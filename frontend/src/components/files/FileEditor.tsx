@@ -1,0 +1,377 @@
+import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { Save, RotateCcw, Settings, Maximize2, Minimize2 } from 'lucide-react'
+import { File as FileType } from '@/types'
+import { useFiles } from '@/stores/fileStore'
+import { Button } from '@/components/ui/Button'
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
+import { cn, debounce, getFileExtension } from '@/lib/utils'
+
+interface FileEditorProps {
+  file: FileType | null
+  className?: string
+}
+
+// Monaco Editor types (for when Monaco is loaded)
+declare global {
+  interface Window {
+    monaco: any
+  }
+}
+
+export function FileEditor({ file, className }: FileEditorProps) {
+  const {
+    updateFileContent,
+    saveFileContent,
+    currentFile,
+    isSaving,
+    error
+  } = useFiles()
+
+  const [isMonacoLoading, setIsMonacoLoading] = useState(true)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  const [lastSavedContent, setLastSavedContent] = useState('')
+  
+  const editorRef = useRef<any>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  // Load Monaco Editor
+  useEffect(() => {
+    const loadMonaco = async () => {
+      if (window.monaco) {
+        setIsMonacoLoading(false)
+        return
+      }
+
+      try {
+        // Load Monaco Editor from CDN
+        const script = document.createElement('script')
+        script.src = 'https://unpkg.com/monaco-editor@0.44.0/min/vs/loader.js'
+        
+        script.onload = () => {
+          window.require.config({ 
+            paths: { 
+              vs: 'https://unpkg.com/monaco-editor@0.44.0/min/vs' 
+            } 
+          })
+          
+          window.require(['vs/editor/editor.main'], () => {
+            setIsMonacoLoading(false)
+          })
+        }
+        
+        document.head.appendChild(script)
+      } catch (error) {
+        console.error('Failed to load Monaco Editor:', error)
+        setIsMonacoLoading(false)
+      }
+    }
+
+    loadMonaco()
+  }, [])
+
+  // Initialize editor when Monaco is loaded and file is available
+  useEffect(() => {
+    if (!isMonacoLoading && file && containerRef.current && !editorRef.current) {
+      const editor = window.monaco.editor.create(containerRef.current, {
+        value: file.content,
+        language: getLanguageFromFileType(file.type, file.name),
+        theme: 'vs-dark',
+        automaticLayout: true,
+        minimap: { enabled: true },
+        scrollBeyondLastLine: false,
+        fontSize: 14,
+        lineNumbers: 'on',
+        renderWhitespace: 'selection',
+        wordWrap: 'on',
+        folding: true,
+        lineDecorationsWidth: 10,
+        lineNumbersMinChars: 4,
+        glyphMargin: false,
+        tabSize: 2,
+        insertSpaces: true,
+      })
+
+      // Handle content changes
+      editor.onDidChangeModelContent(() => {
+        const content = editor.getValue()
+        updateFileContent(file.id, content)
+        setHasUnsavedChanges(content !== lastSavedContent)
+      })
+
+      editorRef.current = editor
+      setLastSavedContent(file.content)
+    }
+  }, [isMonacoLoading, file, updateFileContent])
+
+  // Update editor content when file changes
+  useEffect(() => {
+    if (editorRef.current && file && file.id !== currentFile?.id) {
+      const editor = editorRef.current
+      const model = window.monaco.editor.createModel(
+        file.content,
+        getLanguageFromFileType(file.type, file.name)
+      )
+      editor.setModel(model)
+      setLastSavedContent(file.content)
+      setHasUnsavedChanges(false)
+    }
+  }, [file, currentFile])
+
+  // Cleanup editor
+  useEffect(() => {
+    return () => {
+      if (editorRef.current) {
+        editorRef.current.dispose()
+        editorRef.current = null
+      }
+    }
+  }, [])
+
+  // Auto-save with debouncing
+  const debouncedSave = useCallback(
+    debounce(async (fileId: string) => {
+      if (hasUnsavedChanges) {
+        try {
+          await saveFileContent(fileId)
+          setLastSavedContent(currentFile?.content || '')
+          setHasUnsavedChanges(false)
+        } catch (error) {
+          console.error('Auto-save failed:', error)
+        }
+      }
+    }, 2000),
+    [hasUnsavedChanges, saveFileContent, currentFile]
+  )
+
+  useEffect(() => {
+    if (file && hasUnsavedChanges) {
+      debouncedSave(file.id)
+    }
+  }, [file, hasUnsavedChanges, debouncedSave])
+
+  const handleSave = async () => {
+    if (!file) return
+    
+    try {
+      await saveFileContent(file.id)
+      setLastSavedContent(currentFile?.content || '')
+      setHasUnsavedChanges(false)
+    } catch (error) {
+      // Error is handled by the store
+    }
+  }
+
+  const handleRevert = () => {
+    if (!file || !editorRef.current) return
+    
+    if (confirm('Are you sure you want to revert all unsaved changes?')) {
+      editorRef.current.setValue(lastSavedContent)
+      updateFileContent(file.id, lastSavedContent)
+      setHasUnsavedChanges(false)
+    }
+  }
+
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen)
+  }
+
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault()
+        handleSave()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [handleSave])
+
+  if (!file) {
+    return (
+      <div className={cn('flex flex-col h-full bg-background', className)}>
+        <div className="flex-1 flex items-center justify-center text-muted-foreground">
+          <div className="text-center">
+            <div className="text-6xl mb-4">📝</div>
+            <h3 className="text-lg font-medium mb-2">No file selected</h3>
+            <p className="text-sm">Select a file from the explorer to start editing</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (isMonacoLoading) {
+    return (
+      <div className={cn('flex flex-col h-full bg-background', className)}>
+        <div className="p-4 border-b border-border">
+          <div className="flex items-center justify-between">
+            <h3 className="font-medium text-foreground truncate">{file.name}</h3>
+          </div>
+        </div>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <LoadingSpinner className="w-8 h-8 mb-2" />
+            <p className="text-sm text-muted-foreground">Loading editor...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div 
+      className={cn(
+        'flex flex-col h-full bg-background',
+        isFullscreen && 'fixed inset-0 z-50',
+        className
+      )}
+    >
+      {/* Header */}
+      <div className="p-4 border-b border-border">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <h3 className="font-medium text-foreground truncate">{file.name}</h3>
+            {hasUnsavedChanges && (
+              <div className="w-2 h-2 bg-orange-500 rounded-full" title="Unsaved changes" />
+            )}
+            {isSaving(file.id) && (
+              <LoadingSpinner className="w-4 h-4" />
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={handleRevert}
+              disabled={!hasUnsavedChanges || isSaving(file.id)}
+              className="h-8"
+            >
+              <RotateCcw className="w-4 h-4 mr-1" />
+              Revert
+            </Button>
+
+            <Button
+              size="sm"
+              onClick={handleSave}
+              disabled={!hasUnsavedChanges || isSaving(file.id)}
+              className="h-8"
+            >
+              <Save className="w-4 h-4 mr-1" />
+              {isSaving(file.id) ? 'Saving...' : 'Save'}
+            </Button>
+
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={toggleFullscreen}
+              className="h-8 w-8 p-0"
+            >
+              {isFullscreen ? (
+                <Minimize2 className="w-4 h-4" />
+              ) : (
+                <Maximize2 className="w-4 h-4" />
+              )}
+            </Button>
+          </div>
+        </div>
+
+        {error && (
+          <div className="mt-2 p-2 bg-destructive/10 border border-destructive/20 rounded-md">
+            <p className="text-sm text-destructive">{error}</p>
+          </div>
+        )}
+
+        {/* File Info */}
+        <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+          <span>Type: {file.type}</span>
+          <span>Lines: {file.content.split('\n').length}</span>
+          <span>Characters: {file.content.length}</span>
+          {hasUnsavedChanges && (
+            <span className="text-orange-600">• Unsaved changes</span>
+          )}
+        </div>
+      </div>
+
+      {/* Editor */}
+      <div className="flex-1 relative">
+        <div
+          ref={containerRef}
+          className="absolute inset-0"
+          style={{ height: '100%' }}
+        />
+      </div>
+
+      {/* Footer */}
+      <div className="px-4 py-2 border-t border-border bg-muted/20">
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <div className="flex items-center gap-4">
+            <span>Language: {getLanguageFromFileType(file.type, file.name)}</span>
+            <span>Auto-save: {hasUnsavedChanges ? 'Pending' : 'Up to date'}</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span>Ctrl+S to save</span>
+            {isFullscreen && <span>Press Esc to exit fullscreen</span>}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Helper function to map file types to Monaco Editor languages
+function getLanguageFromFileType(fileType: string, fileName: string): string {
+  const extension = getFileExtension(fileName)
+  
+  // Map file types and extensions to Monaco languages
+  const languageMap: Record<string, string> = {
+    // By file type
+    javascript: 'javascript',
+    typescript: 'typescript',
+    python: 'python',
+    java: 'java',
+    cpp: 'cpp',
+    html: 'html',
+    css: 'css',
+    json: 'json',
+    markdown: 'markdown',
+    yaml: 'yaml',
+    xml: 'xml',
+    sql: 'sql',
+    shell: 'shell',
+    dockerfile: 'dockerfile',
+    
+    // By file extension
+    js: 'javascript',
+    jsx: 'javascript',
+    ts: 'typescript',
+    tsx: 'typescript',
+    py: 'python',
+    java: 'java',
+    cpp: 'cpp',
+    c: 'cpp',
+    h: 'cpp',
+    hpp: 'cpp',
+    html: 'html',
+    htm: 'html',
+    css: 'css',
+    scss: 'scss',
+    sass: 'sass',
+    less: 'less',
+    json: 'json',
+    md: 'markdown',
+    yml: 'yaml',
+    yaml: 'yaml',
+    xml: 'xml',
+    sql: 'sql',
+    sh: 'shell',
+    bash: 'shell',
+    zsh: 'shell',
+    fish: 'shell',
+  }
+
+  return languageMap[fileType] || languageMap[extension] || 'plaintext'
+}
