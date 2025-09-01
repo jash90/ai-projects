@@ -75,7 +75,7 @@ export const chatStore = create<ChatStore>()((set) => ({
     set((state) => ({
       messages: {
         ...state.messages,
-        [key]: messages.map(msg => ({ ...msg, isLoading: false }))
+        [key]: (messages || []).map(msg => ({ ...msg, isLoading: false }))
       }
     }))
   },

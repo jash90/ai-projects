@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { io, Socket } from 'socket.io-client'
 import { useAuth } from '@/stores/authStore'
 import { chatStore } from '@/stores/chatStore'
-import { Message, SocketMessage } from '@/types'
+import { ConversationMessage, SocketMessage } from '@/types'
 
 interface UseSocketOptions {
   autoConnect?: boolean
@@ -76,12 +76,12 @@ export function useSocket(projectId?: string, options: UseSocketOptions = {}) {
     })
 
     // Message events
-    socket.on('new-message', (data: { projectId: string; message: Message; sender: any }) => {
-      addMessage(data.projectId, data.message)
+            socket.on('new-message', (data: { projectId: string; agentId: string; message: ConversationMessage; sender: any }) => {
+      addMessage(data.projectId, data.agentId, data.message)
     })
 
-    socket.on('message-history', (data: { projectId: string; messages: Message[] }) => {
-      chatStore.getState().setMessages(data.projectId, data.messages)
+    socket.on('message-history', (data: { projectId: string; agentId: string; messages: ConversationMessage[] }) => {
+      chatStore.getState().setMessages(data.projectId, data.agentId, data.messages)
     })
 
     // Typing events

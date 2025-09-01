@@ -94,9 +94,12 @@ export interface Conversation {
 }
 
 export interface ConversationMessage {
+  id?: string;
   role: 'user' | 'assistant';
   content: string;
   timestamp: string;
+  created_at?: string;
+  error?: string;
   metadata?: MessageMetadata;
 }
 

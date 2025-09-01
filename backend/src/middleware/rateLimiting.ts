@@ -55,7 +55,7 @@ class RedisStore {
 // General rate limiting
 export const generalLimiter = rateLimit({
   windowMs: config.rate_limit.window_ms, // 15 minutes
-  max: config.rate_limit.max_requests, // 100 requests per windowMs
+  max: process.env.NODE_ENV === 'development' ? 1000 : config.rate_limit.max_requests, // 1000 requests in dev, 100 in prod
   message: {
     success: false,
     error: 'Too many requests, please try again later'
@@ -109,7 +109,7 @@ export const uploadLimiter = rateLimit({
 // Chat/messaging rate limiting
 export const chatLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 30, // 30 messages per minute
+  max: process.env.NODE_ENV === 'development' ? 200 : 30, // 200 messages per minute in dev, 30 in prod
   message: {
     success: false,
     error: 'Too many messages, please slow down'
@@ -121,7 +121,7 @@ export const chatLimiter = rateLimit({
 // API creation rate limiting (for projects, agents, etc.)
 export const creationLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 20, // 20 creations per hour
+  max: process.env.NODE_ENV === 'development' ? 100 : 20, // 100 creations per hour in dev, 20 in prod
   message: {
     success: false,
     error: 'Too many creation requests, please try again later'

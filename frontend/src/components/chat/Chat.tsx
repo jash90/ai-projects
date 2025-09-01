@@ -16,6 +16,21 @@ interface ChatProps {
 }
 
 function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
+  // Return early if agent is not available
+  if (!agent) {
+    return (
+      <div className={cn('flex flex-col h-full bg-background items-center justify-center', className)}>
+        <div className="text-center space-y-4">
+          <div className="text-4xl">🤖</div>
+          <h3 className="font-semibold text-foreground">Select an Agent</h3>
+          <p className="text-muted-foreground text-sm max-w-md">
+            Choose an AI agent from the sidebar to start a conversation. Each agent has different capabilities and models.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   const conversation = useConversation(project.id, agent.id)
   const isSending = useConversationSending(project.id, agent.id)
   const [includeFiles, setIncludeFiles] = useState(true)
@@ -81,7 +96,7 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
       />
       
       <ChatMessages
-        messages={conversation?.messages || []}
+        messages={(conversation?.messages || []).filter(Boolean)}
         agent={agent}
         isLoading={isSending}
         className="flex-1"
