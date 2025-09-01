@@ -42,8 +42,8 @@ async function ensureUploadDir(): Promise<void> {
   }
 }
 
-// Get files for a project
-router.get('/projects/:projectId/files', 
+// Get uploaded files for a project
+router.get('/projects/:projectId/uploads', 
   generalLimiter,
   authenticateToken,
   validate({ 
@@ -80,7 +80,7 @@ router.get('/projects/:projectId/files',
 );
 
 // Upload file to project
-router.post('/projects/:projectId/files', 
+router.post('/projects/:projectId/uploads', 
   uploadLimiter,
   authenticateToken,
   upload.single('file'),
@@ -295,7 +295,7 @@ router.delete('/files/:id',
 );
 
 // Get files by type for a project
-router.get('/projects/:projectId/files/type/:mimetype', 
+router.get('/projects/:projectId/uploads/type/:mimetype', 
   generalLimiter,
   authenticateToken,
   validate({ 
@@ -337,7 +337,7 @@ router.get('/projects/:projectId/files/type/:mimetype',
 );
 
 // Search files in a project
-router.get('/projects/:projectId/files/search', 
+router.get('/projects/:projectId/uploads/search', 
   generalLimiter,
   authenticateToken,
   validate({ 
@@ -381,7 +381,7 @@ router.get('/projects/:projectId/files/search',
 );
 
 // Get file statistics for a project
-router.get('/projects/:projectId/files/stats', 
+router.get('/projects/:projectId/uploads/stats', 
   generalLimiter,
   authenticateToken,
   validate({ params: Joi.object({ projectId: commonSchemas.uuid }) }),

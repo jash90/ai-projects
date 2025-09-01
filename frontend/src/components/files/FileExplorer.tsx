@@ -5,11 +5,13 @@ import {
   FolderOpen, 
   Plus, 
   Search, 
+  Upload,
   MoreVertical,
   Edit3,
   Trash2,
   Download,
-  Copy
+  Copy,
+  FileText
 } from 'lucide-react'
 import { File as FileType } from '@/types'
 import { useFiles } from '@/stores/fileStore'
@@ -18,6 +20,7 @@ import { Input } from '@/components/ui/Input'
 import { ScrollArea } from '@/components/ui/ScrollArea'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { FileDialog } from './FileDialog'
+import { UploadFileDialog } from './UploadFileDialog'
 import { cn, getFileExtension, copyToClipboard, truncateText } from '@/lib/utils'
 
 interface FileExplorerProps {
@@ -55,6 +58,7 @@ export function FileExplorer({
   const [searchQuery, setSearchQuery] = useState('')
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(['root']))
   const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [showUploadDialog, setShowUploadDialog] = useState(false)
   const [contextMenu, setContextMenu] = useState<{
     x: number
     y: number
@@ -162,6 +166,11 @@ export function FileExplorer({
     }
   }
 
+  const handleUploadComplete = (files: any[]) => {
+    // Refresh the file list to show newly uploaded files
+    fetchProjectFiles(projectId)
+  }
+
   const handleDeleteFile = async (file: FileType) => {
     if (confirm(`Are you sure you want to delete "${file.name}"? This action cannot be undone.`)) {
       try {
@@ -172,6 +181,8 @@ export function FileExplorer({
       }
     }
   }
+
+
 
   const handleCopyContent = async (file: FileType) => {
     try {
@@ -192,7 +203,12 @@ export function FileExplorer({
     })
   }
 
-  const getFileIcon = (fileName: string, fileType: string) => {
+  const handleFileClick = (file: FileType) => {
+    // All files are now text files that can be opened in the editor
+    onFileSelect(file)
+  }
+
+  const getFileIcon = (fileName: string, fileType: string, file?: FileType) => {
     const ext = getFileExtension(fileName)
     
     // Common file type icons
@@ -254,11 +270,11 @@ export function FileExplorer({
             : 'text-foreground'
         )}
         style={{ paddingLeft: `${8 + indent}px` }}
-        onClick={() => item.file && onFileSelect(item.file)}
+        onClick={() => item.file && handleFileClick(item.file)}
         onContextMenu={(e) => item.file && handleRightClick(e, item.file)}
       >
         <span className="text-base">
-          {getFileIcon(item.name, item.file?.type || '')}
+          {getFileIcon(item.name, item.file?.type || '', item.file)}
         </span>
         <span className="flex-1 truncate" title={item.name}>
           {item.name}
@@ -292,13 +308,25 @@ export function FileExplorer({
             <File className="w-5 h-5" />
             Files
           </h2>
-          <Button
-            size="sm"
-            onClick={() => setShowCreateDialog(true)}
-            className="h-8 w-8 p-0"
-          >
-            <Plus className="w-4 h-4" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setShowUploadDialog(true)}
+              className="h-8 px-2"
+              title="Upload files from computer"
+            >
+              <Upload className="w-4 h-4" />
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => setShowCreateDialog(true)}
+              className="h-8 w-8 p-0"
+              title="Create new file"
+            >
+              <Plus className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
 
         {/* Search */}
@@ -372,13 +400,14 @@ export function FileExplorer({
           <button
             className="w-full px-3 py-1.5 text-left text-sm hover:bg-accent hover:text-accent-foreground flex items-center gap-2"
             onClick={() => {
-              onFileSelect(contextMenu.file)
+              handleFileClick(contextMenu.file)
               setContextMenu(null)
             }}
           >
             <Edit3 className="w-3 h-3" />
             Open
           </button>
+          
           <button
             className="w-full px-3 py-1.5 text-left text-sm hover:bg-accent hover:text-accent-foreground flex items-center gap-2"
             onClick={() => handleCopyContent(contextMenu.file)}
@@ -386,6 +415,7 @@ export function FileExplorer({
             <Copy className="w-3 h-3" />
             Copy Content
           </button>
+          
           <div className="border-t border-border my-1" />
           <button
             className="w-full px-3 py-1.5 text-left text-sm hover:bg-destructive hover:text-destructive-foreground flex items-center gap-2 text-destructive"
@@ -403,6 +433,14 @@ export function FileExplorer({
         onClose={() => setShowCreateDialog(false)}
         onSubmit={handleCreateFile}
         title="Create New File"
+      />
+
+      {/* Upload File Dialog */}
+      <UploadFileDialog
+        open={showUploadDialog}
+        onClose={() => setShowUploadDialog(false)}
+        projectId={projectId}
+        onUploadComplete={handleUploadComplete}
       />
     </div>
   )
