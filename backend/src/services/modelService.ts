@@ -153,11 +153,11 @@ class ModelService {
       logger.info('Loading Anthropic models...');
       const now = new Date().toISOString();
 
-      // Custom Anthropic models list
+      // Custom Anthropic models list (as requested by user)
       const anthropicModels = [
         {
           id: 'claude-opus-4-1-20250805',
-          name: 'Claude Opus 4.1',
+          name: 'Claude Opus 4.1 (August 2025)',
           max_tokens: 8192,
           context_window: 200000,
           input_cost: 20.00,
@@ -167,7 +167,7 @@ class ModelService {
         },
         {
           id: 'claude-opus-4-20250514',
-          name: 'Claude Opus 4',
+          name: 'Claude Opus 4 (May 2025)',
           max_tokens: 8192,
           context_window: 200000,
           input_cost: 18.00,
@@ -177,7 +177,7 @@ class ModelService {
         },
         {
           id: 'claude-sonnet-4-20250514',
-          name: 'Claude Sonnet 4',
+          name: 'Claude Sonnet 4 (May 2025)',
           max_tokens: 8192,
           context_window: 200000,
           input_cost: 8.00,
@@ -187,7 +187,7 @@ class ModelService {
         },
         {
           id: 'claude-3-7-sonnet-latest',
-          name: 'Claude 3.7 Sonnet Latest',
+          name: 'Claude 3.7 Sonnet (Latest)',
           max_tokens: 8192,
           context_window: 200000,
           input_cost: 5.00,

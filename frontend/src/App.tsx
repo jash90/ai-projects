@@ -17,6 +17,7 @@ import RegisterPage from '@/pages/RegisterPage'
 import DashboardPage from '@/pages/DashboardPage'
 import ProjectPage from '@/pages/ProjectPage'
 import SettingsPage from '@/pages/SettingsPage'
+import { UsagePage } from '@/pages/UsagePage'
 
 // UI Components
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
@@ -117,6 +118,14 @@ function App() {
                   element={
                     <DashboardLayout>
                       <SettingsPage />
+                    </DashboardLayout>
+                  }
+                />
+                <Route
+                  path="/usage"
+                  element={
+                    <DashboardLayout>
+                      <UsagePage />
                     </DashboardLayout>
                   }
                 />

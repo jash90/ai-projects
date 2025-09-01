@@ -3,11 +3,15 @@ import Anthropic from '@anthropic-ai/sdk';
 import { Agent, ConversationMessage, MessageMetadata } from '../types';
 import config from '../utils/config';
 import logger from '../utils/logger';
+import { TokenService } from './tokenService';
 
 export interface ChatRequest {
   agent: Agent;
   messages: ConversationMessage[];
   projectFiles?: string[];
+  userId?: string;
+  projectId?: string;
+  conversationId?: string;
 }
 
 export interface ChatResponse {
@@ -44,16 +48,16 @@ class AIService {
   }
 
   async chat(request: ChatRequest): Promise<ChatResponse> {
-    const { agent, messages, projectFiles } = request;
+    const { agent, messages, projectFiles, userId, projectId, conversationId } = request;
     const startTime = Date.now();
 
     try {
       let response: ChatResponse;
 
       if (agent.provider === 'openai') {
-        response = await this.chatWithOpenAI(agent, messages, projectFiles);
+        response = await this.chatWithOpenAI(agent, messages, projectFiles, userId, projectId, conversationId);
       } else if (agent.provider === 'anthropic') {
-        response = await this.chatWithAnthropic(agent, messages, projectFiles);
+        response = await this.chatWithAnthropic(agent, messages, projectFiles, userId, projectId, conversationId);
       } else {
         throw new Error(`Unsupported AI provider: ${agent.provider}`);
       }
@@ -85,7 +89,10 @@ class AIService {
   private async chatWithOpenAI(
     agent: Agent,
     messages: ConversationMessage[],
-    projectFiles?: string[]
+    projectFiles?: string[],
+    userId?: string,
+    projectId?: string,
+    conversationId?: string
   ): Promise<ChatResponse> {
     if (!this.openai) {
       throw new Error('OpenAI API key not configured');
@@ -128,11 +135,28 @@ class AIService {
       throw new Error('No response content from OpenAI');
     }
 
+    // Track token usage if user context is provided
+    if (userId && completion.usage) {
+      await TokenService.trackUsage({
+        userId,
+        projectId,
+        agentId: agent.id,
+        conversationId,
+        provider: 'openai',
+        model: agent.model,
+        promptTokens: completion.usage.prompt_tokens || 0,
+        completionTokens: completion.usage.completion_tokens || 0,
+        requestType: 'chat'
+      });
+    }
+
     return {
       content: choice.message.content,
       metadata: {
         model: agent.model,
         tokens: completion.usage?.total_tokens,
+        prompt_tokens: completion.usage?.prompt_tokens,
+        completion_tokens: completion.usage?.completion_tokens,
         files: projectFiles
       }
     };
@@ -141,7 +165,10 @@ class AIService {
   private async chatWithAnthropic(
     agent: Agent,
     messages: ConversationMessage[],
-    projectFiles?: string[]
+    projectFiles?: string[],
+    userId?: string,
+    projectId?: string,
+    conversationId?: string
   ): Promise<ChatResponse> {
     logger.info(`Anthropic client check: ${!!this.anthropic}`);
     logger.info(`Anthropic messages check: ${!!this.anthropic?.messages}`);
@@ -149,6 +176,8 @@ class AIService {
     if (!this.anthropic) {
       throw new Error('Anthropic API key not configured');
     }
+    
+    const actualModel = agent.model;
 
     // Build system message with agent prompt and file context
     let systemContent = agent.system_prompt;
@@ -164,7 +193,7 @@ class AIService {
 
     try {
       const completion = await this.anthropic.messages.create({
-        model: agent.model,
+        model: actualModel, // Use the mapped model name
         max_tokens: agent.max_tokens,
         temperature: agent.temperature,
         system: systemContent,
@@ -176,19 +205,44 @@ class AIService {
         throw new Error('Unexpected response type from Anthropic');
       }
 
+      // Track token usage if user context is provided
+      if (userId && completion.usage) {
+        await TokenService.trackUsage({
+          userId,
+          projectId,
+          agentId: agent.id,
+          conversationId,
+          provider: 'anthropic',
+          model: agent.model,
+          promptTokens: completion.usage.input_tokens || 0,
+          completionTokens: completion.usage.output_tokens || 0,
+          requestType: 'chat'
+        });
+      }
+
       return {
         content: content.text,
         metadata: {
           model: agent.model,
           tokens: completion.usage ? completion.usage.input_tokens + completion.usage.output_tokens : 0,
+          prompt_tokens: completion.usage?.input_tokens,
+          completion_tokens: completion.usage?.output_tokens,
           files: projectFiles
         }
       };
-    } catch (error) {
-      if (error instanceof Error) {
+    } catch (error: any) {
+      logger.error('Anthropic API error details:', error);
+      
+      // Handle different error types
+      if (error?.response?.data?.error?.message) {
+        throw new Error(`Anthropic API error: ${error.response.data.error.message}`);
+      } else if (error?.message) {
         throw new Error(`Anthropic API error: ${error.message}`);
+      } else if (typeof error === 'string') {
+        throw new Error(`Anthropic API error: ${error}`);
+      } else {
+        throw new Error('Unknown error occurred with Anthropic API');
       }
-      throw new Error('Unknown error occurred with Anthropic API');
     }
   }
 
