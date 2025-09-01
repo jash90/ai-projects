@@ -1,5 +1,5 @@
 import { Pool, Client } from 'pg';
-import { createClient } from 'redis';
+import { createClient, RedisClientType } from 'redis';
 import config from '../utils/config';
 import logger from '../utils/logger';
 
@@ -12,7 +12,7 @@ export const pool = new Pool({
 });
 
 // Redis connection
-export const redis = createClient({
+export const redis: RedisClientType = createClient({
   url: config.redis_url,
 });
 
