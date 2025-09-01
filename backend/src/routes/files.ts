@@ -4,7 +4,6 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs/promises';
 import { v4 as uuidv4 } from 'uuid';
-import sharp from 'sharp';
 import { ProjectFileModel } from '../models/ProjectFile';
 import { ProjectModel } from '../models/Project';
 import { authenticateToken } from '../middleware/auth';
@@ -109,25 +108,8 @@ router.post('/projects/:projectId/files',
       const filename = `${uuidv4()}${fileExtension}`;
       const filepath = path.join(config.upload_path, filename);
 
-      // Process image files for optimization
-      let processedBuffer = uploadedFile.buffer;
-      if (uploadedFile.mimetype.startsWith('image/')) {
-        try {
-          processedBuffer = await sharp(uploadedFile.buffer)
-            .resize(2048, 2048, { 
-              fit: 'inside', 
-              withoutEnlargement: true 
-            })
-            .jpeg({ quality: 85 })
-            .toBuffer();
-        } catch (error) {
-          logger.warn('Image processing failed, using original:', error);
-          processedBuffer = uploadedFile.buffer;
-        }
-      }
-
-      // Write file to disk
-      await fs.writeFile(filepath, processedBuffer);
+      // Write file to disk (text files only)
+      await fs.writeFile(filepath, uploadedFile.buffer);
 
       // Save file record to database
       const file = await ProjectFileModel.create({
@@ -135,7 +117,7 @@ router.post('/projects/:projectId/files',
         filename,
         original_name: uploadedFile.originalname,
         mimetype: uploadedFile.mimetype,
-        size: processedBuffer.length,
+        size: uploadedFile.buffer.length,
         path: filepath,
         uploaded_by: userId,
       });

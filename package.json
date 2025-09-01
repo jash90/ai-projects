@@ -17,10 +17,21 @@
     "db:migrate": "cd backend && pnpm run db:migrate",
     "db:seed": "cd backend && pnpm run db:seed"
   },
-  "keywords": ["ai", "projects", "chat", "full-stack", "claude"],
+  "keywords": [
+    "ai",
+    "projects",
+    "chat",
+    "full-stack",
+    "claude"
+  ],
   "author": "Your Name",
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }

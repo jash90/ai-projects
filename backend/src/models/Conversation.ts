@@ -27,7 +27,7 @@ export class ConversationModel {
     const row = result.rows[0];
     return {
       ...row,
-      messages: JSON.parse(row.messages || '[]')
+      messages: Array.isArray(row.messages) ? row.messages : JSON.parse(row.messages || '[]')
     };
   }
 
@@ -62,7 +62,7 @@ export class ConversationModel {
     const row = result.rows[0];
     return {
       ...row,
-      messages: JSON.parse(row.messages || '[]')
+      messages: Array.isArray(row.messages) ? row.messages : JSON.parse(row.messages || '[]')
     };
   }
 
@@ -123,7 +123,7 @@ export class ConversationModel {
     const result = await pool.query(query, [projectId]);
     return result.rows.map(row => ({
       ...row,
-      messages: JSON.parse(row.messages || '[]')
+      messages: Array.isArray(row.messages) ? row.messages : JSON.parse(row.messages || '[]')
     }));
   }
 

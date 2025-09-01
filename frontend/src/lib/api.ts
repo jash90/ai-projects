@@ -237,7 +237,7 @@ export const conversationsApi = {
 // Chat API
 export const chatApi = {
   sendMessage: (projectId: string, agentId: string, data: { message: string; includeFiles?: boolean }) =>
-    apiClient.post<ApiResponse<{ conversation: any; response: any }>>(`/projects/${projectId}/agents/${agentId}/chat`, data),
+    apiClient.post<ApiResponse<{ user_message: any; assistant_message: any }>>(`/projects/${projectId}/agents/${agentId}/chat`, data),
 
   getAIStatus: () =>
     apiClient.get<ApiResponse<{ providers: Record<string, boolean>; models: Record<string, string[]> }>>('/ai/status'),
@@ -248,6 +248,9 @@ export const chatApi = {
 
 // Project Files API (for text-based files)
 export const filesApi = {
+  getFiles: (projectId: string) =>
+    apiClient.get<ApiResponse<{ files: any[]; count: number }>>(`/projects/${projectId}/files`),
+  
   getProjectFiles: (projectId: string) =>
     apiClient.get<ApiResponse<{ files: any[]; count: number }>>(`/projects/${projectId}/files`),
 
@@ -304,3 +307,6 @@ export const uploadedFilesApi = {
   getStats: (projectId: string) =>
     apiClient.get<ApiResponse<any>>(`/projects/${projectId}/files/stats`),
 }
+
+// Alias for project text files
+export const projectFilesApi = filesApi

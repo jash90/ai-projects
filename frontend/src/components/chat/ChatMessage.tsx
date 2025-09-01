@@ -33,7 +33,7 @@ function ChatMessage({ message, agent }: ChatMessageProps) {
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <span>{isUser ? 'You' : agent.name}</span>
           <span>•</span>
-          <span>{formatRelativeTime(message.created_at)}</span>
+          <span>{formatRelativeTime(message.created_at || message.timestamp)}</span>
         </div>
 
         {/* Message Content */}

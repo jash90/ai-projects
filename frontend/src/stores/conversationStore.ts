@@ -70,6 +70,7 @@ export const conversationStore = create<ConversationState>((set, get) => ({
         id: `temp-${Date.now()}`,
         role: 'user',
         content,
+        timestamp: new Date().toISOString(),
         created_at: new Date().toISOString()
       }
 
@@ -92,7 +93,7 @@ export const conversationStore = create<ConversationState>((set, get) => ({
       // Send message to backend
       const response = await chatApi.sendMessage(projectId, agentId, {
         message: content,
-        include_files: includeFiles
+        includeFiles: includeFiles
       })
 
       if (response.success) {

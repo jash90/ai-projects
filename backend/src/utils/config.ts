@@ -11,7 +11,7 @@ const config: Config = {
   jwt_expires_in: process.env.JWT_EXPIRES_IN || '7d',
   upload_path: process.env.UPLOAD_PATH || './uploads',
   max_file_size: parseInt(process.env.MAX_FILE_SIZE || '10485760', 10), // 10MB
-  allowed_file_types: (process.env.ALLOWED_FILE_TYPES || '.jpg,.jpeg,.png,.gif,.pdf,.txt,.md,.json,.js,.ts,.html,.css,.py,.java,.cpp,.c,.go,.rs,.php,.rb,.swift').split(','),
+  allowed_file_types: (process.env.ALLOWED_FILE_TYPES || '.txt,.md,.json,.js,.ts,.jsx,.tsx,.html,.css,.scss,.sass,.py,.java,.cpp,.c,.go,.rs,.php,.rb,.swift,.yaml,.yml,.xml,.sql,.sh,.bash,.dockerfile,.gitignore,.env.example').split(','),
   cors_origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   rate_limit: {
     window_ms: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000', 10), // 15 minutes

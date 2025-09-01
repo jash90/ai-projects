@@ -14,15 +14,33 @@ interface ChatMessagesProps {
 function ChatMessages({ messages, agent, isLoading = false, className }: ChatMessagesProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
+  
+  // Ensure messages is always an array and agent exists
+  const safeMessages = messages || []
+  
+  // Return early if agent is not available
+  if (!agent) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center space-y-2">
+          <div className="text-2xl">⚠️</div>
+          <h3 className="font-semibold text-foreground">Agent not found</h3>
+          <p className="text-muted-foreground text-sm">
+            Please select an agent to start chatting
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     if (endRef.current) {
       endRef.current.scrollIntoView({ behavior: 'smooth' })
     }
-  }, [messages])
+  }, [safeMessages])
 
-  if (messages.length === 0 && !isLoading) {
+  if (safeMessages.length === 0 && !isLoading) {
     return (
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center space-y-2">
@@ -42,9 +60,9 @@ function ChatMessages({ messages, agent, isLoading = false, className }: ChatMes
   return (
     <ScrollArea className={`flex-1 ${className}`}>
       <div ref={scrollRef} className="min-h-full">
-        {messages.map((message) => (
+        {safeMessages.map((message, index) => (
           <ChatMessage
-            key={message.id}
+            key={message.id || `message-${index}`}
             message={message}
             agent={agent}
           />
