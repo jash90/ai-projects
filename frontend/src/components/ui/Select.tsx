@@ -30,6 +30,7 @@ interface SelectItemProps {
 interface SelectValueProps {
   placeholder?: string
   className?: string
+  children?: React.ReactNode
 }
 
 const SelectContext = React.createContext<{
@@ -140,12 +141,12 @@ const SelectItem = ({ value, children, className, onSelect }: SelectItemProps) =
   )
 }
 
-const SelectValue = ({ placeholder, className }: SelectValueProps) => {
+const SelectValue = ({ placeholder, className, children }: SelectValueProps) => {
   const { value, placeholder: contextPlaceholder } = React.useContext(SelectContext)
 
   return (
     <span className={cn('block truncate', className)}>
-      {value || placeholder || contextPlaceholder}
+      {children || value || placeholder || contextPlaceholder}
     </span>
   )
 }

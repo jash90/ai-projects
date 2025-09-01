@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Plus, Settings, Trash2, Bot, Zap } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Plus, Settings, Trash2, Bot } from 'lucide-react'
 import { Agent, AgentCreate, AgentUpdate } from '@/types'
 import { useAgents } from '@/stores/agentStore'
 import { Button } from '@/components/ui/Button'
@@ -34,9 +34,9 @@ export function AgentPanel({ selectedAgentId, onAgentSelect, className }: AgentP
     fetchAgents()
   }, [fetchAgents])
 
-  const handleCreateAgent = async (data: AgentCreate) => {
+  const handleCreateAgent = async (data: AgentCreate | AgentUpdate) => {
     try {
-      const newAgent = await createAgent(data)
+      const newAgent = await createAgent(data as AgentCreate)
       setShowCreateDialog(false)
       onAgentSelect(newAgent)
     } catch (error) {
@@ -44,11 +44,11 @@ export function AgentPanel({ selectedAgentId, onAgentSelect, className }: AgentP
     }
   }
 
-  const handleUpdateAgent = async (data: AgentUpdate) => {
+  const handleUpdateAgent = async (data: AgentCreate | AgentUpdate) => {
     if (!editingAgent) return
     
     try {
-      const updatedAgent = await updateAgent(editingAgent.id, data)
+      const updatedAgent = await updateAgent(editingAgent.id, data as AgentUpdate)
       setEditingAgent(null)
       if (selectedAgentId === editingAgent.id) {
         onAgentSelect(updatedAgent)
@@ -246,7 +246,22 @@ export function AgentPanel({ selectedAgentId, onAgentSelect, className }: AgentP
             }}
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select agent..." />
+              <SelectValue placeholder="Select agent...">
+                {(() => {
+                  const selectedAgent = agents.find(a => a.id === selectedAgentId)
+                  return selectedAgent ? (
+                    <div className="flex items-center gap-2">
+                      <span>{getProviderIcon(selectedAgent.provider)}</span>
+                      <span>{selectedAgent.name}</span>
+                      <span className="text-xs text-muted-foreground">
+                        ({selectedAgent.provider})
+                      </span>
+                    </div>
+                  ) : (
+                    'Select agent...'
+                  )
+                })()}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {agents.map((agent) => (

@@ -19,7 +19,7 @@ interface AgentDialogProps {
 
 interface AIStatus {
   providers: Record<string, boolean>
-  models: Record<string, string[]>
+  models: Record<string, Array<{ id: string; name: string }>>
 }
 
 export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDialogProps) {
@@ -83,7 +83,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
       if (statusResponse.success && modelsResponse.success) {
         // Transform the data to match expected format
         const providers: Record<string, boolean> = {}
-        const models: Record<string, string[]> = {}
+        const models: Record<string, Array<{ id: string; name: string }>> = {}
         
         // Build providers map
         statusResponse.data?.providers?.forEach((provider: any) => {
@@ -95,7 +95,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
           if (!models[model.provider]) {
             models[model.provider] = []
           }
-          models[model.provider].push(model.id)
+          models[model.provider].push({ id: model.id, name: model.name })
         })
         
         const aiStatus = { providers, models }
@@ -105,7 +105,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
         if (!formData.model && models[formData.provider] && models[formData.provider].length > 0) {
           const firstModel = models[formData.provider][0]
           if (firstModel) {
-            setFormData(prev => ({ ...prev, model: firstModel }))
+            setFormData(prev => ({ ...prev, model: firstModel.id }))
           }
         }
       }
@@ -122,7 +122,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
     setFormData(prev => ({
       ...prev,
       provider: provider as 'openai' | 'anthropic',
-      model: availableModels[0] || '', // Auto-select first available model
+      model: availableModels[0]?.id || '', // Auto-select first available model
     }))
   }
 
@@ -286,12 +286,17 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
                       onValueChange={(value) => setFormData(prev => ({ ...prev, model: value }))}
                     >
                       <SelectTrigger className="mt-1">
-                        <SelectValue placeholder="Select model..." />
+                        <SelectValue placeholder="Select model...">
+                          {(() => {
+                            const selectedModel = availableModels.find(m => m.id === formData.model)
+                            return selectedModel ? selectedModel.name : 'Select model...'
+                          })()}
+                        </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         {availableModels.map((model) => (
-                          <SelectItem key={model} value={model}>
-                            {model}
+                          <SelectItem key={model.id} value={model.id}>
+                            {model.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
