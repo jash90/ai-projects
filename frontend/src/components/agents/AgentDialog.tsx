@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Agent, AgentCreate, AgentUpdate } from '@/types'
-import { chatApi } from '@/lib/api'
+import { modelsApi } from '@/lib/api'
 import { Dialog } from '@/components/ui/Dialog'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -74,30 +74,54 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
   const loadAIStatus = async () => {
     setIsLoading(true)
     try {
-      const response = await chatApi.getAIStatus()
-      if (response.success) {
-        setAiStatus(response.data)
+      // Get provider status and models
+      const [statusResponse, modelsResponse] = await Promise.all([
+        modelsApi.getProviderStatus(),
+        modelsApi.getModels()
+      ])
+      
+      if (statusResponse.success && modelsResponse.success) {
+        // Transform the data to match expected format
+        const providers: Record<string, boolean> = {}
+        const models: Record<string, string[]> = {}
+        
+        // Build providers map
+        statusResponse.data?.providers?.forEach((provider: any) => {
+          providers[provider.name] = provider.configured
+        })
+        
+        // Build models map by provider
+        modelsResponse.data?.models?.forEach((model: any) => {
+          if (!models[model.provider]) {
+            models[model.provider] = []
+          }
+          models[model.provider].push(model.id)
+        })
+        
+        const aiStatus = { providers, models }
+        setAiStatus(aiStatus)
         
         // Auto-select first available model if none selected
-        if (!formData.model && response.data.models[formData.provider]) {
-          const firstModel = response.data.models[formData.provider][0]
+        if (!formData.model && models[formData.provider] && models[formData.provider].length > 0) {
+          const firstModel = models[formData.provider][0]
           if (firstModel) {
             setFormData(prev => ({ ...prev, model: firstModel }))
           }
         }
       }
     } catch (error) {
-      setError('Failed to load AI provider status')
+      console.error('Failed to load models:', error)
+      setError('Failed to load AI models. Please check your connection.')
     } finally {
       setIsLoading(false)
     }
   }
 
-  const handleProviderChange = (provider: 'openai' | 'anthropic') => {
+  const handleProviderChange = (provider: string) => {
     const availableModels = aiStatus?.models[provider] || []
     setFormData(prev => ({
       ...prev,
-      provider,
+      provider: provider as 'openai' | 'anthropic',
       model: availableModels[0] || '', // Auto-select first available model
     }))
   }

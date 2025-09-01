@@ -27,9 +27,19 @@ class AIService {
     }
 
     if (config.ai.anthropic_api_key) {
-      this.anthropic = new Anthropic({
-        apiKey: config.ai.anthropic_api_key,
-      });
+      try {
+        this.anthropic = new Anthropic({
+          apiKey: config.ai.anthropic_api_key,
+        });
+        logger.info('Anthropic client initialized successfully');
+        logger.info(`Anthropic client type: ${typeof this.anthropic}`);
+        logger.info(`Anthropic messages available: ${!!this.anthropic?.messages}`);
+      } catch (error) {
+        logger.error('Failed to initialize Anthropic client:', error);
+        this.anthropic = null;
+      }
+    } else {
+      logger.warn('Anthropic API key not configured');
     }
   }
 
@@ -96,12 +106,22 @@ class AIService {
       }))
     ];
 
-    const completion = await this.openai.chat.completions.create({
+    // Some newer models only support default temperature (1.0)
+    const modelsRequiringDefaultTemp = ['gpt-5', 'gpt-5-high', 'o1', 'o3'];
+    const useDefaultTemp = modelsRequiringDefaultTemp.includes(agent.model);
+    
+    const requestParams: any = {
       model: agent.model,
       messages: openaiMessages,
-      temperature: agent.temperature,
-      max_tokens: agent.max_tokens,
-    });
+      max_completion_tokens: agent.max_tokens,
+    };
+    
+    // Only include temperature if the model supports it
+    if (!useDefaultTemp) {
+      requestParams.temperature = agent.temperature;
+    }
+    
+    const completion = await this.openai.chat.completions.create(requestParams);
 
     const choice = completion.choices[0];
     if (!choice.message.content) {
@@ -123,22 +143,13 @@ class AIService {
     messages: ConversationMessage[],
     projectFiles?: string[]
   ): Promise<ChatResponse> {
+    logger.info(`Anthropic client check: ${!!this.anthropic}`);
+    logger.info(`Anthropic messages check: ${!!this.anthropic?.messages}`);
+    
     if (!this.anthropic) {
       throw new Error('Anthropic API key not configured');
     }
 
-    // TODO: Fix Anthropic SDK integration
-    // For now, return a mock response to allow the server to start
-    return {
-      content: 'Anthropic integration is temporarily disabled. Please configure OpenAI instead.',
-      metadata: {
-        model: agent.model,
-        tokens: 0,
-        files: projectFiles
-      }
-    };
-
-    /* Original code - commented out due to SDK type issues
     // Build system message with agent prompt and file context
     let systemContent = agent.system_prompt;
     if (projectFiles && projectFiles.length > 0) {
@@ -151,51 +162,57 @@ class AIService {
       content: msg.content
     }));
 
-    const completion = await this.anthropic.messages.create({
-      model: agent.model,
-      max_tokens: agent.max_tokens,
-      temperature: agent.temperature,
-      system: systemContent,
-      messages: anthropicMessages,
-    });
-
-    const content = completion.content[0];
-    if (content.type !== 'text') {
-      throw new Error('Unexpected response type from Anthropic');
-    }
-
-    return {
-      content: content.text,
-      metadata: {
+    try {
+      const completion = await this.anthropic.messages.create({
         model: agent.model,
-        tokens: completion.usage.input_tokens + completion.usage.output_tokens,
-        files: projectFiles
+        max_tokens: agent.max_tokens,
+        temperature: agent.temperature,
+        system: systemContent,
+        messages: anthropicMessages,
+      });
+
+      const content = completion.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type from Anthropic');
       }
-    };
-    */
+
+      return {
+        content: content.text,
+        metadata: {
+          model: agent.model,
+          tokens: completion.usage ? completion.usage.input_tokens + completion.usage.output_tokens : 0,
+          files: projectFiles
+        }
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Anthropic API error: ${error.message}`);
+      }
+      throw new Error('Unknown error occurred with Anthropic API');
+    }
   }
 
-  // Get available models for each provider
-  getAvailableModels(): Record<string, string[]> {
-    return {
-      openai: [
-        'gpt-4-1106-preview',
-        'gpt-4',
-        'gpt-3.5-turbo',
-        'gpt-3.5-turbo-16k'
-      ],
-      anthropic: [
-        'claude-3-opus-20240229',
-        'claude-3-sonnet-20240229',
-        'claude-3-haiku-20240307'
-      ]
-    };
+  // Get available models for each provider (async now)
+  async getAvailableModels(): Promise<Record<string, string[]>> {
+    const { modelService } = await import('./modelService');
+    const models = await modelService.getAvailableModels();
+    
+    const result: Record<string, string[]> = {};
+    for (const model of models) {
+      if (!result[model.provider]) {
+        result[model.provider] = [];
+      }
+      result[model.provider].push(model.id);
+    }
+    
+    return result;
   }
 
-  // Validate if a model is available for a provider
-  isModelAvailable(provider: 'openai' | 'anthropic', model: string): boolean {
-    const availableModels = this.getAvailableModels();
-    return availableModels[provider]?.includes(model) || false;
+  // Validate if a model is available for a provider (async now)
+  async isModelAvailable(provider: 'openai' | 'anthropic', model: string): Promise<boolean> {
+    const { modelService } = await import('./modelService');
+    const modelData = await modelService.getModelById(model);
+    return modelData?.provider === provider && !!modelData;
   }
 
   // Get provider status

@@ -97,25 +97,15 @@ export const conversationStore = create<ConversationState>((set, get) => ({
       })
 
       if (response.success) {
-        const { user_message, assistant_message } = response.data
+        const { conversation } = response.data
         
-        // Replace optimistic message with real messages
-        set(state => {
-          const conversation = state.conversations[key]
-          if (conversation) {
-            const messagesWithoutTemp = conversation.messages.filter(m => m.id !== tempMessage.id)
-            return {
-              conversations: {
-                ...state.conversations,
-                [key]: {
-                  ...conversation,
-                  messages: [...messagesWithoutTemp, user_message, assistant_message]
-                }
-              }
-            }
+        // Replace optimistic message with updated conversation
+        set(state => ({
+          conversations: {
+            ...state.conversations,
+            [key]: conversation
           }
-          return state
-        })
+        }))
       } else {
         // Update optimistic message with error
         set(state => {

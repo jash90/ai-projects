@@ -237,7 +237,7 @@ export const conversationsApi = {
 // Chat API
 export const chatApi = {
   sendMessage: (projectId: string, agentId: string, data: { message: string; includeFiles?: boolean }) =>
-    apiClient.post<ApiResponse<{ user_message: any; assistant_message: any }>>(`/projects/${projectId}/agents/${agentId}/chat`, data),
+    apiClient.post<ApiResponse<{ conversation: any; response: any }>>(`/projects/${projectId}/agents/${agentId}/chat`, data),
 
   getAIStatus: () =>
     apiClient.get<ApiResponse<{ providers: Record<string, boolean>; models: Record<string, string[]> }>>('/ai/status'),
@@ -306,6 +306,24 @@ export const uploadedFilesApi = {
 
   getStats: (projectId: string) =>
     apiClient.get<ApiResponse<any>>(`/projects/${projectId}/files/stats`),
+}
+
+// AI Models API
+export const modelsApi = {
+  getModels: () =>
+    apiClient.get<ApiResponse<{ models: any[]; count: number }>>('/models'),
+
+  getModelsByProvider: (provider: 'openai' | 'anthropic') =>
+    apiClient.get<ApiResponse<{ provider: string; models: any[]; count: number }>>(`/models/providers/${provider}`),
+
+  getModel: (modelId: string) =>
+    apiClient.get<ApiResponse<{ model: any }>>(`/models/${modelId}`),
+
+  getProviderStatus: () =>
+    apiClient.get<ApiResponse<{ providers: any[] }>>('/models/providers/status'),
+
+  syncModels: () =>
+    apiClient.post<ApiResponse<{ results: any[]; summary: any }>>('/models/sync'),
 }
 
 // Alias for project text files

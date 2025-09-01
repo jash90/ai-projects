@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import { initializeDatabase, closeDatabase } from './database/connection';
 import { seedDatabase } from './database/seed';
 import { SocketHandler } from './services/socketHandler';
+import { modelService } from './services/modelService';
 import { generalLimiter } from './middleware/rateLimiting';
 import { sanitizeInputs } from './middleware/validation';
 import config from './utils/config';
@@ -19,6 +20,7 @@ import conversationRoutes from './routes/conversations';
 import projectFileRoutes from './routes/projectFiles';
 import fileRoutes from './routes/files';
 import chatRoutes from './routes/chat';
+import modelRoutes from './routes/models';
 
 const app = express();
 const server = createServer(app);
@@ -104,6 +106,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/agents', agentRoutes);
 app.use('/api/conversations', conversationRoutes);
+app.use('/api/models', modelRoutes);
 app.use('/api', projectFileRoutes); // Project file routes include projects/:id/files
 app.use('/api', fileRoutes);         // Uploaded file routes
 app.use('/api', chatRoutes);         // Chat routes
@@ -176,6 +179,10 @@ async function startServer(): Promise<void> {
     // Seed database with initial data
     await seedDatabase();
     logger.info('Database seeded successfully');
+
+    // Initialize model service and sync AI models
+    await modelService.initialize();
+    logger.info('Model service initialized successfully');
 
     // Start server
     server.listen(config.port, () => {
