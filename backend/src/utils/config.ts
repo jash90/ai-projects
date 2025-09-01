@@ -1,0 +1,27 @@
+import dotenv from 'dotenv';
+import { Config } from '../types';
+
+dotenv.config();
+
+const config: Config = {
+  port: parseInt(process.env.PORT || '3001', 10),
+  database_url: process.env.DATABASE_URL || 'postgres://claude_user:claude_password@localhost:5432/claude_projects',
+  redis_url: process.env.REDIS_URL || 'redis://localhost:6379',
+  jwt_secret: process.env.JWT_SECRET || 'your-super-secret-jwt-key',
+  jwt_expires_in: process.env.JWT_EXPIRES_IN || '7d',
+  upload_path: process.env.UPLOAD_PATH || './uploads',
+  max_file_size: parseInt(process.env.MAX_FILE_SIZE || '10485760', 10), // 10MB
+  allowed_file_types: (process.env.ALLOWED_FILE_TYPES || '.jpg,.jpeg,.png,.gif,.pdf,.txt,.md,.json,.js,.ts,.html,.css,.py,.java,.cpp,.c,.go,.rs,.php,.rb,.swift').split(','),
+  cors_origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  rate_limit: {
+    window_ms: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000', 10), // 15 minutes
+    max_requests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100', 10),
+  },
+  ai: {
+    openai_api_key: process.env.OPENAI_API_KEY,
+    anthropic_api_key: process.env.ANTHROPIC_API_KEY,
+  },
+  log_level: process.env.LOG_LEVEL || 'info',
+};
+
+export default config;
