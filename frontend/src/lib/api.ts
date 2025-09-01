@@ -136,6 +136,22 @@ class ApiClient {
     window.URL.revokeObjectURL(downloadUrl)
   }
 
+  // Multipart form data upload
+  async postFormData<T>(url: string, formData: FormData): Promise<T> {
+    const response = await this.client.post<T>(url, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    return response.data
+  }
+
+  // Multipart form data update
+  async putFormData<T>(url: string, formData: FormData): Promise<T> {
+    const response = await this.client.put<T>(url, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    return response.data
+  }
+
   // Get axios instance for advanced usage
   getClient(): AxiosInstance {
     return this.client
@@ -206,17 +222,64 @@ export const agentsApi = {
   getAgent: (id: string) =>
     apiClient.get<ApiResponse<{ agent: any }>>(`/agents/${id}`),
 
-  createAgent: (data: any) =>
-    apiClient.post<ApiResponse<{ agent: any }>>('/agents', data),
+  createAgent: async (data: any) => {
+    // Handle file uploads separately if files are present
+    if (data.files && data.files.length > 0) {
+      const formData = new FormData()
+      
+      // Add agent data
+      Object.keys(data).forEach(key => {
+        if (key !== 'files') {
+          formData.append(key, data[key])
+        }
+      })
+      
+      // Add files
+      data.files.forEach((file: File) => {
+        formData.append('files', file)
+      })
+      
+      return apiClient.postFormData<ApiResponse<{ agent: any }>>('/agents', formData)
+    }
+    
+    return apiClient.post<ApiResponse<{ agent: any }>>('/agents', data)
+  },
 
-  updateAgent: (id: string, data: any) =>
-    apiClient.put<ApiResponse<{ agent: any }>>(`/agents/${id}`, data),
+  updateAgent: async (id: string, data: any) => {
+    // Handle file uploads separately if files are present
+    if (data.files && data.files.length > 0) {
+      const formData = new FormData()
+      
+      // Add agent data
+      Object.keys(data).forEach(key => {
+        if (key !== 'files') {
+          formData.append(key, data[key])
+        }
+      })
+      
+      // Add files
+      data.files.forEach((file: File) => {
+        formData.append('files', file)
+      })
+      
+      return apiClient.putFormData<ApiResponse<{ agent: any }>>(`/agents/${id}`, formData)
+    }
+    
+    return apiClient.put<ApiResponse<{ agent: any }>>(`/agents/${id}`, data)
+  },
 
   deleteAgent: (id: string) =>
     apiClient.delete<ApiResponse>(`/agents/${id}`),
 
   getAgentStats: (id: string) =>
     apiClient.get<ApiResponse<{ agent_id: string; conversations_using: number; can_delete: boolean }>>(`/agents/${id}/stats`),
+
+  // Agent file management
+  getAgentFiles: (agentId: string) =>
+    apiClient.get<ApiResponse<{ files: any[]; count: number }>>(`/agents/${agentId}/files`),
+
+  deleteAgentFile: (agentId: string, fileId: string) =>
+    apiClient.delete<ApiResponse>(`/agents/${agentId}/files/${fileId}`),
 }
 
 // Conversations API
@@ -281,10 +344,10 @@ export const filesApi = {
 // Uploaded Files API (for binary files)
 export const uploadedFilesApi = {
   getFiles: (projectId: string, params?: { page?: number; limit?: number }) =>
-    apiClient.get<ApiResponse<PaginatedResponse<any>>>(`/projects/${projectId}/files`, params),
+    apiClient.get<ApiResponse<PaginatedResponse<any>>>(`/projects/${projectId}/uploads`, params),
 
   uploadFile: (projectId: string, file: File, onProgress?: (progress: number) => void) =>
-    apiClient.uploadFile<ApiResponse<{ file: any }>>(`/projects/${projectId}/files`, file, onProgress),
+    apiClient.uploadFile<ApiResponse<{ file: any }>>(`/projects/${projectId}/uploads`, file, onProgress),
 
   getFile: (id: string) =>
     apiClient.get(`/files/${id}`),
@@ -296,16 +359,16 @@ export const uploadedFilesApi = {
     apiClient.delete<ApiResponse>(`/files/${id}`),
 
   getFilesByType: (projectId: string, mimetype: string) =>
-    apiClient.get<ApiResponse<{ files: any[]; mimetype: string; count: number }>>(`/projects/${projectId}/files/type/${mimetype}`),
+    apiClient.get<ApiResponse<{ files: any[]; mimetype: string; count: number }>>(`/projects/${projectId}/uploads/type/${mimetype}`),
 
   searchFiles: (projectId: string, query: string, limit?: number) =>
-    apiClient.get<ApiResponse<{ files: any[]; query: string; results_count: number }>>(`/projects/${projectId}/files/search`, {
+    apiClient.get<ApiResponse<{ files: any[]; query: string; results_count: number }>>(`/projects/${projectId}/uploads/search`, {
       q: query,
       limit,
     }),
 
   getStats: (projectId: string) =>
-    apiClient.get<ApiResponse<any>>(`/projects/${projectId}/files/stats`),
+    apiClient.get<ApiResponse<any>>(`/projects/${projectId}/uploads/stats`),
 }
 
 // AI Models API

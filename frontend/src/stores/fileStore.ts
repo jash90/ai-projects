@@ -35,19 +35,20 @@ export const useFiles = create<FileState>((set, get) => ({
   fetchProjectFiles: async (projectId: string) => {
     set({ isLoading: true, error: null })
     try {
+      // Fetch text files from the database
       const response = await projectFilesApi.getFiles(projectId)
-      if (response.success) {
-        set(state => ({
-          filesByProject: {
-            ...state.filesByProject,
-            [projectId]: response.data.files
-          },
-          isLoading: false
-        }))
-      } else {
-        set({ error: response.error || 'Failed to fetch files', isLoading: false })
-      }
+      
+      const files = response.success ? (response.data?.files || []) : []
+
+      set(state => ({
+        filesByProject: {
+          ...state.filesByProject,
+          [projectId]: files
+        },
+        isLoading: false
+      }))
     } catch (error) {
+      console.error('Error in fetchProjectFiles:', error)
       set({ 
         error: error instanceof Error ? error.message : 'Failed to fetch files', 
         isLoading: false 

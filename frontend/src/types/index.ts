@@ -59,8 +59,18 @@ export interface Agent {
   model: string;
   temperature: number;
   max_tokens: number;
+  files?: AgentFile[];
   created_at: string;
   updated_at: string;
+}
+
+export interface AgentFile {
+  id: string;
+  name: string;
+  content: string;
+  size: number;
+  type: string;
+  created_at: string;
 }
 
 export interface AgentCreate {
@@ -71,6 +81,7 @@ export interface AgentCreate {
   model: string;
   temperature?: number;
   max_tokens?: number;
+  files?: File[]; // Browser File objects for upload
 }
 
 export interface AgentUpdate {
@@ -81,6 +92,7 @@ export interface AgentUpdate {
   model?: string;
   temperature?: number;
   max_tokens?: number;
+  files?: File[]; // Browser File objects for upload
 }
 
 // Conversation Types
@@ -119,6 +131,10 @@ export interface File {
   type: string;
   created_at: string;
   updated_at: string;
+  // Additional properties for uploaded files
+  isUploaded?: boolean;
+  size?: number;
+  mimetype?: string;
 }
 
 export interface FileCreate {
@@ -218,6 +234,7 @@ export interface AgentFormData {
   model: string;
   temperature: number;
   max_tokens: number;
+  files?: File[];
 }
 
 // Error Types

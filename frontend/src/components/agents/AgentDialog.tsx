@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/Label'
 import { Textarea } from '@/components/ui/Textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
+import { FileUpload } from '@/components/ui/FileUpload'
 
 interface AgentDialogProps {
   open: boolean
@@ -31,6 +32,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
     model: '',
     temperature: 0.7,
     max_tokens: 2000,
+    files: [] as File[],
   })
   
   const [aiStatus, setAiStatus] = useState<AIStatus | null>(null)
@@ -56,6 +58,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
         model: agent.model,
         temperature: agent.temperature,
         max_tokens: agent.max_tokens,
+        files: [] as File[], // Can't populate with existing files (they're not File objects)
       })
     } else {
       // Reset form for new agent
@@ -67,6 +70,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
         model: '',
         temperature: 0.7,
         max_tokens: 2000,
+        files: [] as File[],
       })
     }
   }, [agent])
@@ -343,6 +347,55 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
                     <p className="text-xs text-muted-foreground mt-1">
                       Maximum response length (higher = longer responses)
                     </p>
+                  </div>
+                </div>
+
+                {/* Existing Files (when editing) */}
+                {agent && agent.files && agent.files.length > 0 && (
+                  <div className="space-y-4">
+                    <div>
+                      <Label>Current Agent Files</Label>
+                      <p className="text-xs text-muted-foreground mb-3">
+                        Files currently associated with this agent. Upload new files below to add more.
+                      </p>
+                      <div className="space-y-2">
+                        {agent.files.map((file) => (
+                          <div
+                            key={file.id}
+                            className="flex items-center justify-between p-3 bg-muted/50 rounded-md"
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="w-4 h-4 text-muted-foreground">📄</div>
+                              <div className="min-w-0">
+                                <p className="text-sm font-medium truncate">
+                                  {file.name}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                  {(file.size / 1024).toFixed(1)} KB • {new Date(file.created_at).toLocaleDateString()}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* File Upload Section */}
+                <div className="space-y-4">
+                  <div>
+                    <Label>{agent ? 'Add More Files (Optional)' : 'Agent Files (Optional)'}</Label>
+                    <p className="text-xs text-muted-foreground mb-3">
+                      Upload files that this agent can reference for context. These files will be available to the agent during conversations.
+                    </p>
+                    <FileUpload
+                      onFilesSelected={(files) => setFormData(prev => ({ ...prev, files }))}
+                      maxFiles={5}
+                      maxFileSize={10}
+                      acceptedTypes={['.txt', '.md', '.json', '.js', '.ts', '.jsx', '.tsx', '.html', '.css', '.py', '.java', '.cpp', '.go', '.rs', '.php', '.rb', '.swift', '.yaml', '.yml', '.xml', '.sql', '.sh']}
+                      multiple={true}
+                    />
                   </div>
                 </div>
               </div>
