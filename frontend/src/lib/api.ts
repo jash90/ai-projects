@@ -342,6 +342,35 @@ export const filesApi = {
 }
 
 // Uploaded Files API (for binary files)
+export const usageApi = {
+  getSummary: (projectId?: string, agentId?: string, startDate?: string, endDate?: string) => {
+    const params: any = {}
+    if (startDate) params.startDate = startDate
+    if (endDate) params.endDate = endDate
+    
+    if (projectId) {
+      return apiClient.get<ApiResponse<any>>(`/projects/${projectId}/usage`, params)
+    } else if (agentId) {
+      return apiClient.get<ApiResponse<any>>(`/agents/${agentId}/usage`, params)
+    } else {
+      return apiClient.get<ApiResponse<any>>('/usage/summary', params)
+    }
+  },
+
+  getStats: (startDate?: string, endDate?: string) => {
+    const params: any = {}
+    if (startDate) params.startDate = startDate
+    if (endDate) params.endDate = endDate
+    return apiClient.get<ApiResponse<{ stats: any[] }>>('/usage/stats', params)
+  },
+
+  getProjectStats: (projectId: string) =>
+    apiClient.get<ApiResponse<{ stats: any[] }>>(`/projects/${projectId}/usage`),
+
+  getAgentStats: (agentId: string) =>
+    apiClient.get<ApiResponse<{ stats: any[] }>>(`/agents/${agentId}/usage`)
+}
+
 export const uploadedFilesApi = {
   getFiles: (projectId: string, params?: { page?: number; limit?: number }) =>
     apiClient.get<ApiResponse<PaginatedResponse<any>>>(`/projects/${projectId}/uploads`, params),

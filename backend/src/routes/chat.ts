@@ -79,7 +79,10 @@ router.post('/projects/:projectId/agents/:agentId/chat',
       const aiResponse = await aiService.chat({
         agent,
         messages,
-        projectFiles
+        projectFiles,
+        userId,
+        projectId,
+        conversationId: conversation?.id
       });
 
       // Add assistant message

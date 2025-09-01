@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { Plus, FolderOpen, MessageSquare, Clock } from 'lucide-react'
+import { Plus, FolderOpen, MessageSquare, Clock, BarChart3 } from 'lucide-react'
 import { projectsApi } from '@/lib/api'
 import { useAuth } from '@/stores/authStore'
 import { formatDate, formatRelativeTime } from '@/lib/utils'
@@ -59,7 +59,7 @@ const DashboardPage: React.FC = () => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-card rounded-lg border border-border p-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
@@ -101,6 +101,20 @@ const DashboardPage: React.FC = () => {
               </div>
             </div>
           </div>
+
+          <Link to="/usage" className="bg-card rounded-lg border border-border p-6 hover:bg-accent transition-colors">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center">
+                <BarChart3 className="w-6 h-6 text-purple-600" />
+              </div>
+              <div>
+                <p className="text-lg font-semibold text-card-foreground">
+                  Usage Stats
+                </p>
+                <p className="text-muted-foreground">View token usage</p>
+              </div>
+            </div>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
