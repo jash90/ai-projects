@@ -54,8 +54,6 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
     loadConversation()
   }, [project.id, agent.id])
 
-      console.log(isGlobalLimitExceeded, isMonthlyLimitExceeded)
-
   const handleSendMessage = useCallback(async (content: string) => {
     if (!content.trim() || isSending) return
 
@@ -103,7 +101,19 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
       }
     } catch (error) {
       console.error('Failed to send message:', error)
-      toast.error('Failed to send message. Please try again.')
+      
+      // Refresh usage data after error to update token limit banner
+      refreshUsage()
+      
+      // Get the formatted error message from the conversation store
+      const conversationError = conversationStore.getState().error
+      if (conversationError) {
+        // Show the specific error message (e.g., token limit exceeded)
+        toast.error(conversationError)
+      } else {
+        // Fallback to generic error if no specific error available
+        toast.error('Failed to send message. Please try again.')
+      }
     }
   }, [project.id, agent.id, includeFiles, streaming, isSending, socketConnected, sendSocketMessage, canSendMessage, getLimitStatusMessage, refreshUsage, isGlobalLimitExceeded, isMonthlyLimitExceeded])
 
