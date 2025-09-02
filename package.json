@@ -11,6 +11,8 @@
     "build:backend": "cd backend && pnpm run build",
     "build:frontend": "cd frontend && pnpm run build",
     "start": "cd backend && pnpm start",
+    "railway:build": "pnpm run build",
+    "railway:start": "./start-railway.sh",
     "install:all": "pnpm install && cd backend && pnpm install && cd ../frontend && pnpm install",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
