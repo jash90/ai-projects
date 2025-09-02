@@ -24,9 +24,9 @@
 
 #### 3. `backend/package.json`
 ```diff
-+ "start:prod": "NODE_ENV=production node dist/index.js"
++ "start:prod": "NODE_ENV=production node start-prod.js"
 + "migrate": "tsx src/database/migrate.ts"
-+ "postinstall": "pnpm run migrate"
+- "postinstall": "pnpm run migrate"  # USUNIĘTO - powodowało błędy build
 ```
 
 ### 🔧 **Backend Poprawki**
@@ -79,6 +79,20 @@ cmd = "pnpm run start:prod"
 #### 8. `Procfile` (alternatywa)
 ```
 web: cd backend && NODE_ENV=production node dist/index.js
+```
+
+#### 9. `backend/start-prod.js` (NOWY)
+```javascript
+// Skrypt startowy z automatycznymi migracjami
+// Uruchamia migrate-prod.js przed startem serwera
+// Obsługuje błędy migracji gracefully
+```
+
+#### 10. `backend/migrate-prod.js` (NOWY)
+```javascript
+// Migracje w pure Node.js (bez tsx dependency)
+// Kompatybilne z Railway production environment
+// Używa PostgreSQL Pool bezpośrednio
 ```
 
 ### 🌍 **Environment Variables**
@@ -183,5 +197,31 @@ Te poprawki rozwiązują główne problemy z wdrożeniem na Railway:
 - ✅ Upload path
 - ✅ Environment variables
 - ✅ Automatic migrations
+
+## 🔧 **Rozwiązane Problemy Build**
+
+### ❌ Problem: `tsx: not found` podczas `postinstall`
+```
+backend postinstall: > tsx src/database/migrate.ts
+backend postinstall: sh: tsx: not found
+```
+**✅ Rozwiązanie:**
+- Usunięto `postinstall` hook z `backend/package.json`
+- Stworzono `migrate-prod.js` w pure Node.js
+- Migracje uruchamiają się teraz w `start:prod`
+
+### ❌ Problem: `packageManager` warning
+```
+! The local project doesn't define a 'packageManager' field
+```
+**✅ Rozwiązanie:**
+- Dodano `"packageManager": "pnpm@8.15.4"` w głównym `package.json`
+
+### ❌ Problem: `--frozen-lockfile` conflicts
+```
+ERR_PNPM_OUTDATED_LOCKFILE Cannot install with "frozen-lockfile"
+```
+**✅ Rozwiązanie:**
+- Zmieniono `nixpacks.toml`: `pnpm install` (bez --frozen-lockfile)
 
 Aplikacja powinna teraz działać płynnie na Railway! 🚀
