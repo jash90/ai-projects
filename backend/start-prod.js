@@ -110,13 +110,13 @@ async function main() {
         
         console.log(`🔍 Testing server responsiveness on port ${port}...`);
         
-        const options = {
-          hostname: 'localhost',
-          port: port,
-          path: '/api/health',
-          method: 'GET',
-          timeout: 5000
-        };
+                         const options = {
+                   hostname: '127.0.0.1', // Use IPv4 instead of localhost
+                   port: port,
+                   path: '/api/health',
+                   method: 'GET',
+                   timeout: 5000
+                 };
         
         const req = http.request(options, (res) => {
           console.log(`✅ Health check response: ${res.statusCode}`);
