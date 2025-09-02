@@ -140,6 +140,33 @@ Health Checks              # Container and service monitoring
 
 ## 🚀 Quick Start
 
+### Option 1: Deploy to Railway (Recommended)
+
+The fastest way to get your application online:
+
+```bash
+# Install Railway CLI
+npm install -g @railway/cli
+
+# Run the quick start script
+./railway-quickstart.sh
+```
+
+Or deploy manually:
+```bash
+# Login to Railway
+railway login
+
+# Create project and deploy
+railway create claude-projects-clone
+railway up
+```
+
+📚 **Full Railway guide**: [RAILWAY.md](./RAILWAY.md)  
+✅ **Deployment checklist**: [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)
+
+### Option 2: Local Development
+
 ### Prerequisites
 - **Node.js 18+** (LTS recommended)
 - **pnpm 8+** (install with `npm install -g pnpm` or `corepack enable pnpm`)
