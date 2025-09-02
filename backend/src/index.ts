@@ -179,23 +179,25 @@ if (process.env.NODE_ENV === 'production') {
   if (fs.existsSync(frontendDistPath)) {
     console.log('✅ Frontend build found, serving static files');
     
-    // Serwuj statyczne pliki z frontend build
-    app.use(express.static(frontendDistPath));
+    // Serwuj statyczne pliki z frontend build (bez index.html)
+    app.use(express.static(frontendDistPath, {
+      fallthrough: true // Allow fallthrough to catch-all route
+    }));
     
     // Catch-all route dla React Router (przed 404 handler)
     app.get('*', (req, res, next) => {
+      console.log(`🔍 Catch-all route hit for path: ${req.path}`);
       // Nie przekierowuj API routes
       if (req.path.startsWith('/api') || req.path.startsWith('/socket.io')) {
+        console.log(`⏭️ Skipping catch-all for API route: ${req.path}`);
         return next(); // Przejdź do 404 handler
       }
+      console.log(`📄 Serving index.html for path: ${req.path}`);
       res.sendFile(indexPath);
     });
   } else {
     console.log('❌ Frontend build not found, serving API only');
   }
-  
-  // 404 handler for unknown routes (only in production)
-  app.use(notFoundHandler);
 } else {
   // 404 handler for unknown routes (in development)
   app.use(notFoundHandler);
