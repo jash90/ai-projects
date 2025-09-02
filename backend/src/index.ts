@@ -29,10 +29,10 @@ import debugRoutes from './routes/debug';
 const app: express.Express = express();
 const server = createServer(app);
 
-// Configure Socket.IO
+// Configure Socket.IO - Allow access from any origin
 const io = new SocketServer(server, {
   cors: {
-    origin: config.cors_origin,
+    origin: true, // Allow all origins
     credentials: true,
   },
   transports: ['websocket', 'polling'],
@@ -62,9 +62,9 @@ app.use(helmet({
   },
 }));
 
-// CORS
+// CORS - Allow access from any origin for Railway deployment
 app.use(cors({
-  origin: config.cors_origin,
+  origin: true, // Allow all origins
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: [
