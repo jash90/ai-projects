@@ -1,23 +1,46 @@
 # Railway NGINX Template - Optimized for Railway deployment
-FROM nginx:alpine
+# Build stage
+FROM node:18-alpine AS builder
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@8.15.4 --activate
 
-# Copy built frontend files to nginx html directory
-COPY frontend/dist /usr/share/nginx/html
+WORKDIR /app
 
-# Copy backend files for API serving
-COPY backend/dist /app/backend/dist
-COPY backend/start-prod.js /app/backend/
-COPY backend/migrate-prod.js /app/backend/
-COPY backend/src/database /app/backend/src/database
+# Copy workspace and nx config files
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml nx.json ./
+COPY backend/package.json ./backend/
+COPY frontend/package.json ./frontend/
+
+# Install dependencies
+RUN pnpm install
+
+# Copy source code
+COPY . .
+
+# Build both frontend and backend
+RUN pnpm exec nx run-many -t build
+
+# Production stage
+FROM nginx:alpine AS production
 
 # Install Node.js for backend API
 RUN apk add --no-cache nodejs npm
 
 # Install pnpm
 RUN npm install -g pnpm@8.15.4
+
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Copy built frontend files to nginx html directory
+COPY --from=builder /app/frontend/dist /usr/share/nginx/html
+
+# Copy backend files for API serving
+COPY --from=builder /app/backend/dist /app/backend/dist
+COPY backend/start-prod.js /app/backend/
+COPY backend/migrate-prod.js /app/backend/
+COPY backend/src/database /app/backend/src/database
 
 # Copy package files for backend dependencies
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml /app/
