@@ -24,6 +24,7 @@ import modelRoutes from './routes/models';
 import usageRoutes from './routes/usage';
 import adminRoutes from './routes/admin';
 import settingsRoutes from './routes/settings';
+import debugRoutes from './routes/debug';
 
 const app = express();
 const server = createServer(app);
@@ -132,6 +133,7 @@ app.use('/api', chatRoutes);         // Chat routes
 app.use('/api', usageRoutes);        // Token usage routes
 app.use('/api/admin', adminRoutes);  // Admin routes
 app.use('/api/settings', settingsRoutes);  // User settings routes
+app.use('/api/debug', debugRoutes);  // Debug routes (development/testing)
 
 // 404 handler
 app.use('*', (req, res) => {

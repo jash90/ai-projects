@@ -343,6 +343,10 @@ export class UserModel {
 
     const usageResult = await pool.query(usageQuery, [userId]);
     const { total_tokens, monthly_tokens } = usageResult.rows[0];
+    
+    // Convert database string values to numbers to prevent string concatenation
+    const totalTokensNum = parseInt(total_tokens) || 0;
+    const monthlyTokensNum = parseInt(monthly_tokens) || 0;
 
     // Get global limits if user doesn't have specific limits
     const globalLimits = await this.getGlobalTokenLimits();
@@ -350,15 +354,15 @@ export class UserModel {
     const monthlyLimit = user.token_limit_monthly || globalLimits.monthly;
 
     // Check global limit
-    if (globalLimit > 0 && total_tokens + tokensToUse > globalLimit) {
+    if (globalLimit > 0 && totalTokensNum + tokensToUse > globalLimit) {
       const { createTokenLimitError } = await import('../utils/errors');
-      throw createTokenLimitError('global', total_tokens, globalLimit, tokensToUse);
+      throw createTokenLimitError('global', totalTokensNum, globalLimit, tokensToUse);
     }
 
     // Check monthly limit
-    if (monthlyLimit > 0 && monthly_tokens + tokensToUse > monthlyLimit) {
+    if (monthlyLimit > 0 && monthlyTokensNum + tokensToUse > monthlyLimit) {
       const { createTokenLimitError } = await import('../utils/errors');
-      throw createTokenLimitError('monthly', monthly_tokens, monthlyLimit, tokensToUse);
+      throw createTokenLimitError('monthly', monthlyTokensNum, monthlyLimit, tokensToUse);
     }
   }
 
