@@ -1,6 +1,9 @@
 # Frontend Dockerfile - Standalone frontend deployment
 FROM node:18-alpine as builder
 
+ARG VITE_API_URL
+ARG VITE_WS_URL
+
 WORKDIR /app
 
 # Enable pnpm
@@ -16,7 +19,7 @@ RUN pnpm install
 COPY . .
 
 # Build the application
-RUN pnpm run build
+RUN VITE_API_URL=${VITE_API_URL} VITE_WS_URL=${VITE_WS_URL} pnpm run build
 
 # Production stage
 FROM nginx:alpine
