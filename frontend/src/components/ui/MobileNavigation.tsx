@@ -61,7 +61,7 @@ export function MobileNavigation({ onNewProject }: MobileNavigationProps) {
       label: 'Dashboard',
       href: '/dashboard',
       icon: Home,
-      active: location.pathname === '/dashboard'
+      active: location.pathname === '/dashboard' || location.pathname === '/'
     },
     {
       label: 'Projects',

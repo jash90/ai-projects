@@ -12,6 +12,7 @@ import AuthLayout from '@/components/layouts/AuthLayout'
 import DashboardLayout from '@/components/layouts/DashboardLayout'
 
 // Page Components
+import LandingPage from '@/pages/LandingPage'
 import LoginPage from '@/pages/LoginPage'
 import RegisterPage from '@/pages/RegisterPage'
 import DashboardPage from '@/pages/DashboardPage'
@@ -74,6 +75,9 @@ function App() {
       <Router>
         <div className="min-h-screen bg-background text-foreground">
           <Routes>
+            {/* Landing Page - Always accessible */}
+            <Route path="/" element={<LandingPage />} />
+            
             {/* Public Routes */}
             {!isAuthenticated ? (
               <>
@@ -93,13 +97,13 @@ function App() {
                     </AuthLayout>
                   }
                 />
-                <Route path="*" element={<Navigate to="/login" replace />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
               </>
             ) : (
               /* Protected Routes */
               <>
                 <Route
-                  path="/"
+                  path="/dashboard"
                   element={
                     <DashboardLayout>
                       <DashboardPage />
@@ -138,7 +142,7 @@ function App() {
                     </DashboardLayout>
                   }
                 />
-                <Route path="*" element={<Navigate to="/" replace />} />
+                <Route path="*" element={<Navigate to="/dashboard" replace />} />
               </>
             )}
           </Routes>
