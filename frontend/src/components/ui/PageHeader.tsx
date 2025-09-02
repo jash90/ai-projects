@@ -53,21 +53,21 @@ export function PageHeader({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between">
           {/* Left side - Title and subtitle */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
             {showBackButton && (
               <Link to={backTo}>
-                <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                <Button variant="ghost" size="sm" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3">
                   <ArrowLeft className="w-4 h-4" />
-                  Back
+                  <span className="hidden sm:inline">Back</span>
                 </Button>
               </Link>
             )}
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground truncate">
                 {title}
               </h1>
               {subtitle && (
-                <p className="text-muted-foreground mt-1">
+                <p className="text-muted-foreground mt-1 text-sm sm:text-base hidden sm:block">
                   {subtitle}
                 </p>
               )}
@@ -75,7 +75,7 @@ export function PageHeader({
           </div>
 
           {/* Right side - Actions */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             {/* Custom actions */}
             {actions}
 
@@ -86,16 +86,18 @@ export function PageHeader({
                 variant="outline"
                 size="sm"
                 disabled={isRefreshing}
-                className="flex items-center gap-2"
+                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3"
               >
                 <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
-                {refreshLabel}
+                <span className="hidden sm:inline">{refreshLabel}</span>
               </Button>
             )}
 
-            {/* User menu */}
+            {/* User menu - hidden on mobile when using MobileNavigation */}
             {showUserMenu && (
-              <UserMenu {...userMenuProps} />
+              <div className="hidden lg:block">
+                <UserMenu {...userMenuProps} />
+              </div>
             )}
           </div>
         </div>
@@ -105,20 +107,20 @@ export function PageHeader({
       {tabs && tabs.length > 0 && (
         <div className="border-t">
           <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex space-x-8">
+            <div className="flex space-x-4 sm:space-x-8 overflow-x-auto scrollbar-hide">
               {tabs.map(tab => (
                 <button
                   key={tab.id}
                   onClick={() => onTabChange?.(tab.id)}
                   className={cn(
-                    "flex items-center py-4 px-1 border-b-2 font-medium text-sm transition-colors",
+                    "flex items-center py-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap shrink-0",
                     activeTab === tab.id
                       ? "border-primary text-primary"
                       : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground"
                   )}
                 >
-                  <tab.icon className="h-4 w-4 mr-2" />
-                  {tab.label}
+                  <tab.icon className="h-4 w-4 mr-1 sm:mr-2" />
+                  <span className="hidden xs:inline sm:inline">{tab.label}</span>
                 </button>
               ))}
             </div>
