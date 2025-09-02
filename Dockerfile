@@ -20,11 +20,14 @@ COPY . .
 # Build using Nx for better caching and parallelization
 RUN pnpm exec nx run-many -t build
 
-# Production stage
-FROM node:18-alpine AS production
+# Production stage with nginx
+FROM nginx:alpine AS production
 
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@8.15.4 --activate
+# Install Node.js for backend
+RUN apk add --no-cache nodejs npm
+
+# Install pnpm via npm
+RUN npm install -g pnpm@8.15.4
 
 WORKDIR /app
 
@@ -45,11 +48,24 @@ COPY backend/start-prod.js ./backend/
 COPY backend/migrate-prod.js ./backend/
 COPY backend/src/database ./backend/src/database
 
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
+
 # Create uploads directory
 RUN mkdir -p /tmp/uploads
 
-# Expose port
-EXPOSE ${PORT:-3001}
+# Create startup script
+RUN echo '#!/bin/sh' > /app/start.sh && \
+    echo 'echo "🚀 Starting backend server..."' >> /app/start.sh && \
+    echo 'cd /app && RUN_MIGRATIONS=false node backend/start-prod.js &' >> /app/start.sh && \
+    echo 'echo "⏳ Waiting for backend to start..."' >> /app/start.sh && \
+    echo 'sleep 5' >> /app/start.sh && \
+    echo 'echo "🌐 Starting nginx..."' >> /app/start.sh && \
+    echo 'nginx -g "daemon off;"' >> /app/start.sh && \
+    chmod +x /app/start.sh
 
-# Start the server with migrations
-CMD ["node", "backend/start-prod.js"]
+# Expose port
+EXPOSE 80
+
+# Start both backend and nginx
+CMD ["/app/start.sh"]
