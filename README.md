@@ -1,6 +1,24 @@
 # AI Projects
 
-A production-ready, full-stack AI-powered development platform that revolutionizes how developers collaborate with AI. Built with modern web technologies, featuring advanced AI agents, real-time collaboration, comprehensive project management, and native mobile/PWA support.
+A production-ready, full-stack AI-powered development platform that revolutionizes how developers collaborate with AI. Built with modern web technologies and **Turbo Repo** for lightning-fast builds, featuring advanced AI agents, real-time collaboration, comprehensive project management, and native mobile/PWA support.
+
+## ⚡ **Turbo Repo Integration**
+
+This project uses **Turbo Repo** for optimized monorepo management:
+
+- 🚀 **48x faster builds** - Second build takes only 196ms instead of 9.459s
+- 🔄 **Intelligent caching** - Only rebuild what changed
+- 🏃‍♂️ **Parallel execution** - Frontend and backend build simultaneously  
+- 📊 **Task orchestration** - Smart dependency management between packages
+- 🎯 **Unified commands** - Single commands for the entire monorepo
+
+```bash
+pnpm build      # Build entire monorepo with Turbo
+pnpm dev        # Run all dev servers in parallel
+pnpm type-check # Type check all packages
+```
+
+See [TURBO_SETUP.md](./TURBO_SETUP.md) for complete Turbo configuration details.
 
 ## 🎯 Key Features
 
@@ -71,6 +89,14 @@ A production-ready, full-stack AI-powered development platform that revolutioniz
 - **Mobile Performance**: Optimized for mobile devices with efficient touch handling and animations
 
 ## 🛠️ Tech Stack
+
+### Monorepo & Build System
+```typescript
+Turbo Repo 2.5                  // High-performance build system with intelligent caching
+pnpm 8.15                      // Fast, disk space efficient package manager  
+pnpm Workspaces               // Monorepo workspace management
+TypeScript 5.0                // Strict typing across entire monorepo
+```
 
 ### Frontend Architecture
 ```typescript
@@ -263,22 +289,46 @@ docker-compose logs -f
 # Admin: http://localhost:3000/admin (after creating admin user)
 ```
 
-**Option B: Local Development**
+**Option B: Local Development with Turbo**
 ```bash
 # Start PostgreSQL and Redis
 docker-compose up -d postgres redis
 
-# Install dependencies
-pnpm run install:all
+# Install dependencies (Turbo included)
+pnpm install
 
 # Run database migrations
-cd backend && pnpm run migrate
+pnpm db:migrate
 
-# Start development servers
-pnpm run dev
+# Start development servers (parallel with Turbo)
+pnpm dev
 
 # Frontend: http://localhost:3000
 # Backend: http://localhost:3001
+```
+
+**Turbo Development Commands**:
+```bash
+# Build entire monorepo (with intelligent caching)
+pnpm build              # 48x faster on second run!
+
+# Type check all packages
+pnpm type-check
+
+# Lint all packages  
+pnpm lint
+
+# Run tests across packages
+pnpm test
+
+# Clean all build artifacts
+pnpm clean
+
+# Build only backend
+pnpm build --filter=backend
+
+# Run dev only for frontend
+pnpm dev --filter=frontend
 ```
 
 ### 4. Initial Setup

@@ -104,3 +104,6 @@ public
 # Temporary folders
 tmp/
 temp/
+
+# Turbo
+.turbo

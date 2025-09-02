@@ -6,8 +6,8 @@ RUN corepack enable && corepack prepare pnpm@8.15.4 --activate
 
 WORKDIR /app
 
-# Copy workspace files
-COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+# Copy workspace and turbo config files
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml turbo.json ./
 COPY backend/package.json ./backend/
 COPY frontend/package.json ./frontend/
 
@@ -17,9 +17,8 @@ RUN pnpm install
 # Copy source code
 COPY . .
 
-# Build backend and frontend
-RUN cd backend && pnpm run build
-RUN cd frontend && pnpm run build
+# Build using Turbo for better caching and parallelization
+RUN pnpm run build
 
 # Production stage
 FROM node:18-alpine AS production
