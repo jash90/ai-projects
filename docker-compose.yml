@@ -3,9 +3,9 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: ai_projects_postgres
+    container_name: claude_projects_postgres
     environment:
-      POSTGRES_DB: ai_projects
+      POSTGRES_DB: claude_projects
       POSTGRES_USER: claude_user
       POSTGRES_PASSWORD: claude_password
     ports:
@@ -14,14 +14,14 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./backend/migrations:/docker-entrypoint-initdb.d/
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U claude_user -d ai_projects"]
+      test: ["CMD-SHELL", "pg_isready -U claude_user -d claude_projects"]
       interval: 30s
       timeout: 10s
       retries: 3
 
   redis:
     image: redis:7-alpine
-    container_name: ai_projects_redis
+    container_name: claude_projects_redis
     ports:
       - "6379:6379"
     volumes:
@@ -34,12 +34,12 @@ services:
 
   backend:
     build: ./backend
-    container_name: ai_projects_backend
+    container_name: claude_projects_backend
     ports:
       - "3001:3001"
     environment:
       NODE_ENV: production
-      DATABASE_URL: postgres://claude_user:claude_password@postgres:5432/ai_projects
+      DATABASE_URL: postgres://claude_user:claude_password@postgres:5432/claude_projects
       REDIS_URL: redis://redis:6379
     depends_on:
       postgres:
@@ -52,7 +52,7 @@ services:
 
   frontend:
     build: ./frontend
-    container_name: ai_projects_frontend
+    container_name: claude_projects_frontend
     ports:
       - "3000:80"
     depends_on:

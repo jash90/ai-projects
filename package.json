@@ -1,5 +1,5 @@
 {
-  "name": "ai-projects-clone",
+  "name": "claude-projects-clone",
   "version": "1.0.0",
   "description": "A full-stack clone of AI Projects with AI agents and project management",
   "main": "index.js",

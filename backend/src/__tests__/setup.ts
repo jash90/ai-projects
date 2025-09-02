@@ -7,7 +7,7 @@ dotenv.config({ path: '.env.test' });
 // Set test environment
 process.env.NODE_ENV = 'test';
 process.env.JWT_SECRET = 'test-jwt-secret';
-process.env.DATABASE_URL = process.env.TEST_DATABASE_URL || 'postgres://claude_user:claude_password@localhost:5432/ai_projects_test';
+process.env.DATABASE_URL = process.env.TEST_DATABASE_URL || 'postgres://claude_user:claude_password@localhost:5432/claude_projects_test';
 
 // Global test setup
 beforeAll(async () => {

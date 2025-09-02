@@ -5,7 +5,7 @@ dotenv.config();
 
 const config: Config = {
   port: parseInt(process.env.PORT || '3001', 10),
-  database_url: process.env.DATABASE_URL || 'postgres://claude_user:claude_password@localhost:5432/ai_projects',
+  database_url: process.env.DATABASE_URL || 'postgres://claude_user:claude_password@localhost:5432/claude_projects',
   redis_url: process.env.REDIS_URL || 'redis://localhost:6379',
   jwt_secret: process.env.JWT_SECRET || 'your-super-secret-jwt-key',
   jwt_expires_in: process.env.JWT_EXPIRES_IN || '7d',
