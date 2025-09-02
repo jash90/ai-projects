@@ -26,7 +26,7 @@ import adminRoutes from './routes/admin';
 import settingsRoutes from './routes/settings';
 import debugRoutes from './routes/debug';
 
-const app = express();
+const app: express.Express = express();
 const server = createServer(app);
 
 // Configure Socket.IO
@@ -75,6 +75,16 @@ app.use(cors({
   optionsSuccessStatus: 200, // For legacy browser support
   preflightContinue: false,
 }));
+
+// Health check endpoint (before other middleware)
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));

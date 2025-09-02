@@ -1,15 +1,18 @@
 FROM node:18-alpine
 
+# Install curl for health checks
+RUN apk add --no-cache curl
+
 WORKDIR /app
 
 # Enable pnpm
 RUN corepack enable pnpm
 
 # Copy package files
-COPY package*.json pnpm-lock.yaml ./
+COPY package*.json ./
 
 # Install dependencies
-RUN pnpm install --prod --frozen-lockfile
+RUN pnpm install
 
 # Copy source code
 COPY . .

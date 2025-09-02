@@ -6,10 +6,10 @@ WORKDIR /app
 RUN corepack enable pnpm
 
 # Copy package files
-COPY package*.json pnpm-lock.yaml ./
+COPY package*.json ./
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 # Copy source code
 COPY . .
@@ -19,6 +19,9 @@ RUN pnpm run build
 
 # Production stage
 FROM nginx:alpine
+
+# Install curl for health checks
+RUN apk add --no-cache curl
 
 # Copy built application
 COPY --from=builder /app/dist /usr/share/nginx/html

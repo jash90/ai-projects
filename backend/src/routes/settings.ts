@@ -5,7 +5,7 @@ import { validate } from '../middleware/validation';
 import Joi from 'joi';
 import logger from '../utils/logger';
 
-const router = Router();
+const router: Router = Router();
 
 // Apply authentication middleware to all settings routes
 router.use(authenticateToken);

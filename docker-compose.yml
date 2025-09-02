@@ -12,7 +12,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./backend/migrations:/docker-entrypoint-initdb.d/
+      - ./backend/src/database/migrations:/docker-entrypoint-initdb.d/
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U claude_user -d claude_projects"]
       interval: 30s
@@ -41,6 +41,15 @@ services:
       NODE_ENV: production
       DATABASE_URL: postgres://claude_user:claude_password@postgres:5432/claude_projects
       REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:-your-jwt-secret-change-in-production}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-your-jwt-refresh-secret-change-in-production}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      MAX_FILE_SIZE: ${MAX_FILE_SIZE:-52428800}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+      DEFAULT_TOKEN_LIMIT_GLOBAL: ${DEFAULT_TOKEN_LIMIT_GLOBAL:-1000000}
+      DEFAULT_TOKEN_LIMIT_MONTHLY: ${DEFAULT_TOKEN_LIMIT_MONTHLY:-100000}
     depends_on:
       postgres:
         condition: service_healthy

@@ -8,7 +8,7 @@ import { pool } from '../database/connection';
 import Joi from 'joi';
 import logger from '../utils/logger';
 
-const router = Router();
+const router: Router = Router();
 
 // Apply authentication and admin check to all routes
 router.use(authenticateToken);

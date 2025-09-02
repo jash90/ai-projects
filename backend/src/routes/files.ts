@@ -12,7 +12,7 @@ import { generalLimiter, uploadLimiter } from '../middleware/rateLimiting';
 import config from '../utils/config';
 import logger from '../utils/logger';
 
-const router = Router();
+const router: Router = Router();
 
 // Configure multer for file uploads
 const storage = multer.memoryStorage();

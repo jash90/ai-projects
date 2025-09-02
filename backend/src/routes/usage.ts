@@ -6,7 +6,7 @@ import { TokenService } from '../services/tokenService';
 import logger from '../utils/logger';
 import Joi from 'joi';
 
-const router = Router();
+const router: Router = Router();
 
 // Get user's token usage summary
 router.get('/usage/summary',

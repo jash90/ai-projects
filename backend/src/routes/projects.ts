@@ -6,7 +6,7 @@ import { validate, commonSchemas } from '../middleware/validation';
 import { generalLimiter, creationLimiter } from '../middleware/rateLimiting';
 import logger from '../utils/logger';
 
-const router = Router();
+const router: Router = Router();
 
 // Get all projects for the current user
 router.get('/', 

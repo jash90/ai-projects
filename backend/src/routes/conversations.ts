@@ -7,7 +7,7 @@ import { validate, commonSchemas } from '../middleware/validation';
 import { generalLimiter } from '../middleware/rateLimiting';
 import logger from '../utils/logger';
 
-const router = Router();
+const router: Router = Router();
 
 // Get conversation between project and agent
 router.get('/:projectId/:agentId', 
