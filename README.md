@@ -1,6 +1,6 @@
 # AI Projects
 
-A production-ready, full-stack AI-powered project management platform that replicates and extends AI Projects functionality with advanced AI agents, real-time chat, dynamic model management, and comprehensive project collaboration tools.
+A production-ready, full-stack AI-powered development platform that revolutionizes how developers collaborate with AI. Built with modern web technologies, featuring advanced AI agents, real-time collaboration, comprehensive project management, and native mobile/PWA support.
 
 ## 🎯 Key Features
 
@@ -23,25 +23,40 @@ A production-ready, full-stack AI-powered project management platform that repli
 - **File Search & Organization**: Full-text search across project files with type filtering
 - **Project Analytics**: Usage statistics and insights per project
 
-### 🔒 **Enterprise-Grade Security**
+### 🔒 **Enterprise-Grade Security & Admin**
 - **JWT Authentication**: Secure token-based auth with automatic refresh and blacklisting
-- **Role-Based Access Control**: Admin and user roles with proper authorization
+- **Role-Based Access Control (RBAC)**: Admin and user roles with comprehensive authorization
+- **Admin Panel**: Complete admin dashboard with user management, token limits, and system statistics
+- **User Management**: Admin can manage users, set individual token limits, and monitor usage
+- **Activity Logging**: Comprehensive audit trail of admin actions and system events
 - **Rate Limiting**: Configurable request limits with Redis-backed storage (1000 requests per 15 minutes)
 - **Input Validation**: Comprehensive request validation using Joi schemas
 - **Security Headers**: Helmet.js integration for secure HTTP headers
 - **CORS Protection**: Configurable cross-origin request handling
 - **File Upload Security**: MIME type validation and size limits (10MB max)
 - **Session Management**: Secure session handling with Redis storage
-- **Admin Panel**: Comprehensive admin dashboard with user management and token limits
+
+### 📱 **Mobile-First & PWA Experience**
+- **Progressive Web App (PWA)**: Full PWA support with offline capabilities and native app installation
+- **Mobile-Optimized UI**: Touch-friendly interface with proper touch targets (44px minimum)
+- **Responsive Design**: Mobile-first design that scales beautifully from phone to desktop
+- **Offline Support**: Service worker with intelligent caching strategies for offline functionality
+- **Native Features**: Web Share API, push notifications, fullscreen mode, and haptic feedback
+- **Touch Gestures**: Swipe navigation, pull-to-refresh, and touch-optimized interactions
+- **Mobile Navigation**: Bottom tab navigation and slide-out menus optimized for thumb navigation
+- **Safe Area Support**: Proper handling of notched devices and status bars
+- **App Installation**: Smart install prompts and PWA installation management
 
 ### 🎨 **Modern User Experience**
-- **Responsive Design**: Mobile-first UI built with Tailwind CSS and custom design system
+- **Landing Page**: Beautiful, conversion-optimized landing page with features showcase
 - **Dark/Light Mode**: System-aware theme switching with persistent preferences
 - **Real-time Updates**: Live notifications and status updates via Socket.IO
 - **Drag & Drop**: Intuitive file upload with visual feedback and progress indicators
-- **Smooth Animations**: Framer Motion powered transitions and micro-interactions
+- **Smooth Animations**: Hardware-accelerated transitions and micro-interactions
 - **Advanced Components**: Custom UI components with accessibility support
 - **Toast Notifications**: Real-time feedback with react-hot-toast integration
+- **User Settings**: Comprehensive settings page for profile, security, preferences, and usage
+- **Mobile Chat Interface**: Touch-optimized chat with auto-resize, character counter, and keyboard handling
 
 ### ⚡ **High Performance**
 - **Optimized Database**: PostgreSQL with JSONB support and efficient indexing
@@ -50,6 +65,8 @@ A production-ready, full-stack AI-powered project management platform that repli
 - **Connection Pooling**: Efficient database connection management
 - **Background Processing**: Non-blocking AI model synchronization
 - **TanStack Query**: Advanced server state management with caching and background updates
+- **Service Worker**: Intelligent caching with network-first and cache-first strategies
+- **Mobile Performance**: Optimized for mobile devices with efficient touch handling and animations
 
 ## 🛠️ Tech Stack
 
@@ -58,16 +75,15 @@ A production-ready, full-stack AI-powered project management platform that repli
 React 18 + TypeScript          // Component framework with strict typing
 Vite 4.5                      // Lightning-fast build tool and dev server  
 Tailwind CSS 3.3             // Utility-first styling with custom design system
-Zustand 4.4                   // Lightweight state management with 7 specialized stores
+Zustand 4.4                   // Lightweight state management with specialized stores
 TanStack Query 5.8           // Server state management and caching
 Socket.io Client 4.7         // Real-time bidirectional communication
 React Hook Form 7.47 + Zod   // Type-safe form validation
-Framer Motion 10.16          // Smooth animations and transitions
 React Router v6.17           // Modern routing with data loading
 Lucide React 0.288           // Beautiful icon library
 React Dropzone 14.2          // File upload with drag & drop
 React Markdown 9.0           // Markdown rendering with syntax highlighting
-Headless UI 1.7              // Accessible component primitives
+PWA Features                 // Service Worker, Web Share API, offline support
 ```
 
 ### Backend Architecture
@@ -97,11 +113,23 @@ Streaming Responses         // Real-time AI response delivery
 Custom Agent Personalities  // Specialized AI agents with unique traits
 ```
 
+### Mobile & PWA Technologies
+```typescript
+Service Workers             // Offline support and background sync
+Web App Manifest           // PWA installation and app metadata
+Web Share API              // Native sharing capabilities
+Touch Events               // Optimized touch and gesture handling
+Intersection Observer      // Efficient scroll and visibility detection
+ResizeObserver            // Responsive layout adjustments
+IndexedDB                 // Offline data storage
+Push Notifications        // Background notifications (ready)
+```
+
 ### DevOps & Infrastructure
 ```yaml
 Docker + Docker Compose     # Containerization with health checks
 pnpm Workspaces 8+         # Monorepo dependency management
-Jest 29.7 + Supertest 7.1  # Comprehensive testing suite with 80%+ coverage
+Jest 29.7 + Supertest 7.1  # Comprehensive testing suite
 ESLint 8.52 + Prettier     # Code quality and formatting
 TypeScript Strict Mode     # Enhanced type safety
 Nodemon + tsx              # Development hot-reloading
@@ -148,33 +176,29 @@ DATABASE_URL=postgres://claude_user:claude_password@localhost:5432/claude_projec
 # Redis Configuration
 REDIS_URL=redis://localhost:6379
 
-# Authentication
-JWT_SECRET=your-super-secret-jwt-key-here-min-32-chars
-JWT_EXPIRES_IN=7d
+# AI Configuration
+OPENAI_API_KEY=your-openai-api-key-here
+ANTHROPIC_API_KEY=your-anthropic-api-key-here
 
-# File Upload Configuration
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key-here
+JWT_REFRESH_SECRET=your-super-secret-refresh-key-here
+
+# Admin Configuration
+ADMIN_EMAIL=your-admin-email@example.com
+DEFAULT_TOKEN_LIMIT_GLOBAL=100000
+DEFAULT_TOKEN_LIMIT_MONTHLY=50000
+
+# Upload Configuration
 UPLOAD_PATH=./uploads
 MAX_FILE_SIZE=10485760
-ALLOWED_FILE_TYPES=.txt,.md,.json,.js,.ts,.jsx,.tsx,.html,.css,.scss,.py,.java,.cpp,.go,.rs,.php,.rb,.swift,.yaml,.yml,.xml,.sql,.sh,.bash
-
-# CORS Configuration
-CORS_ORIGIN=http://localhost:3000
 
 # Rate Limiting
 RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=1000
 
-# AI Provider API Keys
-OPENAI_API_KEY=your-openai-api-key-here
-ANTHROPIC_API_KEY=your-anthropic-api-key-here
-
-# Admin Configuration
-ADMIN_EMAIL=bartekziimny90@gmail.com
-DEFAULT_TOKEN_LIMIT_GLOBAL=1000000
-DEFAULT_TOKEN_LIMIT_MONTHLY=100000
-
-# Logging
-LOG_LEVEL=info
+# CORS Configuration
+CORS_ORIGIN=http://localhost:3000
 ```
 
 **Frontend Environment** (`frontend/.env`):
@@ -183,690 +207,467 @@ LOG_LEVEL=info
 VITE_API_URL=http://localhost:3001
 VITE_WS_URL=ws://localhost:3001
 
-# Optional: Analytics and monitoring
+# App Configuration
+VITE_APP_NAME=AI Projects
 VITE_APP_VERSION=1.0.0
-VITE_BUILD_DATE=2024-01-01
+
+# PWA Configuration
+VITE_PWA_NAME=AI Projects
+VITE_PWA_SHORT_NAME=AI Projects
+VITE_PWA_DESCRIPTION=AI-powered development platform
 ```
 
-### 3. Choose Your Setup Method
+### 3. Development Setup
 
-#### Option A: Docker (Recommended for Production)
+**Option A: Docker Compose (Recommended)**
 ```bash
 # Start all services with Docker
-pnpm run docker:up
+docker-compose up -d
 
 # View logs
 docker-compose logs -f
 
-# Stop all services
-pnpm run docker:down
+# Access the application
+# Frontend: http://localhost:3000
+# Backend: http://localhost:3001
+# Admin: http://localhost:3000/admin (after creating admin user)
 ```
 
-#### Option B: Development Mode
+**Option B: Local Development**
 ```bash
-# Start databases only
-docker-compose up postgres redis -d
+# Start PostgreSQL and Redis
+docker-compose up -d postgres redis
 
-# Run database migrations and seeding
-pnpm run db:migrate
-pnpm run db:seed
+# Install dependencies
+pnpm run install:all
 
-# Start both frontend and backend in development mode
-pnpm run dev
-```
+# Run database migrations
+cd backend && pnpm run migrate
 
-#### Option C: Manual Setup
-```bash
-# Start backend
-cd backend
+# Start development servers
 pnpm run dev
 
-# In another terminal, start frontend
-cd frontend
-pnpm run dev
+# Frontend: http://localhost:3000
+# Backend: http://localhost:3001
 ```
 
-### 4. Access the Application
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:3001
-- **API Documentation**: http://localhost:3001/api-docs (coming soon)
+### 4. Initial Setup
 
-## 📖 Usage Guide
+1. **Create Admin User**:
+   ```bash
+   # The first user registered with ADMIN_EMAIL becomes admin
+   # Or run migration to promote existing user
+   cd backend && pnpm run migrate
+   ```
 
-### Creating Your First Project
-1. **Register/Login**: Create an account or sign in with secure JWT authentication
-2. **New Project**: Click "New Project" and provide name/description
-3. **Select Agent**: Choose from specialized AI agents with unique personalities
-4. **Upload Files**: Add project files for AI context (supports 20+ file types)
-5. **Start Chatting**: Begin real-time conversations with streaming responses
-6. **Monitor Usage**: Track token usage and costs per project
+2. **Access Admin Panel**:
+   - Navigate to `/admin` after logging in as admin
+   - Configure global token limits
+   - Manage users and monitor usage
 
-### AI Agents & Models
-- **Multiple AI Providers**: OpenAI GPT and Anthropic Claude models
-- **Dynamic Model Sync**: Automatic updates when new models are released
-- **Custom Agents**: Create specialized agents with custom system prompts
-- **Context-Aware**: AI agents automatically reference uploaded project files
-- **Token Tracking**: Monitor API usage and costs across all interactions
+3. **Install as PWA**:
+   - Visit the site on mobile or desktop
+   - Look for install prompts in browser
+   - Add to home screen for native app experience
 
-### Advanced Features
-- **Real-time Collaboration**: Multiple users can work on projects simultaneously
-- **File Search**: Full-text search across all project files and conversations
-- **Usage Analytics**: Detailed insights into AI usage patterns and costs
-- **Export Capabilities**: Download conversations and project data
-- **WebSocket Integration**: Live updates for messages, typing indicators, and status changes
-- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
+## 📱 Mobile & PWA Features
 
-## 🏗️ Architecture Overview
+### Progressive Web App Capabilities
+- **Offline Functionality**: Work without internet connection using cached data
+- **App Installation**: Install directly from browser with native app experience
+- **Push Notifications**: Background notifications (infrastructure ready)
+- **Background Sync**: Queue actions when offline, sync when back online
+- **Native Sharing**: Share projects using device's native share sheet
+- **Fullscreen Mode**: Immersive experience without browser UI
+- **Splash Screen**: Custom loading screen during app startup
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Frontend (React)                        │
-├─────────────────────────────────────────────────────────────┤
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │    Pages    │  │ Components  │  │     Stores          │  │
-│  │             │  │             │  │ (Zustand)           │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
-│                                                             │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │    Hooks    │  │   Services  │  │   TanStack Query    │  │
-│  │             │  │             │  │                     │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                    ┌─────────┼─────────┐
-                    │         │         │
-                 HTTP API   WebSocket   │
-                    │         │         │
-┌─────────────────────────────────────────────────────────────┐
-│                    Backend (Node.js)                        │
-├─────────────────────────────────────────────────────────────┤
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │   Routes    │  │ Middleware  │  │     Services        │  │
-│  │             │  │             │  │                     │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
-│                                                             │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │   Models    │  │   Utils     │  │   Socket Handler    │  │
-│  │             │  │             │  │                     │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                    ┌─────────┼─────────┐
-                    │         │         │
-              PostgreSQL    Redis    AI APIs
-                    │         │         │
-┌─────────────────────────────────────────────────────────────┐
-│                   External Services                         │
-├─────────────────────────────────────────────────────────────┤
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │ PostgreSQL  │  │    Redis    │  │    AI Providers     │  │
-│  │   Database  │  │   Cache     │  │ OpenAI + Anthropic  │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
+### Mobile-Optimized Interface
+- **Touch Navigation**: Bottom tab bar and slide-out menus
+- **Gesture Support**: Swipe navigation and touch-friendly interactions
+- **Responsive Chat**: Mobile-optimized chat interface with keyboard handling
+- **File Management**: Touch-friendly file actions with action sheets
+- **Safe Areas**: Proper handling of device notches and home indicators
+- **Haptic Feedback**: Vibration feedback for user interactions
+
+### Mobile-First Components
+```typescript
+// Mobile Navigation with bottom tabs
+<MobileNavigation onNewProject={handleNewProject} />
+
+// Touch-optimized file actions
+<MobileFileActions 
+  file={file}
+  onEdit={handleEdit}
+  onDownload={handleDownload}
+  onShare={handleShare}
+/>
+
+// PWA features integration
+const { isOffline, canInstall, install, share } = usePWAFeatures();
 ```
 
-## 📡 API Reference
+## 🔧 API Reference
 
 ### Authentication Endpoints
-```http
-POST   /api/auth/register     # User registration with validation
-POST   /api/auth/login        # User authentication with JWT
-POST   /api/auth/refresh      # Refresh JWT token
-POST   /api/auth/logout       # Logout and blacklist token
-GET    /api/auth/profile      # Get user profile
-PUT    /api/auth/profile      # Update user profile
-GET    /api/auth/verify       # Verify token validity
+```typescript
+POST   /api/auth/register     // User registration
+POST   /api/auth/login        // User login  
+POST   /api/auth/logout       // User logout
+POST   /api/auth/refresh      // Token refresh
+GET    /api/auth/verify       // Token verification
+GET    /api/auth/me           // Get current user
 ```
 
 ### Project Management
-```http
-GET    /api/projects          # List user projects with pagination
-POST   /api/projects          # Create new project
-GET    /api/projects/recent   # Get recently accessed projects
-GET    /api/projects/search   # Search projects by name/description
-GET    /api/projects/:id      # Get project details
-PUT    /api/projects/:id      # Update project
-DELETE /api/projects/:id      # Delete project and all related data
+```typescript
+GET    /api/projects          // Get user projects
+POST   /api/projects          // Create new project
+GET    /api/projects/:id      // Get project details
+PUT    /api/projects/:id      // Update project
+DELETE /api/projects/:id      // Delete project
+POST   /api/projects/:id/files // Upload project file
+GET    /api/projects/:id/files // Get project files
 ```
 
-### AI Models & Agents
-```http
-GET    /api/models                    # List all available AI models
-GET    /api/models/providers/status  # Get provider status and health
-GET    /api/models/providers/:provider  # Get models by provider (openai/anthropic)
-GET    /api/models/:modelId          # Get specific model details
-POST   /api/models/sync              # Manually sync models from providers
-
-GET    /api/agents                   # List available agents
-GET    /api/agents/:id               # Get agent details
-POST   /api/agents                   # Create custom agent
-PUT    /api/agents/:id               # Update agent configuration
-DELETE /api/agents/:id               # Delete custom agent
-GET    /api/agents/:id/stats         # Get agent usage statistics
-```
-
-### Chat & Conversations
-```http
-GET    /api/conversations/:projectId/:agentId        # Get conversation history
-POST   /api/conversations/:projectId/:agentId/messages  # Send message
-DELETE /api/conversations/:projectId/:agentId        # Clear conversation
-GET    /api/conversations/:projectId                 # Get all project conversations
-GET    /api/conversations/:projectId/:agentId/stats  # Get conversation statistics
-
-POST   /api/projects/:projectId/agents/:agentId/chat  # Send chat message
-GET    /api/ai/status                                 # Get AI service status
-POST   /api/ai/validate                              # Validate AI configuration
-```
-
-### Message Management
-```http
-GET    /api/projects/:projectId/messages        # Get project messages with pagination
-POST   /api/projects/:projectId/messages       # Create new message
-GET    /api/messages/:id                       # Get specific message
-PUT    /api/messages/:id                       # Update message
-DELETE /api/messages/:id                       # Delete message
-GET    /api/projects/:projectId/context        # Get project context for AI
-GET    /api/projects/:projectId/messages/search  # Search messages
-GET    /api/projects/:projectId/messages/stats   # Get message statistics
-DELETE /api/projects/:projectId/messages        # Clear all project messages
-```
-
-### File Management
-```http
-# Project Files (structured content)
-GET    /api/projects/:projectId/files           # List project files
-POST   /api/projects/:projectId/files          # Create project file
-GET    /api/files/:id                          # Get file content
-PUT    /api/files/:id                          # Update file content
-DELETE /api/files/:id                          # Delete file
-GET    /api/projects/:projectId/files/search   # Search files by content
-GET    /api/projects/:projectId/files/type/:type  # Get files by type
-GET    /api/projects/:projectId/files/stats    # Get file statistics
-
-# File Uploads (binary files)
-GET    /api/projects/:projectId/uploads        # List uploaded files
-POST   /api/projects/:projectId/uploads       # Upload binary file
-GET    /api/files/:id/download                # Download file
-GET    /api/projects/:projectId/uploads/type/:mimetype  # Filter by MIME type
-GET    /api/projects/:projectId/uploads/search  # Search uploaded files
-GET    /api/projects/:projectId/uploads/stats   # Get upload statistics
-```
-
-### Usage & Analytics
-```http
-GET    /api/usage/summary                      # Overall usage summary
-GET    /api/usage/stats                        # Detailed usage statistics
-GET    /api/projects/:projectId/usage          # Project-specific usage
-GET    /api/agents/:agentId/usage              # Agent-specific usage
+### AI Chat & Agents
+```typescript
+GET    /api/agents            // Get available agents
+POST   /api/agents            // Create custom agent
+GET    /api/agents/:id        // Get agent details
+PUT    /api/agents/:id        // Update agent
+DELETE /api/agents/:id        // Delete agent
+POST   /api/chat              // Send chat message
+GET    /api/conversations/:id // Get conversation history
+DELETE /api/conversations/:id // Clear conversation
 ```
 
 ### Admin Panel (Admin Only)
-```http
-GET    /api/admin/stats                        # Admin dashboard statistics
-GET    /api/admin/users                        # Get all users with pagination and filters
-GET    /api/admin/users/:userId/stats          # Get detailed user statistics
-PUT    /api/admin/users/:userId/status         # Toggle user active/inactive status
-PUT    /api/admin/users/:userId/token-limits   # Update token limits for specific user
-GET    /api/admin/token-limits                 # Get global token limits
-PUT    /api/admin/token-limits                 # Update global token limits
-GET    /api/admin/activity                     # Get admin activity log with pagination
+```typescript
+GET    /api/admin/stats       // Get system statistics
+GET    /api/admin/users       // Get all users
+GET    /api/admin/users/:id/stats // Get user statistics
+PUT    /api/admin/users/:id/status // Toggle user status
+PUT    /api/admin/users/:id/limits // Update user token limits
+GET    /api/admin/limits      // Get global token limits
+PUT    /api/admin/limits      // Update global token limits
+GET    /api/admin/activity    // Get admin activity log
 ```
 
 ### User Settings (Authenticated Users)
-```http
-GET    /api/settings/profile                   # Get user profile information
-PUT    /api/settings/profile                   # Update username and email
-PUT    /api/settings/password                  # Change user password
-GET    /api/settings/preferences               # Get user preferences (theme, notifications)
-PUT    /api/settings/preferences               # Update user preferences
-GET    /api/settings/usage                     # Get personal usage statistics
+```typescript
+GET    /api/settings/profile  // Get user profile
+PUT    /api/settings/profile  // Update profile
+PUT    /api/settings/password // Change password
+GET    /api/settings/preferences // Get user preferences
+PUT    /api/settings/preferences // Update preferences
+GET    /api/settings/usage    // Get personal usage statistics
 ```
 
-### WebSocket Events
-```javascript
+### Real-time WebSocket Events
+```typescript
 // Client to Server
 'join-project'        // Join project room
-'send-message'        // Send chat message
+'leave-project'       // Leave project room
+'chat-message'        // Send chat message
 'typing-start'        // Start typing indicator
 'typing-stop'         // Stop typing indicator
 
 // Server to Client
-'new-message'         // New message received
-'message-history'     // Historical messages
+'project-updated'     // Project data changed
+'new-message'         // New chat message
 'user-typing'         // User typing status
-'connection-status'   // Connection updates
+'file-uploaded'       // New file uploaded
+'agent-status'        // Agent availability change
 ```
 
-## 🧪 Testing
+## 🏗️ Architecture
 
-### Running Tests
-```bash
-# Run all tests
-pnpm test
-
-# Run backend tests only
-cd backend && pnpm test
-
-# Run tests with coverage
-cd backend && pnpm test --coverage
-
-# Run specific test suites
-cd backend && pnpm test --testNamePattern="Database"
-
-# Run tests in watch mode
-cd backend && pnpm test --watch
-
-# Run all tests including integration tests
-cd backend && pnpm run test:all
+### Frontend Architecture
+```
+src/
+├── components/          # Reusable UI components
+│   ├── ui/             # Base UI components (Button, Input, etc.)
+│   ├── chat/           # Chat-related components
+│   ├── files/          # File management components
+│   ├── agents/         # AI agent components
+│   ├── projects/       # Project management components
+│   ├── admin/          # Admin panel components
+│   └── layouts/        # Layout components
+├── pages/              # Page components
+│   ├── LandingPage.tsx # Marketing landing page
+│   ├── DashboardPage.tsx # Main dashboard
+│   ├── ProjectPage.tsx # Project workspace
+│   ├── AdminPage.tsx   # Admin panel
+│   └── SettingsPage.tsx # User settings
+├── stores/             # Zustand state management
+│   ├── authStore.ts    # Authentication state
+│   ├── projectStore.ts # Project management
+│   ├── agentStore.ts   # AI agents state
+│   ├── conversationStore.ts # Chat state
+│   ├── fileStore.ts    # File management
+│   ├── adminStore.ts   # Admin panel state
+│   └── uiStore.ts      # UI preferences
+├── hooks/              # Custom React hooks
+│   ├── useSocket.ts    # WebSocket integration
+│   ├── usePWAFeatures.ts # PWA functionality
+│   └── useAuth.ts      # Authentication helpers
+├── lib/                # Utilities and configurations
+├── types/              # TypeScript type definitions
+└── utils/              # Helper functions and PWA utilities
 ```
 
-### Test Configuration
-- **Jest 29.7** with TypeScript support via ts-jest
-- **Supertest 7.1** for API endpoint testing
-- **30-second timeout** for AI service tests
-- **Sequential execution** to avoid database conflicts
-- **Coverage reporting** with HTML, LCOV, and text formats
-- **Setup files** for test environment initialization
-
-### Test Structure
+### Backend Architecture
 ```
-backend/src/__tests__/
-├── core/                    # Core functionality tests
-│   ├── database.test.ts     # Database connection and operations
-│   ├── environment.test.ts  # Environment configuration validation
-│   └── testHelpers.test.ts  # Test utility functions
-├── models/                  # Database model tests
-│   ├── Project.basic.test.ts    # Project model CRUD operations
-│   ├── Conversation.basic.test.ts  # Conversation model tests
-│   ├── User.basic.test.ts       # User model tests
-│   ├── Agent.basic.test.ts      # Agent model tests
-│   ├── Message.basic.test.ts    # Message model tests
-│   └── File.basic.test.ts       # File model tests
-├── routes/                  # API endpoint tests
-│   ├── auth.test.ts         # Authentication endpoints
-│   └── projects.test.ts     # Project management endpoints
-├── services/                # Service layer tests
-│   └── aiService.test.ts    # AI service integration tests
-├── middleware/              # Middleware tests
-│   └── auth.test.ts         # Authentication middleware
-└── utils/                   # Utility function tests
-    └── testHelpers.ts       # Common test utilities and mocks
-```
-
-### Test Coverage Goals
-- **Overall**: >80% code coverage
-- **Critical paths**: >95% coverage (auth, AI service, data models)
-- **Integration tests**: All major API endpoints
-- **Unit tests**: All utility functions and business logic
-
-## 🚀 Deployment
-
-### Production Build
-```bash
-# Build both frontend and backend
-pnpm run build
-
-# Start production server
-pnpm start
-```
-
-### Docker Production
-```bash
-# Build and start production containers
-docker-compose -f docker-compose.prod.yml up -d
-
-# Scale services (optional)
-docker-compose -f docker-compose.prod.yml up -d --scale backend=3
-```
-
-### Environment Variables for Production
-```env
-NODE_ENV=production
-DATABASE_URL=postgres://user:pass@host:5432/dbname
-REDIS_URL=redis://host:6379
-JWT_SECRET=your-production-secret-min-32-characters
-OPENAI_API_KEY=your-production-openai-key
-ANTHROPIC_API_KEY=your-production-anthropic-key
-CORS_ORIGIN=https://yourdomain.com
-```
-
-## 🔧 Development
-
-### Project Structure
-```
-claude-projects-clone/
-├── backend/                 # Node.js Express API
-│   ├── src/
-│   │   ├── routes/         # API route handlers
-│   │   ├── services/       # Business logic services
-│   │   ├── models/         # Database models and schemas
-│   │   ├── middleware/     # Express middleware
-│   │   ├── utils/          # Utility functions
-│   │   ├── types/          # TypeScript type definitions
-│   │   └── __tests__/      # Test suites
-│   ├── dist/               # Compiled JavaScript
-│   ├── uploads/            # File upload storage
-│   └── logs/               # Application logs
-├── frontend/               # React TypeScript application
-│   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   ├── pages/          # Page-level components
-│   │   ├── hooks/          # Custom React hooks
-│   │   ├── stores/         # Zustand state management
-│   │   ├── lib/            # Utility libraries
-│   │   └── types/          # TypeScript definitions
-│   ├── dist/               # Production build
-│   └── public/             # Static assets
-├── scripts/                # Utility scripts
-└── docker-compose.yml      # Container orchestration
+src/
+├── controllers/        # Request handlers
+├── middleware/         # Express middleware
+│   ├── auth.ts        # Authentication middleware
+│   ├── adminAuth.ts   # Admin authorization
+│   ├── validation.ts  # Request validation
+│   └── rateLimiting.ts # Rate limiting
+├── models/            # Database models
+├── routes/            # API route definitions
+│   ├── auth.ts       # Authentication routes
+│   ├── projects.ts   # Project management
+│   ├── admin.ts      # Admin panel API
+│   ├── settings.ts   # User settings API
+│   └── chat.ts       # Chat and AI routes
+├── services/          # Business logic
+│   ├── aiService.ts  # AI integration
+│   ├── socketService.ts # WebSocket handling
+│   └── uploadService.ts # File upload
+├── database/          # Database configuration
+│   └── migrations/    # Database migrations
+├── utils/             # Utilities and helpers
+└── types/             # TypeScript definitions
 ```
 
 ### Database Schema
 ```sql
 -- Core Tables
-users              # User accounts and authentication (id, email, password_hash, created_at, updated_at)
-projects           # Project information and settings (id, user_id, name, description, created_at, updated_at)
-agents             # AI agent configurations (id, name, description, personality, model_id, system_prompt)
-ai_models          # Available AI models from providers (id, name, provider, model_id, context_length, etc.)
+users                  # User accounts and profiles
+projects              # Project information
+agents                # AI agent configurations
+conversations         # Chat conversations
+messages              # Individual chat messages
+files                 # Project file metadata
+token_usage          # AI usage tracking
 
--- Content Tables
-conversations      # Chat conversations with JSONB messages (id, project_id, agent_id, messages, created_at)
-messages           # Individual chat messages (id, conversation_id, content, role, metadata, tokens_used)
-project_files      # Project file metadata and content (id, project_id, name, content, file_type, size)
-files              # Binary file uploads (id, project_id, filename, original_name, mime_type, size, path)
+-- Admin & Management
+global_token_limits   # System-wide token limits
+admin_activity_log   # Admin action audit trail
+user_management_view # Admin dashboard view
 
--- Analytics Tables
-token_usage        # AI API usage tracking (id, user_id, project_id, agent_id, model_id, tokens_used, cost)
-
--- System Tables (handled by Redis)
-user_sessions      # Active user sessions (Redis)
-rate_limits        # API rate limiting data (Redis)
+-- Indexes for Performance
+idx_users_email       # Fast user lookup
+idx_projects_user_id  # User's projects
+idx_messages_conversation # Chat history
+idx_token_usage_user  # Usage statistics
 ```
 
-### Component Architecture
+## 🎨 UI/UX Design System
 
-#### Frontend Components
-```
-src/components/
-├── layouts/           # Page layouts (Auth, Dashboard)
-├── ui/               # Reusable UI components (Button, Input, Modal, etc.)
-├── projects/         # Project-specific components
-├── agents/           # Agent management components  
-├── chat/             # Chat interface components
-├── files/            # File management components
-└── usage/            # Usage analytics components
+### Design Principles
+- **Mobile-First**: Every component designed for mobile, enhanced for desktop
+- **Touch-Friendly**: Minimum 44px touch targets throughout the app
+- **Accessibility**: WCAG 2.1 compliant with proper ARIA labels
+- **Performance**: Hardware-accelerated animations and smooth interactions
+- **Consistency**: Unified design language across all platforms
 
-src/stores/           # Zustand state management
-├── authStore.ts      # Authentication state
-├── projectStore.ts   # Project management state
-├── agentStore.ts     # Agent configuration state
-├── chatStore.ts      # Chat interface state
-├── conversationStore.ts  # Conversation history state
-├── fileStore.ts      # File management state
-└── uiStore.ts        # UI preferences and theme state
-```
-
-#### Backend Services
-```
-src/services/
-├── aiService.ts      # AI provider integration (OpenAI + Anthropic)
-├── modelService.ts   # AI model management and synchronization
-├── socketHandler.ts  # WebSocket connection and event handling
-└── tokenService.ts   # JWT token management and validation
-
-src/models/           # Database models with TypeScript interfaces
-├── User.ts           # User account model
-├── Project.ts        # Project model with relationships
-├── Agent.ts          # AI agent configuration model
-├── AIModel.ts        # AI model metadata model
-├── Conversation.ts   # Conversation model with JSONB messages
-├── Message.ts        # Individual message model
-├── ProjectFile.ts    # Project file model
-├── File.ts           # Binary file upload model
-└── TokenUsage.ts     # Usage tracking model
-```
-
-### Adding New Features
-
-1. **Backend API Endpoint**:
+### Component System
 ```typescript
-// backend/src/routes/newFeature.ts
-import { Router } from 'express';
-import { authenticateToken } from '../middleware/auth';
-import { validateRequest } from '../middleware/validation';
-import Joi from 'joi';
+// Button variants with mobile optimization
+<Button size="lg" className="touch-target">Primary Action</Button>
+<Button variant="outline" size="sm">Secondary</Button>
 
-const router = Router();
-router.use(authenticateToken);
+// Mobile-optimized navigation
+<MobileNavigation showAdminLink={user?.role === 'admin'} />
 
-const createSchema = Joi.object({
-  name: Joi.string().required(),
-  // Add validation schema
-});
+// Touch-friendly form inputs
+<Input className="input-mobile" placeholder="Touch-optimized input" />
 
-router.get('/', async (req, res) => {
-  try {
-    // Implementation with proper error handling
-    res.json({ success: true, data: result });
-  } catch (error) {
-    logger.error('Error in newFeature route:', error);
-    res.status(500).json({ success: false, error: 'Internal server error' });
-  }
-});
-
-router.post('/', validateRequest(createSchema), async (req, res) => {
-  // Implementation
-});
-
-export default router;
+// Responsive layout utilities
+<div className="container-mobile">
+  <div className="grid-mobile gap-4">
+    <Card className="card-mobile">Content</Card>
+  </div>
+</div>
 ```
 
-2. **Frontend API Client**:
-```typescript
-// frontend/src/lib/api.ts
-export const newFeatureApi = {
-  getAll: () => apiClient.get<ApiResponse<DataType[]>>('/api/new-feature'),
-  getById: (id: string) => apiClient.get<ApiResponse<DataType>>(`/api/new-feature/${id}`),
-  create: (data: CreateDataType) => apiClient.post<ApiResponse<DataType>>('/api/new-feature', data),
-  update: (id: string, data: UpdateDataType) => apiClient.put<ApiResponse<DataType>>(`/api/new-feature/${id}`, data),
-  delete: (id: string) => apiClient.delete<ApiResponse<void>>(`/api/new-feature/${id}`),
-};
-```
-
-3. **State Management with Zustand**:
-```typescript
-// frontend/src/stores/newFeatureStore.ts
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
-
-interface NewFeatureState {
-  items: DataType[];
-  loading: boolean;
-  error: string | null;
-  
-  // Actions
-  setItems: (items: DataType[]) => void;
-  addItem: (item: DataType) => void;
-  updateItem: (id: string, updates: Partial<DataType>) => void;
-  removeItem: (id: string) => void;
-  setLoading: (loading: boolean) => void;
-  setError: (error: string | null) => void;
+### Theme System
+```css
+/* CSS Custom Properties for theming */
+:root {
+  --primary: 221.2 83.2% 53.3%;
+  --secondary: 210 40% 96%;
+  --accent: 210 40% 96%;
+  --destructive: 0 84.2% 60.2%;
+  --border: 214.3 31.8% 91.4%;
+  --radius: 0.5rem;
 }
 
-export const useNewFeatureStore = create<NewFeatureState>()(
-  devtools(
-    (set, get) => ({
-      items: [],
-      loading: false,
-      error: null,
-      
-      setItems: (items) => set({ items }),
-      addItem: (item) => set((state) => ({ items: [...state.items, item] })),
-      updateItem: (id, updates) => set((state) => ({
-        items: state.items.map((item) => item.id === id ? { ...item, ...updates } : item)
-      })),
-      removeItem: (id) => set((state) => ({
-        items: state.items.filter((item) => item.id !== id)
-      })),
-      setLoading: (loading) => set({ loading }),
-      setError: (error) => set({ error }),
-    }),
-    { name: 'new-feature-store' }
-  )
-);
+.dark {
+  --primary: 217.2 91.2% 59.8%;
+  --secondary: 217.2 32.6% 17.5%;
+  /* ... dark mode values */
+}
 ```
 
-4. **React Query Integration**:
-```typescript
-// frontend/src/hooks/useNewFeature.ts
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { newFeatureApi } from '@/lib/api';
-import { useNewFeatureStore } from '@/stores/newFeatureStore';
+## 🧪 Testing
 
-export const useNewFeature = () => {
-  const queryClient = useQueryClient();
-  const { setError } = useNewFeatureStore();
+### Test Coverage
+```bash
+# Run all tests
+pnpm run test
 
-  const {
-    data: items,
-    isLoading,
-    error
-  } = useQuery({
-    queryKey: ['new-feature'],
-    queryFn: () => newFeatureApi.getAll(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
+# Run with coverage
+pnpm run test:coverage
 
-  const createMutation = useMutation({
-    mutationFn: newFeatureApi.create,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['new-feature'] });
-    },
-    onError: (error) => {
-      setError(error.message);
-    },
-  });
-
-  return {
-    items: items?.data || [],
-    isLoading,
-    error,
-    create: createMutation.mutate,
-    isCreating: createMutation.isPending,
-  };
-};
+# E2E tests (if implemented)
+pnpm run test:e2e
 ```
 
-### Code Quality Standards
-- **TypeScript Configuration**: Strict typing with path aliases and decorator support
-- **ESLint + Prettier**: Automated code formatting and linting with custom rules
-- **Conventional Commits**: Structured commit messages following semantic versioning
-- **Test Coverage**: Comprehensive Jest testing with >80% coverage target
-- **Documentation**: JSDoc comments for all public APIs and complex business logic
-- **Error Handling**: Consistent error patterns with proper logging and user feedback
-- **Security**: Input validation, rate limiting, and secure authentication patterns
+### Testing Strategy
+- **Unit Tests**: Individual component and function testing
+- **Integration Tests**: API endpoint and database testing  
+- **Component Tests**: React component behavior testing
+- **E2E Tests**: Full user workflow testing (ready for implementation)
 
-## 🤝 Contributing
+## 🚀 Deployment
 
-### Development Workflow
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'feat: add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
+### Production Build
+```bash
+# Build for production
+pnpm run build
 
-### Code Style Guidelines
-- Use **TypeScript** for all new code
-- Follow **React** best practices and hooks patterns
-- Write **tests** for new functionality
-- Update **documentation** for API changes
-- Use **conventional commits** for commit messages
+# Preview production build
+pnpm run preview
 
-### Reporting Issues
-- Use the issue template
-- Include steps to reproduce
-- Provide environment details
-- Add relevant logs or screenshots
+# Build Docker images
+docker-compose -f docker-compose.prod.yml build
+```
 
-## 📄 License
+### Environment Variables for Production
+```env
+# Backend Production
+NODE_ENV=production
+DATABASE_URL=your-production-db-url
+REDIS_URL=your-production-redis-url
+JWT_SECRET=your-production-jwt-secret
+CORS_ORIGIN=https://your-domain.com
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+# Frontend Production  
+VITE_API_URL=https://api.your-domain.com
+VITE_WS_URL=wss://api.your-domain.com
+```
 
-## 🙏 Acknowledgments
-
-- **OpenAI** for GPT models and API
-- **Anthropic** for Claude models and API
-- **React Team** for the amazing framework
-- **Vercel** for Vite and development tools
-- **PostgreSQL** and **Redis** communities
-
----
+### PWA Deployment Checklist
+- ✅ HTTPS enabled (required for PWA)
+- ✅ Web App Manifest configured
+- ✅ Service Worker registered
+- ✅ Icons for all device sizes (72px to 512px)
+- ✅ Offline functionality tested
+- ✅ Install prompts working
+- ✅ Push notification infrastructure ready
 
 ## 🔧 Configuration
 
 ### Backend Configuration (`backend/src/utils/config.ts`)
-The backend uses a centralized configuration system that loads from environment variables:
-
 ```typescript
-// Key configuration areas
-server: {
-  port: 3001,
-  cors_origin: "http://localhost:3000"
-}
-database: {
-  url: "postgres://claude_user:claude_password@localhost:5432/claude_projects"
-}
-redis: {
-  url: "redis://localhost:6379"
-}
-ai: {
-  openai_api_key: "your-openai-key",
-  anthropic_api_key: "your-anthropic-key"
-}
-upload: {
-  path: "./uploads",
-  max_file_size: 10485760, // 10MB
-  allowed_types: [".txt", ".md", ".json", ...] // 20+ supported types
-}
-rate_limiting: {
-  window_ms: 900000, // 15 minutes
-  max_requests: 1000
-}
+export const config = {
+  server: {
+    port: process.env.PORT || 3001,
+    cors_origin: process.env.CORS_ORIGIN || "http://localhost:3000"
+  },
+  database: {
+    url: process.env.DATABASE_URL || "postgres://claude_user:claude_password@localhost:5432/claude_projects"
+  },
+  redis: {
+    url: process.env.REDIS_URL || "redis://localhost:6379"
+  },
+  ai: {
+    openai_api_key: process.env.OPENAI_API_KEY,
+    anthropic_api_key: process.env.ANTHROPIC_API_KEY
+  },
+  admin: {
+    email: process.env.ADMIN_EMAIL || "admin@example.com",
+    default_token_limit_global: parseInt(process.env.DEFAULT_TOKEN_LIMIT_GLOBAL || "100000"),
+    default_token_limit_monthly: parseInt(process.env.DEFAULT_TOKEN_LIMIT_MONTHLY || "50000")
+  },
+  upload: {
+    path: process.env.UPLOAD_PATH || "./uploads",
+    max_file_size: parseInt(process.env.MAX_FILE_SIZE || "10485760"), // 10MB
+    allowed_types: [".txt", ".md", ".json", ".js", ".ts", ".py", ".java", ".cpp", ".c", ".html", ".css", ".scss", ".yaml", ".yml", ".xml", ".csv", ".log", ".env", ".gitignore", ".dockerfile"]
+  },
+  rate_limiting: {
+    window_ms: parseInt(process.env.RATE_LIMIT_WINDOW_MS || "900000"), // 15 minutes
+    max_requests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || "1000")
+  }
+};
 ```
 
-### Frontend Configuration (`frontend/vite.config.ts`)
-- **Vite 4.5** with React plugin and TypeScript support
-- **Path aliases** for clean imports (`@/` maps to `src/`)
-- **Proxy configuration** for API and WebSocket connections
-- **Code splitting** with manual chunks for optimal loading
-- **Source maps** enabled for debugging
-
-### Docker Configuration
-- **Multi-stage builds** for optimized production images
-- **Health checks** for all services (PostgreSQL, Redis, Backend)
-- **Volume persistence** for database and upload storage
-- **Network isolation** with service-to-service communication
-- **Environment variable** injection for configuration
+### PWA Configuration (`frontend/public/manifest.json`)
+```json
+{
+  "name": "AI Projects - AI Development Platform",
+  "short_name": "AI Projects",
+  "description": "Collaborate with AI agents to build amazing projects",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512x512.png", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Project",
+      "url": "/dashboard?action=new-project",
+      "icons": [{"src": "/icons/shortcut-new-project.png", "sizes": "96x96"}]
+    }
+  ]
+}
+```
 
 ## 🚀 Advanced Usage
 
 ### Custom AI Agent Creation
 ```typescript
-// Example: Creating a specialized code review agent
-const codeReviewAgent = {
-  name: "Code Review Expert",
-  description: "Specialized in code analysis and review",
-  personality: "analytical",
-  model_id: "gpt-4-turbo-preview",
-  system_prompt: `You are a senior code reviewer with expertise in...
-    Focus on: security, performance, maintainability, best practices.
-    Provide: specific suggestions, code examples, explanations.`
+// Create specialized agents for different tasks
+const agents = {
+  codeReviewer: {
+    name: "Code Review Expert",
+    description: "Specialized in code analysis and security review",
+    personality: "analytical",
+    model_id: "gpt-4-turbo-preview",
+    system_prompt: `You are a senior code reviewer with expertise in security, performance, and best practices. Focus on providing specific, actionable feedback.`
+  },
+  
+  documentationWriter: {
+    name: "Documentation Specialist", 
+    description: "Expert in technical writing and documentation",
+    personality: "helpful",
+    model_id: "claude-3-sonnet-20240229",
+    system_prompt: `You are a technical writing expert who creates clear, comprehensive documentation. Focus on user experience and clarity.`
+  }
 };
 ```
 
 ### WebSocket Integration
 ```typescript
-// Frontend WebSocket usage
+// Frontend WebSocket usage with authentication
 import { io } from 'socket.io-client';
 
 const socket = io('ws://localhost:3001', {
@@ -874,34 +675,238 @@ const socket = io('ws://localhost:3001', {
   transports: ['websocket', 'polling']
 });
 
-// Join project room for real-time updates
+// Project collaboration
 socket.emit('join-project', { projectId });
-
-// Listen for new messages
 socket.on('new-message', (message) => {
-  // Handle incoming message
+  // Handle real-time messages
+});
+
+// Typing indicators
+socket.emit('typing-start', { projectId, agentId });
+socket.on('user-typing', ({ userId, isTyping }) => {
+  // Show typing indicator
 });
 ```
 
-### File Upload with Progress
+### PWA Features Integration
 ```typescript
-// Drag & drop file upload with progress tracking
-const uploadFile = async (file: File, projectId: string) => {
-  const formData = new FormData();
-  formData.append('file', file);
+// Use PWA features in your components
+import { usePWAFeatures } from '@/hooks/usePWAFeatures';
+
+function ProjectActions({ project }) {
+  const { share, install, canInstall, isOffline } = usePWAFeatures();
   
-  return apiClient.post(`/api/projects/${projectId}/uploads`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-    onUploadProgress: (progressEvent) => {
-      const progress = (progressEvent.loaded / progressEvent.total) * 100;
-      updateProgress(progress);
+  const handleShare = async () => {
+    await share({
+      title: `AI Projects - ${project.name}`,
+      text: project.description,
+      url: window.location.href
+    });
+  };
+  
+  const handleInstall = async () => {
+    const success = await install();
+    if (success) {
+      // App installed successfully
     }
+  };
+  
+  return (
+    <div>
+      <Button onClick={handleShare}>Share Project</Button>
+      {canInstall && (
+        <Button onClick={handleInstall}>Install App</Button>
+      )}
+      {isOffline && <Badge>Offline Mode</Badge>}
+    </div>
+  );
+}
+```
+
+### Mobile-Optimized File Upload
+```typescript
+// Touch-friendly file upload with progress
+import { useDropzone } from 'react-dropzone';
+
+function MobileFileUpload({ projectId }) {
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: async (files) => {
+      for (const file of files) {
+        await uploadFile(file, projectId, {
+          onProgress: (progress) => {
+            // Update progress indicator
+          }
+        });
+      }
+    },
+    maxSize: 10 * 1024 * 1024, // 10MB
+    multiple: true
   });
-};
+  
+  return (
+    <div 
+      {...getRootProps()} 
+      className="touch-target border-dashed border-2 p-8 text-center rounded-lg"
+    >
+      <input {...getInputProps()} />
+      <p>Tap to select files or drag and drop</p>
+    </div>
+  );
+}
+```
+
+### Admin Panel Integration
+```typescript
+// Admin functionality with proper authorization
+import { useAdminStore } from '@/stores/adminStore';
+
+function AdminDashboard() {
+  const { 
+    stats, 
+    users, 
+    updateUserLimits, 
+    toggleUserStatus 
+  } = useAdminStore();
+  
+  const handleUpdateLimits = async (userId: string, limits: TokenLimits) => {
+    await updateUserLimits(userId, limits);
+    // Show success message
+  };
+  
+  return (
+    <div className="admin-dashboard">
+      <AdminStats stats={stats} />
+      <UserManagement 
+        users={users}
+        onUpdateLimits={handleUpdateLimits}
+        onToggleStatus={toggleUserStatus}
+      />
+    </div>
+  );
+}
+```
+
+## 📊 Monitoring & Analytics
+
+### Built-in Analytics
+- **User Engagement**: Track active users, session duration, feature usage
+- **AI Usage**: Monitor token consumption, model performance, cost tracking
+- **Performance**: Response times, error rates, system health
+- **Mobile Metrics**: PWA installation rates, offline usage, mobile performance
+
+### Health Checks
+```bash
+# Check service health
+curl http://localhost:3001/health
+
+# Check database connectivity
+curl http://localhost:3001/health/db
+
+# Check Redis connectivity  
+curl http://localhost:3001/health/redis
+
+# Check AI service availability
+curl http://localhost:3001/health/ai
+```
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Development Workflow
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes with proper tests
+4. Ensure mobile compatibility and PWA functionality
+5. Run the test suite (`pnpm run test`)
+6. Commit with conventional commits (`git commit -m 'feat: add amazing feature'`)
+7. Push to your branch (`git push origin feature/amazing-feature`)
+8. Open a Pull Request
+
+### Code Standards
+- **TypeScript**: Strict mode enabled with comprehensive type checking
+- **ESLint + Prettier**: Automated code formatting and linting
+- **Conventional Commits**: Structured commit messages for better changelog
+- **Mobile-First**: All new features must be mobile-optimized
+- **PWA Compliance**: Maintain offline functionality and native app features
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **OpenAI** and **Anthropic** for AI model APIs
+- **React** and **Node.js** communities for excellent tooling
+- **Tailwind CSS** for the utility-first CSS framework
+- **Socket.IO** for real-time communication
+- **Vite** and **Vercel** for development tools
+- **PostgreSQL** and **Redis** communities
+- **PWA** community for progressive web app standards
+
+---
+
+## 🔧 Configuration Reference
+
+### Complete Environment Variables
+
+**Backend (.env)**
+```env
+# Server
+NODE_ENV=development|production
+PORT=3001
+
+# Database
+DATABASE_URL=postgres://user:password@localhost:5432/dbname
+
+# Redis
+REDIS_URL=redis://localhost:6379
+
+# AI Services
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Authentication
+JWT_SECRET=your-jwt-secret
+JWT_REFRESH_SECRET=your-refresh-secret
+
+# Admin
+ADMIN_EMAIL=admin@example.com
+DEFAULT_TOKEN_LIMIT_GLOBAL=100000
+DEFAULT_TOKEN_LIMIT_MONTHLY=50000
+
+# File Upload
+UPLOAD_PATH=./uploads
+MAX_FILE_SIZE=10485760
+
+# Security
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=1000
+CORS_ORIGIN=http://localhost:3000
+```
+
+**Frontend (.env)**
+```env
+# API
+VITE_API_URL=http://localhost:3001
+VITE_WS_URL=ws://localhost:3001
+
+# App
+VITE_APP_NAME=AI Projects
+VITE_APP_VERSION=1.0.0
+
+# PWA
+VITE_PWA_NAME=AI Projects
+VITE_PWA_SHORT_NAME=AI Projects
+VITE_PWA_DESCRIPTION=AI-powered development platform
+VITE_PWA_THEME_COLOR=#3b82f6
+VITE_PWA_BACKGROUND_COLOR=#ffffff
 ```
 
 ---
 
-**Built with ❤️ using modern web technologies and AI integration**
+**Built with ❤️ using modern web technologies, AI integration, and mobile-first design**
 
-For support, feature requests, or contributions, please visit our [GitHub repository](https://github.com/your-username/claude-projects-clone).
+For support, feature requests, or contributions, please visit our [GitHub repository](https://github.com/your-username/ai-projects-platform).
+
+**Experience the future of AI-powered development - install as a PWA and take your projects anywhere! 🚀📱**
