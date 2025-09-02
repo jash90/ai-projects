@@ -21,6 +21,11 @@ const config: Config = {
     openai_api_key: process.env.OPENAI_API_KEY,
     anthropic_api_key: process.env.ANTHROPIC_API_KEY,
   },
+  admin: {
+    email: process.env.ADMIN_EMAIL || 'bartekziimny90@gmail.com',
+    default_token_limit_global: parseInt(process.env.DEFAULT_TOKEN_LIMIT_GLOBAL || '1000000', 10), // 1M tokens
+    default_token_limit_monthly: parseInt(process.env.DEFAULT_TOKEN_LIMIT_MONTHLY || '100000', 10), // 100K tokens/month
+  },
   log_level: process.env.LOG_LEVEL || 'info',
 };
 

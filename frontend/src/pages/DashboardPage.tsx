@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { Plus, FolderOpen, MessageSquare, Clock, BarChart3 } from 'lucide-react'
+import { Plus, FolderOpen, MessageSquare, Clock, BarChart3, Shield } from 'lucide-react'
 import { projectsApi } from '@/lib/api'
 import { useAuth } from '@/stores/authStore'
 import { formatDate, formatRelativeTime } from '@/lib/utils'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import { NewProjectDialog } from '@/components/projects/NewProjectDialog'
+import { PageHeader } from '@/components/ui/PageHeader'
+import { Button } from '@/components/ui/Button'
 
 const DashboardPage: React.FC = () => {
   const { user } = useAuth()
@@ -34,28 +36,19 @@ const DashboardPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-semibold text-card-foreground">
-                Welcome back, {user?.username}
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                Manage your projects and collaborate with AI agents
-              </p>
-            </div>
-            
-            <button
-              onClick={() => setShowNewProjectDialog(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-              New Project
-            </button>
-          </div>
-        </div>
-      </header>
+      <PageHeader
+        title={`Welcome back, ${user?.username}`}
+        subtitle="Manage your projects and collaborate with AI agents"
+        actions={
+          <Button
+            onClick={() => setShowNewProjectDialog(true)}
+            className="flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            New Project
+          </Button>
+        }
+      />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Quick Stats */}
@@ -115,6 +108,22 @@ const DashboardPage: React.FC = () => {
               </div>
             </div>
           </Link>
+
+          {user?.role === 'admin' && (
+            <Link to="/admin" className="bg-card rounded-lg border border-border p-6 hover:bg-accent transition-colors">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center">
+                  <Shield className="w-6 h-6 text-red-600" />
+                </div>
+                <div>
+                  <p className="text-lg font-semibold text-card-foreground">
+                    Admin Panel
+                  </p>
+                  <p className="text-muted-foreground">Manage users & limits</p>
+                </div>
+              </div>
+            </Link>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
