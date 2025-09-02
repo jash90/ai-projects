@@ -41,9 +41,28 @@ function startServer() {
   
   console.log(`🔌 Server will listen on PORT: ${process.env.PORT}`);
   console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔗 Database URL: ${process.env.DATABASE_URL ? 'Set' : 'Not set'}`);
+  console.log(`🔑 JWT Secret: ${process.env.JWT_SECRET ? 'Set' : 'Not set'}`);
+  console.log(`🚀 CORS Origin: ${process.env.CORS_ORIGIN || 'Default'}`);
   
   // Start the Express server
-  require('./dist/index.js');
+  try {
+    console.log('📂 Loading server from: ./dist/index.js');
+    require('./dist/index.js');
+    console.log('✅ Server module loaded successfully');
+  } catch (error) {
+    console.error('💥 Failed to load server module:', error);
+    console.error('📁 Current directory:', process.cwd());
+    console.error('📂 Directory contents:');
+    const fs = require('fs');
+    try {
+      const files = fs.readdirSync('./dist');
+      console.error('dist/ contents:', files);
+    } catch (fsError) {
+      console.error('Cannot read dist directory:', fsError.message);
+    }
+    throw error;
+  }
 }
 
 // Handle process signals gracefully
@@ -82,6 +101,47 @@ async function main() {
     
     // Start the server
     startServer();
+    
+    // Test server responsiveness after a short delay
+    setTimeout(async () => {
+      try {
+        const http = require('http');
+        const port = process.env.PORT || '3001';
+        
+        console.log(`🔍 Testing server responsiveness on port ${port}...`);
+        
+        const options = {
+          hostname: 'localhost',
+          port: port,
+          path: '/api/health',
+          method: 'GET',
+          timeout: 5000
+        };
+        
+        const req = http.request(options, (res) => {
+          console.log(`✅ Health check response: ${res.statusCode}`);
+          if (res.statusCode === 200) {
+            console.log('🎉 Server is responding correctly!');
+          } else {
+            console.log('⚠️  Server responded but with non-200 status');
+          }
+        });
+        
+        req.on('error', (error) => {
+          console.error('❌ Health check failed:', error.message);
+          console.error('🔧 This might indicate the server is not properly listening');
+        });
+        
+        req.on('timeout', () => {
+          console.error('⏰ Health check timed out - server may not be responding');
+          req.destroy();
+        });
+        
+        req.end();
+      } catch (error) {
+        console.error('💥 Error during health check:', error);
+      }
+    }, 3000); // Wait 3 seconds for server to fully start
     
     // Keep the process alive
     console.log('✅ Application started successfully');
