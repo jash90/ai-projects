@@ -27,6 +27,8 @@ class AIService {
     if (config.ai.openai_api_key) {
       this.openai = new OpenAI({
         apiKey: config.ai.openai_api_key,
+        timeout: 120000, // 2 minutes timeout for AI processing
+        maxRetries: 3, // Retry failed requests
       });
     }
 
@@ -34,6 +36,8 @@ class AIService {
       try {
         this.anthropic = new Anthropic({
           apiKey: config.ai.anthropic_api_key,
+          timeout: 120000, // 2 minutes timeout for AI processing
+          maxRetries: 3, // Retry failed requests
         });
         logger.info('Anthropic client initialized successfully');
         logger.info(`Anthropic client type: ${typeof this.anthropic}`);

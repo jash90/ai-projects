@@ -6,14 +6,14 @@ import { FileModel } from '../models/File';
 import { aiService } from '../services/aiService';
 import { authenticateToken } from '../middleware/auth';
 import { validate, commonSchemas } from '../middleware/validation';
-import { generalLimiter } from '../middleware/rateLimiting';
+import { aiLimiter, generalLimiter } from '../middleware/rateLimiting';
 import logger from '../utils/logger';
 
 const router = Router();
 
 // Send message to AI agent
 router.post('/projects/:projectId/agents/:agentId/chat', 
-  generalLimiter,
+  aiLimiter, // Use AI-specific rate limiting
   authenticateToken,
   validate({ 
     params: Joi.object({ 
