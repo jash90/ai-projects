@@ -32,6 +32,8 @@ LOG_LEVEL=info
 ```bash
 VITE_API_URL=https://your-backend.railway.app/api
 VITE_WS_URL=wss://your-backend.railway.app
+API_URL=https://your-backend.railway.app/api
+WS_URL=wss://your-backend.railway.app
 ```
 
 ## 🚀 **Rozwiązania**

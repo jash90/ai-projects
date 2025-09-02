@@ -6,8 +6,12 @@ services:
     ports:
       - "3000:80"
     environment:
-      # Uncomment and set if you want to proxy to external backend
-      # - BACKEND_URL=https://your-backend.railway.app
+      # Frontend environment variables
+      - NODE_ENV=production
+      - VITE_API_URL=https://your-backend.railway.app/api
+      - VITE_WS_URL=wss://your-backend.railway.app
+      - API_URL=https://your-backend.railway.app/api
+      - WS_URL=wss://your-backend.railway.app
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80"]
       interval: 30s
