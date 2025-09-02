@@ -4,7 +4,7 @@ import { authenticateToken } from '../middleware/auth';
 import { generalLimiter } from '../middleware/rateLimiting';
 import logger from '../utils/logger';
 
-const router = Router();
+const router: Router = Router();
 
 // Apply auth and rate limiting to all model routes
 router.use(authenticateToken);

@@ -11,7 +11,7 @@ import { asyncHandler } from '../middleware/errorHandler';
 import { createResourceNotFoundError, createAIServiceError, isAppError } from '../utils/errors';
 import logger from '../utils/logger';
 
-const router = Router();
+const router: Router = Router();
 
 // Send message to AI agent
 router.post('/projects/:projectId/agents/:agentId/chat', 

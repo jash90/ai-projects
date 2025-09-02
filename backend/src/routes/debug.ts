@@ -6,7 +6,7 @@ import { TokenUsageModel } from '../models/TokenUsage';
 import { asyncHandler } from '../middleware/errorHandler';
 import logger from '../utils/logger';
 
-const router = Router();
+const router: Router = Router();
 
 // Debug endpoint to check user status and capabilities
 router.get('/user-status', 

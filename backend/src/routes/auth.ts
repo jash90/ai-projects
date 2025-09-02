@@ -5,7 +5,7 @@ import { validate, commonSchemas } from '../middleware/validation';
 import { authLimiter } from '../middleware/rateLimiting';
 import logger from '../utils/logger';
 
-const router = Router();
+const router: Router = Router();
 
 // Register new user
 router.post('/register', 
