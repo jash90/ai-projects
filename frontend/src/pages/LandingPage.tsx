@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowRight, 
   Bot, 
-  Code, 
   Zap, 
   Shield, 
   Smartphone,
@@ -16,7 +15,11 @@ import {
   Sparkles,
   Download,
   Menu,
-  X
+  X,
+  MessageSquare,
+  Globe,
+  Database,
+  Settings
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { usePWAFeatures } from '@/hooks/usePWAFeatures';
@@ -50,62 +53,95 @@ export default function LandingPage() {
   const features = [
     {
       icon: Bot,
-      title: 'AI-Powered Development',
-      description: 'Collaborate with intelligent AI agents to build amazing projects faster than ever before.'
+      title: 'Advanced AI Integration',
+      description: 'Dynamic model management with OpenAI GPT and Anthropic Claude models. Specialized AI agents with unique personalities and capabilities.',
+      category: 'AI'
     },
     {
-      icon: Code,
-      title: 'Smart Code Generation',
-      description: 'Generate, review, and refine code with AI assistance across multiple programming languages.'
-    },
-    {
-      icon: FileText,
-      title: 'Project Management',
-      description: 'Organize your projects, files, and conversations in one intuitive workspace.'
-    },
-    {
-      icon: Zap,
-      title: 'Real-time Collaboration',
-      description: 'Work seamlessly with AI agents in real-time with instant feedback and suggestions.'
-    },
-    {
-      icon: Shield,
-      title: 'Secure & Private',
-      description: 'Your code and data are protected with enterprise-grade security and privacy controls.'
+      icon: MessageSquare,
+      title: 'Real-time Chat & Collaboration',
+      description: 'WebSocket-powered conversations with typing indicators, streaming responses, and persistent chat history.',
+      category: 'Collaboration'
     },
     {
       icon: Smartphone,
-      title: 'Mobile-First Design',
-      description: 'Work on your projects anywhere with our fully responsive, PWA-enabled interface.'
+      title: 'Mobile-First PWA',
+      description: 'Progressive Web App with offline support, native app installation, touch-optimized interface, and mobile navigation.',
+      category: 'Mobile'
+    },
+    {
+      icon: Shield,
+      title: 'Enterprise Security & Admin',
+      description: 'Role-based access control, admin panel, user management, token limits, activity logging, and comprehensive security.',
+      category: 'Security'
+    },
+    {
+      icon: FileText,
+      title: 'Advanced Project Management',
+      description: 'Multi-project support, file management (20+ types), project-specific agents, and real-time file collaboration.',
+      category: 'Management'
+    },
+    {
+      icon: Zap,
+      title: 'High Performance Architecture',
+      description: 'PostgreSQL with Redis caching, connection pooling, code splitting, service workers, and mobile optimization.',
+      category: 'Performance'
+    },
+    {
+      icon: Database,
+      title: 'Token Usage Tracking',
+      description: 'Comprehensive monitoring of AI API usage, costs per project, admin-configurable limits, and usage analytics.',
+      category: 'Analytics'
+    },
+    {
+      icon: Globe,
+      title: 'Offline Capabilities',
+      description: 'Service worker with intelligent caching, background sync, offline file access, and queue management.',
+      category: 'PWA'
+    },
+    {
+      icon: Settings,
+      title: 'User Settings & Preferences',
+      description: 'Comprehensive settings for profile, security, preferences, dark/light mode, and personal usage statistics.',
+      category: 'User Experience'
     }
   ];
 
   const testimonials = [
     {
       name: 'Sarah Chen',
-      role: 'Full-stack Developer',
+      role: 'Senior Full-stack Developer',
       avatar: '👩‍💻',
-      content: 'AI Projects has transformed how I approach development. The AI assistance is incredibly intuitive and saves me hours every day.'
+      content: 'The mobile-first PWA design is incredible. I can code on my phone during commutes and seamlessly continue on desktop. The offline capabilities are a game-changer.'
     },
     {
       name: 'Marcus Johnson',
-      role: 'Startup Founder',
+      role: 'Engineering Manager',
       avatar: '👨‍🚀',
-      content: 'As a non-technical founder, AI Projects helps me understand and contribute to our codebase. It\'s like having a senior developer on call 24/7.'
+      content: 'The admin panel gives us complete control over our team\'s AI usage. Token tracking and user management features have saved us thousands in API costs.'
     },
     {
       name: 'Elena Rodriguez',
-      role: 'Data Scientist',
+      role: 'DevOps Engineer',
       avatar: '👩‍🔬',
-      content: 'The project organization and AI-powered insights have streamlined our entire data pipeline development process.'
+      content: 'Real-time collaboration with WebSocket integration is seamless. The service worker and caching strategies make this the fastest development platform I\'ve used.'
     }
   ];
 
   const stats = [
-    { value: '10K+', label: 'Developers' },
-    { value: '50K+', label: 'Projects Created' },
-    { value: '99.9%', label: 'Uptime' },
-    { value: '4.9/5', label: 'User Rating' }
+    { value: '15K+', label: 'Active Developers' },
+    { value: '75K+', label: 'AI Projects Built' },
+    { value: '99.9%', label: 'Uptime SLA' },
+    { value: '4.8/5', label: 'PWA Store Rating' }
+  ];
+
+  const techStack = [
+    { name: 'React 18 + TypeScript', category: 'Frontend' },
+    { name: 'Node.js + Express', category: 'Backend' },
+    { name: 'PostgreSQL + Redis', category: 'Database' },
+    { name: 'OpenAI + Anthropic', category: 'AI' },
+    { name: 'Socket.IO + WebRTC', category: 'Real-time' },
+    { name: 'PWA + Service Workers', category: 'Mobile' }
   ];
 
   const handleGetStarted = () => {
@@ -237,21 +273,21 @@ export default function LandingPage() {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-sm text-primary font-medium mb-6">
               <Sparkles className="w-4 h-4" />
-              AI-Powered Development Platform
+              Production-Ready AI Development Platform
             </div>
 
             {/* Headline */}
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 leading-tight">
-              Build Amazing Projects with{' '}
+              The Future of{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">
-                AI Assistance
+                AI-Powered Development
               </span>
             </h1>
 
             {/* Subtitle */}
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-              Collaborate with intelligent AI agents to accelerate your development workflow. 
-              From code generation to project management, we've got you covered.
+              Full-stack platform with advanced AI agents, real-time collaboration, mobile-first PWA design, 
+              enterprise security, and comprehensive project management. Work anywhere, anytime.
             </p>
 
             {/* CTA Buttons */}
@@ -265,13 +301,13 @@ export default function LandingPage() {
                 <ArrowRight className="w-5 h-5" />
               </Button>
               
-              <a 
-                href="#demo"
+              <button 
+                onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
                 className="inline-flex items-center justify-center gap-2 rounded-md border border-input bg-background px-8 py-3 text-base font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 w-full sm:w-auto touch-target"
               >
                 <Play className="w-5 h-5" />
                 Watch Demo
-              </a>
+              </button>
             </div>
 
             {/* Stats */}
@@ -296,27 +332,58 @@ export default function LandingPage() {
         <div className="container-mobile">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Everything you need to build better
+              Production-Ready Features
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Powerful features designed to enhance your development workflow and boost productivity.
+              Enterprise-grade platform with advanced AI integration, mobile-first design, 
+              and comprehensive development tools built for modern teams.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <div key={index} className="card-mobile group hover:shadow-lg transition-all duration-200">
-                <div className="p-3 bg-primary/10 rounded-lg w-fit mb-4 group-hover:bg-primary/20 transition-colors">
-                  <feature.icon className="w-6 h-6 text-primary" />
+                <div className="flex items-center justify-between mb-4">
+                  <div className="p-3 bg-primary/10 rounded-lg w-fit group-hover:bg-primary/20 transition-colors">
+                    <feature.icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <span className="text-xs font-medium px-2 py-1 bg-secondary/50 rounded-full text-muted-foreground">
+                    {feature.category}
+                  </span>
                 </div>
                 <h3 className="text-xl font-semibold text-foreground mb-3">
                   {feature.title}
                 </h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed text-sm">
                   {feature.description}
                 </p>
               </div>
             ))}
+          </div>
+
+          {/* Tech Stack Preview */}
+          <div className="mt-16 pt-16 border-t border-border">
+            <div className="text-center mb-12">
+              <h3 className="text-2xl font-bold text-foreground mb-4">
+                Built with Modern Technologies
+              </h3>
+              <p className="text-muted-foreground">
+                Production-ready stack with TypeScript, React 18, Node.js, PostgreSQL, and AI integration
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {techStack.map((tech, index) => (
+                <div key={index} className="text-center p-4 bg-card rounded-lg border border-border hover:border-primary/20 transition-colors">
+                  <div className="text-sm font-medium text-foreground mb-1">
+                    {tech.name}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {tech.category}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -364,14 +431,15 @@ export default function LandingPage() {
       {/* Pricing Section */}
       <section id="pricing" className="py-16 md:py-24 bg-muted/30">
         <div className="container-mobile">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Simple, transparent pricing
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Start free and scale as you grow. No hidden fees, no surprises.
-            </p>
-          </div>
+                  <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            Enterprise-grade pricing for teams of all sizes
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Full-featured platform with AI integration, mobile PWA, admin controls, and enterprise security. 
+            Start free, scale as you grow.
+          </p>
+        </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {/* Free Plan */}
@@ -388,7 +456,15 @@ export default function LandingPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Basic AI assistance</span>
+                  <span className="text-muted-foreground">OpenAI GPT models</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                  <span className="text-muted-foreground">Mobile PWA access</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                  <span className="text-muted-foreground">Offline capabilities</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
@@ -419,15 +495,23 @@ export default function LandingPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Advanced AI models</span>
+                  <span className="text-muted-foreground">GPT-4 + Claude models</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                  <span className="text-muted-foreground">Real-time collaboration</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                  <span className="text-muted-foreground">Advanced file management</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                  <span className="text-muted-foreground">Usage analytics</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
                   <span className="text-muted-foreground">Priority support</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Team collaboration</span>
                 </li>
               </ul>
               <Button className="w-full" onClick={handleGetStarted}>
@@ -449,15 +533,23 @@ export default function LandingPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Custom AI models</span>
+                  <span className="text-muted-foreground">Admin panel & RBAC</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Dedicated support</span>
+                  <span className="text-muted-foreground">Custom token limits</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                  <span className="text-muted-foreground">Activity logging</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
                   <span className="text-muted-foreground">SSO & compliance</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                  <span className="text-muted-foreground">Dedicated support</span>
                 </li>
               </ul>
               <Button variant="outline" className="w-full">
@@ -472,10 +564,11 @@ export default function LandingPage() {
       <section className="py-16 md:py-24 bg-gradient-to-r from-primary to-primary/80">
         <div className="container-mobile text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
-            Ready to transform your development workflow?
+            Ready to revolutionize your development experience?
           </h2>
           <p className="text-lg text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
-            Join thousands of developers who are building better projects with AI assistance.
+            Join thousands of developers building the future with AI-powered development, 
+            mobile-first design, and enterprise-grade security.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button 
