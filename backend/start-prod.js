@@ -109,7 +109,7 @@ async function main() {
                  const port = process.env.PORT || '3001';
                  
                  console.log(`🔍 Testing server responsiveness on port ${port}...`);
-                 console.log(`🔍 Using IPv4 address: 127.0.0.1:${port}`);
+                 console.log(`🔍 Using address: 0.0.0.0:${port}`);
                  
                  // Check if port is actually listening
                  const net = require('net');
@@ -128,10 +128,10 @@ async function main() {
                    console.log(`❌ Port ${port} connection error:`, err.message);
                  });
                  
-                 socket.connect(port, '127.0.0.1');
+                 socket.connect(port, '0.0.0.0');
         
                          const options = {
-                   hostname: '127.0.0.1', // Use IPv4 instead of localhost
+                   hostname: '0.0.0.0', // Use 0.0.0.0 for Railway compatibility
                    port: port,
                    path: '/api/health',
                    method: 'GET',
