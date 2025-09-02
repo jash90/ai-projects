@@ -1,24 +1,29 @@
 # AI Projects
 
-A production-ready, full-stack AI-powered development platform that revolutionizes how developers collaborate with AI. Built with modern web technologies and **Turbo Repo** for lightning-fast builds, featuring advanced AI agents, real-time collaboration, comprehensive project management, and native mobile/PWA support.
+A production-ready, full-stack AI-powered development platform that revolutionizes how developers collaborate with AI. Built with modern web technologies and **Nx** for intelligent build orchestration, featuring advanced AI agents, real-time collaboration, comprehensive project management, and native mobile/PWA support.
 
-## ⚡ **Turbo Repo Integration**
+## ⚡ **Nx Workspace Integration**
 
-This project uses **Turbo Repo** for optimized monorepo management:
+This project uses **Nx** for advanced monorepo management and build optimization:
 
-- 🚀 **48x faster builds** - Second build takes only 196ms instead of 9.459s
-- 🔄 **Intelligent caching** - Only rebuild what changed
+- 🎯 **Smart task orchestration** - Intelligent dependency graph analysis
+- ⚡ **Advanced caching** - More granular and efficient than traditional tools
 - 🏃‍♂️ **Parallel execution** - Frontend and backend build simultaneously  
-- 📊 **Task orchestration** - Smart dependency management between packages
-- 🎯 **Unified commands** - Single commands for the entire monorepo
+- 📊 **Affected-only builds** - Only build what changed
+- 🔧 **Rich plugin ecosystem** - Built-in support for popular frameworks
+- 🛠️ **Enhanced developer tools** - Superior CLI and workspace management
 
 ```bash
-pnpm build      # Build entire monorepo with Turbo
+pnpm build      # Build entire monorepo with Nx
 pnpm dev        # Run all dev servers in parallel
 pnpm type-check # Type check all packages
+
+# Advanced Nx commands
+pnpm exec nx graph              # Visual dependency graph
+pnpm exec nx affected -t build  # Build only affected projects
 ```
 
-See [TURBO_SETUP.md](./TURBO_SETUP.md) for complete Turbo configuration details.
+See [NX_MIGRATION.md](./NX_MIGRATION.md) for complete migration details and Nx configuration.
 
 ## 🎯 Key Features
 
@@ -92,10 +97,10 @@ See [TURBO_SETUP.md](./TURBO_SETUP.md) for complete Turbo configuration details.
 
 ### Monorepo & Build System
 ```typescript
-Turbo Repo 2.5                  // High-performance build system with intelligent caching
-pnpm 8.15                      // Fast, disk space efficient package manager  
-pnpm Workspaces               // Monorepo workspace management
-TypeScript 5.0                // Strict typing across entire monorepo
+Nx 21.4                       // Advanced monorepo build system with smart orchestration
+pnpm 8.15                     // Fast, disk space efficient package manager  
+pnpm Workspaces              // Monorepo workspace management
+TypeScript 5.0               // Strict typing across entire monorepo
 ```
 
 ### Frontend Architecture
@@ -289,28 +294,28 @@ docker-compose logs -f
 # Admin: http://localhost:3000/admin (after creating admin user)
 ```
 
-**Option B: Local Development with Turbo**
+**Option B: Local Development with Nx**
 ```bash
 # Start PostgreSQL and Redis
 docker-compose up -d postgres redis
 
-# Install dependencies (Turbo included)
+# Install dependencies (Nx included)
 pnpm install
 
 # Run database migrations
 pnpm db:migrate
 
-# Start development servers (parallel with Turbo)
+# Start development servers (parallel with Nx)
 pnpm dev
 
 # Frontend: http://localhost:3000
 # Backend: http://localhost:3001
 ```
 
-**Turbo Development Commands**:
+**Nx Development Commands**:
 ```bash
 # Build entire monorepo (with intelligent caching)
-pnpm build              # 48x faster on second run!
+pnpm build              # Smart caching and task orchestration!
 
 # Type check all packages
 pnpm type-check
