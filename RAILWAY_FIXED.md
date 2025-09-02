@@ -12,7 +12,9 @@
 - ✅ Poprawiono konfigurację portu dla Railway (`PORT` environment variable)
 - ✅ Dodano obsługę statycznych plików frontend w produkcji
 - ✅ Zmieniono ścieżkę uploadów na `/tmp/uploads` (Railway ephemeral filesystem)
-- ✅ Dodano skrypty `start:prod` i `migrate`
+- ✅ Dodano skrypty `start:prod` z automatycznymi migracjami
+- ✅ Stworzono `migrate-prod.js` - migracje bez tsx dependency
+- ✅ Usunięto `postinstall` hook żeby uniknąć błędów build
 
 ### 3. **Konfiguracja Środowiska**
 - ✅ Zaktualizowano `railway.env.example` z poprawnymi zmiennymi
