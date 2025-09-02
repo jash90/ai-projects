@@ -162,49 +162,34 @@ app.use('*', (req, res) => {
 // Import and use the new error handler
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 
-// Serwuj statyczne pliki frontend w produkcji
+// In production with nginx, we only serve API routes
+// nginx handles static files and frontend routing
 if (process.env.NODE_ENV === 'production') {
+  console.log('🌐 Production mode: nginx will serve static files');
+  console.log('🔧 Backend will only handle API routes');
+} else {
+  // In development, serve static files directly
   const path = require('path');
   const fs = require('fs');
   
   const frontendDistPath = path.join(__dirname, '../../frontend/dist');
   const indexPath = path.join(frontendDistPath, 'index.html');
   
-  console.log('🔍 Checking frontend build...');
-  console.log('📂 Frontend dist path:', frontendDistPath);
-  console.log('📄 Index.html path:', indexPath);
-  console.log('📁 Frontend dist exists:', fs.existsSync(frontendDistPath));
-  console.log('📄 Index.html exists:', fs.existsSync(indexPath));
-  
   if (fs.existsSync(frontendDistPath)) {
-    console.log('✅ Frontend build found, serving static files');
+    console.log('✅ Development mode: serving static files directly');
     
-    // Serwuj statyczne pliki z frontend build (bez index.html)
-    app.use(express.static(frontendDistPath, {
-      fallthrough: true // Allow fallthrough to catch-all route
-    }));
+    // Serwuj statyczne pliki z frontend build
+    app.use(express.static(frontendDistPath));
     
-    // Add middleware to log all requests
-    app.use((req, res, next) => {
-      console.log(`📥 Request: ${req.method} ${req.path}`);
-      next();
-    });
-    
-    // Catch-all route dla React Router (przed 404 handler)
+    // Catch-all route dla React Router
     app.get('*', (req, res, next) => {
-      console.log(`🔍 Catch-all route hit for path: ${req.path}`);
-      // Nie przekierowuj API routes
       if (req.path.startsWith('/api') || req.path.startsWith('/socket.io')) {
-        console.log(`⏭️ Skipping catch-all for API route: ${req.path}`);
-        return next(); // Przejdź do 404 handler
+        return next();
       }
-      console.log(`📄 Serving index.html for path: ${req.path}`);
       res.sendFile(indexPath);
     });
-  } else {
-    console.log('❌ Frontend build not found, serving API only');
   }
-} else {
+  
   // 404 handler for unknown routes (in development)
   app.use(notFoundHandler);
 }
