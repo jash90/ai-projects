@@ -18,7 +18,6 @@ export const redis: RedisClientType = createClient({
   url: config.redis_url,
   socket: {
     connectTimeout: 10000, // 10 seconds
-    commandTimeout: 30000, // 30 seconds
     keepAlive: 30000, // 30 seconds
   },
 });

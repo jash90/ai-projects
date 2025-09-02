@@ -3,7 +3,7 @@ import Joi from 'joi';
 import { AgentModel } from '../models/Agent';
 import { ConversationModel } from '../models/Conversation';
 import { FileModel } from '../models/File';
-import { aiService } from '../services/aiService';
+import { aiService, ChatResponse } from '../services/aiService';
 import { authenticateToken } from '../middleware/auth';
 import { validate, commonSchemas } from '../middleware/validation';
 import { aiLimiter, generalLimiter } from '../middleware/rateLimiting';
@@ -22,13 +22,14 @@ router.post('/projects/:projectId/agents/:agentId/chat',
     }),
     body: Joi.object({
       message: Joi.string().min(1).max(50000).required(),
-      includeFiles: Joi.boolean().default(true)
+      includeFiles: Joi.boolean().default(true),
+      stream: Joi.boolean().default(false)
     })
   }),
   async (req: Request, res: Response) => {
     try {
       const { projectId, agentId } = req.params;
-      const { message, includeFiles } = req.body;
+      const { message, includeFiles, stream } = req.body;
       const userId = req.user!.id;
 
       // Get agent
@@ -75,55 +76,127 @@ router.post('/projects/:projectId/agents/:agentId/chat',
         }
       }
 
-      // Get AI response
+      // Get AI response (streaming or regular)
       const aiResponse = await aiService.chat({
         agent,
         messages,
         projectFiles,
         userId,
         projectId,
-        conversationId: conversation?.id
+        conversationId: conversation?.id,
+        stream
       });
 
-      // Add assistant message
-      const assistantMessage = {
-        role: 'assistant' as const,
-        content: aiResponse.content,
-        timestamp: new Date(),
-        metadata: aiResponse.metadata
-      };
+      if (stream && 'stream' in aiResponse) {
+        // Handle streaming response
+        res.writeHead(200, {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          'Connection': 'keep-alive',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'Cache-Control'
+        });
 
-      messages.push(assistantMessage);
+        let fullContent = '';
+        
+        try {
+          for await (const chunk of aiResponse.stream) {
+            if (typeof chunk === 'string') {
+              fullContent += chunk;
+              res.write(`data: ${JSON.stringify({ type: 'chunk', content: chunk })}\n\n`);
+            } else {
+              // This is the final response with metadata
+              const finalResponse = chunk as ChatResponse;
+              
+              // Add assistant message
+              const assistantMessage = {
+                role: 'assistant' as const,
+                content: finalResponse.content,
+                timestamp: new Date(),
+                metadata: finalResponse.metadata
+              };
 
-      // Save updated conversation
-      const updatedConversation = await ConversationModel.createOrUpdate(
-        projectId,
-        agentId,
-        messages,
-        userId
-      );
+              messages.push(assistantMessage);
 
-      logger.info('Chat message processed', {
-        projectId,
-        agentId,
-        userId,
-        userMessageLength: message.length,
-        aiResponseLength: aiResponse.content.length,
-        totalMessages: messages.length,
-        includeFiles,
-        fileCount: projectFiles.length
-      });
+              // Save updated conversation
+              const updatedConversation = await ConversationModel.createOrUpdate(
+                projectId,
+                agentId,
+                messages,
+                userId
+              );
 
-      res.json({
-        success: true,
-        data: {
-          conversation: updatedConversation,
-          response: {
-            content: aiResponse.content,
-            metadata: aiResponse.metadata
+              // Send final response
+              res.write(`data: ${JSON.stringify({ 
+                type: 'complete', 
+                conversation: updatedConversation,
+                response: {
+                  content: finalResponse.content,
+                  metadata: finalResponse.metadata
+                }
+              })}\n\n`);
+
+              logger.info('Streaming chat message processed', {
+                projectId,
+                agentId,
+                userId,
+                userMessageLength: message.length,
+                aiResponseLength: finalResponse.content.length,
+                totalMessages: messages.length,
+                includeFiles,
+                fileCount: projectFiles.length
+              });
+            }
           }
+        } catch (error) {
+          res.write(`data: ${JSON.stringify({ type: 'error', error: error instanceof Error ? error.message : 'Unknown error' })}\n\n`);
+        } finally {
+          res.end();
         }
-      });
+      } else {
+        // Handle regular response
+        const regularResponse = aiResponse as ChatResponse;
+        
+        // Add assistant message
+        const assistantMessage = {
+          role: 'assistant' as const,
+          content: regularResponse.content,
+          timestamp: new Date(),
+          metadata: regularResponse.metadata
+        };
+
+        messages.push(assistantMessage);
+
+        // Save updated conversation
+        const updatedConversation = await ConversationModel.createOrUpdate(
+          projectId,
+          agentId,
+          messages,
+          userId
+        );
+
+        logger.info('Chat message processed', {
+          projectId,
+          agentId,
+          userId,
+          userMessageLength: message.length,
+          aiResponseLength: regularResponse.content.length,
+          totalMessages: messages.length,
+          includeFiles,
+          fileCount: projectFiles.length
+        });
+
+        res.json({
+          success: true,
+          data: {
+            conversation: updatedConversation,
+            response: {
+              content: regularResponse.content,
+              metadata: regularResponse.metadata
+            }
+          }
+        });
+      }
     } catch (error) {
       if (error instanceof Error && error.message.includes('access denied')) {
         return res.status(403).json({
