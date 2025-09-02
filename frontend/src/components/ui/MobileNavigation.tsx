@@ -108,7 +108,7 @@ export function MobileNavigation({ onNewProject }: MobileNavigationProps) {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">CP</span>
             </div>
-            <span className="font-semibold text-foreground">Claude Projects</span>
+            <span className="font-semibold text-foreground">AI Projects</span>
           </Link>
 
           {/* Actions */}

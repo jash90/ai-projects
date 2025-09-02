@@ -1,7 +1,7 @@
 {
-  "name": "claude-projects-clone",
+  "name": "ai-projects",
   "version": "1.0.0",
-  "description": "A full-stack clone of Claude Projects with AI agents and project management",
+  "description": "A full-stack of AI Projects with AI agents and project management",
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \"pnpm run dev:backend\" \"pnpm run dev:frontend\"",
@@ -22,7 +22,7 @@
     "projects",
     "chat",
     "full-stack",
-    "claude"
+    "ai"
   ],
   "author": "Your Name",
   "license": "MIT",

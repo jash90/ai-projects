@@ -69,7 +69,7 @@ const RegisterPage: React.FC = () => {
       <div className="text-center space-y-2">
         <h1 className="text-2xl font-semibold">Create your account</h1>
         <p className="text-muted-foreground">
-          Get started with Claude Projects
+          Get started with AI Projects
         </p>
       </div>
 

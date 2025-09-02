@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Setup script for Claude Projects Clone
+# Setup script for AI Projects
 set -e
 
-echo "🚀 Setting up Claude Projects Clone..."
+echo "🚀 Setting up AI Projects..."
 
 # Check if Node.js is installed
 if ! command -v node &> /dev/null; then
