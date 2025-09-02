@@ -96,6 +96,8 @@ export interface MessageMetadata {
   tokens?: number;
   model?: string;
   processing_time?: number;
+  prompt_tokens?: number;
+  completion_tokens?: number;
 }
 
 // File Types (for project files)

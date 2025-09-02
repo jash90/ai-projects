@@ -299,8 +299,75 @@ export const conversationsApi = {
 
 // Chat API
 export const chatApi = {
-  sendMessage: (projectId: string, agentId: string, data: { message: string; includeFiles?: boolean }) =>
+  sendMessage: (projectId: string, agentId: string, data: { message: string; includeFiles?: boolean; stream?: boolean }) =>
     apiClient.post<ApiResponse<{ conversation: any; response: any }>>(`/projects/${projectId}/agents/${agentId}/chat`, data),
+
+  sendStreamingMessage: async (
+    projectId: string, 
+    agentId: string, 
+    data: { message: string; includeFiles?: boolean },
+    onChunk: (chunk: string) => void,
+    onComplete: (response: any) => void,
+    onError: (error: string) => void
+  ) => {
+    const token = authStore.getState().tokens?.access_token;
+    
+    try {
+      const response = await fetch(`${apiClient.client.defaults.baseURL}/projects/${projectId}/agents/${agentId}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...data,
+          stream: true
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('No response body');
+      }
+
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              
+              if (data.type === 'chunk') {
+                onChunk(data.content);
+              } else if (data.type === 'complete') {
+                onComplete(data);
+              } else if (data.type === 'error') {
+                onError(data.error);
+              }
+            } catch (e) {
+              console.warn('Failed to parse SSE data:', line);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      onError(error instanceof Error ? error.message : 'Unknown error');
+    }
+  },
 
   getAIStatus: () =>
     apiClient.get<ApiResponse<{ providers: Record<string, boolean>; models: Record<string, string[]> }>>('/ai/status'),

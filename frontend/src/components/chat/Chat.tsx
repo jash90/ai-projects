@@ -34,6 +34,7 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
   const conversation = useConversation(project.id, agent.id)
   const isSending = useConversationSending(project.id, agent.id)
   const [includeFiles, setIncludeFiles] = useState(true)
+  const [streaming, setStreaming] = useState(true)
   const { sendMessage: sendSocketMessage, isConnected: socketConnected } = useSocket(project.id)
 
   // Load conversation history on mount
@@ -53,12 +54,21 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
     if (!content.trim() || isSending) return
 
     try {
-      await conversationStore.getState().sendMessage(
-        project.id, 
-        agent.id, 
-        content, 
-        includeFiles
-      )
+      if (streaming) {
+        await conversationStore.getState().sendStreamingMessage(
+          project.id, 
+          agent.id, 
+          content, 
+          includeFiles
+        )
+      } else {
+        await conversationStore.getState().sendMessage(
+          project.id, 
+          agent.id, 
+          content, 
+          includeFiles
+        )
+      }
       
       // Send via socket for real-time updates (optional)
       if (socketConnected) {
@@ -71,7 +81,7 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
     } catch (error) {
       console.error('Failed to send message:', error)
     }
-  }, [project.id, agent.id, includeFiles, isSending, socketConnected, sendSocketMessage])
+  }, [project.id, agent.id, includeFiles, streaming, isSending, socketConnected, sendSocketMessage])
 
   const handleClearConversation = useCallback(async () => {
     if (confirm('Are you sure you want to clear this conversation? This action cannot be undone.')) {
@@ -91,6 +101,8 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
         isConnected={socketConnected}
         includeFiles={includeFiles}
         onToggleFiles={setIncludeFiles}
+        streaming={streaming}
+        onToggleStreaming={setStreaming}
         onClearConversation={handleClearConversation}
         onToggleSidebar={onToggleSidebar}
       />

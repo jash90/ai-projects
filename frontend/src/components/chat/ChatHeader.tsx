@@ -2,8 +2,8 @@
 import { useState } from 'react'
 import { Menu, FileText, Trash2, Settings } from 'lucide-react'
 import { Project, Agent } from '@/types'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar'
 import { Button } from '@/components/ui/Button'
+import { StreamingToggle } from './StreamingToggle'
 import { cn, getInitials, generateColorFromString } from '@/lib/utils'
 
 interface ChatHeaderProps {
@@ -14,6 +14,8 @@ interface ChatHeaderProps {
   onToggleFiles?: (include: boolean) => void
   onClearConversation?: () => void
   onToggleSidebar?: () => void
+  streaming?: boolean
+  onToggleStreaming?: (enabled: boolean) => void
   className?: string
 }
 
@@ -25,6 +27,8 @@ function ChatHeader({
   onToggleFiles,
   onClearConversation,
   onToggleSidebar,
+  streaming = true,
+  onToggleStreaming,
   className 
 }: ChatHeaderProps) {
   const [showMenu, setShowMenu] = useState(false)
@@ -96,6 +100,15 @@ function ChatHeader({
       </div>
 
       <div className="flex items-center gap-2">
+        {/* Streaming Toggle */}
+        {onToggleStreaming && (
+          <StreamingToggle
+            enabled={streaming}
+            onToggle={onToggleStreaming}
+            className="h-8"
+          />
+        )}
+
         {/* File Context Toggle */}
         <Button
           variant={includeFiles ? "default" : "outline"}

@@ -56,7 +56,7 @@ export const conversationStore = create<ConversationState>((set, get) => ({
     }
   },
 
-  sendMessage: async (projectId: string, agentId: string, content: string, includeFiles = true) => {
+  sendMessage: async (projectId: string, agentId: string, content: string, includeFiles = true, stream = false) => {
     const key = getConversationKey(projectId, agentId)
     
     set(state => ({
@@ -132,6 +132,135 @@ export const conversationStore = create<ConversationState>((set, get) => ({
         set({ error })
         throw new Error(error)
       }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to send message'
+      set({ error: errorMessage })
+      throw error
+    } finally {
+      set(state => ({
+        sendingStates: { ...state.sendingStates, [key]: false }
+      }))
+    }
+  },
+
+  sendStreamingMessage: async (projectId: string, agentId: string, content: string, includeFiles = true) => {
+    const key = getConversationKey(projectId, agentId)
+    
+    set(state => ({
+      sendingStates: { ...state.sendingStates, [key]: true },
+      error: null
+    }))
+
+    try {
+      // Add optimistic user message
+      const tempMessage: ConversationMessage = {
+        id: `temp-${Date.now()}`,
+        role: 'user',
+        content,
+        timestamp: new Date().toISOString(),
+        created_at: new Date().toISOString()
+      }
+
+      set(state => {
+        const conversation = state.conversations[key]
+        if (conversation) {
+          return {
+            conversations: {
+              ...state.conversations,
+              [key]: {
+                ...conversation,
+                messages: [...conversation.messages, tempMessage]
+              }
+            }
+          }
+        }
+        return state
+      })
+
+      // Add temporary AI message for streaming
+      const aiTempMessage: ConversationMessage = {
+        id: `ai-temp-${Date.now()}`,
+        role: 'assistant',
+        content: '',
+        timestamp: new Date().toISOString(),
+        created_at: new Date().toISOString()
+      };
+
+      set(state => {
+        const conversation = state.conversations[key]
+        if (conversation) {
+          return {
+            conversations: {
+              ...state.conversations,
+              [key]: {
+                ...conversation,
+                messages: [...conversation.messages, aiTempMessage]
+              }
+            }
+          }
+        }
+        return state
+      })
+
+      // Start streaming
+      await chatApi.sendStreamingMessage(
+        projectId,
+        agentId,
+        { message: content, includeFiles },
+        (chunk: string) => {
+          // Update streaming message content
+          set(state => {
+            const conversation = state.conversations[key]
+            if (conversation) {
+              return {
+                conversations: {
+                  ...state.conversations,
+                  [key]: {
+                    ...conversation,
+                    messages: conversation.messages.map(m => 
+                      m.id === aiTempMessage.id 
+                        ? { ...m, content: m.content + chunk }
+                        : m
+                    )
+                  }
+                }
+              }
+            }
+            return state
+          })
+        },
+        (response: any) => {
+          // Replace with final conversation
+          set(state => ({
+            conversations: {
+              ...state.conversations,
+              [key]: response.conversation
+            }
+          }))
+        },
+        (error: string) => {
+          // Handle streaming error
+          set(state => {
+            const conversation = state.conversations[key]
+            if (conversation) {
+              return {
+                conversations: {
+                  ...state.conversations,
+                  [key]: {
+                    ...conversation,
+                    messages: conversation.messages.map(m => 
+                      m.id === aiTempMessage.id 
+                        ? { ...m, error }
+                        : m
+                    )
+                  }
+                }
+              }
+            }
+            return state
+          })
+        }
+      )
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to send message'
       set({ error: errorMessage })
