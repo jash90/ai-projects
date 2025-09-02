@@ -52,7 +52,7 @@ export function useSocket(projectId?: string, options: UseSocketOptions = {}) {
       reconnection: true,
       reconnectionDelay: 2000,
       reconnectionDelayMax: 10000,
-      maxReconnectionAttempts: 5,
+      reconnectionAttempts: 5,
     })
 
     const socket = socketRef.current

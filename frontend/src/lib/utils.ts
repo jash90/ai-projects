@@ -225,3 +225,11 @@ export function formatCurrency(amount: number): string {
     maximumFractionDigits: 4
   }).format(amount)
 }
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      NODE_ENV: 'development' | 'production' | 'test'
+    }
+  }
+}
+export {}

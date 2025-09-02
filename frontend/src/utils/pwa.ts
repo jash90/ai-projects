@@ -93,36 +93,14 @@ class PWAManager {
         console.error('Service Worker registration failed:', error);
       }
     }
-  }
+    }
 
-  public async showInstallPrompt(): Promise<boolean> {
+  public showInstallPrompt() {
     if (!this.deferredPrompt) {
-      return false;
+      console.log('No installation prompt available');
+      return;
     }
 
-    try {
-      // Show the install prompt
-      await this.deferredPrompt.prompt();
-      
-      // Wait for the user to respond to the prompt
-      const { outcome } = await this.deferredPrompt.userChoice;
-      
-      console.log(`User response to install prompt: ${outcome}`);
-      
-      // Track the outcome
-      this.trackEvent('pwa_install_prompt', { outcome });
-      
-      // Clear the deferredPrompt
-      this.deferredPrompt = null;
-      
-      return outcome === 'accepted';
-    } catch (error) {
-      console.error('Error showing install prompt:', error);
-      return false;
-    }
-  }
-
-  private showInstallPrompt() {
     // Create install banner
     const banner = this.createInstallBanner();
     document.body.appendChild(banner);
@@ -244,8 +222,8 @@ class PWAManager {
     console.log('PWA Event:', eventName, properties);
     
     // Example: Google Analytics
-    if (typeof gtag !== 'undefined') {
-      gtag('event', eventName, properties);
+    if (typeof (window as any).gtag !== 'undefined') {
+      (window as any).gtag('event', eventName, properties);
     }
   }
 

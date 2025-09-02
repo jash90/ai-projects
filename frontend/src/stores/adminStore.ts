@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { AdminStats, UserManagement, UserUsageStats, TokenLimitUpdate, AdminActivity } from '@/types'
+import { AdminStats, UserManagement, AdminActivity } from '@/types'
 
 interface AdminState {
   // Stats
@@ -118,7 +118,7 @@ const initialState: AdminState = {
 
 export const useAdminStore = create<AdminStore>()(
   devtools(
-    (set, get) => ({
+    (set) => ({
       ...initialState,
 
       // Stats actions

@@ -38,7 +38,7 @@ export const conversationStore = create<ConversationState>((set, get) => ({
     try {
       const response = await conversationsApi.getConversation(projectId, agentId)
       if (response.success) {
-        const conversation = response.data.conversation
+        const conversation = response.data?.conversation
         set(state => ({
           conversations: {
             ...state.conversations,
@@ -58,7 +58,7 @@ export const conversationStore = create<ConversationState>((set, get) => ({
     }
   },
 
-  sendMessage: async (projectId: string, agentId: string, content: string, includeFiles = true, stream = false) => {
+  sendMessage: async (projectId: string, agentId: string, content: string, includeFiles = true) => {
     const key = getConversationKey(projectId, agentId)
     
     set(state => ({
@@ -99,7 +99,7 @@ export const conversationStore = create<ConversationState>((set, get) => ({
       })
 
       if (response.success) {
-        const { conversation } = response.data
+        const conversation = response.data?.conversation
         
         // Replace optimistic message with updated conversation
         set(state => ({
@@ -148,20 +148,23 @@ export const conversationStore = create<ConversationState>((set, get) => ({
         }
       }
       
-      // Update optimistic message with specific error
+      // Update last message with specific error
       set(state => {
         const conversation = state.conversations[key]
         if (conversation) {
-          return {
-            conversations: {
-              ...state.conversations,
-              [key]: {
-                ...conversation,
-                messages: conversation.messages.map(m => 
-                  m.id === tempMessage.id 
-                    ? { ...m, error: errorMessage }
-                    : m
-                )
+          const lastMessage = conversation.messages[conversation.messages.length - 1]
+          if (lastMessage && lastMessage.role === 'user') {
+            return {
+              conversations: {
+                ...state.conversations,
+                [key]: {
+                  ...conversation,
+                  messages: conversation.messages.map(m => 
+                    m.id === lastMessage.id 
+                      ? { ...m, error: errorMessage }
+                      : m
+                  )
+                }
               }
             }
           }

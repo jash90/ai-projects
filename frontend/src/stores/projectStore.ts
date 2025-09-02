@@ -15,7 +15,7 @@ interface ProjectState {
   clearError: () => void
 }
 
-export const useProjects = create<ProjectState>((set, get) => ({
+export const useProjects = create<ProjectState>((set) => ({
   projects: [],
   currentProject: null,
   isLoading: false,
@@ -27,7 +27,7 @@ export const useProjects = create<ProjectState>((set, get) => ({
       const response = await projectsApi.getProjects()
       if (response.success) {
         set({ 
-          projects: response.data.items || [], 
+          projects: response.data?.items || [], 
           isLoading: false 
         })
       } else {
@@ -47,7 +47,7 @@ export const useProjects = create<ProjectState>((set, get) => ({
       const response = await projectsApi.getProject(id)
       if (response.success) {
         set({ 
-          currentProject: response.data.project, 
+          currentProject: response.data?.project, 
           isLoading: false 
         })
       } else {

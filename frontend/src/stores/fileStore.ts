@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { File, FileCreate, FileUpdate } from '@/types'
+import { File, FileCreate } from '@/types'
 import { projectFilesApi } from '@/lib/api'
 
 interface FileState {
@@ -74,7 +74,7 @@ export const useFiles = create<FileState>((set, get) => ({
     try {
       const response = await projectFilesApi.createFile(projectId, data)
       if (response.success) {
-        const newFile = response.data.file
+        const newFile = response.data?.file
         set(state => ({
           filesByProject: {
             ...state.filesByProject,
@@ -138,7 +138,7 @@ export const useFiles = create<FileState>((set, get) => ({
       })
       
       if (response.success) {
-        const updatedFile = response.data.file
+        const updatedFile = response.data?.file
         set(state => {
           const newFilesByProject = { ...state.filesByProject }
           let updatedCurrentFile = state.currentFile
