@@ -1,7 +1,7 @@
 {
-  "name": "claude-projects-backend",
+  "name": "ai-projects-backend",
   "version": "1.0.0",
-  "description": "Backend API for Claude Projects Clone",
+  "description": "Backend API for AI Projects Clone",
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",

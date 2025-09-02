@@ -11,7 +11,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
       <div className="hidden lg:flex lg:w-1/2 bg-primary text-primary-foreground flex-col justify-center items-center p-12">
         <div className="max-w-md text-center space-y-6">
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold">Claude Projects</h1>
+            <h1 className="text-4xl font-bold">AI Projects</h1>
             <p className="text-lg text-primary-foreground/90">
               Collaborate with AI agents on your projects
             </p>

@@ -1,6 +1,6 @@
-# Claude Projects Clone
+# AI Projects Clone
 
-A production-ready, full-stack AI-powered project management platform that replicates and extends Claude Projects functionality with advanced AI agents, real-time chat, dynamic model management, and comprehensive project collaboration tools.
+A production-ready, full-stack AI-powered project management platform that replicates and extends AI Projects functionality with advanced AI agents, real-time chat, dynamic model management, and comprehensive project collaboration tools.
 
 ## 🎯 Key Features
 
@@ -122,7 +122,7 @@ Health Checks              # Container and service monitoring
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd claude-projects-clone
+cd ai-projects-clone
 
 # Run automated setup script
 chmod +x scripts/setup.sh
@@ -143,7 +143,7 @@ NODE_ENV=development
 PORT=3001
 
 # Database Configuration
-DATABASE_URL=postgres://claude_user:claude_password@localhost:5432/claude_projects
+DATABASE_URL=postgres://claude_user:claude_password@localhost:5432/ai_projects
 
 # Redis Configuration
 REDIS_URL=redis://localhost:6379
@@ -534,7 +534,7 @@ CORS_ORIGIN=https://yourdomain.com
 
 ### Project Structure
 ```
-claude-projects-clone/
+ai-projects-clone/
 ├── backend/                 # Node.js Express API
 │   ├── src/
 │   │   ├── routes/         # API route handlers
@@ -814,7 +814,7 @@ server: {
   cors_origin: "http://localhost:3000"
 }
 database: {
-  url: "postgres://claude_user:claude_password@localhost:5432/claude_projects"
+  url: "postgres://claude_user:claude_password@localhost:5432/ai_projects"
 }
 redis: {
   url: "redis://localhost:6379"
@@ -904,4 +904,4 @@ const uploadFile = async (file: File, projectId: string) => {
 
 **Built with ❤️ using modern web technologies and AI integration**
 
-For support, feature requests, or contributions, please visit our [GitHub repository](https://github.com/your-username/claude-projects-clone).
+For support, feature requests, or contributions, please visit our [GitHub repository](https://github.com/your-username/ai-projects-clone).
