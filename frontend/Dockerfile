@@ -43,6 +43,8 @@ RUN echo '#!/bin/sh' > /start.sh && \
     echo 'echo "🔍 Environment Variables Debug:"' >> /start.sh && \
     echo 'echo "VITE_API_URL: $VITE_API_URL"' >> /start.sh && \
     echo 'echo "API_URL: $API_URL"' >> /start.sh && \
+    echo 'echo "VITE_WS_URL: $VITE_WS_URL"' >> /start.sh && \
+    echo 'echo "WS_URL: $WS_URL"' >> /start.sh && \
     echo 'echo "NODE_ENV: $NODE_ENV"' >> /start.sh && \
     echo 'echo "PORT: $PORT"' >> /start.sh && \
     echo 'echo ""' >> /start.sh && \
