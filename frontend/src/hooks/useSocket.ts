@@ -48,6 +48,11 @@ export function useSocket(projectId?: string, options: UseSocketOptions = {}) {
       },
       transports: ['websocket', 'polling'],
       forceNew: true,
+      timeout: 60000, // 60 seconds connection timeout
+      reconnection: true,
+      reconnectionDelay: 2000,
+      reconnectionDelayMax: 10000,
+      maxReconnectionAttempts: 5,
     })
 
     const socket = socketRef.current

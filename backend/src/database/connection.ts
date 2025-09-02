@@ -7,13 +7,20 @@ import logger from '../utils/logger';
 export const pool = new Pool({
   connectionString: config.database_url,
   max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  idleTimeoutMillis: 60000, // 60 seconds
+  connectionTimeoutMillis: 10000, // 10 seconds
+  query_timeout: 120000, // 2 minutes for long queries
+  statement_timeout: 120000, // 2 minutes for long statements
 });
 
 // Redis connection
 export const redis: RedisClientType = createClient({
   url: config.redis_url,
+  socket: {
+    connectTimeout: 10000, // 10 seconds
+    commandTimeout: 30000, // 30 seconds
+    keepAlive: 30000, // 30 seconds
+  },
 });
 
 // Database initialization

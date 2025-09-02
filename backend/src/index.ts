@@ -33,6 +33,9 @@ const io = new SocketServer(server, {
     credentials: true,
   },
   transports: ['websocket', 'polling'],
+  pingTimeout: 60000, // 60 seconds
+  pingInterval: 25000, // 25 seconds
+  connectTimeout: 45000, // 45 seconds
 });
 
 // Initialize socket handler
@@ -73,6 +76,19 @@ app.use(cors({
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Request timeout middleware
+app.use((req, res, next) => {
+  // Set longer timeout for AI chat endpoints
+  if (req.path.includes('/chat')) {
+    req.setTimeout(180000); // 3 minutes for AI requests
+    res.setTimeout(180000);
+  } else {
+    req.setTimeout(60000); // 1 minute for other requests
+    res.setTimeout(60000);
+  }
+  next();
+});
 
 // Request sanitization
 app.use(sanitizeInputs);
@@ -186,12 +202,18 @@ async function startServer(): Promise<void> {
     await modelService.initialize();
     logger.info('Model service initialized successfully');
 
+    // Configure server timeouts for long AI processing
+    server.timeout = 180000; // 3 minutes
+    server.keepAliveTimeout = 65000; // 65 seconds
+    server.headersTimeout = 66000; // 66 seconds (slightly higher than keepAliveTimeout)
+
     // Start server
     server.listen(config.port, () => {
       logger.info(`Server started on port ${config.port}`, {
         environment: process.env.NODE_ENV,
         port: config.port,
         cors_origin: config.cors_origin,
+        timeout: server.timeout,
       });
     });
 
