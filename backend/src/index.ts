@@ -193,10 +193,13 @@ if (process.env.NODE_ENV === 'production') {
   } else {
     console.log('❌ Frontend build not found, serving API only');
   }
+  
+  // 404 handler for unknown routes (only in production)
+  app.use(notFoundHandler);
+} else {
+  // 404 handler for unknown routes (in development)
+  app.use(notFoundHandler);
 }
-
-// 404 handler for unknown routes
-app.use(notFoundHandler);
 
 // Global error handler
 app.use(errorHandler);
