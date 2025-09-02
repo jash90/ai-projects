@@ -18,7 +18,9 @@
     "test": "jest",
     "test:all": "jest --testPathIgnorePatterns=[]",
     "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix"
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.60.0",
@@ -61,6 +63,7 @@
     "supertest": "^7.1.4",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
+    "tsx": "^4.20.5",
     "typescript": "^5.2.2"
   }
 }

@@ -137,4 +137,22 @@ Po tych poprawkach Railway build powinien przejść bez błędów:
 
 ## 🎉 **Problem Rozwiązany!**
 
+## 🔧 **Dodatkowe Poprawki Railway Runtime**
+
+### ❌ Problem: `ERR_ERL_UNEXPECTED_X_FORWARDED_FOR`
+```
+ValidationError: The 'X-Forwarded-For' header is set but the Express 'trust proxy' setting is false
+```
+**✅ Rozwiązanie:**
+```javascript
+// backend/src/index.ts
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1); // Trust first proxy (Railway)
+}
+```
+**Powód:** 
+- Railway używa proxy i wysyła nagłówek `X-Forwarded-For`
+- Express musi wiedzieć, że może ufać pierwszemu proxy
+- Rate limiting potrzebuje prawdziwego IP użytkownika
+
 Aplikacja jest teraz w pełni kompatybilna z Railway production environment! 🚀

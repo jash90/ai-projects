@@ -224,4 +224,18 @@ ERR_PNPM_OUTDATED_LOCKFILE Cannot install with "frozen-lockfile"
 **✅ Rozwiązanie:**
 - Zmieniono `nixpacks.toml`: `pnpm install` (bez --frozen-lockfile)
 
+### ❌ Problem: `ERR_ERL_UNEXPECTED_X_FORWARDED_FOR` (Runtime)
+```
+ValidationError: The 'X-Forwarded-For' header is set but the Express 'trust proxy' setting is false
+```
+**✅ Rozwiązanie:**
+```javascript
+// backend/src/index.ts
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1); // Trust first proxy (Railway)
+}
+```
+- Railway używa proxy i wysyła nagłówek `X-Forwarded-For`
+- Express musi wiedzieć, że może ufać proxy dla rate limiting
+
 Aplikacja powinna teraz działać płynnie na Railway! 🚀
