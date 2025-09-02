@@ -15,12 +15,12 @@
     "type-check": "turbo type-check",
     "test": "turbo test",
     "clean": "turbo clean && rm -rf node_modules",
-    "start": "turbo start --filter=backend",
+    "start": "cd backend && pnpm run start",
     "start:prod": "node backend/start-prod.js",
-    "db:migrate": "turbo db:migrate --filter=backend",
-    "db:seed": "turbo db:seed --filter=backend",
-    "railway:build": "turbo build",
-    "railway:start": "./start-railway.sh",
+    "db:migrate": "cd backend && pnpm run db:migrate",
+    "db:seed": "cd backend && pnpm run db:seed",
+    "railway:build": "cd backend && pnpm run build && cd ../frontend && pnpm run build",
+    "railway:start": "node backend/start-prod.js",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "install:all": "pnpm install"
@@ -34,9 +34,11 @@
   ],
   "author": "Your Name",
   "license": "MIT",
-  "devDependencies": {
-    "concurrently": "^8.2.2",
+  "dependencies": {
     "turbo": "^2.5.6"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   },
   "pnpm": {
     "ignoredBuiltDependencies": [
