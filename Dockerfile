@@ -6,8 +6,8 @@ RUN corepack enable && corepack prepare pnpm@8.15.4 --activate
 
 WORKDIR /app
 
-# Copy workspace and turbo config files
-COPY pnpm-workspace.yaml package.json pnpm-lock.yaml turbo.json ./
+# Copy workspace and nx config files
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml nx.json ./
 COPY backend/package.json ./backend/
 COPY frontend/package.json ./frontend/
 
