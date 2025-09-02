@@ -163,6 +163,7 @@ railway up
 ```
 
 📚 **Full Railway guide**: [RAILWAY.md](./RAILWAY.md)  
+🔧 **Railway fixes**: [RAILWAY_FIXED.md](./RAILWAY_FIXED.md)  
 ✅ **Deployment checklist**: [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)
 
 ### Option 2: Local Development

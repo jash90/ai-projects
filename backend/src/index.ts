@@ -157,6 +157,23 @@ app.use('*', (req, res) => {
 // Import and use the new error handler
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 
+// Serwuj statyczne pliki frontend w produkcji
+if (process.env.NODE_ENV === 'production') {
+  const path = require('path');
+  
+  // Serwuj statyczne pliki z frontend build
+  app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+  
+  // Catch-all route dla React Router (przed 404 handler)
+  app.get('*', (req, res, next) => {
+    // Nie przekierowuj API routes
+    if (req.path.startsWith('/api') || req.path.startsWith('/socket.io')) {
+      return next(); // Przejdź do 404 handler
+    }
+    res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+  });
+}
+
 // 404 handler for unknown routes
 app.use(notFoundHandler);
 
@@ -183,11 +200,12 @@ async function startServer(): Promise<void> {
     server.keepAliveTimeout = 65000; // 65 seconds
     server.headersTimeout = 66000; // 66 seconds (slightly higher than keepAliveTimeout)
 
-    // Start server
-    server.listen(config.port, () => {
-      logger.info(`Server started on port ${config.port}`, {
+    // Start server - Railway automatycznie przypisuje PORT
+    const PORT = parseInt(process.env.PORT || config.port.toString(), 10);
+    server.listen(PORT, '0.0.0.0', () => {
+      logger.info(`Server started on port ${PORT}`, {
         environment: process.env.NODE_ENV,
-        port: config.port,
+        port: PORT,
         cors_origin: config.cors_origin,
         timeout: server.timeout,
       });
