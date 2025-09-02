@@ -102,13 +102,33 @@ async function main() {
     // Start the server
     startServer();
     
-    // Test server responsiveness after a short delay
-    setTimeout(async () => {
-      try {
-        const http = require('http');
-        const port = process.env.PORT || '3001';
-        
-        console.log(`🔍 Testing server responsiveness on port ${port}...`);
+                 // Test server responsiveness after a short delay
+             setTimeout(async () => {
+               try {
+                 const http = require('http');
+                 const port = process.env.PORT || '3001';
+                 
+                 console.log(`🔍 Testing server responsiveness on port ${port}...`);
+                 console.log(`🔍 Using IPv4 address: 127.0.0.1:${port}`);
+                 
+                 // Check if port is actually listening
+                 const net = require('net');
+                 const socket = new net.Socket();
+                 
+                 socket.setTimeout(2000);
+                 socket.on('connect', () => {
+                   console.log(`✅ Port ${port} is listening and accepting connections`);
+                   socket.destroy();
+                 });
+                 socket.on('timeout', () => {
+                   console.log(`⏰ Port ${port} connection timeout`);
+                   socket.destroy();
+                 });
+                 socket.on('error', (err) => {
+                   console.log(`❌ Port ${port} connection error:`, err.message);
+                 });
+                 
+                 socket.connect(port, '127.0.0.1');
         
                          const options = {
                    hostname: '127.0.0.1', // Use IPv4 instead of localhost
@@ -141,7 +161,7 @@ async function main() {
       } catch (error) {
         console.error('💥 Error during health check:', error);
       }
-    }, 3000); // Wait 3 seconds for server to fully start
+                 }, 5000); // Wait 5 seconds for server to fully start
     
     // Keep the process alive
     console.log('✅ Application started successfully');
