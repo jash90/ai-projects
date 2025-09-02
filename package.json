@@ -10,7 +10,6 @@
   },
   "scripts": {
     "start": "cd backend && pnpm start",
-    "postinstall": "pnpm run build",
     "railway:build": "pnpm run build",
     "railway:start": "./start-railway.sh",
     "docker:up": "docker-compose up -d",
