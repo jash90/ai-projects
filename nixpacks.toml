@@ -9,3 +9,6 @@ cmds = ["pnpm exec nx run-many -t build"]
 
 [start]
 cmd = "node backend/start-prod.js"
+
+[variables]
+NODE_ENV = "production"
