@@ -44,11 +44,22 @@ location /socket.io {
 For external backend configuration, you can use environment variables:
 
 ```bash
-# Set backend URL
+# Set backend URLs
 docker run -p 3000:80 \
-  -e BACKEND_URL=https://your-backend.railway.app \
+  -e VITE_API_URL=https://your-backend.railway.app/api \
+  -e VITE_WS_URL=wss://your-backend.railway.app \
+  -e API_URL=https://your-backend.railway.app/api \
+  -e WS_URL=wss://your-backend.railway.app \
   claude-projects-frontend
 ```
+
+#### Available Environment Variables:
+
+- **`VITE_API_URL`** - API URL for Vite build (used during build time)
+- **`VITE_WS_URL`** - WebSocket URL for Vite build (used during build time)
+- **`API_URL`** - API URL for nginx proxy (used at runtime)
+- **`WS_URL`** - WebSocket URL for nginx proxy (used at runtime)
+- **`NODE_ENV`** - Environment mode (development/production)
 
 ## Differences from Main Dockerfile
 
