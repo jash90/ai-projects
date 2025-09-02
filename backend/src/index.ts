@@ -22,6 +22,8 @@ import fileRoutes from './routes/files';
 import chatRoutes from './routes/chat';
 import modelRoutes from './routes/models';
 import usageRoutes from './routes/usage';
+import adminRoutes from './routes/admin';
+import settingsRoutes from './routes/settings';
 
 const app = express();
 const server = createServer(app);
@@ -128,6 +130,8 @@ app.use('/api', projectFileRoutes); // Project file routes include projects/:id/
 app.use('/api', fileRoutes);         // Uploaded file routes
 app.use('/api', chatRoutes);         // Chat routes
 app.use('/api', usageRoutes);        // Token usage routes
+app.use('/api/admin', adminRoutes);  // Admin routes
+app.use('/api/settings', settingsRoutes);  // User settings routes
 
 // 404 handler
 app.use('*', (req, res) => {

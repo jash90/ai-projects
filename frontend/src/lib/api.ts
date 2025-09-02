@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios'
-import { ApiResponse, AuthTokens, PaginatedResponse } from '@/types'
+import { ApiResponse, AuthTokens, PaginatedResponse, User, UserPreferences, AdminStats, UserManagement, UserUsageStats, TokenLimitUpdate, AdminActivity } from '@/types'
 import { authStore } from '@/stores/authStore'
 
 class ApiClient {
@@ -164,10 +164,10 @@ export const apiClient = new ApiClient()
 // Auth API
 export const authApi = {
   login: (data: { email: string; password: string }) =>
-    apiClient.post<ApiResponse<{ user: any; tokens: AuthTokens }>>('/auth/login', data),
+    apiClient.post<ApiResponse<{ user: User; tokens: AuthTokens }>>('/auth/login', data),
 
   register: (data: { email: string; username: string; password: string }) =>
-    apiClient.post<ApiResponse<{ user: any; tokens: AuthTokens }>>('/auth/register', data),
+    apiClient.post<ApiResponse<{ user: User; tokens: AuthTokens }>>('/auth/register', data),
 
   logout: () =>
     apiClient.post<ApiResponse>('/auth/logout'),
@@ -177,6 +177,9 @@ export const authApi = {
       refresh_token: refreshToken,
     }),
 
+  getCurrentUser: () =>
+    apiClient.get<ApiResponse<{ user: User }>>('/auth/me'),
+
   getProfile: () =>
     apiClient.get<ApiResponse<{ user: any }>>('/auth/profile'),
 
@@ -184,7 +187,7 @@ export const authApi = {
     apiClient.put<ApiResponse<{ user: any }>>('/auth/profile', data),
 
   verifyToken: () =>
-    apiClient.get<ApiResponse<{ user: any; valid: boolean }>>('/auth/verify'),
+    apiClient.get<ApiResponse<{ user: User; valid: boolean }>>('/auth/verify'),
 }
 
 // Projects API
@@ -487,3 +490,82 @@ export const modelsApi = {
 
 // Alias for project text files
 export const projectFilesApi = filesApi
+
+// Admin API
+export const adminApi = {
+  // Dashboard stats
+  getStats: () =>
+    apiClient.get<ApiResponse<AdminStats>>('/admin/stats'),
+
+  // User management
+  getUsers: (params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    role?: 'user' | 'admin';
+    status?: 'active' | 'inactive';
+  }) =>
+    apiClient.get<ApiResponse<{
+      users: UserManagement[];
+      pagination: {
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+      };
+    }>>('/admin/users', params),
+
+  getUserStats: (userId: string) =>
+    apiClient.get<ApiResponse<UserUsageStats>>(`/admin/users/${userId}/stats`),
+
+  toggleUserStatus: (userId: string, isActive: boolean) =>
+    apiClient.put<ApiResponse>(`/admin/users/${userId}/status`, { is_active: isActive }),
+
+  updateUserTokenLimits: (userId: string, limits: Omit<TokenLimitUpdate, 'user_id'>) =>
+    apiClient.put<ApiResponse>(`/admin/users/${userId}/token-limits`, limits),
+
+  // Global token limits
+  getGlobalTokenLimits: () =>
+    apiClient.get<ApiResponse<{ global: number; monthly: number }>>('/admin/token-limits'),
+
+  updateGlobalTokenLimits: (limits: Omit<TokenLimitUpdate, 'user_id'>) =>
+    apiClient.put<ApiResponse>('/admin/token-limits', limits),
+
+  // Activity log
+  getActivity: (params?: {
+    page?: number;
+    limit?: number;
+    admin_user_id?: string;
+    action_type?: string;
+  }) =>
+    apiClient.get<ApiResponse<{
+      activities: AdminActivity[];
+      pagination: {
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+      };
+    }>>('/admin/activity', params),
+};
+
+// Settings API
+export const settingsApi = {
+  getProfile: () =>
+    apiClient.get<ApiResponse<{ user: User }>>('/settings/profile'),
+
+  updateProfile: (updates: { username?: string; email?: string }) =>
+    apiClient.put<ApiResponse<{ user: User }>>('/settings/profile', updates),
+
+  updatePassword: (data: { current_password: string; new_password: string }) =>
+    apiClient.put<ApiResponse<{ message: string }>>('/settings/password', data),
+
+  getPreferences: () =>
+    apiClient.get<ApiResponse<{ preferences: UserPreferences }>>('/settings/preferences'),
+
+  updatePreferences: (preferences: UserPreferences) =>
+    apiClient.put<ApiResponse<{ preferences: UserPreferences }>>('/settings/preferences', preferences),
+
+  getUsage: () =>
+    apiClient.get<ApiResponse<{ stats: UserUsageStats }>>('/settings/usage'),
+};

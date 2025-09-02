@@ -51,7 +51,13 @@ router.post('/register',
           user: {
             id: user.id,
             email: user.email,
-            username: user.username
+            username: user.username,
+            role: user.role,
+            token_limit_global: user.token_limit_global,
+            token_limit_monthly: user.token_limit_monthly,
+            is_active: user.is_active,
+            created_at: user.created_at,
+            updated_at: user.updated_at
           },
           tokens: {
             access_token: accessToken,
@@ -110,7 +116,13 @@ router.post('/login',
           user: {
             id: user.id,
             email: user.email,
-            username: user.username
+            username: user.username,
+            role: user.role,
+            token_limit_global: user.token_limit_global,
+            token_limit_monthly: user.token_limit_monthly,
+            is_active: user.is_active,
+            created_at: user.created_at,
+            updated_at: user.updated_at
           },
           tokens: {
             access_token: accessToken,
@@ -278,13 +290,78 @@ router.put('/profile',
 
 // Verify token (for frontend to check if token is still valid)
 router.get('/verify', authenticateToken, async (req: Request, res: Response) => {
-  res.json({
-    success: true,
-    data: {
-      user: req.user,
-      valid: true
+  try {
+    // Get fresh user data from database to include role and other fields
+    const user = await UserModel.findById(req.user!.id);
+    
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        error: 'User not found'
+      });
     }
-  });
+
+    res.json({
+      success: true,
+      data: {
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          role: user.role,
+          token_limit_global: user.token_limit_global,
+          token_limit_monthly: user.token_limit_monthly,
+          is_active: user.is_active,
+          created_at: user.created_at,
+          updated_at: user.updated_at
+        },
+        valid: true
+      }
+    });
+  } catch (error) {
+    logger.error('Error verifying token:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to verify token'
+    });
+  }
+});
+
+// Get current user (refresh user data)
+router.get('/me', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const user = await UserModel.findById(req.user!.id);
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'User not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          role: user.role,
+          token_limit_global: user.token_limit_global,
+          token_limit_monthly: user.token_limit_monthly,
+          is_active: user.is_active,
+          created_at: user.created_at,
+          updated_at: user.updated_at
+        }
+      }
+    });
+  } catch (error) {
+    logger.error('Error getting current user:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to get user data'
+    });
+  }
 });
 
 export default router;

@@ -3,6 +3,10 @@ export interface User {
   id: string;
   email: string;
   username: string;
+  role: 'user' | 'admin';
+  token_limit_global?: number;
+  token_limit_monthly?: number;
+  is_active: boolean;
   created_at: Date;
   updated_at: Date;
 }
@@ -16,6 +20,22 @@ export interface UserCreate {
 export interface UserLogin {
   email: string;
   password: string;
+}
+
+export interface UserProfileUpdate {
+  username?: string;
+  email?: string;
+}
+
+export interface UserPasswordUpdate {
+  current_password: string;
+  new_password: string;
+}
+
+export interface UserPreferences {
+  theme?: 'light' | 'dark' | 'system';
+  notifications_enabled?: boolean;
+  email_notifications?: boolean;
 }
 
 // Project Types
@@ -225,6 +245,52 @@ export interface ValidationError {
   message: string;
 }
 
+// Admin Types
+export interface AdminStats {
+  total_users: number;
+  active_users: number;
+  total_projects: number;
+  total_messages: number;
+  total_tokens_used: number;
+  total_cost: number;
+  monthly_tokens: number;
+  monthly_cost: number;
+  top_users: UserUsageStats[];
+}
+
+export interface UserUsageStats {
+  user_id: string;
+  email: string;
+  username: string;
+  total_tokens: number;
+  monthly_tokens: number;
+  total_cost: number;
+  monthly_cost: number;
+  project_count: number;
+  last_active: Date;
+}
+
+export interface TokenLimitUpdate {
+  user_id?: string;
+  global_limit?: number;
+  monthly_limit?: number;
+}
+
+export interface UserManagement {
+  id: string;
+  email: string;
+  username: string;
+  role: 'user' | 'admin';
+  token_limit_global?: number;
+  token_limit_monthly?: number;
+  is_active: boolean;
+  total_tokens_used: number;
+  monthly_tokens_used: number;
+  project_count: number;
+  last_active?: Date;
+  created_at: Date;
+}
+
 // Configuration Types
 export interface Config {
   port: number;
@@ -243,6 +309,11 @@ export interface Config {
   ai: {
     openai_api_key?: string;
     anthropic_api_key?: string;
+  };
+  admin: {
+    email: string;
+    default_token_limit_global: number;
+    default_token_limit_monthly: number;
   };
   log_level: string;
 }

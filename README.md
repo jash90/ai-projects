@@ -11,6 +11,7 @@ A production-ready, full-stack AI-powered project management platform that repli
 - **Real-time Chat**: WebSocket-powered conversations with typing indicators and message history
 - **Context-Aware AI**: Project files automatically included in AI conversations for enhanced context
 - **Token Usage Tracking**: Comprehensive monitoring of AI API usage and costs per project and agent
+- **Token Limit Management**: Admin-configurable global and per-user token limits with automatic enforcement
 - **Streaming Responses**: Real-time AI response streaming for better user experience
 
 ### 📁 **Project Management**
@@ -24,12 +25,14 @@ A production-ready, full-stack AI-powered project management platform that repli
 
 ### 🔒 **Enterprise-Grade Security**
 - **JWT Authentication**: Secure token-based auth with automatic refresh and blacklisting
+- **Role-Based Access Control**: Admin and user roles with proper authorization
 - **Rate Limiting**: Configurable request limits with Redis-backed storage (1000 requests per 15 minutes)
 - **Input Validation**: Comprehensive request validation using Joi schemas
 - **Security Headers**: Helmet.js integration for secure HTTP headers
 - **CORS Protection**: Configurable cross-origin request handling
 - **File Upload Security**: MIME type validation and size limits (10MB max)
 - **Session Management**: Secure session handling with Redis storage
+- **Admin Panel**: Comprehensive admin dashboard with user management and token limits
 
 ### 🎨 **Modern User Experience**
 - **Responsive Design**: Mobile-first UI built with Tailwind CSS and custom design system
@@ -164,6 +167,11 @@ RATE_LIMIT_MAX_REQUESTS=1000
 # AI Provider API Keys
 OPENAI_API_KEY=your-openai-api-key-here
 ANTHROPIC_API_KEY=your-anthropic-api-key-here
+
+# Admin Configuration
+ADMIN_EMAIL=bartekziimny90@gmail.com
+DEFAULT_TOKEN_LIMIT_GLOBAL=1000000
+DEFAULT_TOKEN_LIMIT_MONTHLY=100000
 
 # Logging
 LOG_LEVEL=info
@@ -390,6 +398,28 @@ GET    /api/usage/summary                      # Overall usage summary
 GET    /api/usage/stats                        # Detailed usage statistics
 GET    /api/projects/:projectId/usage          # Project-specific usage
 GET    /api/agents/:agentId/usage              # Agent-specific usage
+```
+
+### Admin Panel (Admin Only)
+```http
+GET    /api/admin/stats                        # Admin dashboard statistics
+GET    /api/admin/users                        # Get all users with pagination and filters
+GET    /api/admin/users/:userId/stats          # Get detailed user statistics
+PUT    /api/admin/users/:userId/status         # Toggle user active/inactive status
+PUT    /api/admin/users/:userId/token-limits   # Update token limits for specific user
+GET    /api/admin/token-limits                 # Get global token limits
+PUT    /api/admin/token-limits                 # Update global token limits
+GET    /api/admin/activity                     # Get admin activity log with pagination
+```
+
+### User Settings (Authenticated Users)
+```http
+GET    /api/settings/profile                   # Get user profile information
+PUT    /api/settings/profile                   # Update username and email
+PUT    /api/settings/password                  # Change user password
+GET    /api/settings/preferences               # Get user preferences (theme, notifications)
+PUT    /api/settings/preferences               # Update user preferences
+GET    /api/settings/usage                     # Get personal usage statistics
 ```
 
 ### WebSocket Events

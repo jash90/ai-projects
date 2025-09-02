@@ -4,6 +4,7 @@ import { Agent, ConversationMessage, MessageMetadata } from '../types';
 import config from '../utils/config';
 import logger from '../utils/logger';
 import { TokenService } from './tokenService';
+import { UserModel } from '../models/User';
 
 export interface ChatRequest {
   agent: Agent;
@@ -61,6 +62,15 @@ class AIService {
     const startTime = Date.now();
 
     try {
+      // Check token limits before processing (estimate tokens for the request)
+      if (userId) {
+        const estimatedTokens = this.estimateTokens(messages, projectFiles);
+        const tokenCheck = await UserModel.checkTokenLimit(userId, estimatedTokens);
+        
+        if (!tokenCheck.allowed) {
+          throw new Error(`Token limit exceeded: ${tokenCheck.reason}`);
+        }
+      }
       if (stream) {
         // Return streaming response
         if (agent.provider === 'openai') {
@@ -520,6 +530,29 @@ class AIService {
     const { modelService } = await import('./modelService');
     const modelData = await modelService.getModelById(model);
     return modelData?.provider === provider && !!modelData;
+  }
+
+  private estimateTokens(messages: ConversationMessage[], projectFiles?: string[]): number {
+    // Rough estimation: 1 token ≈ 4 characters for English text
+    let totalChars = 0;
+    
+    // Count message characters
+    messages.forEach(message => {
+      totalChars += message.content.length;
+    });
+    
+    // Count project file characters (if included)
+    if (projectFiles) {
+      projectFiles.forEach(file => {
+        totalChars += file.length;
+      });
+    }
+    
+    // Add some buffer for system prompts and formatting
+    const estimatedTokens = Math.ceil(totalChars / 4) + 500;
+    
+    // Add response buffer (estimate response will be similar size to input)
+    return estimatedTokens * 2;
   }
 
   // Get provider status

@@ -11,6 +11,7 @@ import { AgentPanel } from '@/components/agents/AgentPanel'
 import { FileExplorer } from '@/components/files/FileExplorer'
 import { FileEditor } from '@/components/files/FileEditor'
 import { Chat } from '@/components/chat/Chat'
+import { UserMenu } from '@/components/ui/UserMenu'
 import { cn } from '@/lib/utils'
 
 function ProjectPage() {
@@ -143,6 +144,8 @@ function ProjectPage() {
               <PanelLeftClose className="w-4 h-4" />
             )}
           </Button>
+          
+          <UserMenu />
         </div>
       </div>
 
