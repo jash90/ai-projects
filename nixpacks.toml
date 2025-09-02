@@ -5,10 +5,7 @@ nixPkgs = ["nodejs-18_x", "pnpm"]
 cmds = ["pnpm install"]
 
 [phases.build]
-cmds = [
-  "cd backend && pnpm run build",
-  "cd frontend && pnpm run build"
-]
+cmds = ["pnpm exec nx run-many -t build"]
 
 [start]
 cmd = "node backend/start-prod.js"

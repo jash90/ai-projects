@@ -9,17 +9,17 @@
     "pnpm": ">=8.0.0"
   },
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
-    "type-check": "turbo type-check",
-    "test": "turbo test",
-    "clean": "turbo clean && rm -rf node_modules",
+    "build": "pnpm exec nx run-many -t build",
+    "dev": "pnpm exec nx run-many -t dev",
+    "lint": "pnpm exec nx run-many -t lint",
+    "type-check": "pnpm exec nx run-many -t type-check",
+    "test": "pnpm exec nx run-many -t test",
+    "clean": "pnpm exec nx run-many -t clean && rm -rf node_modules",
     "start": "cd backend && pnpm run start",
     "start:prod": "node backend/start-prod.js",
     "db:migrate": "cd backend && pnpm run db:migrate",
     "db:seed": "cd backend && pnpm run db:seed",
-    "railway:build": "cd backend && pnpm run build && cd ../frontend && pnpm run build",
+    "railway:build": "pnpm exec nx run-many -t build",
     "railway:start": "node backend/start-prod.js",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
@@ -34,11 +34,14 @@
   ],
   "author": "Your Name",
   "license": "MIT",
-  "dependencies": {
-    "turbo": "^2.5.6"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@nx/eslint": "^21.4.1",
+    "@nx/node": "^21.4.1",
+    "@nx/vite": "^21.4.1",
+    "@nx/workspace": "^21.4.1",
+    "concurrently": "^8.2.2",
+    "nx": "21.4.1"
   },
   "pnpm": {
     "ignoredBuiltDependencies": [
