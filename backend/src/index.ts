@@ -44,6 +44,11 @@ const io = new SocketServer(server, {
 // Initialize socket handler
 const socketHandler = new SocketHandler(io);
 
+// Trust proxy for Railway/production deployment
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1); // Trust first proxy (Railway)
+}
+
 // Security middleware
 app.use(helmet({
   contentSecurityPolicy: {

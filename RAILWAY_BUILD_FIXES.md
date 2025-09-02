@@ -10,12 +10,18 @@ backend postinstall: sh: tsx: not found
 
 ## ✅ **Zastosowane Rozwiązania**
 
-### 1. **Usunięto Problematyczny `postinstall` Hook**
+### 1. **Usunięto Problematyczne `postinstall` Hooks**
 ```diff
 # backend/package.json
 - "postinstall": "pnpm run migrate"
+
+# główny package.json  
+- "postinstall": "pnpm run build"
 ```
-**Powód:** `tsx` nie jest dostępne podczas instalacji dependencies na Railway
+**Powód:** 
+- `tsx` nie jest dostępne podczas `--prod` instalacji
+- `tsc` nie jest dostępne w production dependencies
+- `postinstall` powoduje build loops w Docker
 
 ### 2. **Stworzono Production Migration Script**
 ```javascript
@@ -52,6 +58,22 @@ cmds = ["pnpm install"]  # bez --frozen-lockfile
 + "start:prod": "NODE_ENV=production node start-prod.js"
 ```
 
+### 7. **Poprawiono Dockerfile dla Railway**
+```diff
+# Dockerfile
++ COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+- RUN pnpm install --prod --frozen-lockfile || pnpm install --prod
++ RUN pnpm install --prod --ignore-scripts
++ COPY backend/start-prod.js ./backend/
++ COPY backend/migrate-prod.js ./backend/
+- CMD ["node", "backend/dist/index.js"]
++ CMD ["node", "backend/start-prod.js"]
+```
+**Powód:**
+- Kopiowanie `pnpm-lock.yaml` eliminuje błędy frozen-lockfile
+- `--ignore-scripts` pomija problematyczne postinstall hooks
+- Kopiowanie production scripts dla automatycznych migracji
+
 ## 🏗️ **Nowa Architektura Startowa**
 
 ```
@@ -85,12 +107,14 @@ backend/
 
 ```bash
 # Lokalnie - wszystko działa
-✅ pnpm run build     # SUCCESS
-✅ pnpm run start:prod # SUCCESS (z migracjami)
+✅ pnpm run build           # SUCCESS
+✅ docker build -t test .   # SUCCESS (45.8s)
+✅ pnpm run start:prod      # SUCCESS (z migracjami)
 
 # Railway - powinno działać
-✅ nixpacks build     # Bez tsx errors
-✅ start:prod         # Z automatycznymi migracjami
+✅ Dockerfile build        # Bez tsx/postinstall errors
+✅ nixpacks build          # Alternatywnie
+✅ start:prod              # Z automatycznymi migracjami
 ```
 
 ## 🚀 **Gotowe do Wdrożenia**
