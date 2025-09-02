@@ -184,6 +184,12 @@ if (process.env.NODE_ENV === 'production') {
       fallthrough: true // Allow fallthrough to catch-all route
     }));
     
+    // Add middleware to log all requests
+    app.use((req, res, next) => {
+      console.log(`📥 Request: ${req.method} ${req.path}`);
+      next();
+    });
+    
     // Catch-all route dla React Router (przed 404 handler)
     app.get('*', (req, res, next) => {
       console.log(`🔍 Catch-all route hit for path: ${req.path}`);
