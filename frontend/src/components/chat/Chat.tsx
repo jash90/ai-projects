@@ -3,10 +3,13 @@ import { Project, Agent } from '@/types'
 import { ChatHeader } from './ChatHeader'
 import { ChatMessages } from './ChatMessages'
 import { ChatInput } from './ChatInput'
+import { TokenLimitBanner } from './TokenLimitBanner'
 import { useConversation, useConversationSending } from '@/stores/conversationStore'
 import { conversationStore } from '@/stores/conversationStore'
 import { useSocket } from '@/hooks/useSocket'
+import { useTokenLimits } from '@/hooks/useTokenLimits'
 import { cn } from '@/lib/utils'
+import toast from 'react-hot-toast'
 
 interface ChatProps {
   project: Project
@@ -36,6 +39,7 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
   const [includeFiles, setIncludeFiles] = useState(true)
   const [streaming, setStreaming] = useState(true)
   const { sendMessage: sendSocketMessage, isConnected: socketConnected } = useSocket(project.id)
+  const { canSendMessage, getLimitStatusMessage, refreshUsage, isGlobalLimitExceeded, isMonthlyLimitExceeded } = useTokenLimits()
 
   // Load conversation history on mount
   useEffect(() => {
@@ -50,8 +54,24 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
     loadConversation()
   }, [project.id, agent.id])
 
+      console.log(isGlobalLimitExceeded, isMonthlyLimitExceeded)
+
   const handleSendMessage = useCallback(async (content: string) => {
     if (!content.trim() || isSending) return
+
+
+    // Check token limits before sending
+    if (!canSendMessage) {
+      const limitMessage = getLimitStatusMessage()
+      if (limitMessage) {
+        toast.error(limitMessage)
+      } else if (isGlobalLimitExceeded || isMonthlyLimitExceeded) {
+        toast.error('Token limit exceeded. Cannot send message.')
+      } else {
+        toast.error('Cannot send message. Please check your account status.')
+      }
+      return
+    }
 
     try {
       if (streaming) {
@@ -70,6 +90,9 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
         )
       }
       
+      // Refresh usage data after sending message
+      refreshUsage()
+      
       // Send via socket for real-time updates (optional)
       if (socketConnected) {
         sendSocketMessage({
@@ -80,8 +103,9 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
       }
     } catch (error) {
       console.error('Failed to send message:', error)
+      toast.error('Failed to send message. Please try again.')
     }
-  }, [project.id, agent.id, includeFiles, streaming, isSending, socketConnected, sendSocketMessage])
+  }, [project.id, agent.id, includeFiles, streaming, isSending, socketConnected, sendSocketMessage, canSendMessage, getLimitStatusMessage, refreshUsage, isGlobalLimitExceeded, isMonthlyLimitExceeded])
 
   const handleClearConversation = useCallback(async () => {
     if (confirm('Are you sure you want to clear this conversation? This action cannot be undone.')) {
@@ -114,10 +138,16 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
         className="flex-1"
       />
       
+      <TokenLimitBanner className="mx-4 mb-2" />
+      
       <ChatInput
         onSendMessage={handleSendMessage}
-        disabled={isSending}
-        placeholder={`Message ${agent.name}...`}
+        disabled={isSending || !canSendMessage}
+        placeholder={
+          !canSendMessage 
+            ? (getLimitStatusMessage() || "Token limit exceeded")
+            : `Message ${agent.name}...`
+        }
       />
     </div>
   )

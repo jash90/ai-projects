@@ -142,54 +142,14 @@ app.use('*', (req, res) => {
   });
 });
 
+// Import and use the new error handler
+import { errorHandler, notFoundHandler } from './middleware/errorHandler';
+
+// 404 handler for unknown routes
+app.use(notFoundHandler);
+
 // Global error handler
-app.use((error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  logger.error('Unhandled error:', {
-    error: error.message,
-    stack: error.stack,
-    path: req.path,
-    method: req.method,
-    userId: (req as any).user?.id,
-  });
-
-  // Handle specific error types
-  if (error.name === 'ValidationError') {
-    return res.status(400).json({
-      success: false,
-      error: 'Validation failed',
-      details: error.message,
-    });
-  }
-
-  if (error.name === 'UnauthorizedError') {
-    return res.status(401).json({
-      success: false,
-      error: 'Unauthorized',
-    });
-  }
-
-  if (error.code === 'LIMIT_FILE_SIZE') {
-    return res.status(400).json({
-      success: false,
-      error: 'File size exceeds limit',
-    });
-  }
-
-  if (error.code === 'LIMIT_UNEXPECTED_FILE') {
-    return res.status(400).json({
-      success: false,
-      error: 'Unexpected file upload',
-    });
-  }
-
-  // Default error response
-  res.status(500).json({
-    success: false,
-    error: process.env.NODE_ENV === 'production' 
-      ? 'Internal server error' 
-      : error.message,
-  });
-});
+app.use(errorHandler);
 
 // Initialize database and start server
 async function startServer(): Promise<void> {

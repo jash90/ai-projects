@@ -7,6 +7,8 @@ import { aiService, ChatResponse } from '../services/aiService';
 import { authenticateToken } from '../middleware/auth';
 import { validate, commonSchemas } from '../middleware/validation';
 import { aiLimiter, generalLimiter } from '../middleware/rateLimiting';
+import { asyncHandler } from '../middleware/errorHandler';
+import { createResourceNotFoundError, createAIServiceError, isAppError } from '../utils/errors';
 import logger from '../utils/logger';
 
 const router = Router();
@@ -26,7 +28,7 @@ router.post('/projects/:projectId/agents/:agentId/chat',
       stream: Joi.boolean().default(false)
     })
   }),
-  async (req: Request, res: Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     try {
       const { projectId, agentId } = req.params;
       const { message, includeFiles, stream } = req.body;
@@ -35,10 +37,7 @@ router.post('/projects/:projectId/agents/:agentId/chat',
       // Get agent
       const agent = await AgentModel.findById(agentId);
       if (!agent) {
-        return res.status(404).json({
-          success: false,
-          error: 'Agent not found'
-        });
+        throw createResourceNotFoundError('Agent', agentId);
       }
 
       // Get existing conversation
@@ -149,7 +148,14 @@ router.post('/projects/:projectId/agents/:agentId/chat',
             }
           }
         } catch (error) {
-          res.write(`data: ${JSON.stringify({ type: 'error', error: error instanceof Error ? error.message : 'Unknown error' })}\n\n`);
+          // Handle streaming errors with proper error formatting
+          let errorMessage = 'Unknown error';
+          if (isAppError(error)) {
+            errorMessage = error.userMessage;
+          } else if (error instanceof Error) {
+            errorMessage = error.message;
+          }
+          res.write(`data: ${JSON.stringify({ type: 'error', error: errorMessage })}\n\n`);
         } finally {
           res.end();
         }
@@ -198,30 +204,27 @@ router.post('/projects/:projectId/agents/:agentId/chat',
         });
       }
     } catch (error) {
-      if (error instanceof Error && error.message.includes('access denied')) {
-        return res.status(403).json({
-          success: false,
-          error: 'Access denied to this project'
-        });
+      // Let the async handler deal with AppErrors
+      if (isAppError(error)) {
+        throw error;
       }
 
-      if (error instanceof Error && (
-        error.message.includes('API key not configured') ||
-        error.message.includes('Unsupported AI provider')
-      )) {
-        return res.status(400).json({
-          success: false,
-          error: error.message
-        });
+      // Handle specific error types and convert to AppErrors
+      if (error instanceof Error) {
+        if (error.message.includes('access denied')) {
+          throw createResourceNotFoundError('Project', req.params.projectId);
+        }
+
+        if (error.message.includes('API key not configured') || 
+            error.message.includes('Unsupported AI provider')) {
+          throw createAIServiceError('unknown', error.message);
+        }
       }
 
-      logger.error('Error processing chat message:', error);
-      res.status(500).json({
-        success: false,
-        error: 'Failed to process chat message'
-      });
+      // Re-throw unknown errors to be handled by global error handler
+      throw error;
     }
-  }
+  })
 );
 
 // Get AI models and provider status
