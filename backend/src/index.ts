@@ -165,18 +165,34 @@ import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 // Serwuj statyczne pliki frontend w produkcji
 if (process.env.NODE_ENV === 'production') {
   const path = require('path');
+  const fs = require('fs');
   
-  // Serwuj statyczne pliki z frontend build
-  app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+  const frontendDistPath = path.join(__dirname, '../../frontend/dist');
+  const indexPath = path.join(frontendDistPath, 'index.html');
   
-  // Catch-all route dla React Router (przed 404 handler)
-  app.get('*', (req, res, next) => {
-    // Nie przekierowuj API routes
-    if (req.path.startsWith('/api') || req.path.startsWith('/socket.io')) {
-      return next(); // Przejdź do 404 handler
-    }
-    res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
-  });
+  console.log('🔍 Checking frontend build...');
+  console.log('📂 Frontend dist path:', frontendDistPath);
+  console.log('📄 Index.html path:', indexPath);
+  console.log('📁 Frontend dist exists:', fs.existsSync(frontendDistPath));
+  console.log('📄 Index.html exists:', fs.existsSync(indexPath));
+  
+  if (fs.existsSync(frontendDistPath)) {
+    console.log('✅ Frontend build found, serving static files');
+    
+    // Serwuj statyczne pliki z frontend build
+    app.use(express.static(frontendDistPath));
+    
+    // Catch-all route dla React Router (przed 404 handler)
+    app.get('*', (req, res, next) => {
+      // Nie przekierowuj API routes
+      if (req.path.startsWith('/api') || req.path.startsWith('/socket.io')) {
+        return next(); // Przejdź do 404 handler
+      }
+      res.sendFile(indexPath);
+    });
+  } else {
+    console.log('❌ Frontend build not found, serving API only');
+  }
 }
 
 // 404 handler for unknown routes
