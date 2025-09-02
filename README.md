@@ -27,9 +27,11 @@ A production-ready, full-stack AI-powered development platform that revolutioniz
 - **JWT Authentication**: Secure token-based auth with automatic refresh and blacklisting
 - **Role-Based Access Control (RBAC)**: Admin and user roles with comprehensive authorization
 - **Admin Panel**: Complete admin dashboard with user management, token limits, and system statistics
+- **Token Limit Enforcement**: Robust client-side and server-side token limit blocking with real-time validation
 - **User Management**: Admin can manage users, set individual token limits, and monitor usage
 - **Activity Logging**: Comprehensive audit trail of admin actions and system events
-- **Rate Limiting**: Configurable request limits with Redis-backed storage (1000 requests per 15 minutes)
+- **Rate Limiting**: Generous, configurable request limits with Redis-backed storage (2000-5000 requests per 15 minutes)
+- **Error Handling**: Structured error responses with user-friendly messages and proper HTTP status codes
 - **Input Validation**: Comprehensive request validation using Joi schemas
 - **Security Headers**: Helmet.js integration for secure HTTP headers
 - **CORS Protection**: Configurable cross-origin request handling
@@ -363,6 +365,14 @@ PUT    /api/settings/preferences // Update preferences
 GET    /api/settings/usage    // Get personal usage statistics
 ```
 
+### Debug Endpoints (Development/Testing)
+```typescript
+GET    /api/debug/user-status        // Get detailed user status and capabilities
+POST   /api/debug/test-token-limit   // Test token limit checking with specified tokens
+GET    /api/debug/test-ai-service    // Check AI service connectivity and configuration
+POST   /api/debug/reset-user-usage/:userId // Reset user token usage (admin only)
+```
+
 ### Real-time WebSocket Events
 ```typescript
 // Client to Server
@@ -513,18 +523,30 @@ idx_token_usage_user  # Usage statistics
 }
 ```
 
-## 🧪 Testing
+## 🧪 Testing & Debugging
 
 ### Test Coverage
 ```bash
 # Run all tests
-pnpm run test
+npm test
 
 # Run with coverage
-pnpm run test:coverage
+npm run test:coverage
 
 # E2E tests (if implemented)
-pnpm run test:e2e
+npm run test:e2e
+
+# Token limit blocking tests
+npm run test:token-limits
+
+# Debug token limit calculations
+npm run debug:token-limits
+
+# Check specific user account
+npm run check:user user@example.com
+
+# Inspect test database contents
+npm run inspect:test-db
 ```
 
 ### Testing Strategy
@@ -532,16 +554,132 @@ pnpm run test:e2e
 - **Integration Tests**: API endpoint and database testing  
 - **Component Tests**: React component behavior testing
 - **E2E Tests**: Full user workflow testing (ready for implementation)
+- **Token Limit Tests**: Comprehensive test suite for token limit enforcement with 7 scenarios
+- **User Account Debugging**: Tools to analyze user accounts and diagnose issues
+- **Test Database**: Isolated test database with automatic cleanup for safe testing
+
+### Debug Tools & Endpoints
+
+#### Production Debug Endpoints (Authenticated)
+```bash
+# Get detailed user status and token limits
+GET /api/debug/user-status
+
+# Test token limit checking
+POST /api/debug/test-token-limit
+{
+  "tokens_to_use": 1000
+}
+
+# Check AI service connectivity  
+GET /api/debug/test-ai-service
+
+# Reset user token usage (admin only)
+POST /api/debug/reset-user-usage/:userId
+```
+
+#### Development Scripts
+```bash
+# Analyze specific user account
+npm run check:user test1234@gmail.com
+
+# Test token limit blocking with 7 comprehensive scenarios
+npm run test:token-limits
+
+# Debug token calculations step-by-step
+npm run debug:token-limits
+
+# Inspect test database contents
+npm run inspect:test-db
+```
+
+## 🔧 Recent Improvements
+
+### Token Limit System Overhaul (Latest)
+- **Fixed Critical Bug**: Resolved string concatenation issue in token limit calculations that was preventing proper enforcement
+- **Comprehensive Testing**: Added 7-scenario test suite covering all token limit edge cases with 100% success rate
+- **Enhanced Error Handling**: Structured error responses with specific HTTP status codes (402 for token limits, 429 for rate limits)
+- **Debug Tools**: Complete set of debugging tools for analyzing user accounts and token usage
+- **Client-Side Validation**: Pre-flight token limit checking to prevent unnecessary API calls
+- **Real-Time Feedback**: Token limit banner with progress indicators and status messages
+
+### Error Handling & User Experience
+- **Structured Error System**: Custom error classes with user-friendly messages and metadata
+- **Smart Error Display**: Frontend automatically formats technical errors into readable messages
+- **Rate Limit Separation**: Clear distinction between rate limits (429) and token limits (402)
+- **Graceful Degradation**: Proper fallbacks when services are unavailable
+
+### Testing & Quality Assurance
+- **Test Database**: Isolated test environment with automatic data cleanup
+- **User Account Analysis**: Tools to diagnose account issues and token usage patterns
+- **Comprehensive Coverage**: Token limit enforcement tested across all scenarios
+- **Production Debugging**: Safe debugging endpoints for troubleshooting live issues
+
+## 🛠️ Troubleshooting
+
+### Common Issues & Solutions
+
+#### Token Limit Issues
+```bash
+# Check if user can send messages
+npm run check:user user@example.com
+
+# Test token limit enforcement
+npm run test:token-limits
+
+# Debug token calculations
+npm run debug:token-limits
+```
+
+**Symptoms**: User can't send messages, seeing "limit exceeded" errors
+**Solutions**:
+1. Check user's current token usage and limits
+2. Verify user account is active
+3. Ensure user has AI agents created in their projects
+4. Reset token usage if needed (admin only)
+
+#### Chat Not Working
+**Symptoms**: Messages not sending, "Failed to send message" errors
+**Common Causes**:
+1. **No AI Agents**: User needs to create AI agents in their projects
+2. **Token Limits**: Check if user has exceeded their limits
+3. **API Keys**: Verify OpenAI/Anthropic API keys are configured
+4. **Rate Limits**: Check if rate limits are being hit
+
+#### Database Connection Issues
+```bash
+# Check database connectivity
+npm run db:migrate
+
+# Reset test database
+npm run inspect:test-db
+```
+
+#### Performance Issues
+```bash
+# Check service health
+curl http://localhost:3001/api/health
+
+# Monitor token usage
+GET /api/debug/user-status
+```
+
+### Debug Workflow
+1. **Identify Issue**: Use debug endpoints to gather information
+2. **Analyze Data**: Check user status, token limits, and usage patterns
+3. **Test Specific Scenarios**: Use test scripts to reproduce issues
+4. **Apply Fixes**: Update limits, reset usage, or fix configuration
+5. **Verify Resolution**: Re-run tests to confirm fixes
 
 ## 🚀 Deployment
 
 ### Production Build
 ```bash
 # Build for production
-pnpm run build
+npm run build
 
 # Preview production build
-pnpm run preview
+npm run preview
 
 # Build Docker images
 docker-compose -f docker-compose.prod.yml build
