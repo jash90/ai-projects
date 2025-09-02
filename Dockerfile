@@ -54,8 +54,17 @@ RUN pnpm install --prod --ignore-scripts
 RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'echo "🚀 Starting backend API server..."' >> /app/start.sh && \
     echo 'cd /app && RUN_MIGRATIONS=false node backend/start-prod.js &' >> /app/start.sh && \
+    echo 'BACKEND_PID=$!' >> /app/start.sh && \
     echo 'echo "⏳ Waiting for backend to start..."' >> /app/start.sh && \
-    echo 'sleep 3' >> /app/start.sh && \
+    echo 'sleep 5' >> /app/start.sh && \
+    echo 'echo "🔍 Checking if backend is still running..."' >> /app/start.sh && \
+    echo 'if kill -0 $BACKEND_PID 2>/dev/null; then' >> /app/start.sh && \
+    echo '  echo "✅ Backend is running (PID: $BACKEND_PID)"' >> /app/start.sh && \
+    echo 'else' >> /app/start.sh && \
+    echo '  echo "❌ Backend stopped, restarting..."' >> /app/start.sh && \
+    echo '  cd /app && RUN_MIGRATIONS=false node backend/start-prod.js &' >> /app/start.sh && \
+    echo '  sleep 3' >> /app/start.sh && \
+    echo 'fi' >> /app/start.sh && \
     echo 'echo "🌐 Starting nginx..."' >> /app/start.sh && \
     echo 'nginx -g "daemon off;"' >> /app/start.sh && \
     chmod +x /app/start.sh
