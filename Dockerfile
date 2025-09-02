@@ -1,72 +1,54 @@
-# Multi-stage Dockerfile for Railway deployment
-# This builds both backend and frontend in a single container
+# Dockerfile - poprawiony dla Railway
+FROM node:18-alpine AS builder
 
-FROM node:18-alpine AS base
-
-# Install curl and other utilities
-RUN apk add --no-cache curl
+# Install pnpm globally
+RUN corepack enable && corepack prepare pnpm@8.15.4 --activate
 
 WORKDIR /app
 
-# Enable pnpm
-RUN corepack enable pnpm
+# Copy workspace files
+COPY pnpm-workspace.yaml package.json ./
+COPY backend/package.json ./backend/
+COPY frontend/package.json ./frontend/
 
-# Copy package files
-COPY package*.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY backend/package*.json ./backend/
-COPY frontend/package*.json ./frontend/
-
-# Install all dependencies
-RUN pnpm install
+# Install ALL dependencies (including dev) for building
+RUN pnpm install --frozen-lockfile || pnpm install
 
 # Copy source code
 COPY . .
 
-# Build backend
+# Build backend and frontend
 RUN cd backend && pnpm run build
-
-# Build frontend
 RUN cd frontend && pnpm run build
 
 # Production stage
 FROM node:18-alpine AS production
 
-# Install nginx and curl
-RUN apk add --no-cache nginx curl
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@8.15.4 --activate
 
 WORKDIR /app
 
-# Enable pnpm
-RUN corepack enable pnpm
+# Copy package files
+COPY package.json pnpm-workspace.yaml ./
+COPY backend/package.json ./backend/
+COPY frontend/package.json ./frontend/
 
-# Copy package files and install only production dependencies
-COPY package*.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY backend/package*.json ./backend/
-RUN cd backend && pnpm install --prod
+# Install only production dependencies
+RUN pnpm install --prod --frozen-lockfile || pnpm install --prod
 
-# Copy built backend
-COPY --from=base /app/backend/dist ./backend/dist
-COPY --from=base /app/backend/src/database ./backend/src/database
+# Copy built files from builder
+COPY --from=builder /app/backend/dist ./backend/dist
+COPY --from=builder /app/frontend/dist ./frontend/dist
 
-# Copy built frontend
-COPY --from=base /app/frontend/dist ./frontend/dist
-
-# Copy nginx configuration
-COPY nginx.railway.conf /etc/nginx/nginx.conf
+# Copy other necessary files
+COPY backend/src/database ./backend/src/database
 
 # Create uploads directory
-RUN mkdir -p uploads
-
-# Create startup script
-COPY start-railway.sh ./
-RUN chmod +x start-railway.sh
+RUN mkdir -p /tmp/uploads
 
 # Expose port
-EXPOSE $PORT
+EXPOSE ${PORT:-3001}
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-  CMD curl -f http://localhost:$PORT/api/health || exit 1
-
-# Start the application
-CMD ["./start-railway.sh"]
+# Start the server
+CMD ["node", "backend/dist/index.js"]

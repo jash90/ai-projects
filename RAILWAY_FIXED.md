@@ -246,4 +246,29 @@ Twoja aplikacja Claude Projects Clone jest teraz gotowa do użycia na Railway!
 
 **URL:** `https://your-app.up.railway.app`
 
+## 📁 Nowe Pliki Backend (Dodane):
+
+```
+backend/
+├── start-prod.js     # Skrypt startowy z automatycznymi migracjami  
+├── migrate-prod.js   # Migracje bez tsx dependency
+└── package.json      # Zaktualizowane skrypty (bez postinstall)
+```
+
+## 🔧 Kluczowe Poprawki Build Issues:
+
+### Problem: `tsx: not found` podczas `postinstall`
+**Rozwiązanie:** 
+- ✅ Usunięto `postinstall: "pnpm run migrate"` 
+- ✅ Stworzono `migrate-prod.js` (pure Node.js, bez tsx)
+- ✅ Migracje uruchamiają się teraz w `start:prod`
+
+### Problem: `packageManager` warning
+**Rozwiązanie:**
+- ✅ Dodano `"packageManager": "pnpm@8.15.4"` w głównym package.json
+
+### Problem: `--frozen-lockfile` issues
+**Rozwiązanie:**
+- ✅ Zmieniono `nixpacks.toml` na `pnpm install` (bez --frozen-lockfile)
+
 Powodzenia! 🚀

@@ -3,28 +3,29 @@
   "version": "1.0.0",
   "description": "A full-stack of AI Projects with AI agents and project management",
   "main": "index.js",
+  "packageManager": "pnpm@8.15.4",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
   "scripts": {
-    "dev": "concurrently \"pnpm run dev:backend\" \"pnpm run dev:frontend\"",
-    "dev:backend": "cd backend && pnpm run dev",
-    "dev:frontend": "cd frontend && pnpm run dev",
-    "build": "pnpm run build:backend && pnpm run build:frontend",
-    "build:backend": "cd backend && pnpm run build",
-    "build:frontend": "cd frontend && pnpm run build",
     "start": "cd backend && pnpm start",
-    "start:prod": "cd backend && NODE_ENV=production node dist/index.js",
     "postinstall": "pnpm run build",
-    "install:all": "pnpm install",
     "railway:build": "pnpm run build",
     "railway:start": "./start-railway.sh",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "db:migrate": "cd backend && pnpm run db:migrate",
-    "db:seed": "cd backend && pnpm run db:seed"
-  },
-  "packageManager": "pnpm@8.15.4",
-  "engines": {
-    "node": ">=18.0.0",
-    "pnpm": ">=8.0.0"
+    "db:seed": "cd backend && pnpm run db:seed",
+    "install:all": "pnpm install",
+    "build": "pnpm run build:backend && pnpm run build:frontend",
+    "build:backend": "cd backend && pnpm run build",
+    "build:frontend": "cd frontend && pnpm run build",
+    "start:prod": "cd backend && NODE_ENV=production node dist/index.js",
+    "dev": "concurrently \"pnpm run dev:backend\" \"pnpm run dev:frontend\"",
+    "dev:backend": "cd backend && pnpm run dev",
+    "dev:frontend": "cd frontend && pnpm run dev",
+    "clean": "rm -rf backend/dist frontend/dist node_modules backend/node_modules frontend/node_modules"
   },
   "keywords": [
     "ai",
