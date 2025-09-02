@@ -65,11 +65,7 @@ class AIService {
       // Check token limits before processing (estimate tokens for the request)
       if (userId) {
         const estimatedTokens = this.estimateTokens(messages, projectFiles);
-        const tokenCheck = await UserModel.checkTokenLimit(userId, estimatedTokens);
-        
-        if (!tokenCheck.allowed) {
-          throw new Error(`Token limit exceeded: ${tokenCheck.reason}`);
-        }
+        await UserModel.checkTokenLimit(userId, estimatedTokens);
       }
       if (stream) {
         // Return streaming response

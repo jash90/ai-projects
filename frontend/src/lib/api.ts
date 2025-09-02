@@ -64,6 +64,20 @@ class ApiClient {
           }
         }
 
+        // Extract meaningful error messages from API responses
+        if (error.response?.data) {
+          const errorData = error.response.data;
+          
+          // Create a structured error object that preserves all error information
+          const structuredError = new Error(errorData.error || errorData.message || 'API Error');
+          structuredError.name = 'APIError';
+          
+          // Attach the full error data for better error handling
+          (structuredError as any).errorData = errorData;
+          
+          return Promise.reject(structuredError);
+        }
+        
         return Promise.reject(error)
       }
     )
@@ -329,7 +343,18 @@ export const chatApi = {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        // Try to extract error message from response body
+        try {
+          const errorData = await response.json();
+          
+          // Create a structured error that preserves all error information
+          const error = new Error(errorData.error || errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+          (error as any).errorData = errorData;
+          throw error;
+        } catch (parseError) {
+          // If we can't parse the response, fall back to status text
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
       }
 
       const reader = response.body?.getReader();
@@ -368,7 +393,12 @@ export const chatApi = {
         }
       }
     } catch (error) {
-      onError(error instanceof Error ? error.message : 'Unknown error');
+      // Handle structured error data properly
+      if (error instanceof Error && (error as any).errorData) {
+        onError((error as any).errorData);
+      } else {
+        onError(error instanceof Error ? error.message : 'Unknown error');
+      }
     }
   },
 

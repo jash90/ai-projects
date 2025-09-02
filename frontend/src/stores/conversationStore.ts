@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { Conversation, ConversationMessage } from '@/types'
 import { conversationsApi, chatApi } from '@/lib/api'
+import { formatChatErrorMessage } from '@/utils/errorMessages'
 
 interface ConversationState {
   // Conversations by project-agent key (projectId-agentId)
@@ -12,6 +13,7 @@ interface ConversationState {
   // Actions
   getConversation: (projectId: string, agentId: string) => Promise<Conversation>
   sendMessage: (projectId: string, agentId: string, content: string, includeFiles?: boolean) => Promise<void>
+  sendStreamingMessage: (projectId: string, agentId: string, content: string, includeFiles?: boolean) => Promise<void>
   clearConversation: (projectId: string, agentId: string) => Promise<void>
   clearError: () => void
 }
@@ -133,7 +135,40 @@ export const conversationStore = create<ConversationState>((set, get) => ({
         throw new Error(error)
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to send message'
+      let errorMessage = 'Failed to send message'
+      
+      // Extract and format error messages for better UX
+      if (error instanceof Error) {
+        // Check if this is a structured API error
+        const errorData = (error as any).errorData;
+        if (errorData) {
+          errorMessage = formatChatErrorMessage(errorData);
+        } else {
+          errorMessage = formatChatErrorMessage(error.message);
+        }
+      }
+      
+      // Update optimistic message with specific error
+      set(state => {
+        const conversation = state.conversations[key]
+        if (conversation) {
+          return {
+            conversations: {
+              ...state.conversations,
+              [key]: {
+                ...conversation,
+                messages: conversation.messages.map(m => 
+                  m.id === tempMessage.id 
+                    ? { ...m, error: errorMessage }
+                    : m
+                )
+              }
+            }
+          }
+        }
+        return state
+      })
+      
       set({ error: errorMessage })
       throw error
     } finally {
@@ -238,8 +273,10 @@ export const conversationStore = create<ConversationState>((set, get) => ({
             }
           }))
         },
-        (error: string) => {
-          // Handle streaming error
+        (error: string | any) => {
+          // Handle streaming error with better error messages
+          const errorMessage = formatChatErrorMessage(error)
+          
           set(state => {
             const conversation = state.conversations[key]
             if (conversation) {
@@ -250,7 +287,7 @@ export const conversationStore = create<ConversationState>((set, get) => ({
                     ...conversation,
                     messages: conversation.messages.map(m => 
                       m.id === aiTempMessage.id 
-                        ? { ...m, error }
+                        ? { ...m, error: errorMessage }
                         : m
                     )
                   }

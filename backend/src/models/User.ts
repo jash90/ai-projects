@@ -317,10 +317,15 @@ export class UserModel {
     await pool.query(query, [adminUserId, actionType, targetUserId, JSON.stringify(details)]);
   }
 
-  static async checkTokenLimit(userId: string, tokensToUse: number): Promise<{ allowed: boolean; reason?: string }> {
+  static async checkTokenLimit(userId: string, tokensToUse: number): Promise<void> {
     const user = await this.findById(userId);
-    if (!user || !user.is_active) {
-      return { allowed: false, reason: 'User not found or inactive' };
+    if (!user) {
+      throw new Error(`User not found: ${userId}`);
+    }
+
+    if (!user.is_active) {
+      const { createUserInactiveError } = await import('../utils/errors');
+      throw createUserInactiveError(userId);
     }
 
     // Get user's current usage
@@ -345,16 +350,16 @@ export class UserModel {
     const monthlyLimit = user.token_limit_monthly || globalLimits.monthly;
 
     // Check global limit
-    if (total_tokens + tokensToUse > globalLimit) {
-      return { allowed: false, reason: 'Global token limit exceeded' };
+    if (globalLimit > 0 && total_tokens + tokensToUse > globalLimit) {
+      const { createTokenLimitError } = await import('../utils/errors');
+      throw createTokenLimitError('global', total_tokens, globalLimit, tokensToUse);
     }
 
     // Check monthly limit
-    if (monthly_tokens + tokensToUse > monthlyLimit) {
-      return { allowed: false, reason: 'Monthly token limit exceeded' };
+    if (monthlyLimit > 0 && monthly_tokens + tokensToUse > monthlyLimit) {
+      const { createTokenLimitError } = await import('../utils/errors');
+      throw createTokenLimitError('monthly', monthly_tokens, monthlyLimit, tokensToUse);
     }
-
-    return { allowed: true };
   }
 
   static async updateProfile(userId: string, updates: UserProfileUpdate): Promise<User | null> {

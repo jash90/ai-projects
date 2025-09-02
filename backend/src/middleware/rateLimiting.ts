@@ -55,13 +55,14 @@ class RedisStore {
 // General rate limiting
 export const generalLimiter = rateLimit({
   windowMs: config.rate_limit.window_ms, // 15 minutes
-  max: process.env.NODE_ENV === 'development' ? 2000 : 500, // 2000 requests in dev, 500 in prod
-  message: {
-    success: false,
-    error: 'Too many requests, please try again later'
-  },
+  max: process.env.NODE_ENV === 'development' ? 5000 : 2000, // 5000 requests in dev, 2000 in prod
   standardHeaders: true,
   legacyHeaders: false,
+  handler: (req, res, next) => {
+    const { createRateLimitError } = require('../utils/errors');
+    const resetTime = new Date(Date.now() + config.rate_limit.window_ms);
+    next(createRateLimitError(resetTime));
+  },
   // Simple memory-based rate limiting for now
   // store: new (class implements rateLimit.Store {
   //   private redisStore = new RedisStore('general:');
@@ -84,61 +85,67 @@ export const generalLimiter = rateLimit({
 // Authentication specific rate limiting
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // 10 attempts per windowMs
-  message: {
-    success: false,
-    error: 'Too many authentication attempts, please try again later'
-  },
+  max: 50, // 50 attempts per windowMs
   standardHeaders: true,
   legacyHeaders: false,
   skipSuccessfulRequests: true, // Don't count successful requests
+  handler: (req, res, next) => {
+    const { createRateLimitError } = require('../utils/errors');
+    const resetTime = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes from now
+    next(createRateLimitError(resetTime));
+  }
 });
 
 // File upload rate limiting
 export const uploadLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 50, // 50 uploads per hour
-  message: {
-    success: false,
-    error: 'Too many file uploads, please try again later'
-  },
+  max: 200, // 200 uploads per hour
   standardHeaders: true,
   legacyHeaders: false,
+  handler: (req, res, next) => {
+    const { createRateLimitError } = require('../utils/errors');
+    const resetTime = new Date(Date.now() + 60 * 60 * 1000); // 1 hour from now
+    next(createRateLimitError(resetTime));
+  }
 });
 
 // Chat/messaging rate limiting
 export const chatLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: process.env.NODE_ENV === 'development' ? 500 : 60, // 500 messages per minute in dev, 60 in prod
-  message: {
-    success: false,
-    error: 'Too many messages, please slow down'
-  },
+  max: process.env.NODE_ENV === 'development' ? 1000 : 300, // 1000 messages per minute in dev, 300 in prod
   standardHeaders: true,
   legacyHeaders: false,
+  handler: (req, res, next) => {
+    const { createRateLimitError } = require('../utils/errors');
+    const resetTime = new Date(Date.now() + 60 * 1000); // 1 minute from now
+    next(createRateLimitError(resetTime));
+  }
 });
 
 // AI request rate limiting (more generous due to longer processing times)
 export const aiLimiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
-  max: process.env.NODE_ENV === 'development' ? 200 : 50, // 200 AI requests per 5 minutes in dev, 50 in prod
-  message: {
-    success: false,
-    error: 'AI request limit reached, please wait before making more requests'
-  },
+  max: process.env.NODE_ENV === 'development' ? 500 : 200, // 500 AI requests per 5 minutes in dev, 200 in prod
   standardHeaders: true,
   legacyHeaders: false,
   skipSuccessfulRequests: false, // Count all AI requests
+  handler: (req, res, next) => {
+    // Instead of sending response directly, throw an error that our error handler can catch
+    const { createRateLimitError } = require('../utils/errors');
+    const resetTime = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from now
+    next(createRateLimitError(resetTime));
+  }
 });
 
 // API creation rate limiting (for projects, agents, etc.)
 export const creationLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: process.env.NODE_ENV === 'development' ? 100 : 20, // 100 creations per hour in dev, 20 in prod
-  message: {
-    success: false,
-    error: 'Too many creation requests, please try again later'
-  },
+  max: process.env.NODE_ENV === 'development' ? 500 : 100, // 500 creations per hour in dev, 100 in prod
   standardHeaders: true,
   legacyHeaders: false,
+  handler: (req, res, next) => {
+    const { createRateLimitError } = require('../utils/errors');
+    const resetTime = new Date(Date.now() + 60 * 60 * 1000); // 1 hour from now
+    next(createRateLimitError(resetTime));
+  }
 });
