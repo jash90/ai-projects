@@ -53,6 +53,15 @@ RUN pnpm install --prod --ignore-scripts
 # Create startup script
 RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'echo "🚀 Starting backend API server..."' >> /app/start.sh && \
+    echo 'echo "🔍 Environment Variables Debug:"' >> /app/start.sh && \
+    echo 'echo "NODE_ENV: $NODE_ENV"' >> /app/start.sh && \
+    echo 'echo "PORT: $PORT"' >> /app/start.sh && \
+    echo 'echo "DATABASE_URL: ${DATABASE_URL:+SET}"' >> /app/start.sh && \
+    echo 'echo "REDIS_URL: ${REDIS_URL:+SET}"' >> /app/start.sh && \
+    echo 'echo "JWT_SECRET: ${JWT_SECRET:+SET}"' >> /app/start.sh && \
+    echo 'echo "OPENAI_API_KEY: ${OPENAI_API_KEY:+SET}"' >> /app/start.sh && \
+    echo 'echo "ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:+SET}"' >> /app/start.sh && \
+    echo 'echo "CORS_ORIGIN: $CORS_ORIGIN"' >> /app/start.sh && \
     echo 'cd /app && RUN_MIGRATIONS=false node backend/start-prod.js &' >> /app/start.sh && \
     echo 'BACKEND_PID=$!' >> /app/start.sh && \
     echo 'echo "⏳ Waiting for backend to start..."' >> /app/start.sh && \
