@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: .
+    ports:
+      - "3000:80"
+    environment:
+      # Uncomment and set if you want to proxy to external backend
+      # - BACKEND_URL=https://your-backend.railway.app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Example: If you want to run with a separate backend
+  # backend:
+  #   image: your-backend-image
+  #   ports:
+  #     - "3001:3001"
+  #   environment:
+  #     - NODE_ENV=production
+  #     - DATABASE_URL=your-database-url
