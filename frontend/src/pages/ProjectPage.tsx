@@ -138,7 +138,7 @@ function ProjectPage() {
     if (!currentProject) return
     
     const shareData = {
-      title: `Claude Projects - ${currentProject.name}`,
+      title: `AI Projects - ${currentProject.name}`,
       text: currentProject.description || 'Check out this AI project!',
       url: window.location.href
     }

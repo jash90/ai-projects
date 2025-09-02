@@ -162,7 +162,7 @@ class PWAManager {
 
     banner.innerHTML = `
       <div style="flex: 1; margin-right: 16px;">
-        <div style="font-weight: 600; margin-bottom: 4px;">Install Claude Projects</div>
+        <div style="font-weight: 600; margin-bottom: 4px;">Install AI Projects</div>
         <div style="font-size: 14px; opacity: 0.9;">Add to your home screen for quick access</div>
       </div>
       <div style="display: flex; gap: 8px;">

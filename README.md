@@ -1,6 +1,6 @@
-# Claude Projects Clone
+# AI Projects
 
-A production-ready, full-stack AI-powered project management platform that replicates and extends Claude Projects functionality with advanced AI agents, real-time chat, dynamic model management, and comprehensive project collaboration tools.
+A production-ready, full-stack AI-powered project management platform that replicates and extends AI Projects functionality with advanced AI agents, real-time chat, dynamic model management, and comprehensive project collaboration tools.
 
 ## 🎯 Key Features
 
