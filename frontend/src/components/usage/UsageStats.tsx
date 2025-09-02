@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 import { 
-  TrendingUp, 
   DollarSign, 
   Activity, 
   BarChart3,
-  Calendar,
   Zap
 } from 'lucide-react'
 import { Card } from '@/components/ui/Card'

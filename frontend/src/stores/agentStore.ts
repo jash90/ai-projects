@@ -15,7 +15,7 @@ interface AgentState {
   clearError: () => void
 }
 
-export const useAgents = create<AgentState>((set, get) => ({
+export const useAgents = create<AgentState>((set) => ({
   agents: [],
   isLoading: false,
   error: null,
@@ -25,7 +25,7 @@ export const useAgents = create<AgentState>((set, get) => ({
     try {
       const response = await agentsApi.getAgents()
       if (response.success) {
-        set({ agents: response.data.agents, isLoading: false })
+        set({ agents: response.data?.agents || [], isLoading: false })
       } else {
         set({ error: response.error || 'Failed to fetch agents', isLoading: false })
       }
@@ -42,7 +42,7 @@ export const useAgents = create<AgentState>((set, get) => ({
     try {
       const response = await agentsApi.createAgent(data)
       if (response.success) {
-        const newAgent = response.data.agent
+        const newAgent = response.data?.agent
         set(state => ({ 
           agents: [...state.agents, newAgent]
         }))
@@ -64,7 +64,7 @@ export const useAgents = create<AgentState>((set, get) => ({
     try {
       const response = await agentsApi.updateAgent(id, data)
       if (response.success) {
-        const updatedAgent = response.data.agent
+        const updatedAgent = response.data?.agent
         set(state => ({
           agents: state.agents.map(agent => 
             agent.id === id ? updatedAgent : agent

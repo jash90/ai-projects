@@ -148,7 +148,7 @@ export function ProjectFileUpload({
 
       // Call success callback
       if (onUploadComplete && response.success) {
-        onUploadComplete(response.data.file)
+        onUploadComplete(response.data?.file)
       }
 
       // Remove from list after 2 seconds
@@ -233,11 +233,6 @@ export function ProjectFileUpload({
     }
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      handleFiles(e.target.files)
-    }
-  }
 
   const removeUploadingFile = (fileId: string) => {
     setUploadingFiles(prev => prev.filter(uf => uf.id !== fileId))

@@ -330,7 +330,7 @@ export const chatApi = {
     const token = authStore.getState().tokens?.access_token;
     
     try {
-      const response = await fetch(`${apiClient.client.defaults.baseURL}/projects/${projectId}/agents/${agentId}/chat`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3001"}/projects/${projectId}/agents/${agentId}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

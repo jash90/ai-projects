@@ -16,7 +16,6 @@ import {
   WifiOff,
   Wifi,
   Upload,
-  AlertCircle
 } from 'lucide-react'
 import { Agent, File as FileType } from '@/types'
 import { useProjects } from '@/stores/projectStore'
@@ -41,7 +40,7 @@ function ProjectPage() {
   
   const { currentProject, fetchProject, isLoading: isLoadingProject } = useProjects()
   const { agents, fetchAgents } = useAgents()
-  const { getFileById } = useFiles()
+  const { } = useFiles()
   
   // PWA features
   const { 

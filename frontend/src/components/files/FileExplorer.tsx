@@ -6,12 +6,9 @@ import {
   Plus, 
   Search, 
   Upload,
-  MoreVertical,
   Edit3,
   Trash2,
-  Download,
   Copy,
-  FileText
 } from 'lucide-react'
 import { File as FileType } from '@/types'
 import { useFiles } from '@/stores/fileStore'
@@ -21,7 +18,7 @@ import { ScrollArea } from '@/components/ui/ScrollArea'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { FileDialog } from './FileDialog'
 import { UploadFileDialog } from './UploadFileDialog'
-import { cn, getFileExtension, copyToClipboard, truncateText } from '@/lib/utils'
+import { cn, getFileExtension, copyToClipboard } from '@/lib/utils'
 
 interface FileExplorerProps {
   projectId: string
@@ -166,7 +163,7 @@ export function FileExplorer({
     }
   }
 
-  const handleUploadComplete = (files: any[]) => {
+  const handleUploadComplete = () => {
     // Refresh the file list to show newly uploaded files
     fetchProjectFiles(projectId)
   }
@@ -208,7 +205,7 @@ export function FileExplorer({
     onFileSelect(file)
   }
 
-  const getFileIcon = (fileName: string, fileType: string, file?: FileType) => {
+  const getFileIcon = (fileName: string) => {
     const ext = getFileExtension(fileName)
     
     // Common file type icons
@@ -274,7 +271,7 @@ export function FileExplorer({
         onContextMenu={(e) => item.file && handleRightClick(e, item.file)}
       >
         <span className="text-base">
-          {getFileIcon(item.name, item.file?.type || '', item.file)}
+          {getFileIcon(item.name)}
         </span>
         <span className="flex-1 truncate" title={item.name}>
           {item.name}

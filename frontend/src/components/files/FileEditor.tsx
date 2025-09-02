@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { Save, RotateCcw, Settings, Maximize2, Minimize2 } from 'lucide-react'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { Save, RotateCcw, Maximize2, Minimize2 } from 'lucide-react'
 import { File as FileType } from '@/types'
 import { useFiles } from '@/stores/fileStore'
 import { Button } from '@/components/ui/Button'
@@ -49,13 +49,13 @@ export function FileEditor({ file, className }: FileEditorProps) {
         script.src = 'https://unpkg.com/monaco-editor@0.44.0/min/vs/loader.js'
         
         script.onload = () => {
-          window.require.config({ 
+          (window as any).require.config({ 
             paths: { 
               vs: 'https://unpkg.com/monaco-editor@0.44.0/min/vs' 
             } 
           })
           
-          window.require(['vs/editor/editor.main'], () => {
+          (window as any).require(['vs/editor/editor.main'], () => {
             setIsMonacoLoading(false)
           })
         }
