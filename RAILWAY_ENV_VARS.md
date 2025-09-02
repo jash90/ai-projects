@@ -53,6 +53,8 @@ ANTHROPIC_API_KEY=sk-ant-your-anthropic-api-key-here
 CORS_ORIGIN=http://localhost:3000
 VITE_API_URL=http://localhost:3001/api
 VITE_WS_URL=ws://localhost:3001
+API_URL=http://localhost:3001/api
+WS_URL=ws://localhost:3001
 ```
 
 ### **2. Docker z zmiennymi środowiskowymi**
