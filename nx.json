@@ -1,0 +1,107 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "namedInputs": {
+    "sharedGlobals": [
+      "{workspaceRoot}/**/.env.*local",
+      "{workspaceRoot}/.env",
+      {
+        "env": "NODE_ENV"
+      },
+      {
+        "env": "DATABASE_URL"
+      },
+      {
+        "env": "REDIS_URL"
+      },
+      {
+        "env": "JWT_SECRET"
+      },
+      {
+        "env": "OPENAI_API_KEY"
+      },
+      {
+        "env": "ANTHROPIC_API_KEY"
+      },
+      {
+        "env": "PORT"
+      }
+    ],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ]
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "{projectRoot}/**/*",
+        "{projectRoot}/.env.local"
+      ],
+      "outputs": [
+        "{projectRoot}/dist/**",
+        "{projectRoot}/build/**"
+      ],
+      "cache": true
+    },
+    "dev": {
+      "cache": false
+    },
+    "lint": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "{projectRoot}/**/*",
+        "{projectRoot}/.eslintrc*",
+        "{projectRoot}/eslint.config.*"
+      ],
+      "cache": true
+    },
+    "type-check": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "{projectRoot}/**/*",
+        "{projectRoot}/tsconfig.json",
+        "{projectRoot}/tsconfig.*.json"
+      ],
+      "cache": true
+    },
+    "test": {
+      "dependsOn": [
+        "build"
+      ],
+      "inputs": [
+        "{projectRoot}/**/*",
+        "{projectRoot}/jest.config.*",
+        "{projectRoot}/vitest.config.*"
+      ],
+      "outputs": [
+        "{projectRoot}/coverage/**"
+      ],
+      "cache": true
+    },
+    "clean": {
+      "cache": false
+    },
+    "db:migrate": {
+      "cache": false
+    },
+    "db:seed": {
+      "cache": false
+    },
+    "start": {
+      "cache": false
+    },
+    "start:prod": {
+      "dependsOn": [
+        "build"
+      ],
+      "cache": false
+    }
+  }
+}

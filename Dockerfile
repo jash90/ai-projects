@@ -17,8 +17,8 @@ RUN pnpm install
 # Copy source code
 COPY . .
 
-# Build using Turbo for better caching and parallelization
-RUN pnpm run build
+# Build using Nx for better caching and parallelization
+RUN pnpm exec nx run-many -t build
 
 # Production stage
 FROM node:18-alpine AS production
