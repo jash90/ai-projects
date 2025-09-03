@@ -33,13 +33,30 @@ export const useFiles = create<FileState>((set, get) => ({
   error: null,
 
   fetchProjectFiles: async (projectId: string) => {
+    const state = get()
+    
+    // Prevent multiple simultaneous requests
+    if (state.isLoading || state.filesByProject[projectId]) {
+      console.log('🚫 Skipping fetchProjectFiles - already loading or cached:', projectId)
+      return
+    }
+    
+    console.log('🚀 Starting fetchProjectFiles for project:', projectId)
+    const startTime = performance.now()
+    
     set({ isLoading: true, error: null })
     try {
       // Fetch text files from the database
+      const apiStartTime = performance.now()
       const response = await projectFilesApi.getFiles(projectId)
+      const apiEndTime = performance.now()
+      
+      console.log(`📡 API call took: ${(apiEndTime - apiStartTime).toFixed(2)}ms`)
       
       const files = response.success ? (response.data?.files || []) : []
+      console.log(`📁 Fetched ${files.length} files for project ${projectId}`)
 
+      const renderStartTime = performance.now()
       set(state => ({
         filesByProject: {
           ...state.filesByProject,
@@ -47,8 +64,12 @@ export const useFiles = create<FileState>((set, get) => ({
         },
         isLoading: false
       }))
+      const renderEndTime = performance.now()
+      
+      const totalTime = performance.now() - startTime
+      console.log(`⚡ Total fetchProjectFiles time: ${totalTime.toFixed(2)}ms (API: ${(apiEndTime - apiStartTime).toFixed(2)}ms, Render: ${(renderEndTime - renderStartTime).toFixed(2)}ms)`)
     } catch (error) {
-      console.error('Error in fetchProjectFiles:', error)
+      console.error('❌ Error in fetchProjectFiles:', error)
       set({ 
         error: error instanceof Error ? error.message : 'Failed to fetch files', 
         isLoading: false 

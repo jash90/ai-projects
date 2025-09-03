@@ -38,10 +38,19 @@ export function FileEditor({ file, className }: FileEditorProps) {
   // Load Monaco Editor
   useEffect(() => {
     const loadMonaco = async () => {
+      console.log('Loading Monaco Editor...')
+      
       if (window.monaco) {
+        console.log('Monaco already loaded')
         setIsMonacoLoading(false)
         return
       }
+
+      // Set a timeout to prevent infinite loading
+      const timeout = setTimeout(() => {
+        console.warn('Monaco Editor loading timeout, falling back to textarea')
+        setIsMonacoLoading(false)
+      }, 10000) // 10 second timeout
 
       try {
         // Load Monaco Editor from CDN
@@ -49,20 +58,30 @@ export function FileEditor({ file, className }: FileEditorProps) {
         script.src = 'https://unpkg.com/monaco-editor@0.44.0/min/vs/loader.js'
         
         script.onload = () => {
+          console.log('Monaco loader script loaded');
           (window as any).require.config({ 
             paths: { 
               vs: 'https://unpkg.com/monaco-editor@0.44.0/min/vs' 
             } 
-          })
+          });
           
           (window as any).require(['vs/editor/editor.main'], () => {
+            console.log('Monaco editor main loaded')
+            clearTimeout(timeout)
             setIsMonacoLoading(false)
           })
+        }
+        
+        script.onerror = (error) => {
+          console.error('Failed to load Monaco loader script:', error)
+          clearTimeout(timeout)
+          setIsMonacoLoading(false)
         }
         
         document.head.appendChild(script)
       } catch (error) {
         console.error('Failed to load Monaco Editor:', error)
+        clearTimeout(timeout)
         setIsMonacoLoading(false)
       }
     }
@@ -298,11 +317,20 @@ export function FileEditor({ file, className }: FileEditorProps) {
 
       {/* Editor */}
       <div className="flex-1 relative">
-        <div
-          ref={containerRef}
-          className="absolute inset-0"
-          style={{ height: '100%' }}
-        />
+        {window.monaco ? (
+          <div
+            ref={containerRef}
+            className="absolute inset-0"
+            style={{ height: '100%' }}
+          />
+        ) : (
+          <textarea
+            value={file.content}
+            onChange={(e) => updateFileContent(file.id, e.target.value)}
+            className="w-full h-full p-4 font-mono text-sm bg-background text-foreground border-0 resize-none focus:outline-none"
+            placeholder="Start typing..."
+          />
+        )}
       </div>
 
       {/* Footer */}
