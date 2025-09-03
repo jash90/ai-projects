@@ -33,7 +33,7 @@ function runMigrations() {
 function startServer() {
   console.log('🌐 Starting the server...');
   
-  // Ensure PORT is set for Railway
+  // Ensure PORT is set
   if (!process.env.PORT) {
     console.log('⚠️  PORT environment variable not set, using default 3001');
     process.env.PORT = '3001';
@@ -131,7 +131,7 @@ async function main() {
                  socket.connect(port, '0.0.0.0');
         
                          const options = {
-                   hostname: '0.0.0.0', // Use 0.0.0.0 for Railway compatibility
+                   hostname: '0.0.0.0', // Use 0.0.0.0 for production compatibility
                    port: port,
                    path: '/api/health',
                    method: 'GET',

@@ -19,8 +19,7 @@
     "start:prod": "node backend/start-prod.js",
     "db:migrate": "cd backend && pnpm run db:migrate",
     "db:seed": "cd backend && pnpm run db:seed",
-    "railway:build": "pnpm exec nx run-many -t build",
-    "railway:start": "node backend/start-prod.js",
+
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "install:all": "pnpm install"

@@ -46,10 +46,10 @@ For external backend configuration, you can use environment variables:
 ```bash
 # Set backend URLs
 docker run -p 3000:80 \
-  -e VITE_API_URL=https://your-backend.railway.app/api \
-  -e VITE_WS_URL=wss://your-backend.railway.app \
-  -e API_URL=https://your-backend.railway.app/api \
-  -e WS_URL=wss://your-backend.railway.app \
+  -e VITE_API_URL=http://localhost:3001/api \
+  -e VITE_WS_URL=ws://localhost:3001 \
+  -e API_URL=http://localhost:3001/api \
+  -e WS_URL=ws://localhost:3001 \
   claude-projects-frontend
 ```
 
@@ -63,19 +63,19 @@ docker run -p 3000:80 \
 
 ## Differences from Main Dockerfile
 
-| Feature | Main Dockerfile | Frontend Dockerfile |
-|---------|----------------|-------------------|
-| **Backend** | ✅ Included | ❌ External only |
-| **Nginx** | ✅ Included | ✅ Included |
-| **API Proxy** | ✅ Internal (127.0.0.1:3001) | ❌ External only |
-| **Use Case** | Full-stack deployment | Frontend-only deployment |
-| **Railway** | ✅ Recommended | ❌ Use main instead |
+| Feature        | Main Dockerfile             | Frontend Dockerfile      |
+| -------------- | --------------------------- | ------------------------ |
+| **Backend**    | ✅ Included                  | ❌ External only          |
+| **Nginx**      | ✅ Included                  | ✅ Included               |
+| **API Proxy**  | ✅ Internal (127.0.0.1:3001) | ❌ External only          |
+| **Use Case**   | Full-stack deployment       | Frontend-only deployment |
+| **Production** | ✅ Recommended               | ❌ Use main instead       |
 
-## Railway Deployment
+## Production Deployment
 
-**⚠️ Important**: For Railway deployment, use the **main Dockerfile** in the root directory, not this frontend Dockerfile.
+**⚠️ Important**: For production deployment, use the **main Dockerfile** in the root directory, not this frontend Dockerfile.
 
-The main Dockerfile includes both backend and nginx in one container, which is optimized for Railway's deployment model.
+The main Dockerfile includes both backend and nginx in one container, which is optimized for production deployment.
 
 ## Development
 
