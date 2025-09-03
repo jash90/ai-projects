@@ -5,6 +5,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import { v4 as uuidv4 } from 'uuid';
 import { ProjectFileModel } from '../models/ProjectFile';
+import { FileModel } from '../models/File';
 import { ProjectModel } from '../models/Project';
 import { authenticateToken } from '../middleware/auth';
 import { validate, commonSchemas, validateFileUpload } from '../middleware/validation';
@@ -411,6 +412,48 @@ router.get('/projects/:projectId/uploads/stats',
       res.status(500).json({
         success: false,
         error: 'Failed to fetch file statistics'
+      });
+    }
+  }
+);
+
+// Migrate file to Markdown type
+router.post('/files/:id/migrate-markdown',
+  generalLimiter,
+  authenticateToken,
+  validate({ params: Joi.object({ id: commonSchemas.uuid }) }),
+  async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const userId = req.user!.id;
+
+      // Get the file
+      const file = await FileModel.findById(id, userId);
+      if (!file) {
+        return res.status(404).json({
+          success: false,
+          error: 'File not found'
+        });
+      }
+
+      // Update file type to markdown
+      await FileModel.updateById(id, { type: 'markdown' }, userId);
+
+      logger.info('File migrated to Markdown', { 
+        fileId: id, 
+        userId, 
+        fileName: file.name
+      });
+
+      res.json({
+        success: true,
+        data: { message: 'File migrated to Markdown successfully' }
+      });
+    } catch (error) {
+      logger.error('Error migrating file to Markdown:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Failed to migrate file to Markdown'
       });
     }
   }
