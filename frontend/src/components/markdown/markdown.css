@@ -114,6 +114,8 @@
   color: var(--foreground);
   word-wrap: break-word;
   overflow-wrap: break-word;
+  overflow: visible;
+  height: auto;
 }
 
 .markdown-preview h1,
@@ -160,6 +162,7 @@
 .markdown-preview p {
   margin-bottom: 1em;
   line-height: 1.6;
+  white-space: pre-wrap;
 }
 
 .markdown-preview code {
@@ -174,9 +177,11 @@
   background: var(--muted);
   padding: 1rem;
   border-radius: 6px;
-  overflow-x: auto;
+  overflow: visible;
   margin: 1em 0;
   border: 1px solid var(--border);
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .markdown-preview pre code {
@@ -197,6 +202,7 @@
   border-collapse: collapse;
   width: 100%;
   margin: 1em 0;
+  overflow: visible;
 }
 
 .markdown-preview th,
@@ -260,11 +266,214 @@
 /* KaTeX math styling */
 .markdown-preview .katex {
   font-size: 1em;
+  color: var(--foreground);
+  font-family: 'KaTeX_Main', 'Times New Roman', serif;
 }
 
 .markdown-preview .katex-display {
   margin: 1em 0;
   text-align: center;
+  padding: 1rem;
+  background: var(--muted);
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  word-wrap: break-word;
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+/* Math block styling */
+.markdown-preview .math-block {
+  text-align: center;
+  word-wrap: break-word;
+}
+
+.markdown-preview .math-block .katex-display {
+  margin: 0;
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+  word-wrap: break-word;
+}
+
+/* Inline math styling */
+.markdown-preview .math-inline {
+  display: inline;
+  vertical-align: baseline;
+}
+
+.markdown-preview .math-inline .katex {
+  font-size: 0.9em;
+}
+
+/* Ensure math equations are properly styled in dark mode */
+.markdown-preview .katex .base {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .mord {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .mrel {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .mbin {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .mopen {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .mclose {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .mpunct {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .mspace {
+  color: var(--foreground);
+}
+
+/* Additional math styling for complex expressions */
+.markdown-preview .katex .mfrac {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .msup {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .msub {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .msubsup {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .mroot {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .msqrt {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .mtable {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .mtr {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .mtd {
+  color: var(--foreground);
+}
+
+/* Ensure proper spacing for math expressions */
+.markdown-preview .katex-display .katex {
+  white-space: nowrap;
+}
+
+/* Fix for inline math spacing */
+.markdown-preview .math-inline .katex {
+  white-space: nowrap;
+}
+
+/* Additional math constructs styling */
+.markdown-preview .katex .munderover {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .munder {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .mover {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .mphantom {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .mtext {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .mstyle {
+  color: var(--foreground);
+}
+
+/* Ensure proper rendering of complex operators */
+.markdown-preview .katex .mop {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .mrel {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .mbin {
+  color: var(--foreground);
+}
+
+/* Greek letters and special symbols */
+.markdown-preview .katex .mord {
+  color: var(--foreground);
+}
+
+/* Ensure proper spacing for delimiters */
+.markdown-preview .katex .delimsizing {
+  color: var(--foreground);
+}
+
+/* Fix for large operators like integrals and sums */
+.markdown-preview .katex .mop .mop {
+  color: var(--foreground);
+}
+
+/* Matrix and array styling */
+.markdown-preview .katex .arraycolsep {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .col-align-c {
+  text-align: center;
+}
+
+.markdown-preview .katex .col-align-l {
+  text-align: left;
+}
+
+.markdown-preview .katex .col-align-r {
+  text-align: right;
+}
+
+/* Better spacing for complex expressions */
+.markdown-preview .katex .vlist-r {
+  color: var(--foreground);
+}
+
+.markdown-preview .katex .vlist-t {
+  color: var(--foreground);
+}
+
+/* Ensure proper rendering of cases environment */
+.markdown-preview .katex .cases {
+  color: var(--foreground);
+}
+
+/* Fix for align environment */
+.markdown-preview .katex .eqn-num {
+  color: var(--foreground);
 }
 
 /* Code highlighting */

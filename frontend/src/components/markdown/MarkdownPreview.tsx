@@ -1,4 +1,3 @@
-import { } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
@@ -12,7 +11,12 @@ interface MarkdownPreviewProps {
   className?: string
 }
 
+// Math rendering is handled by rehype-katex plugin
+
+
+
 export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
+
   return (
     <div className={`markdown-preview ${className || ''} prose dark:prose-invert max-w-none`}>
       <ReactMarkdown
@@ -20,7 +24,7 @@ export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
         rehypePlugins={[rehypeKatex, rehypeHighlight]}
         components={{
           table: ({ children, ...props }) => (
-            <div className="table-wrapper overflow-x-auto my-4">
+            <div className="table-wrapper my-4">
               <table className="min-w-full divide-y divide-border border border-border" {...props}>
                 {children}
               </table>
@@ -84,11 +88,55 @@ export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
             }
             return <input type={type} {...props} />
           },
+          // Let rehype-katex handle math rendering automatically
+          div: ({ children, className, ...props }: any) => (
+            <div className={className} {...props}>{children}</div>
+          ),
+          span: ({ children, className, ...props }: any) => (
+            <span className={className} {...props}>{children}</span>
+          ),
+          // Handle paragraphs to ensure proper spacing
+          p: ({ children, ...props }: any) => (
+            <p className="my-2" {...props}>
+              {children}
+            </p>
+          ),
+          // Handle headers to ensure proper spacing
+          h1: ({ children, ...props }: any) => (
+            <h1 className="text-3xl font-bold my-4 border-b border-border pb-2" {...props}>
+              {children}
+            </h1>
+          ),
+          h2: ({ children, ...props }: any) => (
+            <h2 className="text-2xl font-semibold my-3 border-b border-border pb-1" {...props}>
+              {children}
+            </h2>
+          ),
+          h3: ({ children, ...props }: any) => (
+            <h3 className="text-xl font-semibold my-2" {...props}>
+              {children}
+            </h3>
+          ),
+          h4: ({ children, ...props }: any) => (
+            <h4 className="text-lg font-semibold my-2" {...props}>
+              {children}
+            </h4>
+          ),
+          h5: ({ children, ...props }: any) => (
+            <h5 className="text-base font-semibold my-2" {...props}>
+              {children}
+            </h5>
+          ),
+          h6: ({ children, ...props }: any) => (
+            <h6 className="text-sm font-semibold my-2 text-muted-foreground" {...props}>
+              {children}
+            </h6>
+          ),
           code: ({ className, children, ...props }: any) => {
             const match = /language-(\w+)/.exec(className || '')
             const isInline = !match
             return !isInline && match ? (
-              <pre className="code-block bg-muted p-4 rounded-lg overflow-x-auto my-4">
+              <pre className="code-block bg-muted p-4 rounded-lg my-4 whitespace-pre-wrap break-words">
                 <code className={className} {...props}>
                   {children}
                 </code>
@@ -106,3 +154,5 @@ export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
     </div>
   )
 }
+
+// Math components are available in ReactKatex.tsx for direct use

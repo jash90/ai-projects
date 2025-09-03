@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import React from 'react'
 import { ConversationMessage, Agent } from '@/types'
 import { ChatMessage } from './ChatMessage'
 import { ScrollArea } from '@/components/ui/ScrollArea'
@@ -12,9 +12,6 @@ interface ChatMessagesProps {
 }
 
 function ChatMessages({ messages, agent, isLoading = false, className }: ChatMessagesProps) {
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const endRef = useRef<HTMLDivElement>(null)
-  
   // Ensure messages is always an array and agent exists
   const safeMessages = messages || []
   
@@ -32,13 +29,6 @@ function ChatMessages({ messages, agent, isLoading = false, className }: ChatMes
       </div>
     )
   }
-
-  // Auto-scroll to bottom when new messages arrive
-  useEffect(() => {
-    if (endRef.current) {
-      endRef.current.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [safeMessages])
 
   if (safeMessages.length === 0 && !isLoading) {
     return (
@@ -59,7 +49,7 @@ function ChatMessages({ messages, agent, isLoading = false, className }: ChatMes
 
   return (
     <ScrollArea className={`flex-1 ${className}`}>
-      <div ref={scrollRef} className="min-h-full">
+      <div className="min-h-full">
         {safeMessages.map((message, index) => (
           <ChatMessage
             key={message.id || `message-${index}`}
@@ -76,8 +66,6 @@ function ChatMessages({ messages, agent, isLoading = false, className }: ChatMes
             </div>
           </div>
         )}
-        
-        <div ref={endRef} />
       </div>
     </ScrollArea>
   )
