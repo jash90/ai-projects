@@ -1,4 +1,4 @@
-# Railway NGINX Template - Optimized for Railway deployment
+# Production Dockerfile with Nginx and Backend
 # Build stage
 FROM node:18-alpine AS builder
 
@@ -78,7 +78,7 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'nginx -g "daemon off;"' >> /app/start.sh && \
     chmod +x /app/start.sh
 
-# Expose port 80 (Railway will handle port mapping)
+# Expose port 80
 EXPOSE 80
 
 # Start both services

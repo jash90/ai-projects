@@ -44,9 +44,9 @@ const io = new SocketServer(server, {
 // Initialize socket handler
 const socketHandler = new SocketHandler(io);
 
-// Trust proxy for Railway/production deployment
+// Trust proxy for production deployment
 if (process.env.NODE_ENV === 'production') {
-  app.set('trust proxy', 1); // Trust first proxy (Railway)
+  app.set('trust proxy', 1); // Trust first proxy
 }
 
 // Security middleware
@@ -62,7 +62,7 @@ app.use(helmet({
   },
 }));
 
-// CORS - Allow access from any origin for Railway deployment
+// CORS - Allow access from any origin
 app.use(cors({
   origin: true, // Allow all origins
   credentials: true,
@@ -217,7 +217,7 @@ async function startServer(): Promise<void> {
     server.keepAliveTimeout = 65000; // 65 seconds
     server.headersTimeout = 66000; // 66 seconds (slightly higher than keepAliveTimeout)
 
-    // Start server - Railway automatycznie przypisuje PORT
+    // Start server
     const PORT = parseInt(process.env.PORT || config.port.toString(), 10);
     server.listen(PORT, '0.0.0.0', () => {
       logger.info(`Server started on port ${PORT}`, {
