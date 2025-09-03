@@ -1,0 +1,54 @@
+/* Chat-specific Markdown styles */
+.chat-markdown-content {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.chat-markdown-preview {
+  font-size: 0.875rem; /* 14px - smaller than full editor */
+  line-height: 1.5;
+}
+
+.chat-markdown-preview h1,
+.chat-markdown-preview h2,
+.chat-markdown-preview h3,
+.chat-markdown-preview h4,
+.chat-markdown-preview h5,
+.chat-markdown-preview h6 {
+  margin-top: 0.75em;
+  margin-bottom: 0.5em;
+  font-size: 1em; /* Prevent large headers in chat */
+}
+
+.chat-markdown-preview h1 { font-size: 1.1em; }
+.chat-markdown-preview h2 { font-size: 1.05em; }
+
+.chat-markdown-preview pre {
+  font-size: 0.8em;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.chat-markdown-preview table {
+  font-size: 0.8em;
+  max-width: 100%;
+}
+
+.chat-markdown-preview .katex {
+  font-size: 0.9em;
+}
+
+/* Compact spacing for chat */
+.chat-markdown-preview p {
+  margin-bottom: 0.5em;
+}
+
+.chat-markdown-preview ul,
+.chat-markdown-preview ol {
+  margin: 0.5em 0;
+  padding-left: 1.5em;
+}
+
+.chat-markdown-preview li {
+  margin: 0.25em 0;
+}

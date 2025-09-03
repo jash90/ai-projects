@@ -1,6 +1,8 @@
 
 import { ConversationMessage, Agent } from '@/types'
 import { cn, formatRelativeTime, getInitials, generateColorFromString } from '@/lib/utils'
+import { ChatMessageContent } from './ChatMessageContent'
+import './chat-markdown.css'
 
 interface ChatMessageProps {
   message: ConversationMessage
@@ -39,15 +41,16 @@ function ChatMessage({ message, agent }: ChatMessageProps) {
         {/* Message Content */}
         <div
           className={cn(
-            'rounded-lg px-4 py-2 text-sm max-w-full',
+            'rounded-lg px-4 py-2 text-sm max-w-full group',
             isUser
               ? 'bg-primary text-primary-foreground rounded-br-sm'
               : 'bg-muted text-foreground rounded-bl-sm'
           )}
         >
-          <div className="whitespace-pre-wrap break-words">
-            {message.content}
-          </div>
+          <ChatMessageContent 
+            content={message.content}
+            isUser={isUser}
+          />
         </div>
 
         {/* Error Display */}

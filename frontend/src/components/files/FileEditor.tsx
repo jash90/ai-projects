@@ -4,6 +4,8 @@ import { File as FileType } from '@/types'
 import { useFiles } from '@/stores/fileStore'
 import { Button } from '@/components/ui/Button'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
+import { MarkdownEditor, ExportDialog } from '@/components/markdown'
+import { FileTypeService } from '@/services/fileTypeService'
 import { cn, debounce, getFileExtension } from '@/lib/utils'
 
 interface FileEditorProps {
@@ -31,6 +33,7 @@ export function FileEditor({ file, className }: FileEditorProps) {
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
   const [lastSavedContent, setLastSavedContent] = useState('')
+  const [showExportDialog, setShowExportDialog] = useState(false)
   
   const editorRef = useRef<any>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -316,8 +319,17 @@ export function FileEditor({ file, className }: FileEditorProps) {
       </div>
 
       {/* Editor */}
-      <div className="flex-1 relative">
-        {window.monaco ? (
+      <div className="flex-1 relative min-h-0">
+        {file && FileTypeService.shouldUseMarkdownEditor(file) ? (
+          <MarkdownEditor
+            content={file.content}
+            onChange={(content) => updateFileContent(file.id, content)}
+            onSave={() => saveFileContent(file.id)}
+            onExport={() => setShowExportDialog(true)}
+            readOnly={false}
+            className="h-full"
+          />
+        ) : window.monaco ? (
           <div
             ref={containerRef}
             className="absolute inset-0"
@@ -325,8 +337,8 @@ export function FileEditor({ file, className }: FileEditorProps) {
           />
         ) : (
           <textarea
-            value={file.content}
-            onChange={(e) => updateFileContent(file.id, e.target.value)}
+            value={file?.content || ''}
+            onChange={(e) => file && updateFileContent(file.id, e.target.value)}
             className="w-full h-full p-4 font-mono text-sm bg-background text-foreground border-0 resize-none focus:outline-none"
             placeholder="Start typing..."
           />
@@ -346,6 +358,16 @@ export function FileEditor({ file, className }: FileEditorProps) {
           </div>
         </div>
       </div>
+
+      {/* Export Dialog */}
+      {file && FileTypeService.shouldUseMarkdownEditor(file) && (
+        <ExportDialog
+          open={showExportDialog}
+          onClose={() => setShowExportDialog(false)}
+          content={file.content}
+          filename={file.name.replace(/\.md$/, '')}
+        />
+      )}
     </div>
   )
 }
