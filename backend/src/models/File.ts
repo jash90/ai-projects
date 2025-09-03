@@ -43,9 +43,13 @@ export class FileModel {
     projectId: string,
     userId: string
   ): Promise<File[]> {
+    const startTime = Date.now();
+    
     // First verify user owns the project
     const projectQuery = 'SELECT 1 FROM projects WHERE id = $1 AND user_id = $2';
+    const projectStartTime = Date.now();
     const projectResult = await pool.query(projectQuery, [projectId, userId]);
+    const projectEndTime = Date.now();
     
     if (projectResult.rowCount === 0) {
       throw new Error('Project not found or access denied');
@@ -58,7 +62,13 @@ export class FileModel {
       ORDER BY name ASC
     `;
 
+    const filesStartTime = Date.now();
     const result = await pool.query(query, [projectId]);
+    const filesEndTime = Date.now();
+    
+    const totalTime = Date.now() - startTime;
+    console.log(`🗄️ FileModel.findByProjectId: Total ${totalTime}ms (project check: ${projectEndTime - projectStartTime}ms, files query: ${filesEndTime - filesStartTime}ms), ${result.rows.length} files`);
+    
     return result.rows;
   }
 

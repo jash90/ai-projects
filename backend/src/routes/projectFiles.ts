@@ -16,11 +16,18 @@ router.get('/projects/:projectId/files',
     params: Joi.object({ projectId: commonSchemas.uuid })
   }),
   async (req: Request, res: Response) => {
+    const startTime = Date.now();
     try {
       const { projectId } = req.params;
       const userId = req.user!.id;
 
+      console.log(`🔍 Fetching files for project ${projectId}, user ${userId}`);
+      const dbStartTime = Date.now();
       const files = await FileModel.findByProjectId(projectId, userId);
+      const dbEndTime = Date.now();
+      
+      const totalTime = Date.now() - startTime;
+      console.log(`📊 Files API: Total ${totalTime}ms, DB query ${dbEndTime - dbStartTime}ms, ${files.length} files`);
 
       res.json({
         success: true,

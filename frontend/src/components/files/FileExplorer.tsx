@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { 
   File, 
   Folder, 
@@ -65,8 +65,11 @@ export function FileExplorer({
   const files = getProjectFiles(projectId)
 
   useEffect(() => {
-    fetchProjectFiles(projectId)
-  }, [projectId, fetchProjectFiles])
+    if (projectId && files.length === 0 && !isLoading) {
+      console.log('🔄 FileExplorer: Triggering fetchProjectFiles for project:', projectId)
+      fetchProjectFiles(projectId)
+    }
+  }, [projectId])
 
   useEffect(() => {
     const handleClickOutside = () => setContextMenu(null)
@@ -76,6 +79,8 @@ export function FileExplorer({
 
   // Build file tree from flat file list
   const buildFileTree = (files: FileType[], searchQuery: string): FileTreeItem[] => {
+    const buildStartTime = performance.now()
+    
     const filteredFiles = searchQuery
       ? files.filter(file => 
           file.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -138,6 +143,9 @@ export function FileExplorer({
       }))
     }
 
+    const buildEndTime = performance.now()
+    console.log(`🌳 buildFileTree took: ${(buildEndTime - buildStartTime).toFixed(2)}ms for ${filteredFiles.length} files`)
+    
     return sortTreeItems(tree)
   }
 
