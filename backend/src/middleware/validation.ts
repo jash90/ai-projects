@@ -62,9 +62,12 @@ export const commonSchemas = {
     register: Joi.object({
       email: Joi.string().email().required(),
       username: Joi.string().alphanum().min(3).max(30).required(),
-      password: Joi.string().min(8).max(128).required()
-        .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]'))
-        .message('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'),
+      password: Joi.string().min(6).max(128).required()
+        .messages({
+          'string.min': 'Password must be at least 6 characters',
+          'string.empty': 'Password is required',
+          'any.required': 'Password is required'
+        }),
     }),
     
     login: Joi.object({
@@ -74,9 +77,10 @@ export const commonSchemas = {
     
     update: Joi.object({
       username: Joi.string().alphanum().min(3).max(30).optional(),
-      password: Joi.string().min(8).max(128).optional()
-        .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]'))
-        .message('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'),
+      password: Joi.string().min(6).max(128).optional()
+        .messages({
+          'string.min': 'Password must be at least 6 characters'
+        }),
     }),
   },
 
