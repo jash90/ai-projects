@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import ErrorBoundary from '../ErrorBoundary'
 import {
   Dialog,
   DialogContent,
@@ -6,10 +7,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Label } from '@/components/ui/label'
+} from '@/components/ui/Dialog'
+import { Button } from '@/components/ui/Button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
+import { Label } from '@/components/ui/Label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -197,7 +198,7 @@ mermaid.initialize({
   }
 })
 
-export function DiagramEditorDialog({ open, onClose, onInsert }: DiagramEditorDialogProps) {
+function DiagramEditorDialogBase({ open, onClose, onInsert }: DiagramEditorDialogProps) {
   const [code, setCode] = useState('')
   const [diagramType, setDiagramType] = useState<keyof typeof diagramTemplates>('flowchart')
   const [error, setError] = useState('')
@@ -219,7 +220,7 @@ export function DiagramEditorDialog({ open, onClose, onInsert }: DiagramEditorDi
         const { svg } = await mermaid.render(graphId, code)
         setRenderedDiagram(svg)
         setError('')
-      } catch (err: any) {
+      } catch (err) {
         setError(err?.message || 'Invalid diagram syntax')
         setRenderedDiagram('')
       }
@@ -363,5 +364,14 @@ export function DiagramEditorDialog({ open, onClose, onInsert }: DiagramEditorDi
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  )
+}
+
+// Export the component wrapped with error boundary
+export function DiagramEditorDialog(props: DiagramEditorDialogProps) {
+  return (
+    <ErrorBoundary componentName="DiagramEditorDialog">
+      <DiagramEditorDialogBase {...props} />
+    </ErrorBoundary>
   )
 }

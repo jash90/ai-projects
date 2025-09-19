@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import ErrorBoundary from '../ErrorBoundary'
 import {
   Dialog,
   DialogContent,
@@ -6,13 +7,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
+} from '@/components/ui/Dialog'
+import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import {
   FileText,
   Users,
@@ -614,7 +615,7 @@ Delete a user.
   }
 ]
 
-export function TemplateSelector({ open, onClose, onSelect }: TemplateSelectorProps) {
+function TemplateSelectorBase({ open, onClose, onSelect }: TemplateSelectorProps) {
   const { toast } = useToast()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
@@ -631,8 +632,8 @@ export function TemplateSelector({ open, onClose, onSelect }: TemplateSelectorPr
   const loadRemoteTemplates = async () => {
     setLoading(true)
     try {
-      const response = await apiClient.get('/api/markdown/templates')
-      const remoteTemplates = response.data.templates.map((t: any) => ({
+      const response = await apiClient.get<{ templates: Template[] }>('/api/markdown/templates')
+      const remoteTemplates = response.data.templates.map((t) => ({
         ...t,
         category: t.category || 'general'
       }))
@@ -743,5 +744,14 @@ export function TemplateSelector({ open, onClose, onSelect }: TemplateSelectorPr
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  )
+}
+
+// Export the component wrapped with error boundary
+export function TemplateSelector(props: TemplateSelectorProps) {
+  return (
+    <ErrorBoundary componentName="TemplateSelector">
+      <TemplateSelectorBase {...props} />
+    </ErrorBoundary>
   )
 }

@@ -1,27 +1,65 @@
 import { Router, Request, Response } from 'express'
 import { markdownService } from '../services/markdownService'
 import { authenticateToken } from '../middleware/auth'
+import {
+  exportRateLimit,
+  renderRateLimit,
+  mermaidRateLimit,
+  dailyExportQuota
+} from '../middleware/markdownRateLimit'
 import Joi from 'joi'
 
 const router: Router = Router()
 
-// Validation schemas
+// Constants for validation
+const MAX_CONTENT_LENGTH = 500000 // 500KB max content
+const MAX_FILENAME_LENGTH = 255
+const VALID_FILENAME_PATTERN = /^[\w\-. ]+$/
+
+// Validation schemas with enhanced security
 const renderSchema = Joi.object({
-  content: Joi.string().required(),
+  content: Joi.string()
+    .required()
+    .max(MAX_CONTENT_LENGTH)
+    .messages({
+      'string.max': 'Content too large. Maximum size is 500KB'
+    }),
   mermaid: Joi.boolean().optional()
 })
 
 const validateSchema = Joi.object({
-  content: Joi.string().required()
+  content: Joi.string()
+    .required()
+    .max(MAX_CONTENT_LENGTH)
+    .messages({
+      'string.max': 'Content too large. Maximum size is 500KB'
+    })
 })
 
 const exportSchema = Joi.object({
-  content: Joi.string().required(),
-  filename: Joi.string().required()
+  content: Joi.string()
+    .required()
+    .max(MAX_CONTENT_LENGTH)
+    .messages({
+      'string.max': 'Content too large. Maximum size is 500KB'
+    }),
+  filename: Joi.string()
+    .required()
+    .max(MAX_FILENAME_LENGTH)
+    .pattern(VALID_FILENAME_PATTERN)
+    .messages({
+      'string.pattern.base': 'Filename contains invalid characters',
+      'string.max': 'Filename too long'
+    })
 })
 
 const mermaidSchema = Joi.object({
-  code: Joi.string().required()
+  code: Joi.string()
+    .required()
+    .max(10000) // 10KB max for mermaid diagrams
+    .messages({
+      'string.max': 'Diagram code too large. Maximum size is 10KB'
+    })
 })
 
 // Validate Markdown syntax
@@ -41,7 +79,7 @@ router.post('/validate', authenticateToken, async (req: Request, res: Response) 
 })
 
 // Render Markdown to HTML
-router.post('/render', authenticateToken, async (req: Request, res: Response) => {
+router.post('/render', authenticateToken, renderRateLimit, async (req: Request, res: Response) => {
   try {
     const { error, value } = renderSchema.validate(req.body)
     if (error) {
@@ -59,7 +97,7 @@ router.post('/render', authenticateToken, async (req: Request, res: Response) =>
 })
 
 // Render Mermaid diagram to SVG
-router.post('/mermaid/render', authenticateToken, async (req: Request, res: Response) => {
+router.post('/mermaid/render', authenticateToken, mermaidRateLimit, async (req: Request, res: Response) => {
   try {
     const { error, value } = mermaidSchema.validate(req.body)
     if (error) {
@@ -75,7 +113,7 @@ router.post('/mermaid/render', authenticateToken, async (req: Request, res: Resp
 })
 
 // Export Markdown to HTML
-router.post('/export/html', authenticateToken, async (req: Request, res: Response) => {
+router.post('/export/html', authenticateToken, exportRateLimit, dailyExportQuota, async (req: Request, res: Response) => {
   try {
     const { error, value } = exportSchema.validate(req.body)
     if (error) {
@@ -184,7 +222,7 @@ router.post('/export/html', authenticateToken, async (req: Request, res: Respons
 })
 
 // Export Markdown to PDF
-router.post('/export/pdf', authenticateToken, async (req: Request, res: Response) => {
+router.post('/export/pdf', authenticateToken, exportRateLimit, dailyExportQuota, async (req: Request, res: Response) => {
   try {
     const { error, value } = exportSchema.validate(req.body)
     if (error) {

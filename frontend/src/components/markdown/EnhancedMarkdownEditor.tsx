@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import Split from 'react-split'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import ErrorBoundary from '../ErrorBoundary'
+import { Button } from '@/components/ui/Button'
+import { Card } from '@/components/ui/Card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import {
   Eye,
   EyeOff,
@@ -57,7 +58,7 @@ interface EnhancedMarkdownEditorProps {
   readOnly?: boolean
 }
 
-export function EnhancedMarkdownEditor({
+function EnhancedMarkdownEditorBase({
   initialContent = '',
   onChange,
   onSave,
@@ -94,22 +95,48 @@ export function EnhancedMarkdownEditor({
     }
   }, [fileId])
 
-  // Update word count and reading time
+  // Cleanup on unmount
   useEffect(() => {
-    const words = content.trim().split(/\s+/).filter(w => w.length > 0).length
-    setWordCount(words)
-    setReadingTime(Math.max(1, Math.ceil(words / 200)))
+    return () => {
+      // Clear any pending save operations
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  // Update word count and reading time with debouncing
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      const words = content.trim().split(/\s+/).filter(w => w.length > 0).length
+      setWordCount(words)
+      setReadingTime(Math.max(1, Math.ceil(words / 200)))
+    }, 300)
+
+    return () => clearTimeout(timeoutId)
   }, [content])
+
+  // Debounce save operations
+  const saveTimeoutRef = useRef<NodeJS.Timeout>()
 
   // Handle content changes
   const handleContentChange = useCallback((newContent: string) => {
     setContent(newContent)
     setHasUnsavedChanges(true)
+
+    // Immediate onChange for UI updates
     if (onChange) {
       onChange(newContent)
     }
+
+    // Debounced store update
     if (fileId) {
-      useMarkdownStore.getState().updateContent(fileId, newContent)
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current)
+      }
+      saveTimeoutRef.current = setTimeout(() => {
+        useMarkdownStore.getState().updateContent(fileId, newContent)
+      }, 500)
     }
   }, [onChange, fileId])
 
@@ -377,6 +404,9 @@ export function EnhancedMarkdownEditor({
               placeholder="Start writing your markdown..."
               readOnly={readOnly}
               spellCheck={false}
+              aria-label="Markdown editor"
+              aria-describedby="editor-shortcuts"
+              aria-multiline="true"
             />
           </div>
         )}
@@ -386,6 +416,8 @@ export function EnhancedMarkdownEditor({
             ref={previewRef}
             className="h-full overflow-auto p-8"
             onScroll={() => handleScroll('preview')}
+            role="article"
+            aria-label="Markdown preview"
           >
             <EnhancedMarkdownPreview content={content} />
           </div>
@@ -409,12 +441,17 @@ export function EnhancedMarkdownEditor({
                 placeholder="Start writing your markdown..."
                 readOnly={readOnly}
                 spellCheck={false}
+                aria-label="Markdown editor"
+                aria-describedby="editor-shortcuts"
+                aria-multiline="true"
               />
             </div>
             <div
               ref={previewRef}
               className="h-full overflow-auto p-8"
               onScroll={() => handleScroll('preview')}
+              role="article"
+              aria-label="Markdown preview"
             >
               <EnhancedMarkdownPreview content={content} />
             </div>
@@ -477,5 +514,14 @@ export function EnhancedMarkdownEditor({
         }}
       />
     </div>
+  )
+}
+
+// Export the component wrapped with error boundary
+export function EnhancedMarkdownEditor(props: EnhancedMarkdownEditorProps) {
+  return (
+    <ErrorBoundary componentName="EnhancedMarkdownEditor">
+      <EnhancedMarkdownEditorBase {...props} />
+    </ErrorBoundary>
   )
 }

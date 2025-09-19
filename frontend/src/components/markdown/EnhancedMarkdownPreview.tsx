@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import MarkdownIt from 'markdown-it'
+import ErrorBoundary from '../ErrorBoundary'
 import markdownItKatex from 'markdown-it-katex'
 import markdownItEmoji from 'markdown-it-emoji'
 import markdownItTaskLists from 'markdown-it-task-lists'
@@ -15,6 +16,11 @@ interface EnhancedMarkdownPreviewProps {
   content: string
   className?: string
   theme?: 'light' | 'dark'
+}
+
+// CSS custom properties type
+type ProseStyles = {
+  [key: string]: string
 }
 
 // Initialize mermaid
@@ -35,7 +41,7 @@ mermaid.initialize({
   }
 })
 
-export function EnhancedMarkdownPreview({
+function EnhancedMarkdownPreviewBase({
   content,
   className,
   theme = 'dark'
@@ -105,21 +111,21 @@ export function EnhancedMarkdownPreview({
     md.current.renderer.rules.toc_close = () => '</nav>'
   }, [])
 
-  // Render markdown to HTML
-  useEffect(() => {
-    if (!md.current) return
+  // Memoize markdown rendering function
+  const renderMarkdown = useCallback((markdown: string) => {
+    if (!md.current) return { html: '', headings: [] }
 
     try {
       // Extract TOC if [[toc]] is present
       const tocMarker = '[[toc]]'
-      const hasToc = content.includes(tocMarker)
+      const hasToc = markdown.includes(tocMarker)
 
-      let processedContent = content
+      let processedContent = markdown
       const headings: Array<{ level: number; text: string; id: string }> = []
 
       if (hasToc) {
         // Extract headings for TOC
-        const lines = content.split('\n')
+        const lines = markdown.split('\n')
         lines.forEach(line => {
           const match = line.match(/^(#{1,4})\s+(.+)$/)
           if (match) {
@@ -129,7 +135,6 @@ export function EnhancedMarkdownPreview({
             headings.push({ level, text, id })
           }
         })
-        setTocContent(headings)
 
         // Generate TOC HTML
         let tocHtml = '<nav class="table-of-contents"><ul>'
@@ -152,48 +157,119 @@ export function EnhancedMarkdownPreview({
       // Render markdown
       const rawHtml = md.current.render(processedContent)
 
-      // Sanitize HTML
+      // Enhanced HTML sanitization with multiple layers
       const cleanHtml = DOMPurify.sanitize(rawHtml, {
-        ADD_TAGS: ['iframe'],
-        ADD_ATTR: ['target', 'rel', 'style'],
-        ALLOW_DATA_ATTR: true
+        // Strictly limit allowed tags
+        ALLOWED_TAGS: [
+          'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+          'p', 'br', 'hr',
+          'strong', 'b', 'em', 'i', 'u', 's', 'del', 'ins',
+          'code', 'pre', 'kbd', 'samp', 'var',
+          'a', 'img',
+          'ul', 'ol', 'li',
+          'dl', 'dt', 'dd',
+          'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td',
+          'blockquote', 'q', 'cite',
+          'div', 'span', 'nav',
+          'input', // for checkboxes in task lists
+          'sup', 'sub', // for footnotes
+          'details', 'summary' // for collapsible content
+        ],
+        ALLOWED_ATTR: [
+          'href', 'title', 'target', 'rel', 'id', 'class',
+          'src', 'alt', 'width', 'height',
+          'type', 'checked', 'disabled', // for checkboxes
+          'colspan', 'rowspan', // for tables
+          'start', 'reversed', // for lists
+          'data-*' // for custom data attributes
+        ],
+        // Security settings
+        FORBID_TAGS: ['script', 'style', 'iframe', 'form', 'object', 'embed'],
+        FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'onfocus', 'onblur'],
+        ALLOW_DATA_ATTR: false, // Disable data attributes to prevent attribute-based XSS
+        ALLOW_UNKNOWN_PROTOCOLS: false,
+        SAFE_FOR_TEMPLATES: true,
+        RETURN_TRUSTED_TYPE: false,
+        // URL sanitization
+        ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+        // Custom hooks for additional sanitization
+        ADD_TAGS: [],
+        ADD_ATTR: [],
+        // Prevent DOM clobbering
+        SANITIZE_DOM: true,
+        // Keep content safe for jQuery
+        SAFE_FOR_JQUERY: true
       })
 
-      setRenderedHtml(cleanHtml)
+      // Additional XSS protection: escape any remaining suspicious patterns
+      const doubleCleanHtml = cleanHtml
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+        .replace(/javascript:/gi, '')
+        .replace(/on\w+\s*=/gi, '')
+
+      return { html: doubleCleanHtml, headings }
     } catch (error) {
       console.error('Markdown rendering error:', error)
-      setRenderedHtml('<p>Error rendering markdown</p>')
+      return { html: '<p>Error rendering markdown</p>', headings: [] }
     }
-  }, [content])
+  }, [])
+
+  // Render markdown to HTML with debouncing
+  useEffect(() => {
+    if (!md.current) return
+
+    // Debounce rendering for performance
+    const timeoutId = setTimeout(() => {
+      const { html, headings } = renderMarkdown(content)
+      setRenderedHtml(html)
+      setTocContent(headings)
+    }, 150)
+
+    return () => clearTimeout(timeoutId)
+  }, [content, renderMarkdown])
 
   // Render mermaid diagrams after HTML is rendered
   useEffect(() => {
-    if (!previewRef.current) return
+    if (!previewRef.current || !renderedHtml) return
 
+    let isCancelled = false
     const renderMermaidDiagrams = async () => {
       const mermaidElements = previewRef.current?.querySelectorAll('.mermaid')
       if (!mermaidElements || mermaidElements.length === 0) return
 
       for (const element of mermaidElements) {
+        if (isCancelled) break // Stop rendering if component unmounts
+
         const graphId = element.id
         const graphCode = element.textContent || ''
 
         try {
           const { svg } = await mermaid.render(graphId, graphCode)
-          element.innerHTML = svg
+          if (!isCancelled && element) {
+            element.innerHTML = svg
+          }
         } catch (error) {
           console.error('Mermaid rendering error:', error)
-          element.innerHTML = `<pre class="error">Error rendering diagram: ${error}</pre>`
+          if (!isCancelled && element) {
+            element.innerHTML = `<pre class="error">Error rendering diagram: ${error}</pre>`
+          }
         }
       }
     }
 
-    renderMermaidDiagrams()
+    // Debounce mermaid rendering for performance
+    const timeoutId = setTimeout(renderMermaidDiagrams, 100)
+
+    return () => {
+      isCancelled = true
+      clearTimeout(timeoutId)
+    }
   }, [renderedHtml])
 
   // Handle checkbox clicks for task lists
   useEffect(() => {
-    if (!previewRef.current) return
+    const element = previewRef.current
+    if (!element) return
 
     const handleCheckboxClick = (e: Event) => {
       const target = e.target as HTMLInputElement
@@ -203,9 +279,9 @@ export function EnhancedMarkdownPreview({
       }
     }
 
-    previewRef.current.addEventListener('click', handleCheckboxClick)
+    element.addEventListener('click', handleCheckboxClick)
     return () => {
-      previewRef.current?.removeEventListener('click', handleCheckboxClick)
+      element.removeEventListener('click', handleCheckboxClick)
     }
   }, [renderedHtml])
 
@@ -218,23 +294,32 @@ export function EnhancedMarkdownPreview({
         className
       )}
       dangerouslySetInnerHTML={{ __html: renderedHtml }}
-      style={{
-        ['--tw-prose-body' as any]: theme === 'dark' ? '#e5e7eb' : '#374151',
-        ['--tw-prose-headings' as any]: theme === 'dark' ? '#f3f4f6' : '#111827',
-        ['--tw-prose-links' as any]: theme === 'dark' ? '#60a5fa' : '#2563eb',
-        ['--tw-prose-bold' as any]: theme === 'dark' ? '#f3f4f6' : '#111827',
-        ['--tw-prose-counters' as any]: theme === 'dark' ? '#9ca3af' : '#6b7280',
-        ['--tw-prose-bullets' as any]: theme === 'dark' ? '#9ca3af' : '#6b7280',
-        ['--tw-prose-hr' as any]: theme === 'dark' ? '#374151' : '#e5e7eb',
-        ['--tw-prose-quotes' as any]: theme === 'dark' ? '#f3f4f6' : '#111827',
-        ['--tw-prose-quote-borders' as any]: theme === 'dark' ? '#374151' : '#e5e7eb',
-        ['--tw-prose-captions' as any]: theme === 'dark' ? '#9ca3af' : '#6b7280',
-        ['--tw-prose-code' as any]: theme === 'dark' ? '#f3f4f6' : '#111827',
-        ['--tw-prose-pre-code' as any]: theme === 'dark' ? '#e5e7eb' : '#374151',
-        ['--tw-prose-pre-bg' as any]: theme === 'dark' ? '#1f2937' : '#f3f4f6',
-        ['--tw-prose-th-borders' as any]: theme === 'dark' ? '#4b5563' : '#d1d5db',
-        ['--tw-prose-td-borders' as any]: theme === 'dark' ? '#374151' : '#e5e7eb'
-      }}
+      style={({
+        '--tw-prose-body': theme === 'dark' ? '#e5e7eb' : '#374151',
+        '--tw-prose-headings': theme === 'dark' ? '#f3f4f6' : '#111827',
+        '--tw-prose-links': theme === 'dark' ? '#60a5fa' : '#2563eb',
+        '--tw-prose-bold': theme === 'dark' ? '#f3f4f6' : '#111827',
+        '--tw-prose-counters': theme === 'dark' ? '#9ca3af' : '#6b7280',
+        '--tw-prose-bullets': theme === 'dark' ? '#9ca3af' : '#6b7280',
+        '--tw-prose-hr': theme === 'dark' ? '#374151' : '#e5e7eb',
+        '--tw-prose-quotes': theme === 'dark' ? '#f3f4f6' : '#111827',
+        '--tw-prose-quote-borders': theme === 'dark' ? '#374151' : '#e5e7eb',
+        '--tw-prose-captions': theme === 'dark' ? '#9ca3af' : '#6b7280',
+        '--tw-prose-code': theme === 'dark' ? '#f3f4f6' : '#111827',
+        '--tw-prose-pre-code': theme === 'dark' ? '#e5e7eb' : '#374151',
+        '--tw-prose-pre-bg': theme === 'dark' ? '#1f2937' : '#f3f4f6',
+        '--tw-prose-th-borders': theme === 'dark' ? '#4b5563' : '#d1d5db',
+        '--tw-prose-td-borders': theme === 'dark' ? '#374151' : '#e5e7eb'
+      } as ProseStyles & React.CSSProperties)}
     />
+  )
+}
+
+// Export the component wrapped with error boundary
+export function EnhancedMarkdownPreview(props: EnhancedMarkdownPreviewProps) {
+  return (
+    <ErrorBoundary componentName="EnhancedMarkdownPreview">
+      <EnhancedMarkdownPreviewBase {...props} />
+    </ErrorBoundary>
   )
 }

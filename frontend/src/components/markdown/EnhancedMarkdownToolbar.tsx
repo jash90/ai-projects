@@ -1,12 +1,12 @@
 import React from 'react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/Button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
+} from '@/components/ui/DropdownMenu'
 import {
   Tooltip,
   TooltipContent,
@@ -102,7 +102,7 @@ export function MarkdownToolbar({
 }: MarkdownToolbarProps) {
   return (
     <TooltipProvider>
-      <div className="border-b border-border bg-muted/30 px-2 py-1">
+      <div className="border-b border-border bg-muted/30 px-2 py-1" role="toolbar" aria-label="Markdown editor toolbar">
         <div className="flex items-center justify-between">
           {/* Left side - Editing tools */}
           <div className="flex items-center gap-1">
@@ -116,8 +116,10 @@ export function MarkdownToolbar({
                     onClick={() => onViewModeChange('edit')}
                     className="rounded-none rounded-l-md h-8 px-2"
                     disabled={readOnly}
+                    aria-label="Edit mode"
+                    aria-pressed={viewMode === 'edit'}
                   >
-                    <Edit className="h-4 w-4" />
+                    <Edit className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>Edit mode</TooltipContent>
@@ -130,8 +132,10 @@ export function MarkdownToolbar({
                     size="sm"
                     onClick={() => onViewModeChange('split')}
                     className="rounded-none h-8 px-2"
+                    aria-label="Split view mode"
+                    aria-pressed={viewMode === 'split'}
                   >
-                    <SplitSquareHorizontal className="h-4 w-4" />
+                    <SplitSquareHorizontal className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>Split view</TooltipContent>

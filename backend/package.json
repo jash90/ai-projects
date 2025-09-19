@@ -50,6 +50,7 @@
     "openai": "^4.20.1",
     "pg": "^8.11.3",
     "puppeteer": "^24.18.0",
+    "rate-limit-redis": "^4.2.2",
     "redis": "^4.6.10",
     "socket.io": "^4.7.3",
     "uuid": "^9.0.1",

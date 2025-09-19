@@ -1,8 +1,11 @@
-import React, { Component, ReactNode } from 'react'
+import React, { Component, ReactNode, ErrorInfo } from 'react'
 import { RefreshCw, AlertTriangle } from 'lucide-react'
 
 interface Props {
   children: ReactNode
+  componentName?: string
+  fallback?: ReactNode
+  onError?: (error: Error, errorInfo: ErrorInfo) => void
 }
 
 interface State {
@@ -22,21 +25,36 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Error caught by boundary:', error)
+    const componentName = this.props.componentName ? ` in ${this.props.componentName}` : ''
+    console.error(`Error caught by boundary${componentName}:`, error)
     console.error('Error info:', errorInfo)
-    
+
     this.setState({
       error,
       errorInfo: errorInfo.componentStack || undefined
     })
+
+    // Call custom error handler if provided
+    if (this.props.onError) {
+      this.props.onError(error, errorInfo)
+    }
   }
 
   handleReload = () => {
     window.location.reload()
   }
 
+  handleReset = () => {
+    this.setState({ hasError: false, error: undefined, errorInfo: undefined })
+  }
+
   render() {
     if (this.state.hasError) {
+      // Use custom fallback if provided
+      if (this.props.fallback) {
+        return <>{this.props.fallback}</>
+      }
+
       return (
         <div className="min-h-screen flex items-center justify-center bg-background p-4">
           <div className="max-w-md w-full text-center space-y-6">
@@ -51,7 +69,9 @@ class ErrorBoundary extends Component<Props, State> {
                 Something went wrong
               </h1>
               <p className="text-muted-foreground">
-                We encountered an unexpected error. Please try refreshing the page.
+                {this.props.componentName
+                  ? `An error occurred in the ${this.props.componentName} component.`
+                  : 'We encountered an unexpected error. Please try refreshing the page.'}
               </p>
             </div>
 
@@ -85,3 +105,16 @@ class ErrorBoundary extends Component<Props, State> {
 }
 
 export default ErrorBoundary
+
+// HOC for functional components
+export function withErrorBoundary<P extends object>(
+  Component: React.ComponentType<P>,
+  componentName?: string,
+  fallback?: ReactNode
+) {
+  return (props: P) => (
+    <ErrorBoundary componentName={componentName} fallback={fallback}>
+      <Component {...props} />
+    </ErrorBoundary>
+  )
+}

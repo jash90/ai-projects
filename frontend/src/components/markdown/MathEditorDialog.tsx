@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import ErrorBoundary from '../ErrorBoundary'
 import {
   Dialog,
   DialogContent,
@@ -6,10 +7,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Label } from '@/components/ui/label'
+} from '@/components/ui/Dialog'
+import { Button } from '@/components/ui/Button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
+import { Label } from '@/components/ui/Label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -72,7 +73,7 @@ const mathTemplates = {
   ]
 }
 
-export function MathEditorDialog({ open, onClose, onInsert }: MathEditorDialogProps) {
+function MathEditorDialogBase({ open, onClose, onInsert }: MathEditorDialogProps) {
   const [latex, setLatex] = useState('')
   const [isInline, setIsInline] = useState(true)
   const [renderedMath, setRenderedMath] = useState('')
@@ -94,7 +95,7 @@ export function MathEditorDialog({ open, onClose, onInsert }: MathEditorDialogPr
       })
       setRenderedMath(html)
       setError('')
-    } catch (err: any) {
+    } catch (err) {
       setError(err.message || 'Invalid LaTeX syntax')
       setRenderedMath('')
     }
@@ -242,5 +243,14 @@ export function MathEditorDialog({ open, onClose, onInsert }: MathEditorDialogPr
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  )
+}
+
+// Export the component wrapped with error boundary
+export function MathEditorDialog(props: MathEditorDialogProps) {
+  return (
+    <ErrorBoundary componentName="MathEditorDialog">
+      <MathEditorDialogBase {...props} />
+    </ErrorBoundary>
   )
 }

@@ -9,13 +9,11 @@ import markdownItHighlightJs from 'markdown-it-highlightjs'
 import hljs from 'highlight.js'
 import puppeteer from 'puppeteer'
 import logger from '../utils/logger'
-import { exec } from 'child_process'
-import { promisify } from 'util'
+import { spawn } from 'child_process'
 import fs from 'fs/promises'
 import path from 'path'
 import os from 'os'
-
-const execAsync = promisify(exec)
+import crypto from 'crypto'
 
 class MarkdownService {
   private md: MarkdownIt
@@ -216,29 +214,97 @@ class MarkdownService {
   }
 
   /**
-   * Render mermaid diagrams to SVG
+   * Validate mermaid code for safety
+   */
+  private validateMermaidCode(code: string): boolean {
+    // Check for potentially dangerous patterns
+    const dangerousPatterns = [
+      /[;&|`$(){}[\]<>]/g, // Shell metacharacters
+      /\.\.\//g, // Path traversal
+      /['"]/g, // Quotes that could break out of commands
+    ]
+
+    // Limit code size to prevent DoS
+    if (code.length > 10000) {
+      throw new Error('Mermaid diagram too large')
+    }
+
+    // Check for dangerous patterns in the code
+    for (const pattern of dangerousPatterns) {
+      if (pattern.test(code)) {
+        // Allow safe mermaid syntax elements
+        const safeMermaidSyntax = /^[\w\s\-:>|{}\[\]().,!#%\n\r]+$/
+        if (!safeMermaidSyntax.test(code)) {
+          throw new Error('Invalid characters in Mermaid diagram')
+        }
+      }
+    }
+
+    return true
+  }
+
+  /**
+   * Render mermaid diagrams to SVG (secured version)
    */
   async renderMermaidToSvg(mermaidCode: string): Promise<string> {
     try {
-      const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'mermaid-'))
+      // Validate input to prevent injection attacks
+      this.validateMermaidCode(mermaidCode)
+
+      // Use crypto for secure random directory names
+      const randomId = crypto.randomBytes(16).toString('hex')
+      const tempDir = path.join(os.tmpdir(), `mermaid-${randomId}`)
+      await fs.mkdir(tempDir, { recursive: true })
+
+      // Sanitize file paths
       const inputFile = path.join(tempDir, 'input.mmd')
       const outputFile = path.join(tempDir, 'output.svg')
 
+      // Validate paths don't escape temp directory
+      if (!inputFile.startsWith(tempDir) || !outputFile.startsWith(tempDir)) {
+        throw new Error('Invalid file path')
+      }
+
       await fs.writeFile(inputFile, mermaidCode)
 
-      const { stdout, stderr } = await execAsync(
-        `npx mmdc -i "${inputFile}" -o "${outputFile}" -t dark -b transparent`,
-        { timeout: 30000 }
-      )
+      await new Promise((resolve, reject) => {
+        const child = spawn('npx', [
+          'mmdc',
+          '-i', inputFile,
+          '-o', outputFile,
+          '-t', 'dark',
+          '-b', 'transparent'
+        ], {
+          timeout: 30000,
+          shell: false // Disable shell to prevent injection
+        })
 
-      if (stderr && !stderr.includes('successfully')) {
-        logger.warn('Mermaid rendering warning:', stderr)
-      }
+        let stderr = ''
+        child.stderr.on('data', (data: Buffer) => {
+          stderr += data.toString()
+        })
+
+        child.on('error', reject)
+        child.on('exit', (code: number) => {
+          if (code !== 0) {
+            reject(new Error(`Mermaid CLI exited with code ${code}: ${stderr}`))
+          } else {
+            if (stderr && !stderr.includes('successfully')) {
+              logger.warn('Mermaid rendering warning:', stderr)
+            }
+            resolve(undefined)
+          }
+        })
+      })
 
       const svg = await fs.readFile(outputFile, 'utf-8')
 
-      // Cleanup temp files
-      await fs.rm(tempDir, { recursive: true, force: true })
+      // Cleanup temp files with error handling
+      try {
+        await fs.rm(tempDir, { recursive: true, force: true })
+      } catch (cleanupError) {
+        logger.error('Failed to cleanup temp directory:', cleanupError)
+      }
 
       return svg
     } catch (error) {
