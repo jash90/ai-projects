@@ -1,14 +1,34 @@
 import MarkdownIt from 'markdown-it'
 import markdownItKatex from 'markdown-it-katex'
-import markdownItToc from 'markdown-it-table-of-contents'
+import markdownItTocDoneRight from 'markdown-it-toc-done-right'
 import markdownItFootnote from 'markdown-it-footnote'
+import markdownItTaskLists from 'markdown-it-task-lists'
+import markdownItEmoji from 'markdown-it-emoji'
+import markdownItAnchor from 'markdown-it-anchor'
+import markdownItHighlightJs from 'markdown-it-highlightjs'
+import hljs from 'highlight.js'
 import puppeteer from 'puppeteer'
 import logger from '../utils/logger'
+import { exec } from 'child_process'
+import { promisify } from 'util'
+import fs from 'fs/promises'
+import path from 'path'
+import os from 'os'
+
+const execAsync = promisify(exec)
 
 class MarkdownService {
   private md: MarkdownIt
+  private mdWithMermaid: MarkdownIt
 
   constructor() {
+    // Configure highlight.js
+    hljs.configure({
+      classPrefix: 'hljs-',
+      languages: ['javascript', 'typescript', 'python', 'java', 'cpp', 'csharp', 'go', 'rust', 'sql', 'bash', 'json', 'yaml', 'html', 'css', 'markdown']
+    })
+
+    // Base markdown-it instance with all plugins
     this.md = new MarkdownIt({
       html: true,
       linkify: true,
@@ -16,23 +36,214 @@ class MarkdownService {
       breaks: true
     })
     .use(markdownItKatex, { throwOnError: false, errorColor: '#cc0000' })
-    .use(markdownItToc, {
-      includeLevel: [1, 2, 3, 4],
+    .use(markdownItTocDoneRight, {
       containerClass: 'table-of-contents',
-      markerPattern: /^\[\[toc\]\]/im
+      containerId: 'toc',
+      listType: 'ul',
+      listClass: 'toc-list',
+      itemClass: 'toc-item',
+      linkClass: 'toc-link',
+      level: [1, 2, 3, 4]
     })
     .use(markdownItFootnote)
+    .use(markdownItTaskLists, { enabled: true, label: true })
+    .use(markdownItEmoji)
+    .use(markdownItAnchor, {
+      permalink: markdownItAnchor.permalink.ariaHidden({
+        placement: 'before',
+        symbol: '#'
+      }),
+      level: [1, 2, 3, 4],
+      slugify: (s: string) => s.toLowerCase().replace(/[^\w]+/g, '-')
+    })
+    .use(markdownItHighlightJs, {
+      auto: true,
+      code: true,
+      inline: true,
+      hljs
+    })
+
+    // Instance with mermaid support for diagrams
+    this.mdWithMermaid = this.setupMermaidRenderer()
   }
 
   /**
-   * Render Markdown to HTML
+   * Setup Mermaid renderer for diagrams
    */
-  renderToHtml(markdown: string): string {
+  private setupMermaidRenderer(): MarkdownIt {
+    const md = new MarkdownIt({
+      html: true,
+      linkify: true,
+      typographer: true,
+      breaks: true
+    })
+
+    // Copy all plugins from base instance
+    md.use(markdownItKatex, { throwOnError: false, errorColor: '#cc0000' })
+    .use(markdownItTocDoneRight, {
+      containerClass: 'table-of-contents',
+      containerId: 'toc',
+      listType: 'ul',
+      listClass: 'toc-list',
+      itemClass: 'toc-item',
+      linkClass: 'toc-link',
+      level: [1, 2, 3, 4]
+    })
+    .use(markdownItFootnote)
+    .use(markdownItTaskLists, { enabled: true, label: true })
+    .use(markdownItEmoji)
+    .use(markdownItAnchor, {
+      permalink: markdownItAnchor.permalink.ariaHidden({
+        placement: 'before',
+        symbol: '#'
+      }),
+      level: [1, 2, 3, 4],
+      slugify: (s: string) => s.toLowerCase().replace(/[^\w]+/g, '-')
+    })
+    .use(markdownItHighlightJs, {
+      auto: true,
+      code: true,
+      inline: true,
+      hljs
+    })
+
+    // Add custom mermaid renderer
+    const defaultFence = md.renderer.rules.fence
+    md.renderer.rules.fence = function (tokens, idx, options, env, renderer) {
+      const token = tokens[idx]
+      const info = token.info ? token.info.trim() : ''
+
+      if (info === 'mermaid') {
+        return `<div class="mermaid">${token.content}</div>`
+      }
+
+      if (defaultFence) {
+        return defaultFence(tokens, idx, options, env, renderer)
+      }
+      return ''
+    }
+
+    return md
+  }
+
+  /**
+   * Render Markdown to HTML with optional mermaid support
+   */
+  renderToHtml(markdown: string, options?: { mermaid?: boolean }): string {
     try {
-      return this.md.render(markdown)
+      const renderer = options?.mermaid ? this.mdWithMermaid : this.md
+      return renderer.render(markdown)
     } catch (error) {
       logger.error('Markdown rendering error:', error)
       throw new Error('Failed to render Markdown')
+    }
+  }
+
+  /**
+   * Validate markdown syntax
+   */
+  validateMarkdown(markdown: string): { valid: boolean; errors: string[] } {
+    const errors: string[] = []
+
+    try {
+      // Try to render to catch syntax errors
+      this.md.render(markdown)
+
+      // Check for common issues
+      const lines = markdown.split('\n')
+      lines.forEach((line, index) => {
+        // Check for unclosed code blocks
+        if (line.startsWith('```') && !line.includes('```', 3)) {
+          const nextFence = lines.slice(index + 1).findIndex(l => l.startsWith('```'))
+          if (nextFence === -1) {
+            errors.push(`Unclosed code block at line ${index + 1}`)
+          }
+        }
+
+        // Check for malformed links
+        const linkRegex = /\[([^\]]*)\]\(([^)]*)\)/g
+        let match
+        while ((match = linkRegex.exec(line)) !== null) {
+          if (!match[2]) {
+            errors.push(`Empty link URL at line ${index + 1}`)
+          }
+        }
+      })
+
+      return { valid: errors.length === 0, errors }
+    } catch (error: any) {
+      return { valid: false, errors: [error.message || 'Invalid markdown syntax'] }
+    }
+  }
+
+  /**
+   * Extract metadata from markdown
+   */
+  extractMetadata(markdown: string): {
+    title?: string
+    headings: { level: number; text: string; slug: string }[]
+    wordCount: number
+    readingTime: number
+  } {
+    const headings: { level: number; text: string; slug: string }[] = []
+    let title: string | undefined
+
+    // Extract headings
+    const headingRegex = /^(#{1,6})\s+(.+)$/gm
+    let match
+    while ((match = headingRegex.exec(markdown)) !== null) {
+      const level = match[1].length
+      const text = match[2].trim()
+      const slug = text.toLowerCase().replace(/[^\w]+/g, '-')
+
+      if (level === 1 && !title) {
+        title = text
+      }
+
+      headings.push({ level, text, slug })
+    }
+
+    // Calculate word count and reading time
+    const words = markdown.replace(/```[\s\S]*?```/g, '') // Remove code blocks
+      .replace(/[#*`~\[\]()!]/g, '') // Remove markdown syntax
+      .split(/\s+/)
+      .filter(word => word.length > 0)
+
+    const wordCount = words.length
+    const readingTime = Math.ceil(wordCount / 200) // Average reading speed
+
+    return { title, headings, wordCount, readingTime }
+  }
+
+  /**
+   * Render mermaid diagrams to SVG
+   */
+  async renderMermaidToSvg(mermaidCode: string): Promise<string> {
+    try {
+      const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'mermaid-'))
+      const inputFile = path.join(tempDir, 'input.mmd')
+      const outputFile = path.join(tempDir, 'output.svg')
+
+      await fs.writeFile(inputFile, mermaidCode)
+
+      const { stdout, stderr } = await execAsync(
+        `npx mmdc -i "${inputFile}" -o "${outputFile}" -t dark -b transparent`,
+        { timeout: 30000 }
+      )
+
+      if (stderr && !stderr.includes('successfully')) {
+        logger.warn('Mermaid rendering warning:', stderr)
+      }
+
+      const svg = await fs.readFile(outputFile, 'utf-8')
+
+      // Cleanup temp files
+      await fs.rm(tempDir, { recursive: true, force: true })
+
+      return svg
+    } catch (error) {
+      logger.error('Mermaid rendering error:', error)
+      throw new Error('Failed to render Mermaid diagram')
     }
   }
 
