@@ -1,50 +1,23 @@
 import { Request, Response, NextFunction } from 'express'
 import helmet from 'helmet'
+import { generateNonce, addNonceToCSP } from '../utils/nonce'
 
 /**
- * Content Security Policy configuration for markdown rendering
+ * Enhanced Content Security Policy with nonce support
  */
-export const contentSecurityPolicy = helmet.contentSecurityPolicy({
-  directives: {
-    defaultSrc: ["'self'"],
-    scriptSrc: [
-      "'self'",
-      "'unsafe-inline'", // Required for inline scripts in markdown preview
-      'cdn.jsdelivr.net', // For KaTeX and highlight.js
-      'cdnjs.cloudflare.com'
-    ],
-    styleSrc: [
-      "'self'",
-      "'unsafe-inline'", // Required for inline styles
-      'cdn.jsdelivr.net',
-      'cdnjs.cloudflare.com',
-      'fonts.googleapis.com'
-    ],
-    fontSrc: [
-      "'self'",
-      'cdn.jsdelivr.net',
-      'fonts.gstatic.com',
-      'data:' // For embedded fonts
-    ],
-    imgSrc: [
-      "'self'",
-      'data:', // For base64 images
-      'blob:', // For blob URLs
-      'https:' // For external images in markdown
-    ],
-    connectSrc: ["'self'"],
-    mediaSrc: ["'self'"],
-    objectSrc: ["'none'"], // Prevent plugins
-    childSrc: ["'none'"], // Prevent iframes
-    frameAncestors: ["'none'"], // Prevent clickjacking
-    formAction: ["'self'"],
-    upgradeInsecureRequests: [],
-    blockAllMixedContent: [],
-    baseUri: ["'self'"],
-    manifestSrc: ["'self'"]
-  },
-  reportOnly: false // Set to true for testing
-})
+export const enhancedCSP = (req: Request, res: Response, next: NextFunction) => {
+  // Generate a unique nonce for this request
+  const nonce = generateNonce()
+
+  // Store nonce in response locals for use in templates
+  res.locals.nonce = nonce
+
+  // Set enhanced CSP header with nonce
+  const cspHeader = addNonceToCSP(nonce)
+  res.setHeader('Content-Security-Policy', cspHeader)
+
+  next()
+}
 
 /**
  * Security headers middleware
@@ -89,9 +62,10 @@ export const markdownSecurityHeaders = (req: Request, res: Response, next: NextF
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
   }
 
-  // Add sandbox attribute for exported HTML
+  // Enhanced sandbox for exported HTML with stricter controls
   if (req.path.includes('/export/html')) {
-    res.setHeader('Content-Security-Policy', "sandbox allow-same-origin allow-scripts")
+    res.setHeader('Content-Security-Policy', "sandbox allow-same-origin")
+    res.setHeader('X-Frame-Options', 'DENY')
   }
 
   next()

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import MarkdownIt from 'markdown-it'
 import ErrorBoundary from '../ErrorBoundary'
-import markdownItKatex from 'markdown-it-katex'
+import { katex } from '@mdit/plugin-katex'
 import markdownItEmoji from 'markdown-it-emoji'
 import markdownItTaskLists from 'markdown-it-task-lists'
 import markdownItAnchor from 'markdown-it-anchor'
@@ -70,9 +70,11 @@ function EnhancedMarkdownPreviewBase({
         return ''
       }
     })
-      .use(markdownItKatex, {
+      .use(katex, {
         throwOnError: false,
-        errorColor: '#cc0000'
+        errorColor: '#cc0000',
+        strict: false,
+        trust: false // Security: disable trusted mode
       })
       .use(markdownItEmoji)
       .use(markdownItTaskLists, {
@@ -180,18 +182,18 @@ function EnhancedMarkdownPreviewBase({
           'src', 'alt', 'width', 'height',
           'type', 'checked', 'disabled', // for checkboxes
           'colspan', 'rowspan', // for tables
-          'start', 'reversed', // for lists
-          'data-*' // for custom data attributes
+          'start', 'reversed' // for lists
+          // Note: data-* attributes removed for security
         ],
         // Security settings
         FORBID_TAGS: ['script', 'style', 'iframe', 'form', 'object', 'embed'],
         FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'onfocus', 'onblur'],
-        ALLOW_DATA_ATTR: false, // Disable data attributes to prevent attribute-based XSS
+        ALLOW_DATA_ATTR: false, // Consistently disable data attributes for security
         ALLOW_UNKNOWN_PROTOCOLS: false,
         SAFE_FOR_TEMPLATES: true,
         RETURN_TRUSTED_TYPE: false,
-        // URL sanitization
-        ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+        // URL sanitization - stricter protocol allowlist
+        ALLOWED_URI_REGEXP: /^(?:https?:|mailto:|tel:)/i,
         // Custom hooks for additional sanitization
         ADD_TAGS: [],
         ADD_ATTR: [],

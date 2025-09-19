@@ -1,5 +1,5 @@
 import MarkdownIt from 'markdown-it'
-import markdownItKatex from 'markdown-it-katex'
+import { katex } from '@mdit/plugin-katex'
 import markdownItTocDoneRight from 'markdown-it-toc-done-right'
 import markdownItFootnote from 'markdown-it-footnote'
 import markdownItTaskLists from 'markdown-it-task-lists'
@@ -33,7 +33,12 @@ class MarkdownService {
       typographer: true,
       breaks: true
     })
-    .use(markdownItKatex, { throwOnError: false, errorColor: '#cc0000' })
+    .use(katex, {
+      throwOnError: false,
+      errorColor: '#cc0000',
+      strict: false,
+      trust: false // Security: disable trusted mode
+    })
     .use(markdownItTocDoneRight, {
       containerClass: 'table-of-contents',
       containerId: 'toc',
@@ -77,7 +82,12 @@ class MarkdownService {
     })
 
     // Copy all plugins from base instance
-    md.use(markdownItKatex, { throwOnError: false, errorColor: '#cc0000' })
+    md.use(katex, {
+      throwOnError: false,
+      errorColor: '#cc0000',
+      strict: false,
+      trust: false // Security: disable trusted mode
+    })
     .use(markdownItTocDoneRight, {
       containerClass: 'table-of-contents',
       containerId: 'toc',
@@ -219,30 +229,59 @@ class MarkdownService {
   }
 
   /**
-   * Validate mermaid code for safety
+   * Enhanced Mermaid code validation with stricter security patterns
    */
   private validateMermaidCode(code: string): boolean {
-    // Check for potentially dangerous patterns
-    const dangerousPatterns = [
-      /[;&|`$(){}[\]<>]/g, // Shell metacharacters
-      /\.\.\//g, // Path traversal
-      /['"]/g, // Quotes that could break out of commands
-    ]
-
-    // Limit code size to prevent DoS
-    if (code.length > 10000) {
-      throw new Error('Mermaid diagram too large')
+    // Strict size limits to prevent DoS
+    if (code.length > 5000) {
+      throw new Error('Mermaid diagram exceeds maximum size (5KB)')
     }
 
-    // Check for dangerous patterns in the code
+    if (code.trim().length === 0) {
+      throw new Error('Empty Mermaid diagram')
+    }
+
+    // Check for potentially dangerous patterns
+    const dangerousPatterns = [
+      /[;&|`$<>]/g, // Shell metacharacters and HTML
+      /\.\.\//g, // Path traversal
+      /javascript:/gi, // JavaScript URLs
+      /data:/gi, // Data URLs
+      /vbscript:/gi, // VBScript URLs
+      /file:/gi, // File URLs
+      /ftp:/gi, // FTP URLs
+      /<script[^>]*>/gi, // Script tags
+      /<iframe[^>]*>/gi, // Iframe tags
+      /onclick|onload|onerror/gi, // Event handlers
+      /eval\s*\(/gi, // Eval function
+      /setTimeout|setInterval/gi, // Timer functions
+    ]
+
+    // Check for dangerous patterns
     for (const pattern of dangerousPatterns) {
       if (pattern.test(code)) {
-        // Allow safe mermaid syntax elements
-        const safeMermaidSyntax = /^[\w\s\-:>|{}\[\]().,!#%\n\r]+$/
-        if (!safeMermaidSyntax.test(code)) {
-          throw new Error('Invalid characters in Mermaid diagram')
-        }
+        throw new Error(`Invalid pattern detected in Mermaid diagram: ${pattern.source}`)
       }
+    }
+
+    // Stricter allowlist for Mermaid syntax
+    const allowedSyntax = /^[\w\s\-:>|{}\[\]().,!#%\n\r\"'\/\\]+$/
+    if (!allowedSyntax.test(code)) {
+      throw new Error('Mermaid diagram contains disallowed characters')
+    }
+
+    // Validate basic Mermaid diagram structure
+    const validDiagramTypes = [
+      'graph', 'flowchart', 'sequenceDiagram', 'classDiagram',
+      'gantt', 'pie', 'journey', 'gitgraph', 'quadrantChart'
+    ]
+
+    const hasValidType = validDiagramTypes.some(type =>
+      code.trim().toLowerCase().startsWith(type.toLowerCase())
+    )
+
+    if (!hasValidType) {
+      throw new Error('Invalid or unsupported Mermaid diagram type')
     }
 
     return true

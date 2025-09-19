@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express'
 import { markdownService } from '../services/markdownService'
 import { authenticateToken } from '../middleware/auth'
-import { securityHeaders, markdownSecurityHeaders } from '../middleware/security'
+import { securityHeaders, markdownSecurityHeaders, enhancedCSP } from '../middleware/security'
 import { logMarkdownRequest, logMarkdownError } from '../middleware/requestLogging'
 import {
   exportRateLimit,
@@ -14,6 +14,7 @@ import Joi from 'joi'
 const router: Router = Router()
 
 // Apply middleware to all markdown routes
+router.use(enhancedCSP)
 router.use(securityHeaders)
 router.use(markdownSecurityHeaders)
 router.use(logMarkdownRequest)
@@ -81,7 +82,10 @@ router.post('/validate', authenticateToken, async (req: Request, res: Response) 
     res.json(result)
   } catch (error) {
     console.error('Validation error:', error)
-    res.status(500).json({ error: 'Validation failed' })
+    res.status(500).json({
+      error: 'Validation failed',
+      message: process.env.NODE_ENV === 'development' ? (error as Error).message : 'Internal server error'
+    })
   }
 })
 
@@ -99,7 +103,10 @@ router.post('/render', authenticateToken, renderRateLimit, async (req: Request, 
     res.json({ html, metadata })
   } catch (error) {
     console.error('Rendering error:', error)
-    res.status(500).json({ error: 'Rendering failed' })
+    res.status(500).json({
+      error: 'Rendering failed',
+      message: process.env.NODE_ENV === 'development' ? (error as Error).message : 'Unable to process markdown content'
+    })
   }
 })
 
@@ -115,7 +122,10 @@ router.post('/mermaid/render', authenticateToken, mermaidRateLimit, async (req: 
     res.json({ svg })
   } catch (error) {
     console.error('Mermaid rendering error:', error)
-    res.status(500).json({ error: 'Mermaid rendering failed' })
+    res.status(500).json({
+      error: 'Mermaid rendering failed',
+      message: process.env.NODE_ENV === 'development' ? (error as Error).message : 'Unable to generate diagram'
+    })
   }
 })
 
@@ -224,7 +234,10 @@ router.post('/export/html', authenticateToken, exportRateLimit, dailyExportQuota
     res.send(fullHtml)
   } catch (error) {
     console.error('HTML export error:', error)
-    res.status(500).json({ error: 'HTML export failed' })
+    res.status(500).json({
+      error: 'HTML export failed',
+      message: process.env.NODE_ENV === 'development' ? (error as Error).message : 'Export operation failed'
+    })
   }
 })
 
@@ -243,7 +256,10 @@ router.post('/export/pdf', authenticateToken, exportRateLimit, dailyExportQuota,
     res.send(pdf)
   } catch (error) {
     console.error('PDF export error:', error)
-    res.status(500).json({ error: 'PDF export failed' })
+    res.status(500).json({
+      error: 'PDF export failed',
+      message: process.env.NODE_ENV === 'development' ? (error as Error).message : 'Export operation failed'
+    })
   }
 })
 

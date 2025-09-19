@@ -32,7 +32,7 @@ const createRateLimiter = (options: any) => {
 export const exportRateLimit = createRateLimiter({
   prefix: 'rl:export:',
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // Limit each user to 10 export requests per windowMs
+  max: 5, // Reduced: Limit each user to 5 export requests per windowMs
   message: 'Too many export requests, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,
@@ -52,7 +52,7 @@ export const exportRateLimit = createRateLimiter({
 export const renderRateLimit = createRateLimiter({
   prefix: 'rl:render:',
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 60, // Limit each user to 60 render requests per minute
+  max: 30, // Reduced: Limit each user to 30 render requests per minute
   message: 'Too many render requests, please slow down.',
   standardHeaders: true,
   legacyHeaders: false,
@@ -64,7 +64,7 @@ export const renderRateLimit = createRateLimiter({
 export const mermaidRateLimit = createRateLimiter({
   prefix: 'rl:mermaid:',
   windowMs: 5 * 60 * 1000, // 5 minutes
-  max: 20, // Limit each user to 20 mermaid renders per 5 minutes
+  max: 10, // Reduced: Limit each user to 10 mermaid renders per 5 minutes
   message: 'Too many diagram render requests, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,
@@ -84,7 +84,7 @@ export const mermaidRateLimit = createRateLimiter({
 export const dailyExportQuota = createRateLimiter({
   prefix: 'rl:daily-export:',
   windowMs: 24 * 60 * 60 * 1000, // 24 hours
-  max: 50, // Limit each user to 50 exports per day
+  max: 25, // Reduced: Limit each user to 25 exports per day
   message: 'Daily export quota exceeded.',
   standardHeaders: true,
   legacyHeaders: false,
