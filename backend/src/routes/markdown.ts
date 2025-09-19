@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express'
 import { markdownService } from '../services/markdownService'
 import { authenticateToken } from '../middleware/auth'
+import { securityHeaders, markdownSecurityHeaders } from '../middleware/security'
+import { logMarkdownRequest, logMarkdownError } from '../middleware/requestLogging'
 import {
   exportRateLimit,
   renderRateLimit,
@@ -10,6 +12,11 @@ import {
 import Joi from 'joi'
 
 const router: Router = Router()
+
+// Apply middleware to all markdown routes
+router.use(securityHeaders)
+router.use(markdownSecurityHeaders)
+router.use(logMarkdownRequest)
 
 // Constants for validation
 const MAX_CONTENT_LENGTH = 500000 // 500KB max content
@@ -392,5 +399,8 @@ router.get('/templates/:id', authenticateToken, async (req: Request, res: Respon
   }
   res.json(template)
 })
+
+// Error handling middleware (must be last)
+router.use(logMarkdownError)
 
 export default router

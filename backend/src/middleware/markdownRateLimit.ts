@@ -1,14 +1,36 @@
 import rateLimit from 'express-rate-limit'
 import RedisStore from 'rate-limit-redis'
 import { redisClient } from '../utils/redis'
-import { Request, Response } from 'express'
+import { Request, Response, NextFunction } from 'express'
+import logger from '../utils/logger'
+
+// Fallback to memory store if Redis is unavailable
+const createRateLimiter = (options: any) => {
+  const baseOptions = {
+    ...options,
+    skipSuccessfulRequests: false,
+    skipFailedRequests: false
+  }
+
+  // Try to use Redis store, fall back to memory if unavailable
+  if (redisClient.isReady) {
+    return rateLimit({
+      ...baseOptions,
+      store: new RedisStore({
+        // @ts-ignore - RedisStore type mismatch with redis v4
+        client: redisClient,
+        prefix: options.prefix || 'rl:'
+      })
+    })
+  } else {
+    logger.warn('Redis unavailable, using memory store for rate limiting')
+    return rateLimit(baseOptions)
+  }
+}
 
 // Different rate limits for different operations
-export const exportRateLimit = rateLimit({
-  store: new RedisStore({
-    client: redisClient,
-    prefix: 'rl:export:'
-  }),
+export const exportRateLimit = createRateLimiter({
+  prefix: 'rl:export:',
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 10, // Limit each user to 10 export requests per windowMs
   message: 'Too many export requests, please try again later.',
@@ -27,11 +49,8 @@ export const exportRateLimit = rateLimit({
   }
 })
 
-export const renderRateLimit = rateLimit({
-  store: new RedisStore({
-    client: redisClient,
-    prefix: 'rl:render:'
-  }),
+export const renderRateLimit = createRateLimiter({
+  prefix: 'rl:render:',
   windowMs: 1 * 60 * 1000, // 1 minute
   max: 60, // Limit each user to 60 render requests per minute
   message: 'Too many render requests, please slow down.',
@@ -42,11 +61,8 @@ export const renderRateLimit = rateLimit({
   }
 })
 
-export const mermaidRateLimit = rateLimit({
-  store: new RedisStore({
-    client: redisClient,
-    prefix: 'rl:mermaid:'
-  }),
+export const mermaidRateLimit = createRateLimiter({
+  prefix: 'rl:mermaid:',
   windowMs: 5 * 60 * 1000, // 5 minutes
   max: 20, // Limit each user to 20 mermaid renders per 5 minutes
   message: 'Too many diagram render requests, please try again later.',
@@ -65,11 +81,8 @@ export const mermaidRateLimit = rateLimit({
 })
 
 // Per-user daily export quota
-export const dailyExportQuota = rateLimit({
-  store: new RedisStore({
-    client: redisClient,
-    prefix: 'rl:daily-export:'
-  }),
+export const dailyExportQuota = createRateLimiter({
+  prefix: 'rl:daily-export:',
   windowMs: 24 * 60 * 60 * 1000, // 24 hours
   max: 50, // Limit each user to 50 exports per day
   message: 'Daily export quota exceeded.',

@@ -132,7 +132,12 @@ class MarkdownService {
       const renderer = options?.mermaid ? this.mdWithMermaid : this.md
       return renderer.render(markdown)
     } catch (error) {
-      logger.error('Markdown rendering error:', error)
+      logger.error('Markdown rendering error:', {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        markdownLength: markdown.length,
+        hasMermaid: options?.mermaid
+      })
       throw new Error('Failed to render Markdown')
     }
   }
@@ -308,7 +313,11 @@ class MarkdownService {
 
       return svg
     } catch (error) {
-      logger.error('Mermaid rendering error:', error)
+      logger.error('Mermaid rendering error:', {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        codeLength: mermaidCode.length
+      })
       throw new Error('Failed to render Mermaid diagram')
     }
   }
@@ -317,17 +326,41 @@ class MarkdownService {
    * Export Markdown to PDF
    */
   async exportToPdf(markdown: string, filename: string): Promise<Uint8Array> {
+    let browser = null
     try {
       const html = this.renderToHtml(markdown)
       const fullHtml = this.wrapHtmlForPdf(html)
-      
-      const browser = await puppeteer.launch({
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+
+      browser = await puppeteer.launch({
+        headless: true, // Use headless mode
+        args: [
+          '--no-sandbox', // Required in Docker
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage', // Overcome limited resource problems
+          '--disable-gpu',
+          '--disable-web-security',
+          '--disable-features=IsolateOrigins',
+          '--disable-site-isolation-trials',
+          '--no-first-run',
+          '--no-zygote',
+          '--single-process', // Run in single process for stability
+          '--disable-extensions'
+        ],
+        timeout: 30000, // 30 second timeout
+        protocolTimeout: 30000
       })
       
       const page = await browser.newPage()
-      await page.setContent(fullHtml, { waitUntil: 'networkidle0' })
+
+      // Set security context and viewport
+      await page.setViewport({ width: 1280, height: 720 })
+      await page.setJavaScriptEnabled(false) // Disable JS for security
+
+      // Set content with timeout
+      await page.setContent(fullHtml, {
+        waitUntil: 'networkidle0',
+        timeout: 20000 // 20 second timeout for content loading
+      })
       
       const pdf = await page.pdf({
         format: 'A4',
@@ -340,11 +373,24 @@ class MarkdownService {
         }
       })
       
-      await browser.close()
       return pdf
     } catch (error) {
-      logger.error('PDF export error:', error)
+      logger.error('PDF export error:', {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        markdownLength: markdown.length,
+        filename: filename
+      })
       throw new Error('Failed to export PDF')
+    } finally {
+      // Ensure browser is always closed
+      if (browser) {
+        try {
+          await browser.close()
+        } catch (closeError) {
+          logger.error('Error closing browser:', closeError)
+        }
+      }
     }
   }
 

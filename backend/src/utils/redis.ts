@@ -1,10 +1,10 @@
-import { createClient } from 'redis'
+import { createClient, RedisClientType } from 'redis'
 import config from './config'
 import logger from './logger'
 
 // Create Redis client
-export const redisClient = createClient({
-  url: config.redisUrl,
+export const redisClient: RedisClientType = createClient({
+  url: config.redis_url,
   socket: {
     reconnectStrategy: (retries) => {
       if (retries > 10) {
