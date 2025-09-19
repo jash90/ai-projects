@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A full-stack of AI Projects with AI agents and project management",
   "main": "index.js",
-  "packageManager": "pnpm@8.15.4",
+  "packageManager": "pnpm@10.17.0",
   "engines": {
     "node": ">=18.0.0",
     "pnpm": ">=8.0.0"
@@ -19,7 +19,6 @@
     "start:prod": "node backend/start-prod.js",
     "db:migrate": "cd backend && pnpm run db:migrate",
     "db:seed": "cd backend && pnpm run db:seed",
-
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "install:all": "pnpm install"
@@ -33,7 +32,6 @@
   ],
   "author": "Your Name",
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
     "@nx/eslint": "^21.4.1",
     "@nx/node": "^21.4.1",
