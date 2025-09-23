@@ -1,0 +1,271 @@
+---
+globs: backend/src/database/*,backend/src/models/*,backend/src/routes/*
+description: Database and API design guidelines
+---
+
+# Database & API Design Guidelines
+
+## Database Architecture
+
+### PostgreSQL Configuration
+- **Connection**: [database/connection.ts](mdc:backend/src/database/connection.ts) - Database connection management
+- **Migrations**: [database/migrate.ts](mdc:backend/src/database/migrate.ts) - Database schema migrations
+- **Seeding**: [database/seed.ts](mdc:backend/src/database/seed.ts) - Initial data seeding
+- **Models**: [models/](mdc:backend/src/models/) - Database models and schemas
+
+### Database Design Principles
+- Use UUIDs for primary keys to avoid conflicts
+- Implement proper foreign key relationships
+- Use appropriate data types and constraints
+- Implement proper indexing for performance
+- Use database-level validation where appropriate
+
+### Migration Strategy
+```sql
+-- Example migration structure
+CREATE TABLE users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_created_at ON users(created_at);
+```
+
+## API Design Standards
+
+### RESTful API Principles
+- Use proper HTTP methods (GET, POST, PUT, DELETE, PATCH)
+- Implement consistent URL patterns and resource naming
+- Use proper HTTP status codes for different scenarios
+- Implement proper error handling and response formats
+
+### API Response Format
+```typescript
+// Success response
+{
+  "success": true,
+  "data": { ... },
+  "message": "Operation completed successfully"
+}
+
+// Error response
+{
+  "success": false,
+  "error": "Error message",
+  "code": "ERROR_CODE",
+  "details": { ... }
+}
+
+// Paginated response
+{
+  "success": true,
+  "data": [...],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 100,
+    "totalPages": 5
+  }
+}
+```
+
+### Route Organization
+- **Auth Routes**: [routes/auth.ts](mdc:backend/src/routes/auth.ts) - Authentication and user management
+- **Project Routes**: [routes/projects.ts](mdc:backend/src/routes/projects.ts) - Project management
+- **Chat Routes**: [routes/chat.ts](mdc:backend/src/routes/chat.ts) - AI chat functionality
+- **File Routes**: [routes/files.ts](mdc:backend/src/routes/files.ts) - File upload and management
+
+## Database Models
+
+### Model Structure
+```typescript
+// Example model structure
+export interface User {
+  id: string
+  email: string
+  passwordHash: string
+  createdAt: Date
+  updatedAt: Date
+  lastLoginAt?: Date
+  isActive: boolean
+  role: UserRole
+}
+
+export interface Project {
+  id: string
+  name: string
+  description?: string
+  userId: string
+  createdAt: Date
+  updatedAt: Date
+  isActive: boolean
+}
+```
+
+### Model Relationships
+- **One-to-Many**: User has many Projects
+- **Many-to-Many**: Projects can have multiple Files
+- **One-to-One**: User has one Settings record
+- **Self-Referencing**: Conversations can have parent/child relationships
+
+### Database Constraints
+- Use NOT NULL constraints for required fields
+- Use UNIQUE constraints for unique identifiers
+- Use CHECK constraints for data validation
+- Use FOREIGN KEY constraints for referential integrity
+
+## API Authentication & Authorization
+
+### JWT Token Management
+- Use secure JWT tokens with proper expiration
+- Implement token refresh mechanism
+- Use proper token validation and verification
+- Implement proper logout and token invalidation
+
+### Role-Based Access Control
+```typescript
+// Example authorization middleware
+export const requireRole = (roles: string[]) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user as User
+    if (!user || !roles.includes(user.role)) {
+      return res.status(403).json({
+        success: false,
+        error: 'Insufficient permissions'
+      })
+    }
+    next()
+  }
+}
+```
+
+### API Security
+- Implement proper input validation and sanitization
+- Use rate limiting to prevent abuse
+- Implement proper CORS configuration
+- Use HTTPS in production environments
+
+## Data Validation
+
+### Input Validation with Joi
+```typescript
+// Example validation schema
+const createProjectSchema = Joi.object({
+  name: Joi.string().min(1).max(255).required(),
+  description: Joi.string().max(1000).optional(),
+  isPublic: Joi.boolean().default(false)
+})
+
+export const validateCreateProject = (req: Request, res: Response, next: NextFunction) => {
+  const { error, value } = createProjectSchema.validate(req.body)
+  if (error) {
+    return res.status(400).json({
+      success: false,
+      error: 'Validation error',
+      details: error.details
+    })
+  }
+  req.body = value
+  next()
+}
+```
+
+### Database Validation
+- Use database constraints for data integrity
+- Implement proper data type validation
+- Use proper length limits and format validation
+- Implement proper foreign key validation
+
+## Query Optimization
+
+### Database Indexing
+- Create indexes on frequently queried columns
+- Use composite indexes for multi-column queries
+- Monitor query performance and optimize as needed
+- Use proper index maintenance and cleanup
+
+### Query Patterns
+```typescript
+// Example optimized query
+export const getProjectsByUser = async (userId: string, page: number = 1, limit: number = 20) => {
+  const offset = (page - 1) * limit
+  
+  const query = `
+    SELECT p.*, COUNT(pf.id) as file_count
+    FROM projects p
+    LEFT JOIN project_files pf ON p.id = pf.project_id
+    WHERE p.user_id = $1 AND p.is_active = true
+    GROUP BY p.id
+    ORDER BY p.updated_at DESC
+    LIMIT $2 OFFSET $3
+  `
+  
+  return await db.query(query, [userId, limit, offset])
+}
+```
+
+### Connection Pooling
+- Use proper connection pooling for database connections
+- Implement proper connection timeout and retry logic
+- Monitor connection usage and performance
+- Implement proper connection cleanup and management
+
+## Error Handling
+
+### Database Error Handling
+```typescript
+// Example database error handling
+export const handleDatabaseError = (error: any) => {
+  if (error.code === '23505') { // Unique constraint violation
+    return {
+      success: false,
+      error: 'Resource already exists',
+      code: 'DUPLICATE_RESOURCE'
+    }
+  }
+  
+  if (error.code === '23503') { // Foreign key constraint violation
+    return {
+      success: false,
+      error: 'Referenced resource not found',
+      code: 'INVALID_REFERENCE'
+    }
+  }
+  
+  return {
+    success: false,
+    error: 'Database error occurred',
+    code: 'DATABASE_ERROR'
+  }
+}
+```
+
+### API Error Handling
+- Implement centralized error handling middleware
+- Use proper HTTP status codes for different error types
+- Provide meaningful error messages to clients
+- Log errors with proper context and stack traces
+
+## Performance Monitoring
+
+### Database Performance
+- Monitor query execution times and performance
+- Use database query analysis tools
+- Implement proper database monitoring and alerting
+- Use proper database maintenance and optimization
+
+### API Performance
+- Monitor API response times and throughput
+- Implement proper caching strategies
+- Use proper load balancing and scaling
+- Monitor API usage patterns and trends
+
+### Resource Management
+- Implement proper resource cleanup and management
+- Use proper memory management for large datasets
+- Implement proper connection pooling and management
+- Monitor resource usage and performance metrics

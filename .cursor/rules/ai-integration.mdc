@@ -1,0 +1,197 @@
+---
+globs: backend/src/services/*,backend/src/routes/chat.ts,backend/src/routes/agents.ts
+description: AI and ML integration guidelines
+---
+
+# AI Integration Guidelines
+
+## AI Service Architecture
+
+### Service Organization
+- **Model Service**: [services/modelService.ts](mdc:backend/src/services/modelService.ts) - AI model management and configuration
+- **Chat Service**: Handle AI conversations and streaming responses
+- **Agent Service**: Manage AI agents and their configurations
+- **Usage Tracking**: Monitor token usage and API costs
+
+### AI Provider Integration
+- **OpenAI**: GPT models for text generation and chat
+- **Anthropic**: Claude models for advanced reasoning and analysis
+- **Model Abstraction**: Unified interface for different AI providers
+- **Fallback Strategy**: Graceful degradation when services are unavailable
+
+## API Design for AI Features
+
+### Chat Endpoints
+- **Streaming Responses**: Use Server-Sent Events for real-time AI responses
+- **Conversation Management**: Maintain conversation history and context
+- **Token Management**: Track and limit token usage per user
+- **Error Handling**: Proper error responses for AI service failures
+
+### Agent Management
+- **Agent Configuration**: Store and manage AI agent settings
+- **Model Selection**: Allow users to choose between different AI models
+- **Custom Instructions**: Support for custom system prompts and instructions
+- **Performance Monitoring**: Track agent performance and usage patterns
+
+## Token Usage and Limits
+
+### Usage Tracking
+- Track token consumption per user and conversation
+- Implement usage limits and rate limiting
+- Monitor API costs and usage patterns
+- Provide usage analytics and reporting
+
+### Rate Limiting
+- Implement per-user rate limits for AI requests
+- Use different limits for different user tiers
+- Implement proper backoff strategies
+- Monitor and alert on unusual usage patterns
+
+### Cost Management
+- Track costs per AI provider and model
+- Implement cost alerts and thresholds
+- Use efficient prompting to minimize token usage
+- Implement proper caching for repeated requests
+
+## Streaming and Real-time Features
+
+### WebSocket Integration
+- Use Socket.IO for real-time AI responses
+- Implement proper connection management
+- Handle connection drops and reconnection
+- Use proper error handling for streaming failures
+
+### Streaming Implementation
+```typescript
+// Example streaming response
+app.post('/api/chat/stream', async (req, res) => {
+  const { message, conversationId } = req.body
+  
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+  })
+
+  try {
+    const stream = await openai.chat.completions.create({
+      model: 'gpt-4',
+      messages: conversationHistory,
+      stream: true,
+    })
+
+    for await (const chunk of stream) {
+      const content = chunk.choices[0]?.delta?.content
+      if (content) {
+        res.write(`data: ${JSON.stringify({ content })}\n\n`)
+      }
+    }
+    
+    res.write('data: [DONE]\n\n')
+    res.end()
+  } catch (error) {
+    res.write(`data: ${JSON.stringify({ error: error.message })}\n\n`)
+    res.end()
+  }
+})
+```
+
+## Prompt Engineering
+
+### Prompt Templates
+- Create reusable prompt templates for common tasks
+- Implement prompt versioning and A/B testing
+- Use proper prompt optimization techniques
+- Implement prompt injection protection
+
+### Context Management
+- Maintain conversation context and history
+- Implement proper context window management
+- Use efficient context compression techniques
+- Implement proper context switching between conversations
+
+### System Instructions
+- Define clear system instructions for AI agents
+- Implement role-based system prompts
+- Use proper instruction formatting and structure
+- Implement instruction validation and testing
+
+## Error Handling and Resilience
+
+### AI Service Failures
+- Implement proper retry logic with exponential backoff
+- Use circuit breaker patterns for failing services
+- Implement graceful degradation when AI services are down
+- Provide meaningful error messages to users
+
+### Rate Limit Handling
+- Implement proper rate limit detection and handling
+- Use queue systems for rate-limited requests
+- Implement proper backoff strategies
+- Provide user feedback on rate limiting
+
+### Timeout Management
+- Implement proper timeouts for AI requests
+- Use different timeouts for different types of requests
+- Implement proper cleanup for timed-out requests
+- Provide user feedback on request timeouts
+
+## Security and Privacy
+
+### Input Validation
+- Validate and sanitize all user inputs before sending to AI
+- Implement proper content filtering and moderation
+- Use proper input length limits and validation
+- Implement prompt injection protection
+
+### Data Privacy
+- Implement proper data anonymization for AI requests
+- Use proper data retention policies
+- Implement proper data deletion and cleanup
+- Comply with privacy regulations and requirements
+
+### API Security
+- Use proper API key management and rotation
+- Implement proper request authentication and authorization
+- Use proper rate limiting and abuse prevention
+- Monitor for suspicious usage patterns
+
+## Performance Optimization
+
+### Caching Strategies
+- Cache frequently used AI responses
+- Implement proper cache invalidation
+- Use different caching strategies for different types of requests
+- Monitor cache hit rates and performance
+
+### Response Optimization
+- Use efficient prompting to minimize token usage
+- Implement response compression and optimization
+- Use proper streaming for large responses
+- Implement proper response chunking and pagination
+
+### Resource Management
+- Implement proper resource cleanup and management
+- Use proper connection pooling for AI services
+- Implement proper memory management for large responses
+- Monitor resource usage and performance metrics
+
+## Monitoring and Analytics
+
+### Usage Analytics
+- Track AI usage patterns and trends
+- Monitor token consumption and costs
+- Track user engagement with AI features
+- Implement proper usage reporting and dashboards
+
+### Performance Monitoring
+- Monitor AI response times and latency
+- Track error rates and failure patterns
+- Monitor resource usage and performance metrics
+- Implement proper alerting and notification systems
+
+### Quality Assurance
+- Implement proper AI response quality monitoring
+- Track user satisfaction and feedback
+- Monitor for inappropriate or harmful responses
+- Implement proper quality control and moderation

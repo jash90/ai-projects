@@ -1,0 +1,220 @@
+---
+globs: **/*.{test,spec}.{ts,tsx,js,jsx}
+description: Testing and code quality guidelines
+---
+
+# Testing & Code Quality Guidelines
+
+## Testing Strategy Overview
+
+### Testing Pyramid
+- **Unit Tests**: Test individual functions and components in isolation
+- **Integration Tests**: Test API endpoints and database interactions
+- **E2E Tests**: Test complete user workflows and application behavior
+
+### Test Organization
+- Unit tests: `*.test.ts` or `*.spec.ts` files alongside source code
+- Integration tests: `__tests__/` directories in backend
+- E2E tests: [playwright/](mdc:playwright/) directory at workspace root
+- Test utilities: Shared test helpers and fixtures
+
+## Unit Testing with Jest
+
+### Frontend Unit Tests
+- Test React components with React Testing Library
+- Mock external dependencies and API calls
+- Test user interactions and component behavior
+- Use proper test data factories and fixtures
+
+### Backend Unit Tests
+- Test service functions and business logic
+- Mock database operations and external APIs
+- Test error handling and edge cases
+- Use proper test data setup and teardown
+
+### Jest Configuration
+```typescript
+// Example test structure
+import { render, screen, fireEvent } from '@testing-library/react'
+import { MyComponent } from './MyComponent'
+
+describe('MyComponent', () => {
+  it('should render correctly', () => {
+    render(<MyComponent />)
+    expect(screen.getByText('Expected Text')).toBeInTheDocument()
+  })
+
+  it('should handle user interaction', () => {
+    const mockHandler = jest.fn()
+    render(<MyComponent onClick={mockHandler} />)
+    
+    fireEvent.click(screen.getByRole('button'))
+    expect(mockHandler).toHaveBeenCalledTimes(1)
+  })
+})
+```
+
+## Integration Testing with Supertest
+
+### API Testing
+- Test complete API endpoints with proper request/response validation
+- Test authentication and authorization flows
+- Test error handling and status codes
+- Use test database for isolated testing
+
+### Database Testing
+- Test database models and relationships
+- Test migration and seeding scripts
+- Test transaction handling and rollbacks
+- Use proper test data cleanup
+
+### Integration Test Structure
+```typescript
+// Example API test
+import request from 'supertest'
+import { app } from '../src/index'
+
+describe('API /api/projects', () => {
+  beforeEach(async () => {
+    // Setup test data
+  })
+
+  afterEach(async () => {
+    // Cleanup test data
+  })
+
+  it('should create a new project', async () => {
+    const response = await request(app)
+      .post('/api/projects')
+      .set('Authorization', 'Bearer valid-token')
+      .send({ name: 'Test Project' })
+      .expect(201)
+
+    expect(response.body.success).toBe(true)
+    expect(response.body.data.name).toBe('Test Project')
+  })
+})
+```
+
+## End-to-End Testing with Playwright
+
+### E2E Test Configuration
+- Use Chromium/Desktop Chrome browser for consistency
+- Implement Page Object Model for maintainable tests
+- Use browser contexts for test isolation
+- Implement proper test data management
+
+### Test Structure
+- Test complete user workflows from start to finish
+- Test authentication flows and protected routes
+- Test real-time features and WebSocket connections
+- Test responsive design and cross-browser compatibility
+
+### Playwright Best Practices
+```typescript
+// Example E2E test
+import { test, expect } from '@playwright/test'
+
+test.describe('Project Management', () => {
+  test('should create and manage projects', async ({ page }) => {
+    // Login
+    await page.goto('/login')
+    await page.fill('[data-testid="email"]', 'test@example.com')
+    await page.fill('[data-testid="password"]', 'password')
+    await page.click('[data-testid="login-button"]')
+
+    // Navigate to dashboard
+    await expect(page).toHaveURL('/dashboard')
+    
+    // Create new project
+    await page.click('[data-testid="create-project-button"]')
+    await page.fill('[data-testid="project-name"]', 'Test Project')
+    await page.click('[data-testid="save-project"]')
+    
+    // Verify project creation
+    await expect(page.locator('[data-testid="project-list"]')).toContainText('Test Project')
+  })
+})
+```
+
+## Code Quality Standards
+
+### ESLint Configuration
+- Use TypeScript ESLint rules for type safety
+- Implement React-specific linting rules
+- Use consistent code style across the project
+- Configure proper import/export rules
+
+### Prettier Integration
+- Use Prettier for consistent code formatting
+- Configure editor integration for format on save
+- Use .prettierignore for generated files
+- Set consistent printWidth and quote style
+
+### TypeScript Strict Mode
+- Enable strict TypeScript configuration
+- Use proper type definitions for all functions
+- Implement proper error handling with typed errors
+- Use strict null checks and no implicit any
+
+## Test Data Management
+
+### Test Fixtures
+- Create reusable test data factories
+- Use proper test data cleanup strategies
+- Implement database seeding for tests
+- Use consistent test data across test types
+
+### Mocking Strategies
+- Mock external API calls and services
+- Use proper mock implementations
+- Mock database operations for unit tests
+- Use real database for integration tests
+
+### Test Environment Setup
+- Use separate test database
+- Configure proper environment variables
+- Use test-specific configuration files
+- Implement proper test isolation
+
+## Performance Testing
+
+### Load Testing
+- Test API endpoints under load
+- Monitor memory usage and response times
+- Test database performance under load
+- Implement proper performance monitoring
+
+### Bundle Analysis
+- Monitor frontend bundle size
+- Use proper code splitting strategies
+- Implement lazy loading for non-critical features
+- Monitor and optimize asset loading
+
+## Continuous Integration
+
+### Pre-commit Hooks
+- Run linting and formatting checks
+- Run unit tests before commits
+- Use husky for git hooks
+- Implement proper error handling
+
+### CI/CD Pipeline
+- Run full test suite on pull requests
+- Implement proper test reporting
+- Use proper caching for dependencies
+- Implement proper deployment strategies
+
+## Code Coverage
+
+### Coverage Targets
+- Aim for 80%+ code coverage
+- Focus on critical business logic
+- Test error handling and edge cases
+- Monitor coverage trends over time
+
+### Coverage Reporting
+- Use proper coverage reporting tools
+- Generate coverage reports for CI/CD
+- Implement coverage thresholds
+- Use proper coverage exclusions
