@@ -1,0 +1,143 @@
+---
+globs: frontend/**/*.{ts,tsx,js,jsx}
+description: Frontend development guidelines for React, TypeScript, and Tailwind CSS
+---
+
+# Frontend Development Guidelines
+
+## React Best Practices
+
+### Component Architecture
+- Use functional components with hooks instead of class components
+- Implement React.memo() for expensive components that render often with the same props
+- Utilize React.lazy() and Suspense for code-splitting and performance optimization
+- Use the useCallback hook for event handlers passed to child components
+- Prefer useMemo for expensive calculations to avoid recomputation on every render
+
+### State Management
+- **Zustand** for global state management - see [stores/](mdc:frontend/src/stores/)
+- Create separate stores for distinct state domains instead of one large store
+- Use immer middleware for complex state updates to maintain immutability
+- Implement selectors to derive state and prevent unnecessary re-renders
+- Use TypeScript with strict typing for store definitions
+
+### Data Fetching
+- **TanStack Query** for server state management - see [lib/api.ts](mdc:frontend/src/lib/api.ts)
+- Use appropriate staleTime and gcTime based on data freshness requirements
+- Implement the useInfiniteQuery hook for pagination and infinite scrolling
+- Use optimistic updates for mutations to make the UI feel more responsive
+- Implement retry logic with custom backoff algorithms for transient network issues
+
+### Routing
+- **React Router v6** with createBrowserRouter - see [App.tsx](mdc:frontend/src/App.tsx)
+- Implement lazy loading with React.lazy() for route components
+- Use the useNavigate hook instead of the navigate component prop
+- Leverage loader and action functions to handle data fetching at the route level
+- Implement error boundaries with errorElement to gracefully handle routing errors
+
+## TypeScript Guidelines
+
+### Configuration
+- Strict TypeScript configuration in [tsconfig.json](mdc:frontend/tsconfig.json)
+- Use path mapping with `@/*` for clean imports
+- Enable strict mode with noUnusedLocals and noUnusedParameters
+- Use React 18 types with jsx: "react-jsx"
+
+### Type Definitions
+- Define interfaces in [types/](mdc:frontend/src/types/) directory
+- Use generic types for reusable components
+- Implement proper error handling with typed error states
+- Use discriminated unions for complex state management
+
+### Import/Export Patterns
+```typescript
+// Prefer named exports for components
+export const MyComponent = () => { ... }
+
+// Use default exports only for main page components
+export default MyPage
+
+// Group imports: React, third-party, local
+import React from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { MyComponent } from '@/components/MyComponent'
+```
+
+## Styling with Tailwind CSS
+
+### Configuration
+- Custom theme configuration in [tailwind.config.js](mdc:frontend/tailwind.config.js)
+- CSS variables for consistent theming with dark mode support
+- Custom animations and keyframes for smooth transitions
+- Responsive breakpoints: xs, sm, md, lg, xl, 2xl
+
+### Styling Patterns
+- Use utility classes for consistent spacing and layout
+- Implement component extraction for repeated UI patterns
+- Use the @apply directive in component classes for complex utility combinations
+- Leverage dark mode with the dark: variant
+- Use responsive variants (sm:, md:, lg:, etc.) for adaptive designs
+
+### Component Styling
+```tsx
+// Use clsx and tailwind-merge for conditional classes
+import { clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+
+const Button = ({ variant, className, ...props }) => {
+  return (
+    <button
+      className={twMerge(
+        clsx(
+          'px-4 py-2 rounded-md font-medium transition-colors',
+          {
+            'bg-primary text-primary-foreground': variant === 'primary',
+            'bg-secondary text-secondary-foreground': variant === 'secondary',
+          }
+        ),
+        className
+      )}
+      {...props}
+    />
+  )
+}
+```
+
+## UI Component Guidelines
+
+### Component Structure
+- Place reusable components in [components/ui/](mdc:frontend/src/components/ui/)
+- Page-specific components in [components/](mdc:frontend/src/components/)
+- Use TypeScript interfaces for component props
+- Implement proper accessibility attributes
+
+### Form Handling
+- Use **React Hook Form** with **Zod** validation
+- Implement proper error states and validation feedback
+- Use controlled components for form inputs
+- Implement optimistic updates for better UX
+
+### Animation and Transitions
+- Use **Framer Motion** for complex animations
+- Leverage Tailwind's built-in animations for simple transitions
+- Implement loading states with skeleton components
+- Use smooth transitions for state changes
+
+## Performance Optimization
+
+### Code Splitting
+- Implement route-based code splitting
+- Use dynamic imports for heavy components
+- Lazy load non-critical features
+
+### Bundle Optimization
+- Use Vite's built-in optimizations
+- Implement proper tree shaking
+- Optimize images and assets
+- Use proper caching strategies
+
+### Memory Management
+- Clean up subscriptions and timers in useEffect
+- Use proper dependency arrays in hooks
+- Implement proper error boundaries
+- Monitor bundle size and performance metrics

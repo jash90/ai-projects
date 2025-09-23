@@ -1,0 +1,283 @@
+---
+globs: Dockerfile,docker-compose.yml,nginx.conf,*.sh
+description: Deployment and DevOps guidelines
+---
+
+# Deployment & DevOps Guidelines
+
+## Containerization
+
+### Docker Configuration
+- **Root Dockerfile**: [Dockerfile](mdc:Dockerfile) - Multi-stage build for production
+- **Docker Compose**: [docker-compose.yml](mdc:docker-compose.yml) - Local development environment
+- **Frontend Dockerfile**: [frontend/Dockerfile](mdc:frontend/Dockerfile) - Frontend container
+- **Backend Dockerfile**: [backend/Dockerfile](mdc:backend/Dockerfile) - Backend container
+
+### Multi-stage Build Strategy
+```dockerfile
+# Example multi-stage build
+FROM node:18-alpine AS base
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+
+FROM base AS frontend-build
+COPY frontend/ ./frontend/
+RUN cd frontend && npm ci && npm run build
+
+FROM base AS backend-build
+COPY backend/ ./backend/
+RUN cd backend && npm ci && npm run build
+
+FROM node:18-alpine AS production
+WORKDIR /app
+COPY --from=frontend-build /app/frontend/dist ./frontend/dist
+COPY --from=backend-build /app/backend/dist ./backend/dist
+COPY --from=backend-build /app/backend/package*.json ./backend/
+RUN cd backend && npm ci --only=production
+EXPOSE 3000
+CMD ["node", "backend/dist/index.js"]
+```
+
+## Environment Configuration
+
+### Environment Variables
+- **Development**: Use `.env.local` files for local development
+- **Production**: Use environment variables or secure configuration management
+- **Shared Variables**: Define in [env.example](mdc:env.example) for reference
+- **Nx Integration**: Use shared globals in [nx.json](mdc:nx.json) for consistent handling
+
+### Environment-Specific Configuration
+```typescript
+// Example environment configuration
+const config = {
+  development: {
+    database: {
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT || '5432'),
+      name: process.env.DB_NAME || 'ai_projects_dev'
+    },
+    redis: {
+      host: process.env.REDIS_HOST || 'localhost',
+      port: parseInt(process.env.REDIS_PORT || '6379')
+    }
+  },
+  production: {
+    database: {
+      host: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false }
+    },
+    redis: {
+      host: process.env.REDIS_URL
+    }
+  }
+}
+```
+
+## Nginx Configuration
+
+### Reverse Proxy Setup
+- **Configuration**: [nginx.conf](mdc:nginx.conf) - Production nginx configuration
+- **Static Files**: Serve frontend static files directly
+- **API Proxy**: Proxy API requests to backend service
+- **WebSocket Support**: Handle Socket.IO connections
+
+### Nginx Best Practices
+```nginx
+# Example nginx configuration
+upstream backend {
+    server backend:3000;
+}
+
+server {
+    listen 80;
+    server_name localhost;
+    
+    # Frontend static files
+    location / {
+        root /usr/share/nginx/html;
+        try_files $uri $uri/ /index.html;
+    }
+    
+    # API proxy
+    location /api {
+        proxy_pass http://backend;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    
+    # WebSocket support
+    location /socket.io/ {
+        proxy_pass http://backend;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+    }
+}
+```
+
+## Database Management
+
+### Migration Strategy
+- **Development**: Use local PostgreSQL with migrations
+- **Production**: Use managed database services
+- **Migrations**: Automated migration execution in deployment
+- **Seeding**: Initial data seeding for new environments
+
+### Database Deployment
+```bash
+# Example database deployment script
+#!/bin/bash
+set -e
+
+echo "Running database migrations..."
+cd backend
+npm run db:migrate
+
+echo "Seeding database..."
+npm run db:seed
+
+echo "Database deployment completed successfully"
+```
+
+## CI/CD Pipeline
+
+### Build Process
+- **Frontend**: Build React application with Vite
+- **Backend**: Compile TypeScript and build Node.js application
+- **Testing**: Run unit, integration, and E2E tests
+- **Linting**: Run ESLint and Prettier checks
+- **Type Checking**: Run TypeScript type checking
+
+### Deployment Strategy
+```yaml
+# Example GitHub Actions workflow
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'pnpm'
+    
+    - name: Install dependencies
+      run: pnpm install
+    
+    - name: Run tests
+      run: pnpm test
+    
+    - name: Build applications
+      run: pnpm build
+    
+    - name: Deploy to production
+      run: |
+        # Deployment commands here
+```
+
+## Monitoring and Logging
+
+### Application Logging
+- **Winston Logger**: Structured logging with different levels
+- **Log Aggregation**: Centralized log collection and analysis
+- **Error Tracking**: Proper error reporting and alerting
+- **Performance Monitoring**: Track response times and resource usage
+
+### Health Checks
+```typescript
+// Example health check endpoint
+app.get('/api/health', async (req, res) => {
+  try {
+    // Check database connection
+    await db.query('SELECT 1')
+    
+    // Check Redis connection
+    await redis.ping()
+    
+    res.json({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      memory: process.memoryUsage(),
+      database: 'connected',
+      redis: 'connected'
+    })
+  } catch (error) {
+    res.status(503).json({
+      status: 'unhealthy',
+      error: error.message,
+      timestamp: new Date().toISOString()
+    })
+  }
+})
+```
+
+## Security Considerations
+
+### Production Security
+- **HTTPS**: Use SSL/TLS certificates for production
+- **Headers**: Implement security headers with Helmet
+- **CORS**: Configure proper CORS policies
+- **Rate Limiting**: Implement API rate limiting
+- **Input Validation**: Validate and sanitize all inputs
+
+### Secrets Management
+- **Environment Variables**: Use secure environment variable management
+- **API Keys**: Rotate API keys regularly
+- **Database Credentials**: Use secure credential management
+- **JWT Secrets**: Use strong, random JWT secrets
+
+## Scaling and Performance
+
+### Horizontal Scaling
+- **Load Balancing**: Use nginx for load balancing
+- **Database Scaling**: Use read replicas for database scaling
+- **Caching**: Implement Redis caching for performance
+- **CDN**: Use CDN for static asset delivery
+
+### Performance Optimization
+- **Bundle Optimization**: Optimize frontend bundle size
+- **Database Optimization**: Use proper indexing and query optimization
+- **Caching Strategy**: Implement proper caching layers
+- **Resource Management**: Monitor and optimize resource usage
+
+## Backup and Recovery
+
+### Database Backups
+- **Automated Backups**: Regular automated database backups
+- **Point-in-Time Recovery**: Implement point-in-time recovery
+- **Backup Testing**: Regular backup restoration testing
+- **Disaster Recovery**: Implement disaster recovery procedures
+
+### Application Backups
+- **Code Backups**: Version control with Git
+- **Configuration Backups**: Backup configuration files
+- **Asset Backups**: Backup uploaded files and assets
+- **Recovery Procedures**: Document recovery procedures
+
+## Development Workflow
+
+### Local Development
+- **Docker Compose**: Use docker-compose for local development
+- **Hot Reloading**: Implement hot reloading for development
+- **Database Setup**: Easy database setup and seeding
+- **Environment Setup**: Automated environment setup
+
+### Code Quality
+- **Pre-commit Hooks**: Run linting and tests before commits
+- **Code Review**: Implement proper code review process
+- **Automated Testing**: Run tests on every pull request
+- **Deployment Validation**: Validate deployments before production
