@@ -1,0 +1,250 @@
+---
+globs: nx.json,package.json,pnpm-workspace.yaml
+description: Nx monorepo specific guidelines
+---
+
+# Nx Monorepo Guidelines
+
+## Workspace Configuration
+
+### Nx Configuration
+- **Main Config**: [nx.json](mdc:nx.json) - Nx workspace configuration and task orchestration
+- **Package Manager**: pnpm for efficient dependency management
+- **Workspace Root**: [package.json](mdc:package.json) - Root workspace configuration
+- **Workspace Config**: [pnpm-workspace.yaml](mdc:pnpm-workspace.yaml) - pnpm workspace definition
+
+### Project Structure
+- **Frontend Project**: `claude-projects-frontend` - React application
+- **Backend Project**: `claude-projects-backend` - Node.js API server
+- **Shared Dependencies**: Common dependencies managed at workspace level
+- **Task Orchestration**: Cross-project task execution and caching
+
+## Task Management
+
+### Available Targets
+- **build**: Compile TypeScript and build applications
+- **dev**: Start development servers with hot reloading
+- **test**: Run unit and integration tests
+- **lint**: Run ESLint for code quality checks
+- **type-check**: Run TypeScript type checking
+- **clean**: Clean build artifacts and temporary files
+
+### Task Execution
+```bash
+# Run tasks for all projects
+pnpm exec nx run-many -t build
+pnpm exec nx run-many -t test
+pnpm exec nx run-many -t lint
+
+# Run tasks for specific project
+pnpm exec nx run claude-projects-frontend:build
+pnpm exec nx run claude-projects-backend:dev
+
+# Run tasks with dependencies
+pnpm exec nx run-many -t build --with-deps
+```
+
+### Task Dependencies
+- **Build Dependencies**: Backend builds before frontend when using `--with-deps`
+- **Test Dependencies**: Build must complete before running tests
+- **Lint Dependencies**: Build must complete before linting
+- **Type Check Dependencies**: Build must complete before type checking
+
+## Caching Strategy
+
+### Input Configuration
+```json
+{
+  "namedInputs": {
+    "sharedGlobals": [
+      "{workspaceRoot}/**/.env.*local",
+      "{workspaceRoot}/.env",
+      {"env": "NODE_ENV"},
+      {"env": "DATABASE_URL"},
+      {"env": "REDIS_URL"},
+      {"env": "JWT_SECRET"},
+      {"env": "OPENAI_API_KEY"},
+      {"env": "ANTHROPIC_API_KEY"},
+      {"env": "PORT"}
+    ],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ]
+  }
+}
+```
+
+### Cache Configuration
+- **Build Cache**: Enabled for build tasks with proper inputs/outputs
+- **Test Cache**: Enabled for test tasks with coverage outputs
+- **Lint Cache**: Enabled for lint tasks with proper inputs
+- **Type Check Cache**: Enabled for type-check tasks
+
+### Cache Invalidation
+- **File Changes**: Cache invalidated when input files change
+- **Environment Changes**: Cache invalidated when environment variables change
+- **Dependency Changes**: Cache invalidated when dependencies change
+- **Manual Invalidation**: Use `nx reset` to clear all caches
+
+## Dependency Management
+
+### Project Dependencies
+- **Frontend Dependencies**: React, TypeScript, Vite, Tailwind CSS
+- **Backend Dependencies**: Node.js, Express, PostgreSQL, Redis
+- **Shared Dependencies**: Common utilities and types
+- **Dev Dependencies**: Testing, linting, and build tools
+
+### Dependency Installation
+```bash
+# Install all dependencies
+pnpm install
+
+# Install dependencies for specific project
+pnpm --filter claude-projects-frontend install
+pnpm --filter claude-projects-backend install
+
+# Add new dependency to specific project
+pnpm --filter claude-projects-frontend add react-query
+pnpm --filter claude-projects-backend add express
+```
+
+### Workspace Dependencies
+- **Root Dependencies**: Nx and workspace management tools
+- **Project Dependencies**: Project-specific dependencies
+- **Shared Dependencies**: Common dependencies across projects
+- **Dev Dependencies**: Development and build tools
+
+## Build Configuration
+
+### Target Defaults
+```json
+{
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["{projectRoot}/**/*", "{projectRoot}/.env.local"],
+      "outputs": ["{projectRoot}/dist/**", "{projectRoot}/build/**"],
+      "cache": true
+    },
+    "dev": {
+      "cache": false
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "inputs": ["{projectRoot}/**/*", "{projectRoot}/jest.config.*"],
+      "outputs": ["{projectRoot}/coverage/**"],
+      "cache": true
+    }
+  }
+}
+```
+
+### Build Outputs
+- **Frontend**: Built to `frontend/dist/` directory
+- **Backend**: Compiled to `backend/dist/` directory
+- **Assets**: Static assets served by nginx in production
+- **Source Maps**: Generated for debugging in development
+
+## Development Workflow
+
+### Local Development
+```bash
+# Start all development servers
+pnpm dev
+
+# Start specific project
+pnpm exec nx run claude-projects-frontend:dev
+pnpm exec nx run claude-projects-backend:dev
+
+# Run tests
+pnpm test
+
+# Run linting
+pnpm lint
+
+# Run type checking
+pnpm type-check
+```
+
+### Production Build
+```bash
+# Build all projects
+pnpm build
+
+# Build specific project
+pnpm exec nx run claude-projects-frontend:build
+pnpm exec nx run claude-projects-backend:build
+
+# Start production server
+pnpm start
+```
+
+## Code Sharing
+
+### Shared Libraries
+- **Types**: Shared TypeScript type definitions
+- **Utilities**: Common utility functions
+- **Constants**: Shared constants and configuration
+- **API Client**: Shared API client for frontend-backend communication
+
+### Import Patterns
+```typescript
+// Import from shared libraries
+import { ApiResponse } from '@workspace/shared-types'
+import { formatDate } from '@workspace/shared-utils'
+
+// Import from other projects (if needed)
+import { UserService } from '@workspace/backend-services'
+```
+
+## Performance Optimization
+
+### Build Performance
+- **Parallel Execution**: Run tasks in parallel when possible
+- **Incremental Builds**: Only rebuild changed projects
+- **Cache Utilization**: Leverage Nx cache for faster builds
+- **Dependency Optimization**: Optimize project dependencies
+
+### Development Performance
+- **Hot Reloading**: Fast development server with hot reloading
+- **Incremental Compilation**: Only compile changed files
+- **Source Maps**: Proper source maps for debugging
+- **Fast Refresh**: React Fast Refresh for instant updates
+
+## Monitoring and Analytics
+
+### Build Analytics
+- **Build Times**: Monitor build performance over time
+- **Cache Hit Rates**: Track cache effectiveness
+- **Dependency Analysis**: Analyze project dependencies
+- **Task Execution**: Monitor task execution patterns
+
+### Development Metrics
+- **Startup Time**: Monitor development server startup
+- **Hot Reload Time**: Track hot reload performance
+- **Test Execution**: Monitor test execution times
+- **Lint Performance**: Track linting performance
+
+## Troubleshooting
+
+### Common Issues
+- **Cache Issues**: Use `nx reset` to clear caches
+- **Dependency Issues**: Use `pnpm install` to reinstall dependencies
+- **Build Issues**: Check project configuration and dependencies
+- **Task Issues**: Use `nx show project <project-name>` to debug
+
+### Debug Commands
+```bash
+# Show project configuration
+pnpm exec nx show project claude-projects-frontend
+
+# Show task configuration
+pnpm exec nx show project claude-projects-frontend --web
+
+# Run task with verbose output
+pnpm exec nx run claude-projects-frontend:build --verbose
+
+# Graph project dependencies
+pnpm exec nx graph
+```

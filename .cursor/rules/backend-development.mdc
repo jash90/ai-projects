@@ -1,0 +1,196 @@
+---
+globs: backend/**/*.{ts,js}
+description: Backend development guidelines for Node.js, Express, and TypeScript
+---
+
+# Backend Development Guidelines
+
+## Node.js & Express Architecture
+
+### Project Structure
+- **Entry Point**: [index.ts](mdc:backend/src/index.ts) - Main server configuration
+- **Routes**: [routes/](mdc:backend/src/routes/) - Express route handlers organized by feature
+- **Models**: [models/](mdc:backend/src/models/) - Database models and schemas
+- **Services**: [services/](mdc:backend/src/services/) - Business logic and AI integrations
+- **Middleware**: [middleware/](mdc:backend/src/middleware/) - Express middleware functions
+- **Database**: [database/](mdc:backend/src/database/) - Connection, migrations, and seeding
+
+### Express Configuration
+- Use TypeScript with strict configuration in [tsconfig.json](mdc:backend/tsconfig.json)
+- Implement proper error handling with centralized error middleware
+- Use helmet for security headers and CORS configuration
+- Implement rate limiting for API protection
+- Use Winston for structured logging
+
+### API Design Principles
+- RESTful API design with consistent response formats
+- Use proper HTTP status codes and error messages
+- Implement request validation with Joi schemas
+- Use middleware for cross-cutting concerns (auth, validation, logging)
+- Implement proper API versioning strategy
+
+## TypeScript Guidelines
+
+### Configuration
+- Strict TypeScript configuration with path mapping
+- Use decorators for middleware and validation
+- Implement proper type definitions for all API responses
+- Use interfaces for request/response types
+
+### Code Organization
+```typescript
+// Route structure
+import express from 'express'
+import { validateRequest } from '@/middleware/validation'
+import { authMiddleware } from '@/middleware/auth'
+import { MyService } from '@/services/MyService'
+
+const router = express.Router()
+
+// GET /api/endpoint
+router.get('/', authMiddleware, async (req, res, next) => {
+  try {
+    const result = await MyService.getData()
+    res.json({ success: true, data: result })
+  } catch (error) {
+    next(error)
+  }
+})
+
+export default router
+```
+
+### Error Handling
+- Use centralized error handling middleware
+- Implement proper error types and status codes
+- Log errors with appropriate context
+- Return consistent error response format
+
+## Database Integration
+
+### PostgreSQL with pg
+- Use connection pooling for database connections
+- Implement proper transaction handling
+- Use prepared statements for security
+- Implement database migrations and seeding
+
+### Database Models
+- Define models in [models/](mdc:backend/src/models/) directory
+- Use TypeScript interfaces for database schemas
+- Implement proper validation and sanitization
+- Use UUIDs for primary keys
+
+### Migration Strategy
+- Use [migrate.ts](mdc:backend/src/database/migrate.ts) for database migrations
+- Implement rollback strategies
+- Use version control for migration files
+- Test migrations in development environment
+
+## Authentication & Security
+
+### JWT Authentication
+- Use jsonwebtoken for token generation and verification
+- Implement proper token expiration and refresh strategies
+- Use secure cookie settings for production
+- Implement proper logout and token invalidation
+
+### Security Middleware
+- Use helmet for security headers
+- Implement CORS with proper origin configuration
+- Use express-rate-limit for API protection
+- Implement input sanitization and validation
+- Use bcryptjs for password hashing
+
+### Authorization
+- Implement role-based access control
+- Use middleware for route protection
+- Implement proper permission checking
+- Use environment variables for sensitive configuration
+
+## AI Integration
+
+### OpenAI Integration
+- Use official OpenAI SDK for API calls
+- Implement proper error handling for API failures
+- Use streaming for real-time responses
+- Implement token usage tracking and limits
+
+### Anthropic Claude Integration
+- Use official Anthropic SDK
+- Implement proper conversation management
+- Handle rate limiting and retries
+- Implement proper error handling
+
+### AI Service Architecture
+- Create dedicated service classes for AI providers
+- Implement proper abstraction for different AI models
+- Use dependency injection for testability
+- Implement proper logging and monitoring
+
+## Real-time Communication
+
+### Socket.IO Integration
+- Use Socket.IO for real-time features
+- Implement proper connection management
+- Use rooms for user-specific communication
+- Implement proper error handling and reconnection
+
+### WebSocket Events
+- Define clear event naming conventions
+- Implement proper authentication for socket connections
+- Use proper data validation for socket events
+- Implement proper cleanup on disconnection
+
+## Logging & Monitoring
+
+### Winston Logger
+- Use structured logging with Winston
+- Implement different log levels (error, warn, info, debug)
+- Use proper log formatting for production
+- Implement log rotation and retention
+
+### Error Tracking
+- Implement proper error context
+- Use correlation IDs for request tracking
+- Implement proper error reporting
+- Use proper error categorization
+
+## Performance & Optimization
+
+### Caching Strategy
+- Use Redis for caching frequently accessed data
+- Implement proper cache invalidation
+- Use in-memory caching for static data
+- Implement proper cache warming strategies
+
+### Database Optimization
+- Use proper indexing strategies
+- Implement query optimization
+- Use connection pooling
+- Implement proper database monitoring
+
+### Memory Management
+- Implement proper garbage collection
+- Use streaming for large data processing
+- Implement proper memory monitoring
+- Use proper cleanup for long-running processes
+
+## Testing Strategy
+
+### Unit Testing
+- Use Jest for unit testing
+- Implement proper mocking strategies
+- Test business logic in isolation
+- Use proper test data factories
+
+### Integration Testing
+- Use Supertest for API testing
+- Test database interactions
+- Test external service integrations
+- Implement proper test database setup
+
+### E2E Testing
+- Use Playwright for end-to-end testing
+- Test complete user workflows
+- Implement proper test data management
+- Use proper test environment setup
