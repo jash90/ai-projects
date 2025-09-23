@@ -1,0 +1,100 @@
+---
+alwaysApply: true
+description: Overview of all Cursor rules for the AI Projects monorepo
+---
+
+# AI Projects Monorepo - Cursor Rules Overview
+
+This directory contains comprehensive Cursor rules for the AI Projects monorepo. These rules help maintain code quality, consistency, and best practices across the entire codebase.
+
+## Rule Files
+
+### 🏗️ Architecture & Structure
+- **[project-architecture.mdc](mdc:.cursor/rules/project-architecture.mdc)** - Overall project structure and monorepo organization
+- **[nx-monorepo.mdc](mdc:.cursor/rules/nx-monorepo.mdc)** - Nx-specific guidelines and task management
+
+### 🎨 Frontend Development
+- **[frontend-development.mdc](mdc:.cursor/rules/frontend-development.mdc)** - React, TypeScript, Tailwind CSS, and state management guidelines
+
+### ⚙️ Backend Development
+- **[backend-development.mdc](mdc:.cursor/rules/backend-development.mdc)** - Node.js, Express, TypeScript, and API development guidelines
+
+### 🧪 Testing & Quality
+- **[testing-quality.mdc](mdc:.cursor/rules/testing-quality.mdc)** - Testing strategies, Jest, Playwright, and code quality standards
+
+### 🤖 AI Integration
+- **[ai-integration.mdc](mdc:.cursor/rules/ai-integration.mdc)** - AI/ML integration, OpenAI, Anthropic, and streaming guidelines
+
+### 🗄️ Database & API
+- **[database-api.mdc](mdc:.cursor/rules/database-api.mdc)** - PostgreSQL, API design, authentication, and data validation
+
+### 🚀 Deployment & DevOps
+- **[deployment-devops.mdc](mdc:.cursor/rules/deployment-devops.mdc)** - Docker, nginx, CI/CD, monitoring, and production deployment
+
+### 🔧 Nx Integration
+- **[nx-rules.mdc](mdc:.cursor/rules/nx-rules.mdc)** - Nx Console integration and workspace management
+
+## Quick Reference
+
+### Technology Stack
+- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, TanStack Query, Zustand
+- **Backend**: Node.js, Express, TypeScript, PostgreSQL, Redis, Socket.IO
+- **AI**: OpenAI API, Anthropic Claude API
+- **Testing**: Jest, Playwright, Supertest
+- **Monorepo**: Nx 21.4.1, pnpm
+- **Deployment**: Docker, nginx, CI/CD
+
+### Key Commands
+```bash
+# Development
+pnpm dev                    # Start all development servers
+pnpm build                  # Build all projects
+pnpm test                   # Run all tests
+pnpm lint                   # Run linting
+pnpm type-check            # Run type checking
+
+# Database
+pnpm run db:migrate        # Run database migrations
+pnpm run db:seed           # Seed database
+
+# Nx Commands
+pnpm exec nx run-many -t build    # Build all projects
+pnpm exec nx run <project>:<target>  # Run specific project target
+```
+
+### Project Structure
+```
+ai-projects/
+├── frontend/              # React application
+├── backend/               # Node.js API server
+├── playwright/            # E2E tests
+├── .cursor/rules/         # Cursor rules (this directory)
+├── nx.json               # Nx configuration
+└── package.json          # Workspace configuration
+```
+
+## Rule Application
+
+### Automatic Application
+- Rules with `alwaysApply: true` are automatically applied to every request
+- Rules with specific `globs` patterns apply to matching files
+- Rules with `description` can be manually referenced when needed
+
+### Best Practices
+1. **Follow the established patterns** defined in each rule file
+2. **Use the referenced file paths** to understand the codebase structure
+3. **Apply consistent coding standards** across all projects
+4. **Leverage the monorepo benefits** for code sharing and consistency
+5. **Maintain proper separation of concerns** between frontend and backend
+
+## Contributing
+
+When adding new features or making changes:
+1. Follow the guidelines in the relevant rule files
+2. Maintain consistency with existing code patterns
+3. Update rules if new patterns or technologies are introduced
+4. Ensure all tests pass and code quality standards are met
+
+## Support
+
+These rules are designed to help maintain a high-quality, consistent codebase. If you need clarification on any guidelines or want to suggest improvements, please refer to the specific rule files or the project documentation.

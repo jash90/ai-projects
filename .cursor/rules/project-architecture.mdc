@@ -1,0 +1,74 @@
+---
+alwaysApply: true
+description: Project architecture and structure guidelines
+---
+
+# AI Projects Monorepo Architecture
+
+This is a full-stack AI Projects application built with Nx monorepo architecture.
+
+## Project Structure
+
+### Workspace Organization
+- **Root**: [package.json](mdc:package.json) - Main workspace configuration with pnpm
+- **Frontend**: [frontend/](mdc:frontend/) - React + TypeScript + Vite application
+- **Backend**: [backend/](mdc:backend/) - Node.js + Express + TypeScript API server
+- **Nx Config**: [nx.json](mdc:nx.json) - Monorepo configuration and task orchestration
+
+### Key Technologies
+- **Monorepo**: Nx 21.4.1 with pnpm package manager
+- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, TanStack Query, Zustand
+- **Backend**: Node.js, Express, TypeScript, PostgreSQL, Redis, Socket.IO
+- **AI Integration**: OpenAI API, Anthropic Claude API
+- **Testing**: Jest, Playwright, Supertest
+
+## Architecture Principles
+
+### Monorepo Benefits
+- Shared dependencies and consistent versions
+- Cross-project task orchestration
+- Unified build and deployment pipeline
+- Code sharing between frontend and backend
+
+### Project Dependencies
+- Frontend depends on backend for API endpoints
+- Both projects share common TypeScript configurations
+- Database migrations and seeding handled by backend
+- Socket.IO for real-time communication
+
+### Development Workflow
+- Use `pnpm exec nx run-many -t <target>` for cross-project operations
+- Individual project commands: `pnpm exec nx run <project>:<target>`
+- Database operations: `pnpm run db:migrate`, `pnpm run db:seed`
+- Docker support for containerized deployment
+
+## File Organization
+
+### Frontend Structure
+```
+frontend/
+├── src/
+│   ├── components/     # Reusable UI components
+│   ├── pages/         # Route-based page components
+│   ├── stores/        # Zustand state management
+│   ├── hooks/         # Custom React hooks
+│   ├── lib/           # Utility functions and API client
+│   └── types/         # TypeScript type definitions
+```
+
+### Backend Structure
+```
+backend/
+├── src/
+│   ├── routes/        # Express route handlers
+│   ├── models/        # Database models and schemas
+│   ├── services/      # Business logic and AI integrations
+│   ├── middleware/    # Express middleware
+│   ├── database/      # Database connection and migrations
+│   └── utils/         # Utility functions
+```
+
+## Environment Configuration
+- Environment variables defined in [env.example](mdc:env.example)
+- Shared globals in nx.json for consistent environment handling
+- Separate configurations for development and production
