@@ -6,7 +6,7 @@ export interface TokenUsage {
   project_id?: string;
   agent_id?: string;
   conversation_id?: string;
-  provider: 'openai' | 'anthropic';
+  provider: 'openai' | 'anthropic' | 'openrouter';
   model: string;
   prompt_tokens: number;
   completion_tokens: number;
