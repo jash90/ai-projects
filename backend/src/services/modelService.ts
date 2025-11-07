@@ -240,8 +240,9 @@ class ModelService {
       logger.info('Loading OpenRouter models...');
       const now = new Date().toISOString();
 
-      // Popular OpenRouter models
+      // Comprehensive OpenRouter models list
       const openrouterModels = [
+        // Anthropic Models
         {
           id: 'anthropic/claude-3.5-sonnet',
           name: 'Claude 3.5 Sonnet',
@@ -263,15 +264,26 @@ class ModelService {
           supports_function_calling: true
         },
         {
-          id: 'openai/gpt-4-turbo',
-          name: 'GPT-4 Turbo',
+          id: 'anthropic/claude-3-sonnet',
+          name: 'Claude 3 Sonnet',
           max_tokens: 4096,
-          context_window: 128000,
-          input_cost: 10.00,
-          output_cost: 30.00,
+          context_window: 200000,
+          input_cost: 3.00,
+          output_cost: 15.00,
           supports_vision: true,
           supports_function_calling: true
         },
+        {
+          id: 'anthropic/claude-3-haiku',
+          name: 'Claude 3 Haiku',
+          max_tokens: 4096,
+          context_window: 200000,
+          input_cost: 0.25,
+          output_cost: 1.25,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        // OpenAI Models
         {
           id: 'openai/gpt-4o',
           name: 'GPT-4o',
@@ -283,6 +295,67 @@ class ModelService {
           supports_function_calling: true
         },
         {
+          id: 'openai/gpt-4o-mini',
+          name: 'GPT-4o Mini',
+          max_tokens: 16384,
+          context_window: 128000,
+          input_cost: 0.15,
+          output_cost: 0.60,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        {
+          id: 'openai/gpt-4-turbo',
+          name: 'GPT-4 Turbo',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 10.00,
+          output_cost: 30.00,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        {
+          id: 'openai/gpt-4',
+          name: 'GPT-4',
+          max_tokens: 8192,
+          context_window: 8192,
+          input_cost: 30.00,
+          output_cost: 60.00,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'openai/gpt-3.5-turbo',
+          name: 'GPT-3.5 Turbo',
+          max_tokens: 4096,
+          context_window: 16385,
+          input_cost: 0.50,
+          output_cost: 1.50,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'openai/o1-preview',
+          name: 'O1 Preview',
+          max_tokens: 32768,
+          context_window: 128000,
+          input_cost: 15.00,
+          output_cost: 60.00,
+          supports_vision: false,
+          supports_function_calling: false
+        },
+        {
+          id: 'openai/o1-mini',
+          name: 'O1 Mini',
+          max_tokens: 65536,
+          context_window: 128000,
+          input_cost: 3.00,
+          output_cost: 12.00,
+          supports_vision: false,
+          supports_function_calling: false
+        },
+        // Google Models
+        {
           id: 'google/gemini-pro-1.5',
           name: 'Gemini Pro 1.5',
           max_tokens: 8192,
@@ -293,12 +366,124 @@ class ModelService {
           supports_function_calling: true
         },
         {
+          id: 'google/gemini-flash-1.5',
+          name: 'Gemini Flash 1.5',
+          max_tokens: 8192,
+          context_window: 1000000,
+          input_cost: 0.35,
+          output_cost: 1.05,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        {
+          id: 'google/gemini-2.0-flash-exp',
+          name: 'Gemini 2.0 Flash (Experimental)',
+          max_tokens: 8192,
+          context_window: 1000000,
+          input_cost: 0.00,
+          output_cost: 0.00,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        // Meta Llama Models
+        {
+          id: 'meta-llama/llama-3.1-405b-instruct',
+          name: 'Llama 3.1 405B Instruct',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 2.70,
+          output_cost: 2.70,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
           id: 'meta-llama/llama-3.1-70b-instruct',
           name: 'Llama 3.1 70B Instruct',
           max_tokens: 4096,
           context_window: 128000,
           input_cost: 0.88,
           output_cost: 0.88,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'meta-llama/llama-3.1-8b-instruct',
+          name: 'Llama 3.1 8B Instruct',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 0.10,
+          output_cost: 0.10,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'meta-llama/llama-3.2-90b-vision-instruct',
+          name: 'Llama 3.2 90B Vision Instruct',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 0.90,
+          output_cost: 0.90,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        {
+          id: 'meta-llama/llama-3.2-11b-vision-instruct',
+          name: 'Llama 3.2 11B Vision Instruct',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 0.18,
+          output_cost: 0.18,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        {
+          id: 'meta-llama/llama-3.2-3b-instruct',
+          name: 'Llama 3.2 3B Instruct',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 0.06,
+          output_cost: 0.06,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'meta-llama/llama-3.2-1b-instruct',
+          name: 'Llama 3.2 1B Instruct',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 0.04,
+          output_cost: 0.04,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        // Mistral Models
+        {
+          id: 'mistralai/mistral-large',
+          name: 'Mistral Large',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 3.00,
+          output_cost: 9.00,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'mistralai/mistral-medium',
+          name: 'Mistral Medium',
+          max_tokens: 4096,
+          context_window: 32768,
+          input_cost: 2.70,
+          output_cost: 8.10,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'mistralai/mistral-small',
+          name: 'Mistral Small',
+          max_tokens: 4096,
+          context_window: 32768,
+          input_cost: 1.00,
+          output_cost: 3.00,
           supports_vision: false,
           supports_function_calling: true
         },
@@ -313,6 +498,27 @@ class ModelService {
           supports_function_calling: true
         },
         {
+          id: 'mistralai/mixtral-8x22b-instruct',
+          name: 'Mixtral 8x22B Instruct',
+          max_tokens: 4096,
+          context_window: 65536,
+          input_cost: 0.65,
+          output_cost: 0.65,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'mistralai/codestral-latest',
+          name: 'Codestral (Latest)',
+          max_tokens: 4096,
+          context_window: 32768,
+          input_cost: 1.00,
+          output_cost: 3.00,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        // Perplexity Models
+        {
           id: 'perplexity/llama-3.1-sonar-large-128k-online',
           name: 'Llama 3.1 Sonar Large (Online)',
           max_tokens: 4096,
@@ -321,6 +527,121 @@ class ModelService {
           output_cost: 1.00,
           supports_vision: false,
           supports_function_calling: false
+        },
+        {
+          id: 'perplexity/llama-3.1-sonar-small-128k-online',
+          name: 'Llama 3.1 Sonar Small (Online)',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 0.20,
+          output_cost: 0.20,
+          supports_vision: false,
+          supports_function_calling: false
+        },
+        {
+          id: 'perplexity/llama-3.1-sonar-large-128k-chat',
+          name: 'Llama 3.1 Sonar Large (Chat)',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 1.00,
+          output_cost: 1.00,
+          supports_vision: false,
+          supports_function_calling: false
+        },
+        {
+          id: 'perplexity/llama-3.1-sonar-small-128k-chat',
+          name: 'Llama 3.1 Sonar Small (Chat)',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 0.20,
+          output_cost: 0.20,
+          supports_vision: false,
+          supports_function_calling: false
+        },
+        // Cohere Models
+        {
+          id: 'cohere/command-r-plus',
+          name: 'Command R+',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 3.00,
+          output_cost: 15.00,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'cohere/command-r',
+          name: 'Command R',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 0.50,
+          output_cost: 1.50,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        // DeepSeek Models
+        {
+          id: 'deepseek/deepseek-chat',
+          name: 'DeepSeek Chat',
+          max_tokens: 4096,
+          context_window: 64000,
+          input_cost: 0.14,
+          output_cost: 0.28,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'deepseek/deepseek-coder',
+          name: 'DeepSeek Coder',
+          max_tokens: 4096,
+          context_window: 64000,
+          input_cost: 0.14,
+          output_cost: 0.28,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        // Qwen Models
+        {
+          id: 'qwen/qwen-2-72b-instruct',
+          name: 'Qwen 2 72B Instruct',
+          max_tokens: 4096,
+          context_window: 32768,
+          input_cost: 0.90,
+          output_cost: 0.90,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'qwen/qwen-2-vl-72b-instruct',
+          name: 'Qwen 2 VL 72B Instruct',
+          max_tokens: 4096,
+          context_window: 32768,
+          input_cost: 0.90,
+          output_cost: 0.90,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        // Nvidia Models
+        {
+          id: 'nvidia/nemotron-4-340b-instruct',
+          name: 'Nemotron 4 340B Instruct',
+          max_tokens: 4096,
+          context_window: 4096,
+          input_cost: 4.20,
+          output_cost: 4.20,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        // X.AI Models
+        {
+          id: 'x-ai/grok-beta',
+          name: 'Grok Beta',
+          max_tokens: 4096,
+          context_window: 131072,
+          input_cost: 5.00,
+          output_cost: 15.00,
+          supports_vision: false,
+          supports_function_calling: true
         }
       ];
 

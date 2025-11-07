@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/Textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { FileUpload } from '@/components/ui/FileUpload'
+import { Autocomplete } from '@/components/ui/Autocomplete'
 
 interface AgentDialogProps {
   open: boolean
@@ -293,27 +294,41 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
                   </div>
 
                   <div>
-                    <Label htmlFor="model">Model *</Label>
-                    <Select
-                      value={formData.model}
-                      onValueChange={(value) => setFormData(prev => ({ ...prev, model: value }))}
-                    >
-                      <SelectTrigger className="mt-1">
-                        <SelectValue placeholder="Select model...">
-                          {(() => {
-                            const selectedModel = availableModels.find(m => m.id === formData.model)
-                            return selectedModel ? selectedModel.name : 'Select model...'
-                          })()}
-                        </SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        {availableModels.map((model) => (
-                          <SelectItem key={model.id} value={model.id}>
-                            {model.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    {formData.provider === 'openrouter' ? (
+                      <Autocomplete
+                        id="model"
+                        label="Model *"
+                        placeholder="Search models..."
+                        options={availableModels}
+                        value={formData.model}
+                        onChange={(value) => setFormData(prev => ({ ...prev, model: value }))}
+                        helperText="Type to search through available OpenRouter models"
+                      />
+                    ) : (
+                      <>
+                        <Label htmlFor="model">Model *</Label>
+                        <Select
+                          value={formData.model}
+                          onValueChange={(value) => setFormData(prev => ({ ...prev, model: value }))}
+                        >
+                          <SelectTrigger className="mt-1">
+                            <SelectValue placeholder="Select model...">
+                              {(() => {
+                                const selectedModel = availableModels.find(m => m.id === formData.model)
+                                return selectedModel ? selectedModel.name : 'Select model...'
+                              })()}
+                            </SelectValue>
+                          </SelectTrigger>
+                          <SelectContent>
+                            {availableModels.map((model) => (
+                              <SelectItem key={model.id} value={model.id}>
+                                {model.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </>
+                    )}
                   </div>
                 </div>
 
