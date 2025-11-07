@@ -71,7 +71,7 @@ async function runMigrations(): Promise<void> {
         name VARCHAR(100) NOT NULL,
         description TEXT,
         system_prompt TEXT NOT NULL,
-        provider VARCHAR(20) NOT NULL CHECK (provider IN ('openai', 'anthropic')),
+        provider VARCHAR(20) NOT NULL CHECK (provider IN ('openai', 'anthropic', 'openrouter')),
         model VARCHAR(50) NOT NULL,
         temperature REAL DEFAULT 0.7 CHECK (temperature >= 0 AND temperature <= 2),
         max_tokens INTEGER DEFAULT 2000 CHECK (max_tokens > 0),

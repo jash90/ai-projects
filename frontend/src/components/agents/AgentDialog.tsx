@@ -28,7 +28,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
     name: '',
     description: '',
     system_prompt: '',
-    provider: 'openai' as 'openai' | 'anthropic',
+    provider: 'openai' as 'openai' | 'anthropic' | 'openrouter',
     model: '',
     temperature: 0.7,
     max_tokens: 2000,
@@ -125,7 +125,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
     const availableModels = aiStatus?.models[provider] || []
     setFormData(prev => ({
       ...prev,
-      provider: provider as 'openai' | 'anthropic',
+      provider: provider as 'openai' | 'anthropic' | 'openrouter',
       model: availableModels[0]?.id || '', // Auto-select first available model
     }))
   }
@@ -270,6 +270,15 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
                             <span>🧠</span>
                             <span>Anthropic</span>
                             {!aiStatus?.providers.anthropic && (
+                              <span className="text-xs text-destructive">(Not configured)</span>
+                            )}
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="openrouter">
+                          <div className="flex items-center gap-2">
+                            <span>🌐</span>
+                            <span>OpenRouter</span>
+                            {!aiStatus?.providers.openrouter && (
                               <span className="text-xs text-destructive">(Not configured)</span>
                             )}
                           </div>
