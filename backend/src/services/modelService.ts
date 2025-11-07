@@ -32,6 +32,8 @@ class ModelService {
   private openai: OpenAI | null = null;
   private anthropic: Anthropic | null = null;
   private openrouter: OpenAI | null = null;
+  private openrouterModelsCache: { models: AIModel[]; timestamp: number } | null = null;
+  private readonly CACHE_DURATION = 3600000; // 1 hour in milliseconds
 
   constructor() {
     if (config.ai.openai_api_key) {
@@ -229,16 +231,103 @@ class ModelService {
   }
 
   /**
-   * Fetch available models from OpenRouter
+   * Fetch available models from OpenRouter API dynamically
    */
   async fetchOpenRouterModels(): Promise<AIModel[]> {
     if (!this.openrouter) {
       throw new Error('OpenRouter API key not configured');
     }
 
+    // Check cache first
+    if (this.openrouterModelsCache) {
+      const cacheAge = Date.now() - this.openrouterModelsCache.timestamp;
+      if (cacheAge < this.CACHE_DURATION) {
+        logger.info(`Using cached OpenRouter models (age: ${Math.round(cacheAge / 60000)}min)`);
+        return this.openrouterModelsCache.models;
+      }
+    }
+
     try {
-      logger.info('Loading OpenRouter models...');
+      logger.info('Fetching OpenRouter models from API...');
+
+      // Define the API response interface
+      interface OpenRouterModelsResponse {
+        data: Array<{
+          id: string;
+          name?: string;
+          description?: string;
+          pricing?: {
+            prompt: string;
+            completion: string;
+          };
+          context_length?: number;
+          architecture?: {
+            modality?: string[];
+          };
+          supported_parameters?: string[];
+          top_provider?: {
+            max_completion_tokens?: number;
+          };
+        }>;
+      }
+
+      // Fetch models from OpenRouter API
+      const response = await fetch('https://openrouter.ai/api/v1/models', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${config.ai.openrouter_api_key}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`OpenRouter API returned ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json() as OpenRouterModelsResponse;
       const now = new Date().toISOString();
+
+      // Transform API response to our AIModel format
+      const models: AIModel[] = data.data.map((model: any) => ({
+        id: model.id,
+        name: model.name || model.id,
+        provider: 'openrouter' as const,
+        description: model.description || `${model.name} model`,
+        max_tokens: model.top_provider?.max_completion_tokens || model.context_length || 4096,
+        supports_vision: model.architecture?.modality?.includes('image') || false,
+        supports_function_calling: model.supported_parameters?.includes('tools') ||
+                                  model.supported_parameters?.includes('functions') || false,
+        cost_per_1k_input_tokens: parseFloat(model.pricing?.prompt || '0') * 1000,
+        cost_per_1k_output_tokens: parseFloat(model.pricing?.completion || '0') * 1000,
+        context_window: model.context_length || 4096,
+        created_at: now,
+        updated_at: now
+      }));
+
+      // Cache the results
+      this.openrouterModelsCache = {
+        models,
+        timestamp: Date.now()
+      };
+
+      logger.info(`Loaded ${models.length} OpenRouter models from API`);
+      return models;
+
+    } catch (error) {
+      logger.error('Failed to fetch OpenRouter models from API, using fallback list', {
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+
+      // Fallback to curated list of popular models
+      return this.getDefaultOpenRouterModels();
+    }
+  }
+
+  /**
+   * Get default fallback OpenRouter models
+   */
+  private getDefaultOpenRouterModels(): AIModel[] {
+    const now = new Date().toISOString();
 
       // Comprehensive OpenRouter models list
       const openrouterModels = [
@@ -660,12 +749,8 @@ class ModelService {
         updated_at: now
       }));
 
-      logger.info(`Loaded ${models.length} OpenRouter models`);
+      logger.info(`Using ${models.length} default OpenRouter models`);
       return models;
-    } catch (error) {
-      logger.error('Failed to load OpenRouter models', { error: error instanceof Error ? error.message : 'Unknown error' });
-      throw error;
-    }
   }
 
   /**
@@ -915,6 +1000,29 @@ class ModelService {
       openai: !!this.openai,
       anthropic: !!this.anthropic,
       openrouter: !!this.openrouter
+    };
+  }
+
+  /**
+   * Clear OpenRouter models cache to force refresh on next fetch
+   */
+  clearOpenRouterCache(): void {
+    this.openrouterModelsCache = null;
+    logger.info('OpenRouter models cache cleared');
+  }
+
+  /**
+   * Get cache status for OpenRouter models
+   */
+  getOpenRouterCacheStatus(): { cached: boolean; age?: number; count?: number } {
+    if (!this.openrouterModelsCache) {
+      return { cached: false };
+    }
+    const age = Date.now() - this.openrouterModelsCache.timestamp;
+    return {
+      cached: true,
+      age: Math.round(age / 60000), // age in minutes
+      count: this.openrouterModelsCache.models.length
     };
   }
 
