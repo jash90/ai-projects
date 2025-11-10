@@ -16,23 +16,10 @@ import {
 import { Request as ExpressRequest } from 'express';
 import { AgentModel } from '../models/Agent';
 import { ErrorResponse, DeleteResponse } from './shared/types';
+import { Agent } from '../types';
 import logger from '../utils/logger';
 
 // ===== Interfaces =====
-
-interface Agent {
-  id: string;
-  name: string;
-  description?: string | null;
-  prompt?: string;
-  system_prompt?: string;
-  model: string;
-  provider: 'openai' | 'anthropic' | 'openrouter';
-  temperature: number;
-  max_tokens: number | null;
-  created_at: Date;
-  updated_at: Date;
-}
 
 interface CreateAgentRequest {
   name: string;
