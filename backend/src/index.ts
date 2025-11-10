@@ -33,9 +33,9 @@ const server = createServer(app);
 
 // Parse CORS origins from environment variable (comma-separated)
 // Must be defined before Socket.IO and CORS middleware
-const allowedOrigins = process.env.NODE_ENV === 'production'
-  ? config.cors_origin.split(',').map(origin => origin.trim())
-  : [config.cors_origin, 'http://localhost:5173', 'http://localhost:3000'];
+const allowedOrigins = config.cors_origin
+  .split(',')
+  .map(origin => origin.trim());
 
 // Configure Socket.IO with same CORS settings
 const io = new SocketServer(server, {
