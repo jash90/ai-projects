@@ -55,8 +55,8 @@ export function useTokenLimits() {
     }
 
     // Determine effective limits (user-specific from usageData or system defaults)
-    const effectiveGlobalLimit = usageData.token_limit_global || DEFAULT_GLOBAL_LIMIT;
-    const effectiveMonthlyLimit = usageData.token_limit_monthly || DEFAULT_MONTHLY_LIMIT;
+    const effectiveGlobalLimit = usageData.token_limit_global ?? DEFAULT_GLOBAL_LIMIT;
+    const effectiveMonthlyLimit = usageData.token_limit_monthly ?? DEFAULT_MONTHLY_LIMIT;
 
     // Current usage
     const globalUsage = usageData.total_tokens || 0;
