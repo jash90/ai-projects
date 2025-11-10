@@ -271,47 +271,56 @@ class ModelService {
         }>;
       }
 
-      // Fetch models from OpenRouter API
-      const response = await fetch('https://openrouter.ai/api/v1/models', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${config.ai.openrouter_api_key}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      // Fetch models from OpenRouter API with timeout
+      const abortController = new AbortController();
+      const timeoutId = setTimeout(() => abortController.abort(), 10000); // 10 second timeout
 
-      if (!response.ok) {
-        throw new Error(`OpenRouter API returned ${response.status}: ${response.statusText}`);
+      try {
+        const response = await fetch('https://openrouter.ai/api/v1/models', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${config.ai.openrouter_api_key}`,
+            'Content-Type': 'application/json',
+          },
+          signal: abortController.signal
+        });
+
+        if (!response.ok) {
+          throw new Error(`OpenRouter API returned ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json() as OpenRouterModelsResponse;
+        const now = new Date().toISOString();
+
+        // Transform API response to our AIModel format
+        const models: AIModel[] = data.data.map((model: any) => ({
+          id: model.id,
+          name: model.name || model.id,
+          provider: 'openrouter' as const,
+          description: model.description || `${model.name} model`,
+          max_tokens: model.top_provider?.max_completion_tokens || model.context_length || 4096,
+          supports_vision: model.architecture?.modality?.includes('image') || false,
+          supports_function_calling: model.supported_parameters?.includes('tools') ||
+                                    model.supported_parameters?.includes('functions') || false,
+          cost_per_1k_input_tokens: parseFloat(model.pricing?.prompt || '0') * 1000,
+          cost_per_1k_output_tokens: parseFloat(model.pricing?.completion || '0') * 1000,
+          context_window: model.context_length || 4096,
+          created_at: now,
+          updated_at: now
+        }));
+
+        // Cache the results
+        this.openrouterModelsCache = {
+          models,
+          timestamp: Date.now()
+        };
+
+        logger.info(`Loaded ${models.length} OpenRouter models from API`);
+        return models;
+
+      } finally {
+        clearTimeout(timeoutId);
       }
-
-      const data = await response.json() as OpenRouterModelsResponse;
-      const now = new Date().toISOString();
-
-      // Transform API response to our AIModel format
-      const models: AIModel[] = data.data.map((model: any) => ({
-        id: model.id,
-        name: model.name || model.id,
-        provider: 'openrouter' as const,
-        description: model.description || `${model.name} model`,
-        max_tokens: model.top_provider?.max_completion_tokens || model.context_length || 4096,
-        supports_vision: model.architecture?.modality?.includes('image') || false,
-        supports_function_calling: model.supported_parameters?.includes('tools') ||
-                                  model.supported_parameters?.includes('functions') || false,
-        cost_per_1k_input_tokens: parseFloat(model.pricing?.prompt || '0') * 1000,
-        cost_per_1k_output_tokens: parseFloat(model.pricing?.completion || '0') * 1000,
-        context_window: model.context_length || 4096,
-        created_at: now,
-        updated_at: now
-      }));
-
-      // Cache the results
-      this.openrouterModelsCache = {
-        models,
-        timestamp: Date.now()
-      };
-
-      logger.info(`Loaded ${models.length} OpenRouter models from API`);
-      return models;
 
     } catch (error) {
       logger.error('Failed to fetch OpenRouter models from API, using fallback list', {
