@@ -11,7 +11,7 @@ export class AIModelModel {
       CREATE TABLE IF NOT EXISTS ai_models (
         id VARCHAR(255) PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
-        provider VARCHAR(50) NOT NULL CHECK (provider IN ('openai', 'anthropic')),
+        provider VARCHAR(50) NOT NULL CHECK (provider IN ('openai', 'anthropic', 'openrouter')),
         description TEXT,
         max_tokens INTEGER NOT NULL DEFAULT 4096,
         supports_vision BOOLEAN NOT NULL DEFAULT FALSE,
@@ -66,7 +66,7 @@ export class AIModelModel {
   /**
    * Get models by provider
    */
-  static async findByProvider(provider: 'openai' | 'anthropic'): Promise<AIModel[]> {
+  static async findByProvider(provider: 'openai' | 'anthropic' | 'openrouter'): Promise<AIModel[]> {
     const query = `
       SELECT * FROM ai_models 
       WHERE provider = $1 AND is_active = TRUE 
@@ -161,7 +161,7 @@ export class AIModelModel {
   /**
    * Deactivate models that are no longer available
    */
-  static async deactivateModels(provider: 'openai' | 'anthropic', activeModelIds: string[]): Promise<number> {
+  static async deactivateModels(provider: 'openai' | 'anthropic' | 'openrouter', activeModelIds: string[]): Promise<number> {
     if (activeModelIds.length === 0) {
       // If no active models, deactivate all for this provider
       const query = `

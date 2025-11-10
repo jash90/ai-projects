@@ -37,59 +37,166 @@ export function FileEditor({ file, className }: FileEditorProps) {
   
   const editorRef = useRef<any>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const isMountedRef = useRef<boolean>(true)
+  const checkIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Track mounted state
+  useEffect(() => {
+    isMountedRef.current = true
+    return () => {
+      isMountedRef.current = false
+    }
+  }, [])
 
   // Load Monaco Editor
   useEffect(() => {
     const loadMonaco = async () => {
       console.log('Loading Monaco Editor...')
-      
+
       if (window.monaco) {
         console.log('Monaco already loaded')
-        setIsMonacoLoading(false)
+        if (isMountedRef.current) {
+          setIsMonacoLoading(false)
+        }
         return
       }
 
+      // Check if loader script is already present in DOM
+      const existingScript = document.querySelector('script[data-monaco-loader="true"]')
+      if (existingScript) {
+        console.log('Monaco loader script already present, waiting for Monaco...')
+
+        // Wait for Monaco to be available with interval check
+        checkIntervalRef.current = setInterval(() => {
+          if (window.monaco) {
+            if (checkIntervalRef.current) {
+              clearInterval(checkIntervalRef.current)
+              checkIntervalRef.current = null
+            }
+            if (isMountedRef.current) {
+              setIsMonacoLoading(false)
+            }
+          }
+        }, 100)
+
+        // Timeout after 10 seconds
+        timeoutRef.current = setTimeout(() => {
+          if (checkIntervalRef.current) {
+            clearInterval(checkIntervalRef.current)
+            checkIntervalRef.current = null
+          }
+          if (!window.monaco && isMountedRef.current) {
+            console.warn('Monaco loading timeout')
+            setIsMonacoLoading(false)
+          }
+        }, 10000)
+
+        return
+      }
+
+      // Check if AMD loader is already configured
+      if ((window as any).require && (window as any).require.config) {
+        console.log('AMD loader already configured, loading Monaco...')
+
+        try {
+          (window as any).require(['vs/editor/editor.main'], () => {
+            console.log('Monaco editor main loaded')
+            if (isMountedRef.current) {
+              setIsMonacoLoading(false)
+            }
+          }, (error: any) => {
+            console.error('Failed to load Monaco:', error)
+            if (isMountedRef.current) {
+              setIsMonacoLoading(false)
+            }
+          })
+          return
+        } catch (error) {
+          console.error('AMD loader error:', error)
+        }
+      }
+
       // Set a timeout to prevent infinite loading
-      const timeout = setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
         console.warn('Monaco Editor loading timeout, falling back to textarea')
-        setIsMonacoLoading(false)
+        if (isMountedRef.current) {
+          setIsMonacoLoading(false)
+        }
       }, 10000) // 10 second timeout
 
       try {
         // Load Monaco Editor from CDN
         const script = document.createElement('script')
         script.src = 'https://unpkg.com/monaco-editor@0.44.0/min/vs/loader.js'
-        
+        script.setAttribute('data-monaco-loader', 'true')
+
         script.onload = () => {
           console.log('Monaco loader script loaded');
-          (window as any).require.config({ 
-            paths: { 
-              vs: 'https://unpkg.com/monaco-editor@0.44.0/min/vs' 
-            } 
+          (window as any).require.config({
+            paths: {
+              vs: 'https://unpkg.com/monaco-editor@0.44.0/min/vs'
+            }
           });
-          
+
           (window as any).require(['vs/editor/editor.main'], () => {
             console.log('Monaco editor main loaded')
-            clearTimeout(timeout)
-            setIsMonacoLoading(false)
+            if (timeoutRef.current) {
+              clearTimeout(timeoutRef.current)
+              timeoutRef.current = null
+            }
+            if (isMountedRef.current) {
+              setIsMonacoLoading(false)
+            }
+          }, (error: any) => {
+            console.error('Failed to load Monaco main:', error)
+            if (timeoutRef.current) {
+              clearTimeout(timeoutRef.current)
+              timeoutRef.current = null
+            }
+            if (isMountedRef.current) {
+              setIsMonacoLoading(false)
+            }
           })
         }
-        
+
         script.onerror = (error) => {
           console.error('Failed to load Monaco loader script:', error)
-          clearTimeout(timeout)
-          setIsMonacoLoading(false)
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current)
+            timeoutRef.current = null
+          }
+          if (isMountedRef.current) {
+            setIsMonacoLoading(false)
+          }
         }
-        
+
         document.head.appendChild(script)
       } catch (error) {
         console.error('Failed to load Monaco Editor:', error)
-        clearTimeout(timeout)
-        setIsMonacoLoading(false)
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current)
+          timeoutRef.current = null
+        }
+        if (isMountedRef.current) {
+          setIsMonacoLoading(false)
+        }
       }
     }
 
     loadMonaco()
+
+    // Cleanup function
+    return () => {
+      if (checkIntervalRef.current) {
+        clearInterval(checkIntervalRef.current)
+        checkIntervalRef.current = null
+      }
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+      }
+    }
   }, [])
 
   // Initialize editor when Monaco is loaded and file is available

@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { settingsApi, adminApi } from '@/lib/api';
+import { settingsApi } from '@/lib/api';
 import { useAuth } from '@/stores/authStore';
+
+// System default token limits (matching backend defaults)
+const DEFAULT_GLOBAL_LIMIT = 1000000;  // 1M tokens
+const DEFAULT_MONTHLY_LIMIT = 100000;  // 100K tokens/month
 
 interface TokenLimits {
   globalLimit: number | null;
@@ -44,29 +48,15 @@ export function useTokenLimits() {
     staleTime: 10000, // Consider data stale after 10 seconds
   });
 
-  // Fetch global token limits (fallback if user doesn't have individual limits)
-  const { data: globalLimitsData } = useQuery({
-    queryKey: ['global-token-limits'],
-    queryFn: async () => {
-      const response = await adminApi.getGlobalTokenLimits();
-      if (response.success) {
-        return response.data;
-      }
-      throw new Error(response.error || 'Failed to fetch global limits');
-    },
-    enabled: !!user,
-    staleTime: 300000, // Global limits change rarely, cache for 5 minutes
-  });
-
   useEffect(() => {
     if (!user || !usageData) {
       setLimits(prev => ({ ...prev, canSendMessage: false }));
       return;
     }
 
-    // Determine effective limits (user-specific or global)
-    const effectiveGlobalLimit = user.token_limit_global || globalLimitsData?.global || null;
-    const effectiveMonthlyLimit = user.token_limit_monthly || globalLimitsData?.monthly || null;
+    // Determine effective limits (user-specific from usageData or system defaults)
+    const effectiveGlobalLimit = usageData.token_limit_global ?? DEFAULT_GLOBAL_LIMIT;
+    const effectiveMonthlyLimit = usageData.token_limit_monthly ?? DEFAULT_MONTHLY_LIMIT;
 
     // Current usage
     const globalUsage = usageData.total_tokens || 0;
@@ -98,7 +88,7 @@ export function useTokenLimits() {
       remainingGlobalTokens,
       remainingMonthlyTokens,
     });
-  }, [user, usageData, globalLimitsData]);
+  }, [user, usageData]);
 
   // Function to manually refresh usage data
   const refreshUsage = () => {

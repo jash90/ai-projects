@@ -101,13 +101,33 @@ export class SocketHandler {
       // Notify user of successful join
       socket.emit('project-joined', { projectId, project });
 
-      // Load recent messages for context
-      const recentMessages = await MessageModel.getRecentMessages(projectId, userId, 20);
-      socket.emit('message-history', { projectId, messages: recentMessages });
+      // Load recent messages for context (non-critical - don't fail join if this errors)
+      try {
+        const recentMessages = await MessageModel.getRecentMessages(projectId, userId, 20);
+        socket.emit('message-history', { projectId, messages: recentMessages });
+      } catch (messageError) {
+        logger.warn('Could not load message history', {
+          projectId,
+          userId,
+          error: messageError instanceof Error ? messageError.message : String(messageError),
+          errorStack: messageError instanceof Error ? messageError.stack : undefined
+        });
+        // Send empty message history - join still succeeds
+        socket.emit('message-history', { projectId, messages: [] });
+      }
 
     } catch (error) {
-      logger.error('Error joining project:', error);
-      socket.emit('error', { message: 'Failed to join project' });
+      logger.error('Error joining project:', {
+        error,
+        projectId: data.projectId,
+        userId: socket.userId,
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        errorStack: error instanceof Error ? error.stack : undefined
+      });
+      socket.emit('error', {
+        message: 'Failed to join project',
+        details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : undefined
+      });
     }
   }
 

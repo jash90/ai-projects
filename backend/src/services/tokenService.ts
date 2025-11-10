@@ -11,7 +11,7 @@ const MODEL_PRICING = {
     'gpt-4-turbo': { prompt: 0.01, completion: 0.03 },
     'gpt-4-turbo-preview': { prompt: 0.01, completion: 0.03 },
     'gpt-4-vision-preview': { prompt: 0.01, completion: 0.03 },
-    
+
     // Custom models (using GPT-4 pricing as estimate)
     'gpt-5': { prompt: 0.04, completion: 0.08 },
     'gpt-5-high': { prompt: 0.05, completion: 0.10 },
@@ -19,11 +19,11 @@ const MODEL_PRICING = {
     'o3': { prompt: 0.02, completion: 0.04 },
     'o1': { prompt: 0.015, completion: 0.03 },
     'o4-mini': { prompt: 0.0015, completion: 0.002 },
-    
+
     // GPT-3.5 models
     'gpt-3.5-turbo': { prompt: 0.0005, completion: 0.0015 },
     'gpt-3.5-turbo-16k': { prompt: 0.001, completion: 0.002 },
-    
+
     // Default for unknown models
     'default': { prompt: 0.01, completion: 0.03 }
   },
@@ -33,19 +33,24 @@ const MODEL_PRICING = {
     'claude-opus-4-20250514': { prompt: 0.018, completion: 0.075 },
     'claude-sonnet-4-20250514': { prompt: 0.008, completion: 0.025 },
     'claude-3-7-sonnet-latest': { prompt: 0.005, completion: 0.020 },
-    
+
     // Real Claude 3 models (for fallback)
     'claude-3-opus-20240229': { prompt: 0.015, completion: 0.075 },
     'claude-3-sonnet-20240229': { prompt: 0.003, completion: 0.015 },
     'claude-3-haiku-20240307': { prompt: 0.00025, completion: 0.00125 },
-    
+
     // Claude 2 models
     'claude-2.1': { prompt: 0.008, completion: 0.024 },
     'claude-2.0': { prompt: 0.008, completion: 0.024 },
     'claude-instant-1.2': { prompt: 0.0008, completion: 0.0024 },
-    
+
     // Default for unknown models
     'default': { prompt: 0.008, completion: 0.024 }
+  },
+  openrouter: {
+    // OpenRouter uses dynamic pricing from the API response
+    // These are average estimates for tracking purposes
+    'default': { prompt: 0.005, completion: 0.015 }
   }
 };
 
@@ -54,7 +59,7 @@ export class TokenService {
    * Calculate the cost of tokens for a specific model
    */
   static calculateCost(
-    provider: 'openai' | 'anthropic',
+    provider: 'openai' | 'anthropic' | 'openrouter',
     model: string,
     promptTokens: number,
     completionTokens: number
@@ -77,7 +82,7 @@ export class TokenService {
     projectId?: string;
     agentId?: string;
     conversationId?: string;
-    provider: 'openai' | 'anthropic';
+    provider: 'openai' | 'anthropic' | 'openrouter';
     model: string;
     promptTokens: number;
     completionTokens: number;

@@ -20,6 +20,7 @@ const config: Config = {
   ai: {
     openai_api_key: process.env.OPENAI_API_KEY,
     anthropic_api_key: process.env.ANTHROPIC_API_KEY,
+    openrouter_api_key: process.env.OPENROUTER_API_KEY,
   },
   admin: {
     email: process.env.ADMIN_EMAIL || 'bartekziimny90@gmail.com',
