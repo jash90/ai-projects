@@ -256,9 +256,9 @@ router.get('/ai/status',
 router.post('/ai/validate', 
   generalLimiter,
   authenticateToken,
-  validate({ 
+  validate({
     body: Joi.object({
-      provider: Joi.string().valid('openai', 'anthropic').required(),
+      provider: Joi.string().valid('openai', 'anthropic', 'openrouter').required(),
       model: Joi.string().required()
     })
   }),

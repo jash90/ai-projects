@@ -79,10 +79,10 @@ router.get('/providers/:provider', async (req, res) => {
   try {
     const { provider } = req.params;
     
-    if (provider !== 'openai' && provider !== 'anthropic') {
+    if (provider !== 'openai' && provider !== 'anthropic' && provider !== 'openrouter') {
       return res.status(400).json({
         success: false,
-        error: 'Invalid provider. Must be "openai" or "anthropic"'
+        error: 'Invalid provider. Must be "openai", "anthropic", or "openrouter"'
       });
     }
     

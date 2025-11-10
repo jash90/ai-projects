@@ -57,7 +57,7 @@ interface ChatModelInfo {
 }
 
 interface ValidateAgentRequest {
-  provider: 'openai' | 'anthropic';
+  provider: 'openai' | 'anthropic' | 'openrouter';
   model: string;
 }
 
