@@ -6,7 +6,7 @@ CREATE TABLE
         project_id UUID REFERENCES projects (id) ON DELETE CASCADE,
         agent_id UUID REFERENCES agents (id) ON DELETE CASCADE,
         conversation_id UUID REFERENCES conversations (id) ON DELETE CASCADE,
-        provider VARCHAR(50) NOT NULL, -- 'openai' or 'anthropic'
+        provider VARCHAR(50) NOT NULL, -- 'openai', 'anthropic', or 'openrouter'
         model VARCHAR(100) NOT NULL,
         prompt_tokens INTEGER NOT NULL DEFAULT 0,
         completion_tokens INTEGER NOT NULL DEFAULT 0,
