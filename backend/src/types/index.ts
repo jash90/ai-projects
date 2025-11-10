@@ -66,6 +66,7 @@ export interface Agent {
   name: string;
   description?: string;
   system_prompt: string;
+  prompt?: string; // Alias for system_prompt for backward compatibility
   provider: 'openai' | 'anthropic' | 'openrouter';
   model: string;
   temperature: number;
@@ -223,6 +224,7 @@ export interface AuthUser {
   id: string;
   email: string;
   username: string;
+  role: string;
 }
 
 // Context Types
@@ -251,10 +253,13 @@ export interface AdminStats {
   active_users: number;
   total_projects: number;
   total_messages: number;
+  total_conversations?: number;
   total_tokens_used: number;
   total_cost: number;
   monthly_tokens: number;
   monthly_cost: number;
+  tokens_this_month?: number;
+  cost_this_month?: number;
   top_users: UserUsageStats[];
 }
 

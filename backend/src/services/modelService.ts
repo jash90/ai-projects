@@ -983,7 +983,7 @@ class ModelService {
   /**
    * Get models by provider from database
    */
-  async getModelsByProvider(provider: 'openai' | 'anthropic'): Promise<AIModel[]> {
+  async getModelsByProvider(provider: 'openai' | 'anthropic' | 'openrouter'): Promise<AIModel[]> {
     return await AIModelModel.findByProvider(provider);
   }
 

@@ -1,0 +1,94 @@
+{
+  "entryFile": "src/index.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/controllers/**/*Controller.ts"],
+  "spec": {
+    "outputDirectory": "build",
+    "specVersion": 3,
+    "specFileBaseName": "swagger",
+    "host": "localhost:3001",
+    "schemes": ["http", "https"],
+    "basePath": "/api",
+    "info": {
+      "title": "AI Projects API",
+      "version": "1.0.0",
+      "description": "REST API for AI Projects Platform - Create projects, manage AI agents, upload files, and have conversations with AI assistants.\n\n## Authentication\n\nMost endpoints require JWT authentication. To use protected endpoints:\n\n1. **Register or Login**: Use `/auth/register` or `/auth/login` to create an account\n2. **Copy Access Token**: From the response, copy the `access_token` value\n3. **Authorize**: Click the 'Authorize' button (🔓) at the top of this page\n4. **Enter Token**: Paste your access token and click 'Authorize'\n5. **Test Endpoints**: You can now test protected endpoints with 'Try it out'\n\n## Quick Start\n\n```bash\n# 1. Register a new user\nPOST /api/auth/register\n{\n  \"email\": \"user@example.com\",\n  \"username\": \"testuser\",\n  \"password\": \"password123\"\n}\n\n# 2. Copy the access_token from response\n# 3. Click Authorize button and paste token\n# 4. Test any protected endpoint!\n```",
+      "contact": {
+        "name": "AI Projects Support",
+        "email": "support@ai-projects.com"
+      },
+      "license": {
+        "name": "MIT"
+      }
+    },
+    "securityDefinitions": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT access token obtained from /auth/login or /auth/register"
+      }
+    },
+    "tags": [
+      {
+        "name": "Authentication",
+        "description": "User authentication and authorization endpoints"
+      },
+      {
+        "name": "Projects",
+        "description": "Project management operations"
+      },
+      {
+        "name": "Agents",
+        "description": "AI agent configuration and management"
+      },
+      {
+        "name": "Chat",
+        "description": "AI chat and conversation endpoints"
+      },
+      {
+        "name": "Conversations",
+        "description": "Conversation management"
+      },
+      {
+        "name": "Messages",
+        "description": "Message operations"
+      },
+      {
+        "name": "Files",
+        "description": "Project file management (text files for editing)"
+      },
+      {
+        "name": "Project Files",
+        "description": "Uploaded file management (binary files for agent context)"
+      },
+      {
+        "name": "Models",
+        "description": "AI model discovery and provider status"
+      },
+      {
+        "name": "Settings",
+        "description": "User settings and preferences"
+      },
+      {
+        "name": "Admin",
+        "description": "Administrative operations (admin role required)"
+      },
+      {
+        "name": "Debug",
+        "description": "Debug and troubleshooting endpoints"
+      }
+    ]
+  },
+  "routes": {
+    "routesDir": "build",
+    "middleware": "express",
+    "authenticationModule": "./src/middleware/tsoaAuthentication.ts",
+    "basePath": "/api"
+  },
+  "ignore": [
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/node_modules/**"
+  ]
+}

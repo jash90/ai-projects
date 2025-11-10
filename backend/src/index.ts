@@ -3,12 +3,14 @@ import { createServer } from 'http';
 import { Server as SocketServer } from 'socket.io';
 import cors from 'cors';
 import helmet from 'helmet';
+import swaggerUi from 'swagger-ui-express';
 import { initializeDatabase, closeDatabase } from './database/connection';
 import { seedDatabase } from './database/seed';
 import { SocketHandler } from './services/socketHandler';
 import { modelService } from './services/modelService';
 import { generalLimiter } from './middleware/rateLimiting';
 import { sanitizeInputs } from './middleware/validation';
+import { ValidateError } from 'tsoa';
 import config from './utils/config';
 import logger from './utils/logger';
 
@@ -34,7 +36,12 @@ const server = createServer(app);
 // Must be defined before Socket.IO and CORS middleware
 const allowedOrigins = process.env.NODE_ENV === 'production'
   ? config.cors_origin.split(',').map(origin => origin.trim())
-  : [config.cors_origin, 'http://localhost:5173', 'http://localhost:3000'];
+  : [
+      config.cors_origin,
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'http://localhost:3001'  // Allow Swagger UI to make requests
+    ];
 
 // Configure Socket.IO with same CORS settings
 const io = new SocketServer(server, {
@@ -153,6 +160,21 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// ===== TSOA GENERATED ROUTES AND SWAGGER UI =====
+// Register tsoa-generated routes
+import { RegisterRoutes } from '../build/routes';
+RegisterRoutes(app);
+
+// Serve Swagger UI documentation
+app.use('/api-docs', swaggerUi.serve, async (_req: express.Request, res: express.Response) => {
+  return res.send(
+    swaggerUi.generateHTML(await import('../build/swagger.json'))
+  );
+});
+
+logger.info('✅ Swagger UI available at /api-docs');
+
+// ===== LEGACY EXPRESS ROUTES (being migrated to tsoa) =====
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);

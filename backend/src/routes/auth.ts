@@ -40,7 +40,8 @@ router.post('/register',
       const { accessToken, refreshToken } = generateTokens({
         id: user.id,
         email: user.email,
-        username: user.username
+        username: user.username,
+        role: user.role
       });
 
       logger.info('User registered successfully', { userId: user.id, email: user.email });
@@ -105,7 +106,8 @@ router.post('/login',
       const { accessToken, refreshToken } = generateTokens({
         id: user.id,
         email: user.email,
-        username: user.username
+        username: user.username,
+        role: user.role
       });
 
       logger.info('User logged in successfully', { userId: user.id, email: user.email });

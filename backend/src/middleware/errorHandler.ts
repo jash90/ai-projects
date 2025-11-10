@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
+import { ValidateError } from 'tsoa';
 import { AppError, isAppError, ErrorCode } from '../utils/errors';
+import { AuthenticationError } from './tsoaAuthentication';
 import logger from '../utils/logger';
 
 export interface ErrorResponse {
@@ -64,7 +66,37 @@ export const errorHandler = (
   }
 
   // Handle specific error types that aren't AppErrors
-  
+
+  // TSOA authentication errors (from expressAuthentication)
+  if (error instanceof AuthenticationError) {
+    logger.warn('Authentication error:', {
+      ...requestInfo,
+      error: error.message,
+      statusCode: error.statusCode
+    });
+
+    return res.status(error.statusCode).json({
+      success: false,
+      error: error.message,
+      code: error.statusCode === 401 ? 'AUTHENTICATION_ERROR' : 'AUTHORIZATION_ERROR',
+    } as ErrorResponse);
+  }
+
+  // TSOA validation errors
+  if (error instanceof ValidateError) {
+    logger.warn('TSOA validation error:', {
+      ...requestInfo,
+      fields: error.fields,
+    });
+
+    return res.status(422).json({
+      success: false,
+      error: 'Validation failed',
+      code: 'VALIDATION_ERROR',
+      details: error.fields,
+    } as ErrorResponse);
+  }
+
   // Validation errors (Joi)
   if (error.name === 'ValidationError') {
     logger.warn('Validation error:', {

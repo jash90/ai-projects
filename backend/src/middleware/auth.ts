@@ -54,6 +54,7 @@ export async function authenticateToken(req: Request, res: Response, next: NextF
       id: user.id,
       email: user.email,
       username: user.username,
+      role: user.role
     };
 
     next();
