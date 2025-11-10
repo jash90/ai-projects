@@ -272,6 +272,7 @@ export function ModelPickerModal({
                     onFiltersChange={setModelFilters}
                     defaultOpen={true}
                     persistentOpen={true}
+                    inputRef={searchInputRef}
                     className=""
                   />
                 </div>
