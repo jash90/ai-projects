@@ -40,7 +40,7 @@ export function useSocket(projectId?: string, options: UseSocketOptions = {}) {
   const connect = () => {
     if (socketRef.current || !tokens?.access_token) return
 
-    const wsUrl = import.meta.env.VITE_WS_URL || 'http://localhost:3001'
+    const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:3001'
 
     socketRef.current = io(wsUrl, {
       auth: {
