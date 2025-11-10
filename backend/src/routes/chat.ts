@@ -13,7 +13,80 @@ import logger from '../utils/logger';
 
 const router: Router = Router();
 
-// Send message to AI agent
+/**
+ * @swagger
+ * /api/chat/projects/{projectId}/agents/{agentId}/chat:
+ *   post:
+ *     summary: Send message to AI agent
+ *     tags: [Chat]
+ *     description: Send a chat message to an AI agent and receive a response (streaming or regular)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *       - in: path
+ *         name: agentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Agent ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 minLength: 1
+ *                 maxLength: 50000
+ *                 description: User message to send to AI
+ *               includeFiles:
+ *                 type: boolean
+ *                 default: true
+ *                 description: Include project files in context
+ *               stream:
+ *                 type: boolean
+ *                 default: false
+ *                 description: Enable streaming response
+ *             required:
+ *               - message
+ *     responses:
+ *       200:
+ *         description: Chat response received successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ChatResponse'
+ *           text/event-stream:
+ *             schema:
+ *               type: string
+ *               description: Server-sent events stream (when stream=true)
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       402:
+ *         description: Token limit exceeded
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.post('/projects/:projectId/agents/:agentId/chat', 
   aiLimiter, // Use AI-specific rate limiting
   authenticateToken,
@@ -226,7 +299,48 @@ router.post('/projects/:projectId/agents/:agentId/chat',
   })
 );
 
-// Get AI models and provider status
+/**
+ * @swagger
+ * /api/chat/ai/status:
+ *   get:
+ *     summary: Get AI service status
+ *     tags: [Chat]
+ *     description: Retrieve AI provider availability and available models
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: AI status retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     providers:
+ *                       type: object
+ *                       properties:
+ *                         openai:
+ *                           type: boolean
+ *                         anthropic:
+ *                           type: boolean
+ *                       description: Provider availability status
+ *                     models:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/AIModel'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/ai/status', 
   generalLimiter,
   authenticateToken,
@@ -252,7 +366,41 @@ router.get('/ai/status',
   }
 );
 
-// Validate agent configuration
+/**
+ * @swagger
+ * /api/chat/ai/validate:
+ *   post:
+ *     summary: Validate AI configuration
+ *     tags: [Chat]
+ *     description: Validate that a specific AI provider and model combination is available
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ChatValidationRequest'
+ *     responses:
+ *       200:
+ *         description: Configuration validated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ChatValidationResponse'
+ *       400:
+ *         description: Invalid configuration
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.post('/ai/validate', 
   generalLimiter,
   authenticateToken,

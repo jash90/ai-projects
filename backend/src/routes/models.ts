@@ -11,8 +11,41 @@ router.use(authenticateToken);
 router.use(generalLimiter);
 
 /**
- * GET /api/models
- * Get all available AI models
+ * @swagger
+ * /api/models:
+ *   get:
+ *     summary: Get all available AI models
+ *     tags: [Models]
+ *     description: Retrieve a list of all available AI models from configured providers
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Models retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     models:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/AIModel'
+ *                     count:
+ *                       type: number
+ *                       description: Total number of available models
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
  */
 router.get('/', async (req, res) => {
   try {
@@ -39,8 +72,38 @@ router.get('/', async (req, res) => {
 });
 
 /**
- * GET /api/models/providers/status
- * Get provider status and statistics
+ * @swagger
+ * /api/models/providers/status:
+ *   get:
+ *     summary: Get provider status
+ *     tags: [Models]
+ *     description: Retrieve status and statistics for all AI providers
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Provider status retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     providers:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/ProviderStatus'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
  */
 router.get('/providers/status', async (req, res) => {
   try {
@@ -72,8 +135,52 @@ router.get('/providers/status', async (req, res) => {
 });
 
 /**
- * GET /api/models/providers/:provider
- * Get models by provider (openai or anthropic)
+ * @swagger
+ * /api/models/providers/{provider}:
+ *   get:
+ *     summary: Get models by provider
+ *     tags: [Models]
+ *     description: Retrieve all models from a specific AI provider
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: provider
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [openai, anthropic]
+ *         description: AI provider name
+ *     responses:
+ *       200:
+ *         description: Provider models retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     provider:
+ *                       type: string
+ *                     models:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/AIModel'
+ *                     count:
+ *                       type: number
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
  */
 router.get('/providers/:provider', async (req, res) => {
   try {
@@ -111,8 +218,45 @@ router.get('/providers/:provider', async (req, res) => {
 });
 
 /**
- * GET /api/models/:modelId
- * Get a specific model by ID
+ * @swagger
+ * /api/models/{modelId}:
+ *   get:
+ *     summary: Get specific model details
+ *     tags: [Models]
+ *     description: Retrieve detailed information about a specific AI model
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: modelId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Model ID (e.g., gpt-4, claude-3-sonnet)
+ *     responses:
+ *       200:
+ *         description: Model details retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     model:
+ *                       $ref: '#/components/schemas/AIModel'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
  */
 router.get('/:modelId', async (req, res) => {
   try {
@@ -145,9 +289,27 @@ router.get('/:modelId', async (req, res) => {
 });
 
 /**
- * POST /api/models/sync
- * Manually sync models from AI providers
- * Note: This is an admin-only operation in production
+ * @swagger
+ * /api/models/sync:
+ *   post:
+ *     summary: Sync models from AI providers
+ *     tags: [Models]
+ *     description: Manually trigger synchronization of models from all configured AI providers
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Models synced successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SyncResponse'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
  */
 router.post('/sync', async (req, res) => {
   try {

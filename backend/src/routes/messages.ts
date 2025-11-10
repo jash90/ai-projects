@@ -9,7 +9,54 @@ import logger from '../utils/logger';
 
 const router: Router = Router();
 
-// Get messages for a project
+/**
+ * @swagger
+ * /api/messages/projects/{projectId}/messages:
+ *   get:
+ *     summary: Get all messages for project
+ *     tags: [Messages]
+ *     description: Retrieve paginated messages for a specific project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 50
+ *           maximum: 100
+ *         description: Items per page
+ *     responses:
+ *       200:
+ *         description: Messages retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PaginatedResponse'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/projects/:projectId/messages', 
   generalLimiter,
   authenticateToken,
@@ -46,7 +93,56 @@ router.get('/projects/:projectId/messages',
   }
 );
 
-// Create new message
+/**
+ * @swagger
+ * /api/messages/projects/{projectId}/messages:
+ *   post:
+ *     summary: Create new message
+ *     tags: [Messages]
+ *     description: Create a new message in a project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/MessageCreate'
+ *     responses:
+ *       201:
+ *         description: Message created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     message:
+ *                       $ref: '#/components/schemas/Message'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.post('/projects/:projectId/messages', 
   chatLimiter,
   authenticateToken,
@@ -94,7 +190,50 @@ router.post('/projects/:projectId/messages',
   }
 );
 
-// Get message by ID
+/**
+ * @swagger
+ * /api/messages/messages/{id}:
+ *   get:
+ *     summary: Get message by ID
+ *     tags: [Messages]
+ *     description: Retrieve a specific message by its ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Message ID
+ *     responses:
+ *       200:
+ *         description: Message retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     message:
+ *                       $ref: '#/components/schemas/Message'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/messages/:id', 
   generalLimiter,
   authenticateToken,
@@ -128,7 +267,56 @@ router.get('/messages/:id',
   }
 );
 
-// Update message
+/**
+ * @swagger
+ * /api/messages/messages/{id}:
+ *   put:
+ *     summary: Update message
+ *     tags: [Messages]
+ *     description: Update an existing message's content
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Message ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/MessageUpdate'
+ *     responses:
+ *       200:
+ *         description: Message updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     message:
+ *                       $ref: '#/components/schemas/Message'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.put('/messages/:id', 
   generalLimiter,
   authenticateToken,
@@ -168,7 +356,48 @@ router.put('/messages/:id',
   }
 );
 
-// Delete message
+/**
+ * @swagger
+ * /api/messages/messages/{id}:
+ *   delete:
+ *     summary: Delete message
+ *     tags: [Messages]
+ *     description: Delete a specific message by its ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Message ID
+ *     responses:
+ *       200:
+ *         description: Message deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Message deleted successfully
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.delete('/messages/:id', 
   generalLimiter,
   authenticateToken,
@@ -202,7 +431,62 @@ router.delete('/messages/:id',
   }
 );
 
-// Get conversation context for AI
+/**
+ * @swagger
+ * /api/messages/projects/{projectId}/context:
+ *   get:
+ *     summary: Get conversation context
+ *     tags: [Messages]
+ *     description: Retrieve recent messages for AI conversation context
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *           minimum: 1
+ *           maximum: 50
+ *         description: Number of recent messages to retrieve
+ *     responses:
+ *       200:
+ *         description: Context retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     messages:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/Message'
+ *                     context_length:
+ *                       type: number
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/projects/:projectId/context', 
   generalLimiter,
   authenticateToken,
@@ -244,7 +528,57 @@ router.get('/projects/:projectId/context',
   }
 );
 
-// Search messages in a project
+/**
+ * @swagger
+ * /api/messages/projects/{projectId}/messages/search:
+ *   get:
+ *     summary: Search messages
+ *     tags: [Messages]
+ *     description: Search for messages within a project by content
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *       - in: query
+ *         name: q
+ *         required: true
+ *         schema:
+ *           type: string
+ *           minLength: 1
+ *           maxLength: 255
+ *         description: Search query
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *           minimum: 1
+ *           maximum: 50
+ *         description: Maximum results to return
+ *     responses:
+ *       200:
+ *         description: Search completed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MessageSearchResults'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/projects/:projectId/messages/search', 
   generalLimiter,
   authenticateToken,
@@ -288,7 +622,47 @@ router.get('/projects/:projectId/messages/search',
   }
 );
 
-// Get message statistics for a project
+/**
+ * @swagger
+ * /api/messages/projects/{projectId}/messages/stats:
+ *   get:
+ *     summary: Get message statistics
+ *     tags: [Messages]
+ *     description: Retrieve statistics about messages in a project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *     responses:
+ *       200:
+ *         description: Statistics retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/MessageStats'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/projects/:projectId/messages/stats', 
   generalLimiter,
   authenticateToken,
@@ -324,7 +698,49 @@ router.get('/projects/:projectId/messages/stats',
   }
 );
 
-// Clear all messages in a project
+/**
+ * @swagger
+ * /api/messages/projects/{projectId}/messages:
+ *   delete:
+ *     summary: Delete all project messages
+ *     tags: [Messages]
+ *     description: Delete all messages in a specific project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *     responses:
+ *       200:
+ *         description: Messages cleared successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                 deleted_count:
+ *                   type: number
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.delete('/projects/:projectId/messages', 
   generalLimiter,
   authenticateToken,
