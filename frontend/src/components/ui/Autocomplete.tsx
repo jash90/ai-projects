@@ -45,6 +45,7 @@ interface AutocompleteProps {
   onFiltersChange?: (filters: AutocompleteFilters) => void // Filter change callback
   defaultOpen?: boolean        // Show dropdown open by default
   persistentOpen?: boolean     // Keep dropdown open after selection
+  inputRef?: React.RefObject<HTMLInputElement> // Optional ref to the input element
 }
 
 export function Autocomplete({
@@ -68,7 +69,8 @@ export function Autocomplete({
   filters = {},
   onFiltersChange,
   defaultOpen = false,
-  persistentOpen = false
+  persistentOpen = false,
+  inputRef: externalInputRef
 }: AutocompleteProps) {
   // Generate stable unique ID for ARIA attributes when id prop is not provided
   const generatedId = useId()
@@ -80,8 +82,11 @@ export function Autocomplete({
   const [showFilters, setShowFilters] = useState(false)
   const [collapsedCategories, setCollapsedCategories] = useState<Set<string>>(new Set())
   const containerRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const internalInputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
+
+  // Use external ref if provided, otherwise use internal ref
+  const inputRef = externalInputRef || internalInputRef
 
   // Debounce search query to improve performance with large datasets (340+ models)
   const debouncedSearchQuery = useDebounce(searchQuery, 300)
