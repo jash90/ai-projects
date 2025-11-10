@@ -4,6 +4,8 @@ import { Server as SocketServer } from 'socket.io';
 import cors from 'cors';
 import helmet from 'helmet';
 import swaggerUi from 'swagger-ui-express';
+import { existsSync } from 'fs';
+import { resolve } from 'path';
 import { initializeDatabase, closeDatabase } from './database/connection';
 import { seedDatabase } from './database/seed';
 import { SocketHandler } from './services/socketHandler';
@@ -160,25 +162,60 @@ app.get('/api/health', (req, res) => {
 });
 
 // ===== TSOA GENERATED ROUTES AND SWAGGER UI =====
-// Register tsoa-generated routes
-import { RegisterRoutes } from '../build/routes';
-RegisterRoutes(app);
+// Register tsoa-generated routes with graceful fallback
+(async () => {
+  const routesPath = resolve(__dirname, '../build/routes.js');
+  const swaggerPath = resolve(__dirname, '../build/swagger.json');
 
-// Serve Swagger UI documentation
-app.use('/api-docs', swaggerUi.serve, async (_req: express.Request, res: express.Response) => {
-  try {
-    const swaggerDocument = await import('../build/swagger.json');
-    return res.send(swaggerUi.generateHTML(swaggerDocument));
-  } catch (error) {
-    logger.error('Failed to load Swagger documentation:', error);
-    return res.status(503).json({
-      success: false,
-      error: 'API documentation is not available. Please run `npm run build` first.'
-    });
+  if (existsSync(routesPath)) {
+    try {
+      // Use dynamic require to avoid TypeScript compile-time errors
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const routesModule = require(routesPath);
+
+      if (routesModule && typeof routesModule.RegisterRoutes === 'function') {
+        routesModule.RegisterRoutes(app);
+        logger.info('✅ TSOA routes registered successfully');
+      } else {
+        logger.warn('⚠️  TSOA routes module loaded but RegisterRoutes function not found');
+      }
+    } catch (error) {
+      logger.error('Failed to load TSOA routes:', error);
+      logger.warn('⚠️  TSOA routes not available. Run `npm run build` to generate them.');
+    }
+  } else {
+    logger.warn('⚠️  TSOA routes not found at ' + routesPath);
+    logger.warn('⚠️  Run `npm run build` to generate TSOA routes and Swagger documentation.');
   }
-});
 
-logger.info('✅ Swagger UI available at /api-docs');
+  // Serve Swagger UI documentation with improved error handling
+  app.use('/api-docs', swaggerUi.serve, async (_req: express.Request, res: express.Response) => {
+    if (!existsSync(swaggerPath)) {
+      logger.warn('Swagger documentation requested but not available');
+      return res.status(503).json({
+        success: false,
+        error: 'API documentation is not available. Please run `npm run build` to generate it.',
+        hint: 'Run: npm run build'
+      });
+    }
+
+    try {
+      // Use dynamic require to avoid TypeScript compile-time errors
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const swaggerDocument = require(swaggerPath);
+      return res.send(swaggerUi.generateHTML(swaggerDocument));
+    } catch (error) {
+      logger.error('Failed to load Swagger documentation:', error);
+      return res.status(503).json({
+        success: false,
+        error: 'API documentation failed to load. Please run `npm run build` and try again.',
+        hint: 'Run: npm run build'
+      });
+    }
+  });
+
+  logger.info('✅ Swagger UI endpoint configured at /api-docs');
+})();
 
 // ===== LEGACY EXPRESS ROUTES (being migrated to tsoa) =====
 // API routes
