@@ -15,20 +15,12 @@ import {
   Request
 } from 'tsoa';
 import { Request as ExpressRequest } from 'express';
+import type { Project } from '../types';
 import { ProjectModel } from '../models/Project';
 import { ErrorResponse, DeleteResponse } from './shared/types';
 import logger from '../utils/logger';
 
 // ===== Interfaces =====
-
-interface Project {
-  id: string;
-  name: string;
-  description: string | null;
-  user_id: string;
-  created_at: Date;
-  updated_at: Date;
-}
 
 interface CreateProjectRequest {
   name: string;
