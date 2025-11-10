@@ -8,7 +8,40 @@ import logger from '../utils/logger';
 
 const router: Router = Router();
 
-// Get all agents
+/**
+ * @swagger
+ * /api/agents:
+ *   get:
+ *     summary: Get all AI agents
+ *     tags: [Agents]
+ *     description: Retrieve a list of all available AI agents
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Agents retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     agents:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/Agent'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/', 
   generalLimiter,
   authenticateToken, 
@@ -32,7 +65,50 @@ router.get('/',
   }
 );
 
-// Get agent by ID
+/**
+ * @swagger
+ * /api/agents/{id}:
+ *   get:
+ *     summary: Get agent by ID
+ *     tags: [Agents]
+ *     description: Retrieve detailed information about a specific AI agent
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Agent ID
+ *     responses:
+ *       200:
+ *         description: Agent retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     agent:
+ *                       $ref: '#/components/schemas/Agent'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/:id', 
   generalLimiter,
   authenticateToken,
@@ -65,7 +141,46 @@ router.get('/:id',
   }
 );
 
-// Create new agent (admin functionality - for now, any authenticated user)
+/**
+ * @swagger
+ * /api/agents:
+ *   post:
+ *     summary: Create a new AI agent
+ *     tags: [Agents]
+ *     description: Create a new AI agent with custom configuration
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AgentCreate'
+ *     responses:
+ *       201:
+ *         description: Agent created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     agent:
+ *                       $ref: '#/components/schemas/Agent'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.post('/', 
   creationLimiter,
   authenticateToken,
@@ -94,7 +209,56 @@ router.post('/',
   }
 );
 
-// Update agent
+/**
+ * @swagger
+ * /api/agents/{id}:
+ *   put:
+ *     summary: Update AI agent
+ *     tags: [Agents]
+ *     description: Update an existing AI agent's configuration
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Agent ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AgentUpdate'
+ *     responses:
+ *       200:
+ *         description: Agent updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     agent:
+ *                       $ref: '#/components/schemas/Agent'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.put('/:id', 
   generalLimiter,
   authenticateToken,
@@ -133,7 +297,52 @@ router.put('/:id',
   }
 );
 
-// Delete agent
+/**
+ * @swagger
+ * /api/agents/{id}:
+ *   delete:
+ *     summary: Delete AI agent
+ *     tags: [Agents]
+ *     description: Delete an AI agent (only if not used in any conversations)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Agent ID
+ *     responses:
+ *       200:
+ *         description: Agent deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Agent deleted successfully
+ *       400:
+ *         description: Cannot delete agent in use
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.delete('/:id', 
   generalLimiter,
   authenticateToken,
@@ -173,7 +382,57 @@ router.delete('/:id',
   }
 );
 
-// Get agent usage statistics
+/**
+ * @swagger
+ * /api/agents/{id}/stats:
+ *   get:
+ *     summary: Get agent usage statistics
+ *     tags: [Agents]
+ *     description: Retrieve usage statistics for a specific AI agent
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Agent ID
+ *     responses:
+ *       200:
+ *         description: Agent statistics retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     agent_id:
+ *                       type: string
+ *                       format: uuid
+ *                     conversations_using:
+ *                       type: number
+ *                       description: Number of conversations using this agent
+ *                     can_delete:
+ *                       type: boolean
+ *                       description: Whether the agent can be safely deleted
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/:id/stats', 
   generalLimiter,
   authenticateToken,
