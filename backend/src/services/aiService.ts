@@ -28,6 +28,7 @@ export interface StreamingChatResponse {
 class AIService {
   private openai: OpenAI | null = null;
   private anthropic: Anthropic | null = null;
+  private openrouter: OpenAI | null = null;
 
   constructor() {
     if (config.ai.openai_api_key) {
@@ -55,6 +56,22 @@ class AIService {
     } else {
       logger.warn('Anthropic API key not configured');
     }
+
+    if (config.ai.openrouter_api_key) {
+      this.openrouter = new OpenAI({
+        apiKey: config.ai.openrouter_api_key,
+        baseURL: 'https://openrouter.ai/api/v1',
+        timeout: 120000, // 2 minutes timeout for AI processing
+        maxRetries: 3, // Retry failed requests
+        defaultHeaders: {
+          'HTTP-Referer': 'https://github.com/your-repo', // Optional: for rankings
+          'X-Title': 'AI Projects Platform', // Optional: for rankings
+        },
+      });
+      logger.info('OpenRouter client initialized successfully');
+    } else {
+      logger.warn('OpenRouter API key not configured');
+    }
   }
 
   async chat(request: ChatRequest): Promise<ChatResponse | StreamingChatResponse> {
@@ -73,6 +90,8 @@ class AIService {
           return await this.streamChatWithOpenAI(agent, messages, projectFiles, userId, projectId, conversationId);
         } else if (agent.provider === 'anthropic') {
           return await this.streamChatWithAnthropic(agent, messages, projectFiles, userId, projectId, conversationId);
+        } else if (agent.provider === 'openrouter') {
+          return await this.streamChatWithOpenRouter(agent, messages, projectFiles, userId, projectId, conversationId);
         } else {
           throw new Error(`Unsupported AI provider: ${agent.provider}`);
         }
@@ -84,6 +103,8 @@ class AIService {
           response = await this.chatWithOpenAI(agent, messages, projectFiles, userId, projectId, conversationId);
         } else if (agent.provider === 'anthropic') {
           response = await this.chatWithAnthropic(agent, messages, projectFiles, userId, projectId, conversationId);
+        } else if (agent.provider === 'openrouter') {
+          response = await this.chatWithOpenRouter(agent, messages, projectFiles, userId, projectId, conversationId);
         } else {
           throw new Error(`Unsupported AI provider: ${agent.provider}`);
         }
@@ -505,6 +526,173 @@ class AIService {
     }
   }
 
+  private async chatWithOpenRouter(
+    agent: Agent,
+    messages: ConversationMessage[],
+    projectFiles?: string[],
+    userId?: string,
+    projectId?: string,
+    conversationId?: string
+  ): Promise<ChatResponse> {
+    if (!this.openrouter) {
+      throw new Error('OpenRouter API key not configured');
+    }
+
+    // Build system message with agent prompt and file context
+    let systemContent = agent.system_prompt;
+    if (projectFiles && projectFiles.length > 0) {
+      systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
+    }
+
+    // Convert messages to OpenAI format (OpenRouter is OpenAI-compatible)
+    const openrouterMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
+      { role: 'system', content: systemContent },
+      ...messages.map(msg => ({
+        role: msg.role as 'user' | 'assistant',
+        content: msg.content
+      }))
+    ];
+
+    const completion = await this.openrouter.chat.completions.create({
+      model: agent.model,
+      messages: openrouterMessages,
+      temperature: agent.temperature,
+      max_tokens: agent.max_tokens,
+    });
+
+    const choice = completion.choices[0];
+    if (!choice.message.content) {
+      throw new Error('No response content from OpenRouter');
+    }
+
+    // Track token usage if user context is provided
+    if (userId && completion.usage) {
+      await TokenService.trackUsage({
+        userId,
+        projectId,
+        agentId: agent.id,
+        conversationId,
+        provider: 'openrouter',
+        model: agent.model,
+        promptTokens: completion.usage.prompt_tokens || 0,
+        completionTokens: completion.usage.completion_tokens || 0,
+        requestType: 'chat'
+      });
+    }
+
+    return {
+      content: choice.message.content,
+      metadata: {
+        model: agent.model,
+        tokens: completion.usage?.total_tokens,
+        prompt_tokens: completion.usage?.prompt_tokens,
+        completion_tokens: completion.usage?.completion_tokens,
+        files: projectFiles
+      }
+    };
+  }
+
+  private async streamChatWithOpenRouter(
+    agent: Agent,
+    messages: ConversationMessage[],
+    projectFiles?: string[],
+    userId?: string,
+    projectId?: string,
+    conversationId?: string
+  ): Promise<StreamingChatResponse> {
+    if (!this.openrouter) {
+      throw new Error('OpenRouter API key not configured');
+    }
+
+    // Build system message with agent prompt and file context
+    let systemContent = agent.system_prompt;
+    if (projectFiles && projectFiles.length > 0) {
+      systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
+    }
+
+    // Convert messages to OpenAI format (OpenRouter is OpenAI-compatible)
+    const openrouterMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
+      { role: 'system', content: systemContent },
+      ...messages.map(msg => ({
+        role: msg.role as 'user' | 'assistant',
+        content: msg.content
+      }))
+    ];
+
+    const stream = await this.openrouter.chat.completions.create({
+      model: agent.model,
+      messages: openrouterMessages,
+      temperature: agent.temperature,
+      max_tokens: agent.max_tokens,
+      stream: true, // Enable streaming
+    });
+
+    return {
+      stream: this.processOpenRouterStream(stream, agent, userId, projectId, conversationId, projectFiles)
+    };
+  }
+
+  private async *processOpenRouterStream(
+    stream: any,
+    agent: Agent,
+    userId?: string,
+    projectId?: string,
+    conversationId?: string,
+    projectFiles?: string[]
+  ): AsyncGenerator<string, ChatResponse, unknown> {
+    let fullContent = '';
+    let totalTokens = 0;
+    let promptTokens = 0;
+    let completionTokens = 0;
+
+    try {
+      for await (const chunk of stream) {
+        const delta = chunk.choices[0]?.delta;
+
+        if (delta?.content) {
+          fullContent += delta.content;
+          yield delta.content;
+        }
+
+        // Get usage from the last chunk
+        if (chunk.usage) {
+          totalTokens = chunk.usage.total_tokens || 0;
+          promptTokens = chunk.usage.prompt_tokens || 0;
+          completionTokens = chunk.usage.completion_tokens || 0;
+        }
+      }
+
+      // Track token usage if user context is provided
+      if (userId && totalTokens > 0) {
+        await TokenService.trackUsage({
+          userId,
+          projectId,
+          agentId: agent.id,
+          conversationId,
+          provider: 'openrouter',
+          model: agent.model,
+          promptTokens,
+          completionTokens,
+          requestType: 'chat_stream'
+        });
+      }
+
+      return {
+        content: fullContent,
+        metadata: {
+          model: agent.model,
+          tokens: totalTokens,
+          prompt_tokens: promptTokens,
+          completion_tokens: completionTokens,
+          files: projectFiles
+        }
+      };
+    } catch (error) {
+      logger.error('OpenRouter streaming error:', error);
+      throw error;
+    }
+  }
+
   // Get available models for each provider (async now)
   async getAvailableModels(): Promise<Record<string, string[]>> {
     const { modelService } = await import('./modelService');
@@ -522,7 +710,7 @@ class AIService {
   }
 
   // Validate if a model is available for a provider (async now)
-  async isModelAvailable(provider: 'openai' | 'anthropic', model: string): Promise<boolean> {
+  async isModelAvailable(provider: 'openai' | 'anthropic' | 'openrouter', model: string): Promise<boolean> {
     const { modelService } = await import('./modelService');
     const modelData = await modelService.getModelById(model);
     return modelData?.provider === provider && !!modelData;
@@ -555,7 +743,8 @@ class AIService {
   getProviderStatus(): Record<string, boolean> {
     return {
       openai: !!this.openai,
-      anthropic: !!this.anthropic
+      anthropic: !!this.anthropic,
+      openrouter: !!this.openrouter
     };
   }
 }

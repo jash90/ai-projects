@@ -66,7 +66,7 @@ export interface Agent {
   name: string;
   description?: string;
   system_prompt: string;
-  provider: 'openai' | 'anthropic';
+  provider: 'openai' | 'anthropic' | 'openrouter';
   model: string;
   temperature: number;
   max_tokens: number;
@@ -78,7 +78,7 @@ export interface AgentCreate {
   name: string;
   description?: string;
   system_prompt: string;
-  provider: 'openai' | 'anthropic';
+  provider: 'openai' | 'anthropic' | 'openrouter';
   model: string;
   temperature?: number;
   max_tokens?: number;
@@ -88,7 +88,7 @@ export interface AgentUpdate {
   name?: string;
   description?: string;
   system_prompt?: string;
-  provider?: 'openai' | 'anthropic';
+  provider?: 'openai' | 'anthropic' | 'openrouter';
   model?: string;
   temperature?: number;
   max_tokens?: number;
@@ -309,6 +309,7 @@ export interface Config {
   ai: {
     openai_api_key?: string;
     anthropic_api_key?: string;
+    openrouter_api_key?: string;
   };
   admin: {
     email: string;

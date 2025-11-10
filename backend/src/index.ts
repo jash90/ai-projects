@@ -30,10 +30,16 @@ import markdownRoutes from './routes/markdown';
 const app: express.Express = express();
 const server = createServer(app);
 
-// Configure Socket.IO - Allow access from any origin
+// Parse CORS origins from environment variable (comma-separated)
+// Must be defined before Socket.IO and CORS middleware
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? config.cors_origin.split(',').map(origin => origin.trim())
+  : [config.cors_origin, 'http://localhost:5173', 'http://localhost:3000'];
+
+// Configure Socket.IO with same CORS settings
 const io = new SocketServer(server, {
   cors: {
-    origin: true, // Allow all origins
+    origin: allowedOrigins,
     credentials: true,
   },
   transports: ['websocket', 'polling'],
@@ -50,27 +56,24 @@ if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1); // Trust first proxy
 }
 
-// Security middleware
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "ws:", "wss:"],
-    },
-  },
-}));
-
-// CORS - Allow access from any origin
+// CORS - Must be before other middleware for proper header handling
 app.use(cors({
-  origin: true, // Allow all origins
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      logger.warn('CORS blocked request from origin:', { origin, allowedOrigins });
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: [
-    'Content-Type', 
-    'Authorization', 
+    'Content-Type',
+    'Authorization',
     'X-Requested-With',
     'Accept',
     'Origin',
@@ -80,6 +83,19 @@ app.use(cors({
   exposedHeaders: ['X-Total-Count', 'X-Page-Count'],
   optionsSuccessStatus: 200, // For legacy browser support
   preflightContinue: false,
+}));
+
+// Security middleware - After CORS to allow proper headers
+app.use(helmet({
+  contentSecurityPolicy: process.env.NODE_ENV === 'production' ? {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", ...allowedOrigins, "ws:", "wss:"],
+    },
+  } : false, // Disable in development for easier debugging
 }));
 
 // Health check endpoint (before other middleware)

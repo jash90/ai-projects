@@ -7,7 +7,7 @@ import { AIModelModel } from '../models/AIModel';
 export interface AIModel {
   id: string;
   name: string;
-  provider: 'openai' | 'anthropic';
+  provider: 'openai' | 'anthropic' | 'openrouter';
   description?: string;
   max_tokens: number;
   supports_vision: boolean;
@@ -20,7 +20,7 @@ export interface AIModel {
 }
 
 export interface ModelSyncResult {
-  provider: 'openai' | 'anthropic';
+  provider: 'openai' | 'anthropic' | 'openrouter';
   models_added: number;
   models_updated: number;
   models_removed: number;
@@ -31,6 +31,9 @@ export interface ModelSyncResult {
 class ModelService {
   private openai: OpenAI | null = null;
   private anthropic: Anthropic | null = null;
+  private openrouter: OpenAI | null = null;
+  private openrouterModelsCache: { models: AIModel[]; timestamp: number } | null = null;
+  private readonly CACHE_DURATION = 3600000; // 1 hour in milliseconds
 
   constructor() {
     if (config.ai.openai_api_key) {
@@ -42,6 +45,13 @@ class ModelService {
     if (config.ai.anthropic_api_key) {
       this.anthropic = new Anthropic({
         apiKey: config.ai.anthropic_api_key,
+      });
+    }
+
+    if (config.ai.openrouter_api_key) {
+      this.openrouter = new OpenAI({
+        apiKey: config.ai.openrouter_api_key,
+        baseURL: 'https://openrouter.ai/api/v1',
       });
     }
   }
@@ -221,6 +231,538 @@ class ModelService {
   }
 
   /**
+   * Fetch available models from OpenRouter API dynamically
+   */
+  async fetchOpenRouterModels(): Promise<AIModel[]> {
+    if (!this.openrouter) {
+      throw new Error('OpenRouter API key not configured');
+    }
+
+    // Check cache first
+    if (this.openrouterModelsCache) {
+      const cacheAge = Date.now() - this.openrouterModelsCache.timestamp;
+      if (cacheAge < this.CACHE_DURATION) {
+        logger.info(`Using cached OpenRouter models (age: ${Math.round(cacheAge / 60000)}min)`);
+        return this.openrouterModelsCache.models;
+      }
+    }
+
+    try {
+      logger.info('Fetching OpenRouter models from API...');
+
+      // Define the API response interface
+      interface OpenRouterModelsResponse {
+        data: Array<{
+          id: string;
+          name?: string;
+          description?: string;
+          pricing?: {
+            prompt: string;
+            completion: string;
+          };
+          context_length?: number;
+          architecture?: {
+            modality?: string[];
+          };
+          supported_parameters?: string[];
+          top_provider?: {
+            max_completion_tokens?: number;
+          };
+        }>;
+      }
+
+      // Fetch models from OpenRouter API with timeout
+      const abortController = new AbortController();
+      const timeoutId = setTimeout(() => abortController.abort(), 10000); // 10 second timeout
+
+      try {
+        const response = await fetch('https://openrouter.ai/api/v1/models', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${config.ai.openrouter_api_key}`,
+            'Content-Type': 'application/json',
+          },
+          signal: abortController.signal
+        });
+
+        if (!response.ok) {
+          throw new Error(`OpenRouter API returned ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json() as OpenRouterModelsResponse;
+        const now = new Date().toISOString();
+
+        // Transform API response to our AIModel format
+        const models: AIModel[] = data.data.map((model: any) => ({
+          id: model.id,
+          name: model.name || model.id,
+          provider: 'openrouter' as const,
+          description: model.description || `${model.name} model`,
+          max_tokens: model.top_provider?.max_completion_tokens || model.context_length || 4096,
+          supports_vision: model.architecture?.modality?.includes('image') || false,
+          supports_function_calling: model.supported_parameters?.includes('tools') ||
+                                    model.supported_parameters?.includes('functions') || false,
+          cost_per_1k_input_tokens: parseFloat(model.pricing?.prompt || '0') * 1000,
+          cost_per_1k_output_tokens: parseFloat(model.pricing?.completion || '0') * 1000,
+          context_window: model.context_length || 4096,
+          created_at: now,
+          updated_at: now
+        }));
+
+        // Cache the results
+        this.openrouterModelsCache = {
+          models,
+          timestamp: Date.now()
+        };
+
+        logger.info(`Loaded ${models.length} OpenRouter models from API`);
+        return models;
+
+      } finally {
+        clearTimeout(timeoutId);
+      }
+
+    } catch (error) {
+      logger.error('Failed to fetch OpenRouter models from API, using fallback list', {
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+
+      // Fallback to curated list of popular models
+      return this.getDefaultOpenRouterModels();
+    }
+  }
+
+  /**
+   * Get default fallback OpenRouter models
+   */
+  private getDefaultOpenRouterModels(): AIModel[] {
+    const now = new Date().toISOString();
+
+      // Comprehensive OpenRouter models list
+      const openrouterModels = [
+        // Anthropic Models
+        {
+          id: 'anthropic/claude-3.5-sonnet',
+          name: 'Claude 3.5 Sonnet',
+          max_tokens: 8192,
+          context_window: 200000,
+          input_cost: 3.00,
+          output_cost: 15.00,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        {
+          id: 'anthropic/claude-3-opus',
+          name: 'Claude 3 Opus',
+          max_tokens: 4096,
+          context_window: 200000,
+          input_cost: 15.00,
+          output_cost: 75.00,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        {
+          id: 'anthropic/claude-3-sonnet',
+          name: 'Claude 3 Sonnet',
+          max_tokens: 4096,
+          context_window: 200000,
+          input_cost: 3.00,
+          output_cost: 15.00,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        {
+          id: 'anthropic/claude-3-haiku',
+          name: 'Claude 3 Haiku',
+          max_tokens: 4096,
+          context_window: 200000,
+          input_cost: 0.25,
+          output_cost: 1.25,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        // OpenAI Models
+        {
+          id: 'openai/gpt-4o',
+          name: 'GPT-4o',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 5.00,
+          output_cost: 15.00,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        {
+          id: 'openai/gpt-4o-mini',
+          name: 'GPT-4o Mini',
+          max_tokens: 16384,
+          context_window: 128000,
+          input_cost: 0.15,
+          output_cost: 0.60,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        {
+          id: 'openai/gpt-4-turbo',
+          name: 'GPT-4 Turbo',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 10.00,
+          output_cost: 30.00,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        {
+          id: 'openai/gpt-4',
+          name: 'GPT-4',
+          max_tokens: 8192,
+          context_window: 8192,
+          input_cost: 30.00,
+          output_cost: 60.00,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'openai/gpt-3.5-turbo',
+          name: 'GPT-3.5 Turbo',
+          max_tokens: 4096,
+          context_window: 16385,
+          input_cost: 0.50,
+          output_cost: 1.50,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'openai/o1-preview',
+          name: 'O1 Preview',
+          max_tokens: 32768,
+          context_window: 128000,
+          input_cost: 15.00,
+          output_cost: 60.00,
+          supports_vision: false,
+          supports_function_calling: false
+        },
+        {
+          id: 'openai/o1-mini',
+          name: 'O1 Mini',
+          max_tokens: 65536,
+          context_window: 128000,
+          input_cost: 3.00,
+          output_cost: 12.00,
+          supports_vision: false,
+          supports_function_calling: false
+        },
+        // Google Models
+        {
+          id: 'google/gemini-pro-1.5',
+          name: 'Gemini Pro 1.5',
+          max_tokens: 8192,
+          context_window: 8192,
+          input_cost: 3.50,
+          output_cost: 10.50,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        {
+          id: 'google/gemini-flash-1.5',
+          name: 'Gemini Flash 1.5',
+          max_tokens: 8192,
+          context_window: 8192,
+          input_cost: 0.35,
+          output_cost: 1.05,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        {
+          id: 'google/gemini-2.0-flash-exp',
+          name: 'Gemini 2.0 Flash (Experimental)',
+          max_tokens: 8192,
+          context_window: 8192,
+          input_cost: 0.00,
+          output_cost: 0.00,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        // Meta Llama Models
+        {
+          id: 'meta-llama/llama-3.1-405b-instruct',
+          name: 'Llama 3.1 405B Instruct',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 2.70,
+          output_cost: 2.70,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'meta-llama/llama-3.1-70b-instruct',
+          name: 'Llama 3.1 70B Instruct',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 0.88,
+          output_cost: 0.88,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'meta-llama/llama-3.1-8b-instruct',
+          name: 'Llama 3.1 8B Instruct',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 0.10,
+          output_cost: 0.10,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'meta-llama/llama-3.2-90b-vision-instruct',
+          name: 'Llama 3.2 90B Vision Instruct',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 0.90,
+          output_cost: 0.90,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        {
+          id: 'meta-llama/llama-3.2-11b-vision-instruct',
+          name: 'Llama 3.2 11B Vision Instruct',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 0.18,
+          output_cost: 0.18,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        {
+          id: 'meta-llama/llama-3.2-3b-instruct',
+          name: 'Llama 3.2 3B Instruct',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 0.06,
+          output_cost: 0.06,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'meta-llama/llama-3.2-1b-instruct',
+          name: 'Llama 3.2 1B Instruct',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 0.04,
+          output_cost: 0.04,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        // Mistral Models
+        {
+          id: 'mistralai/mistral-large',
+          name: 'Mistral Large',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 3.00,
+          output_cost: 9.00,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'mistralai/mistral-medium',
+          name: 'Mistral Medium',
+          max_tokens: 4096,
+          context_window: 32768,
+          input_cost: 2.70,
+          output_cost: 8.10,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'mistralai/mistral-small',
+          name: 'Mistral Small',
+          max_tokens: 4096,
+          context_window: 32768,
+          input_cost: 1.00,
+          output_cost: 3.00,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'mistralai/mixtral-8x7b-instruct',
+          name: 'Mixtral 8x7B Instruct',
+          max_tokens: 4096,
+          context_window: 32768,
+          input_cost: 0.24,
+          output_cost: 0.24,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'mistralai/mixtral-8x22b-instruct',
+          name: 'Mixtral 8x22B Instruct',
+          max_tokens: 4096,
+          context_window: 65536,
+          input_cost: 0.65,
+          output_cost: 0.65,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'mistralai/codestral-latest',
+          name: 'Codestral (Latest)',
+          max_tokens: 4096,
+          context_window: 32768,
+          input_cost: 1.00,
+          output_cost: 3.00,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        // Perplexity Models
+        {
+          id: 'perplexity/llama-3.1-sonar-large-128k-online',
+          name: 'Llama 3.1 Sonar Large (Online)',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 1.00,
+          output_cost: 1.00,
+          supports_vision: false,
+          supports_function_calling: false
+        },
+        {
+          id: 'perplexity/llama-3.1-sonar-small-128k-online',
+          name: 'Llama 3.1 Sonar Small (Online)',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 0.20,
+          output_cost: 0.20,
+          supports_vision: false,
+          supports_function_calling: false
+        },
+        {
+          id: 'perplexity/llama-3.1-sonar-large-128k-chat',
+          name: 'Llama 3.1 Sonar Large (Chat)',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 1.00,
+          output_cost: 1.00,
+          supports_vision: false,
+          supports_function_calling: false
+        },
+        {
+          id: 'perplexity/llama-3.1-sonar-small-128k-chat',
+          name: 'Llama 3.1 Sonar Small (Chat)',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 0.20,
+          output_cost: 0.20,
+          supports_vision: false,
+          supports_function_calling: false
+        },
+        // Cohere Models
+        {
+          id: 'cohere/command-r-plus',
+          name: 'Command R+',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 3.00,
+          output_cost: 15.00,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'cohere/command-r',
+          name: 'Command R',
+          max_tokens: 4096,
+          context_window: 128000,
+          input_cost: 0.50,
+          output_cost: 1.50,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        // DeepSeek Models
+        {
+          id: 'deepseek/deepseek-chat',
+          name: 'DeepSeek Chat',
+          max_tokens: 4096,
+          context_window: 64000,
+          input_cost: 0.14,
+          output_cost: 0.28,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'deepseek/deepseek-coder',
+          name: 'DeepSeek Coder',
+          max_tokens: 4096,
+          context_window: 64000,
+          input_cost: 0.14,
+          output_cost: 0.28,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        // Qwen Models
+        {
+          id: 'qwen/qwen-2-72b-instruct',
+          name: 'Qwen 2 72B Instruct',
+          max_tokens: 4096,
+          context_window: 32768,
+          input_cost: 0.90,
+          output_cost: 0.90,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        {
+          id: 'qwen/qwen-2-vl-72b-instruct',
+          name: 'Qwen 2 VL 72B Instruct',
+          max_tokens: 4096,
+          context_window: 32768,
+          input_cost: 0.90,
+          output_cost: 0.90,
+          supports_vision: true,
+          supports_function_calling: true
+        },
+        // Nvidia Models
+        {
+          id: 'nvidia/nemotron-4-340b-instruct',
+          name: 'Nemotron 4 340B Instruct',
+          max_tokens: 4096,
+          context_window: 4096,
+          input_cost: 4.20,
+          output_cost: 4.20,
+          supports_vision: false,
+          supports_function_calling: true
+        },
+        // X.AI Models
+        {
+          id: 'x-ai/grok-beta',
+          name: 'Grok Beta',
+          max_tokens: 4096,
+          context_window: 131072,
+          input_cost: 5.00,
+          output_cost: 15.00,
+          supports_vision: false,
+          supports_function_calling: true
+        }
+      ];
+
+      const models: AIModel[] = openrouterModels.map(model => ({
+        id: model.id,
+        name: model.name,
+        provider: 'openrouter' as const,
+        description: `OpenRouter ${model.name} model`,
+        max_tokens: model.max_tokens,
+        supports_vision: model.supports_vision,
+        supports_function_calling: model.supports_function_calling,
+        cost_per_1k_input_tokens: model.input_cost,
+        cost_per_1k_output_tokens: model.output_cost,
+        context_window: model.context_window,
+        created_at: now,
+        updated_at: now
+      }));
+
+      logger.info(`Using ${models.length} default OpenRouter models`);
+      return models;
+  }
+
+  /**
    * Sync models from all configured providers
    */
   async syncAllModels(): Promise<ModelSyncResult[]> {
@@ -262,13 +804,31 @@ class ModelService {
       }
     }
 
+    // Sync OpenRouter models
+    if (this.openrouter) {
+      try {
+        const models = await this.fetchOpenRouterModels();
+        const result = await this.syncModelsToDatabase('openrouter', models);
+        results.push(result);
+      } catch (error) {
+        results.push({
+          provider: 'openrouter',
+          models_added: 0,
+          models_updated: 0,
+          models_removed: 0,
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error'
+        });
+      }
+    }
+
     return results;
   }
 
   /**
    * Sync models to database
    */
-  private async syncModelsToDatabase(provider: 'openai' | 'anthropic', models: AIModel[]): Promise<ModelSyncResult> {
+  private async syncModelsToDatabase(provider: 'openai' | 'anthropic' | 'openrouter', models: AIModel[]): Promise<ModelSyncResult> {
     try {
       logger.info(`Syncing ${models.length} ${provider} models to database...`);
       
@@ -447,7 +1007,31 @@ class ModelService {
   getProviderStatus(): Record<string, boolean> {
     return {
       openai: !!this.openai,
-      anthropic: !!this.anthropic
+      anthropic: !!this.anthropic,
+      openrouter: !!this.openrouter
+    };
+  }
+
+  /**
+   * Clear OpenRouter models cache to force refresh on next fetch
+   */
+  clearOpenRouterCache(): void {
+    this.openrouterModelsCache = null;
+    logger.info('OpenRouter models cache cleared');
+  }
+
+  /**
+   * Get cache status for OpenRouter models
+   */
+  getOpenRouterCacheStatus(): { cached: boolean; age?: number; count?: number } {
+    if (!this.openrouterModelsCache) {
+      return { cached: false };
+    }
+    const age = Date.now() - this.openrouterModelsCache.timestamp;
+    return {
+      cached: true,
+      age: Math.round(age / 60000), // age in minutes
+      count: this.openrouterModelsCache.models.length
     };
   }
 

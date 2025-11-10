@@ -41,18 +41,21 @@ export default function AdminPage() {
     queryKey: ['admin', 'stats'],
     queryFn: () => adminApi.getStats(),
     refetchInterval: 30000,
+    enabled: user?.role === 'admin',
   });
 
   // Fetch users
   const { data: usersData, isLoading: usersLoading, refetch: refetchUsers } = useQuery({
     queryKey: ['admin', 'users'],
     queryFn: () => adminApi.getUsers(),
+    enabled: user?.role === 'admin',
   });
 
   // Fetch global token limits
   const { data: limitsData, isLoading: limitsLoading, refetch: refetchLimits } = useQuery({
     queryKey: ['admin', 'token-limits'],
     queryFn: () => adminApi.getGlobalTokenLimits(),
+    enabled: user?.role === 'admin',
   });
 
   const stats = statsData?.data;
