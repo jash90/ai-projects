@@ -44,6 +44,7 @@ interface AutocompleteProps {
   filters?: AutocompleteFilters // Current filter values
   onFiltersChange?: (filters: AutocompleteFilters) => void // Filter change callback
   defaultOpen?: boolean        // Show dropdown open by default
+  persistentOpen?: boolean     // Keep dropdown open after selection
 }
 
 export function Autocomplete({
@@ -66,7 +67,8 @@ export function Autocomplete({
   enableFilters = false,
   filters = {},
   onFiltersChange,
-  defaultOpen = false
+  defaultOpen = false,
+  persistentOpen = false
 }: AutocompleteProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const [searchQuery, setSearchQuery] = useState('')
@@ -219,14 +221,17 @@ export function Autocomplete({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
-        setSearchQuery('')
+        // Only close if NOT in persistent mode
+        if (!persistentOpen) {
+          setIsOpen(false)
+          setSearchQuery('')
+        }
       }
     }
 
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  }, [persistentOpen])
 
   // Get flat list of all options for keyboard navigation
   const flatOptions = React.useMemo(() =>
@@ -273,9 +278,16 @@ export function Autocomplete({
 
   const handleOptionSelect = (optionId: string) => {
     onChange(optionId)
-    setIsOpen(false)
-    setSearchQuery('')
-    inputRef.current?.blur()
+
+    // Only close dropdown if NOT in persistent mode
+    if (!persistentOpen) {
+      setIsOpen(false)
+      setSearchQuery('')
+      inputRef.current?.blur()
+    } else {
+      // In persistent mode: clear search to show full list with selection
+      setSearchQuery('')
+    }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

@@ -271,7 +271,8 @@ export function ModelPickerModal({
                     filters={modelFilters}
                     onFiltersChange={setModelFilters}
                     defaultOpen={true}
-                    className="w-full"
+                    persistentOpen={true}
+                    className=""
                   />
                 </div>
               </div>
