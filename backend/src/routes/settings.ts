@@ -33,7 +33,38 @@ const preferencesUpdateSchema = {
   })
 };
 
-// Get user profile
+/**
+ * @swagger
+ * /api/settings/profile:
+ *   get:
+ *     summary: Get user profile
+ *     tags: [Settings]
+ *     description: Retrieve current user's profile information
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Profile retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     user:
+ *                       $ref: '#/components/schemas/User'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/profile', async (req: Request, res: Response) => {
   try {
     const user = await UserModel.findById(req.user!.id);
@@ -67,7 +98,50 @@ router.get('/profile', async (req: Request, res: Response) => {
   }
 });
 
-// Update user profile
+/**
+ * @swagger
+ * /api/settings/profile:
+ *   put:
+ *     summary: Update user profile
+ *     tags: [Settings]
+ *     description: Update user profile information (username or email)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UserProfileUpdate'
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     user:
+ *                       $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Email or username already taken
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.put('/profile', validate(profileUpdateSchema), async (req: Request, res: Response) => {
   try {
     const updates = req.body;
@@ -127,7 +201,39 @@ router.put('/profile', validate(profileUpdateSchema), async (req: Request, res: 
   }
 });
 
-// Update password
+/**
+ * @swagger
+ * /api/settings/password:
+ *   put:
+ *     summary: Change password
+ *     tags: [Settings]
+ *     description: Update user password with current password verification
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PasswordUpdate'
+ *     responses:
+ *       200:
+ *         description: Password updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SuccessResponse'
+ *       400:
+ *         description: Current password incorrect
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.put('/password', validate(passwordUpdateSchema), async (req: Request, res: Response) => {
   try {
     const { current_password, new_password } = req.body;
@@ -156,7 +262,36 @@ router.put('/password', validate(passwordUpdateSchema), async (req: Request, res
   }
 });
 
-// Get user preferences
+/**
+ * @swagger
+ * /api/settings/preferences:
+ *   get:
+ *     summary: Get user preferences
+ *     tags: [Settings]
+ *     description: Retrieve user preferences (theme, notifications, etc.)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Preferences retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     preferences:
+ *                       $ref: '#/components/schemas/UserPreferences'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/preferences', async (req: Request, res: Response) => {
   try {
     const preferences = await UserModel.getUserPreferences(req.user!.id);
@@ -174,7 +309,44 @@ router.get('/preferences', async (req: Request, res: Response) => {
   }
 });
 
-// Update user preferences
+/**
+ * @swagger
+ * /api/settings/preferences:
+ *   put:
+ *     summary: Update user preferences
+ *     tags: [Settings]
+ *     description: Update user preferences (theme, notifications, etc.)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PreferencesUpdate'
+ *     responses:
+ *       200:
+ *         description: Preferences updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     preferences:
+ *                       $ref: '#/components/schemas/UserPreferences'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.put('/preferences', validate(preferencesUpdateSchema), async (req: Request, res: Response) => {
   try {
     const preferences = req.body;
@@ -195,7 +367,36 @@ router.put('/preferences', validate(preferencesUpdateSchema), async (req: Reques
   }
 });
 
-// Get user usage statistics
+/**
+ * @swagger
+ * /api/settings/usage:
+ *   get:
+ *     summary: Get user usage statistics
+ *     tags: [Settings]
+ *     description: Retrieve token usage statistics for the current user
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Usage statistics retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     stats:
+ *                       $ref: '#/components/schemas/UsageSummary'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/usage', async (req: Request, res: Response) => {
   try {
     const userId = req.user!.id;

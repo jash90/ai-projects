@@ -8,7 +8,31 @@ import logger from '../utils/logger';
 
 const router: Router = Router();
 
-// Debug endpoint to check user status and capabilities
+/**
+ * @swagger
+ * /api/debug/user-status:
+ *   get:
+ *     summary: Get detailed user status
+ *     tags: [Debug]
+ *     description: Retrieve comprehensive debug information about the current user
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User debug information retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserDebugInfo'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/user-status', 
   generalLimiter,
   authenticateToken,
@@ -129,7 +153,41 @@ router.get('/user-status',
   })
 );
 
-// Test endpoint to simulate token limit checking
+/**
+ * @swagger
+ * /api/debug/test-token-limit:
+ *   post:
+ *     summary: Test token limit checking
+ *     tags: [Debug]
+ *     description: Test whether a specified number of tokens would be allowed
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/TokenLimitTestRequest'
+ *     responses:
+ *       200:
+ *         description: Token limit check passed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TokenLimitTestResponse'
+ *       402:
+ *         description: Token limit would be exceeded
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TokenLimitTestResponse'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.post('/test-token-limit',
   generalLimiter,
   authenticateToken,
@@ -169,7 +227,29 @@ router.post('/test-token-limit',
   })
 );
 
-// Test endpoint to check AI service connectivity
+/**
+ * @swagger
+ * /api/debug/test-ai-service:
+ *   get:
+ *     summary: Test AI service connectivity
+ *     tags: [Debug]
+ *     description: Check configuration and connectivity of AI service providers
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: AI service status retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AIServiceStatus'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/test-ai-service',
   generalLimiter,
   authenticateToken,
@@ -207,7 +287,39 @@ router.get('/test-ai-service',
   })
 );
 
-// Endpoint to reset user token usage (admin only)
+/**
+ * @swagger
+ * /api/debug/reset-user-usage/{userId}:
+ *   post:
+ *     summary: Reset user token usage
+ *     tags: [Debug]
+ *     description: Reset all token usage records for a specific user (admin only)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: User usage reset successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UsageResetResponse'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.post('/reset-user-usage/:userId',
   generalLimiter,
   authenticateToken,

@@ -8,7 +8,54 @@ import logger from '../utils/logger';
 
 const router: Router = Router();
 
-// Get all files for a project
+/**
+ * @swagger
+ * /api/projectFiles/projects/{projectId}/files:
+ *   get:
+ *     summary: Get all project files
+ *     tags: [Project Files]
+ *     description: Retrieve all editable text files for a project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *     responses:
+ *       200:
+ *         description: Files retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     files:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/EditableFile'
+ *                     count:
+ *                       type: number
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/projects/:projectId/files', 
   generalLimiter,
   authenticateToken,
@@ -53,7 +100,62 @@ router.get('/projects/:projectId/files',
   }
 );
 
-// Create new file in project
+/**
+ * @swagger
+ * /api/projectFiles/projects/{projectId}/files:
+ *   post:
+ *     summary: Create new project file
+ *     tags: [Project Files]
+ *     description: Create a new editable text file in a project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/FileCreate'
+ *     responses:
+ *       201:
+ *         description: File created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     file:
+ *                       $ref: '#/components/schemas/EditableFile'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       409:
+ *         description: File name conflict
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.post('/projects/:projectId/files', 
   creationLimiter,
   authenticateToken,
@@ -117,7 +219,50 @@ router.post('/projects/:projectId/files',
   }
 );
 
-// Get file by ID
+/**
+ * @swagger
+ * /api/projectFiles/files/{id}:
+ *   get:
+ *     summary: Get project file content
+ *     tags: [Project Files]
+ *     description: Retrieve a specific editable file by ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: File ID
+ *     responses:
+ *       200:
+ *         description: File retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     file:
+ *                       $ref: '#/components/schemas/EditableFile'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/files/:id', 
   generalLimiter,
   authenticateToken,
@@ -153,7 +298,64 @@ router.get('/files/:id',
   }
 );
 
-// Update file
+/**
+ * @swagger
+ * /api/projectFiles/files/{id}:
+ *   put:
+ *     summary: Update project file
+ *     tags: [Project Files]
+ *     description: Update a file's name, content, or type
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: File ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/FileUpdate'
+ *     responses:
+ *       200:
+ *         description: File updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     file:
+ *                       $ref: '#/components/schemas/EditableFile'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       409:
+ *         description: File name conflict
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.put('/files/:id', 
   generalLimiter,
   authenticateToken,
@@ -233,7 +435,41 @@ router.put('/files/:id',
   }
 );
 
-// Delete file
+/**
+ * @swagger
+ * /api/projectFiles/files/{id}:
+ *   delete:
+ *     summary: Delete project file
+ *     tags: [Project Files]
+ *     description: Delete an editable file from a project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: File ID
+ *     responses:
+ *       200:
+ *         description: File deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SuccessResponse'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.delete('/files/:id', 
   generalLimiter,
   authenticateToken,
@@ -269,7 +505,49 @@ router.delete('/files/:id',
   }
 );
 
-// Search files in project
+/**
+ * @swagger
+ * /api/projectFiles/projects/{projectId}/files/search:
+ *   get:
+ *     summary: Search project files
+ *     tags: [Project Files]
+ *     description: Search for editable files by name or content
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *       - in: query
+ *         name: q
+ *         required: true
+ *         schema:
+ *           type: string
+ *           minLength: 1
+ *           maxLength: 255
+ *         description: Search query
+ *     responses:
+ *       200:
+ *         description: Search completed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/FileSearchResults'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/projects/:projectId/files/search', 
   generalLimiter,
   authenticateToken,
@@ -312,7 +590,62 @@ router.get('/projects/:projectId/files/search',
   }
 );
 
-// Get files by type
+/**
+ * @swagger
+ * /api/projectFiles/projects/{projectId}/files/type/{type}:
+ *   get:
+ *     summary: Get files by type
+ *     tags: [Project Files]
+ *     description: Retrieve all files of a specific type/language
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *       - in: path
+ *         name: type
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: File type (e.g., typescript, javascript, markdown)
+ *     responses:
+ *       200:
+ *         description: Files retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     files:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/EditableFile'
+ *                     type:
+ *                       type: string
+ *                     count:
+ *                       type: number
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/projects/:projectId/files/type/:type', 
   generalLimiter,
   authenticateToken,
@@ -354,7 +687,47 @@ router.get('/projects/:projectId/files/type/:type',
   }
 );
 
-// Get file statistics for project
+/**
+ * @swagger
+ * /api/projectFiles/projects/{projectId}/files/stats:
+ *   get:
+ *     summary: Get file statistics
+ *     tags: [Project Files]
+ *     description: Retrieve statistics about editable files in a project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *     responses:
+ *       200:
+ *         description: Statistics retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/FileStats'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/projects/:projectId/files/stats', 
   generalLimiter,
   authenticateToken,
