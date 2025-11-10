@@ -320,17 +320,18 @@ export const chatApi = {
     apiClient.post<ApiResponse<{ conversation: any; response: any }>>(`/projects/${projectId}/agents/${agentId}/chat`, data),
 
   sendStreamingMessage: async (
-    projectId: string, 
-    agentId: string, 
+    projectId: string,
+    agentId: string,
     data: { message: string; includeFiles?: boolean },
     onChunk: (chunk: string) => void,
     onComplete: (response: any) => void,
     onError: (error: string) => void
   ) => {
     const token = authStore.getState().tokens?.access_token;
-    
+    const baseURL = import.meta.env.VITE_API_URL || '/api';
+
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3001"}/projects/${projectId}/agents/${agentId}/chat`, {
+      const response = await fetch(`${baseURL}/projects/${projectId}/agents/${agentId}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

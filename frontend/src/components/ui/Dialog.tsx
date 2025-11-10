@@ -57,18 +57,18 @@ const Dialog = ({ open, onClose, children, className }: DialogProps) => {
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
-      
+
       {/* Dialog */}
       <div
         ref={dialogRef}
         className={cn(
-          'relative z-10 w-full max-w-lg mx-4 bg-background border border-border rounded-lg shadow-lg',
+          'relative z-10 w-full max-w-lg bg-background border border-border rounded-lg shadow-lg',
           className
         )}
       >

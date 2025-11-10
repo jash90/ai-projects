@@ -88,12 +88,11 @@ router.post('/projects/:projectId/agents/:agentId/chat',
 
       if (stream && 'stream' in aiResponse) {
         // Handle streaming response
+        // CORS headers are handled by global middleware
         res.writeHead(200, {
           'Content-Type': 'text/event-stream',
           'Cache-Control': 'no-cache',
-          'Connection': 'keep-alive',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Cache-Control'
+          'Connection': 'keep-alive'
         });
 
         let fullContent = '';
