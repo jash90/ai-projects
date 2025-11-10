@@ -183,7 +183,8 @@ export function Autocomplete({
     } else {
       // No search query - show all filtered options with optional popular first
       if (showPopularFirst) {
-        filtered.sort((a, b) => {
+        // Create a shallow copy to avoid mutating the original props array
+        filtered = [...filtered].sort((a, b) => {
           if (a.isPopular !== b.isPopular) {
             return a.isPopular ? -1 : 1
           }
