@@ -101,6 +101,7 @@ export class ProjectsController extends Controller {
   @Get()
   @Security('jwt')
   @SuccessResponse('200', 'Retrieved successfully')
+  @TsoaResponse<ErrorResponse>(401, 'Unauthorized')
   @TsoaResponse<ErrorResponse>(500, 'Failed to fetch projects')
   public async getProjects(
     @Query() page: number = 1,
@@ -109,7 +110,14 @@ export class ProjectsController extends Controller {
     @Request() request?: ExpressRequest
   ): Promise<GetProjectsResponse> {
     try {
-      const userId = request!.user!.id;
+      // Validate request and user authentication
+      if (!request || !request.user || !request.user.id) {
+        logger.warn('Unauthorized access attempt to getProjects');
+        this.setStatus(401);
+        throw new Error('Unauthorized: User not authenticated');
+      }
+
+      const userId = request.user.id;
       const result = await ProjectModel.findByUserId(userId, page, limit, search);
 
       return {
@@ -118,8 +126,10 @@ export class ProjectsController extends Controller {
       };
     } catch (error) {
       logger.error('Error fetching projects:', { error, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
-      this.setStatus(500);
-      throw new Error('Failed to fetch projects');
+      if (!this.getStatus()) {
+        this.setStatus(500);
+      }
+      throw error;
     }
   }
 
@@ -133,13 +143,21 @@ export class ProjectsController extends Controller {
   @Get('recent')
   @Security('jwt')
   @SuccessResponse('200', 'Retrieved successfully')
+  @TsoaResponse<ErrorResponse>(401, 'Unauthorized')
   @TsoaResponse<ErrorResponse>(500, 'Failed to fetch recent projects')
   public async getRecentProjects(
     @Query() limit: number = 5,
     @Request() request?: ExpressRequest
   ): Promise<GetRecentProjectsResponse> {
     try {
-      const userId = request!.user!.id;
+      // Validate user authentication
+      if (!request || !request.user || !request.user.id) {
+        logger.warn('Unauthorized access attempt to getRecentProjects');
+        this.setStatus(401);
+        throw new Error('Unauthorized: User not authenticated');
+      }
+
+      const userId = request.user.id;
       const projects = await ProjectModel.getRecentActivity(userId, limit);
 
       return {
@@ -150,8 +168,10 @@ export class ProjectsController extends Controller {
       };
     } catch (error) {
       logger.error('Error fetching recent projects:', { error, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
-      this.setStatus(500);
-      throw new Error('Failed to fetch recent projects');
+      if (!this.getStatus()) {
+        this.setStatus(500);
+      }
+      throw error;
     }
   }
 
@@ -165,6 +185,7 @@ export class ProjectsController extends Controller {
   @Get('search')
   @Security('jwt')
   @SuccessResponse('200', 'Retrieved successfully')
+  @TsoaResponse<ErrorResponse>(401, 'Unauthorized')
   @TsoaResponse<ErrorResponse>(500, 'Failed to search projects')
   public async searchProjects(
     @Query() q: string,
@@ -172,7 +193,14 @@ export class ProjectsController extends Controller {
     @Request() request?: ExpressRequest
   ): Promise<SearchProjectsResponse> {
     try {
-      const userId = request!.user!.id;
+      // Validate user authentication
+      if (!request || !request.user || !request.user.id) {
+        logger.warn('Unauthorized access attempt to searchProjects');
+        this.setStatus(401);
+        throw new Error('Unauthorized: User not authenticated');
+      }
+
+      const userId = request.user.id;
       const projects = await ProjectModel.searchProjects(userId, q, limit);
 
       return {
@@ -184,8 +212,10 @@ export class ProjectsController extends Controller {
       };
     } catch (error) {
       logger.error('Error searching projects:', { error, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
-      this.setStatus(500);
-      throw new Error('Failed to search projects');
+      if (!this.getStatus()) {
+        this.setStatus(500);
+      }
+      throw error;
     }
   }
 
@@ -200,6 +230,7 @@ export class ProjectsController extends Controller {
   @Get('{id}')
   @Security('jwt')
   @SuccessResponse('200', 'Retrieved successfully')
+  @TsoaResponse<ErrorResponse>(401, 'Unauthorized')
   @TsoaResponse<ErrorResponse>(404, 'Project not found')
   @TsoaResponse<ErrorResponse>(500, 'Failed to fetch project')
   public async getProjectById(
@@ -207,7 +238,14 @@ export class ProjectsController extends Controller {
     @Request() request?: ExpressRequest
   ): Promise<GetProjectResponse> {
     try {
-      const userId = request!.user!.id;
+      // Validate user authentication
+      if (!request || !request.user || !request.user.id) {
+        logger.warn('Unauthorized access attempt to getProjectById');
+        this.setStatus(401);
+        throw new Error('Unauthorized: User not authenticated');
+      }
+
+      const userId = request.user.id;
       const project = await ProjectModel.findById(id, userId);
 
       if (!project) {
@@ -240,13 +278,21 @@ export class ProjectsController extends Controller {
   @Post()
   @Security('jwt')
   @SuccessResponse('201', 'Project created successfully')
+  @TsoaResponse<ErrorResponse>(401, 'Unauthorized')
   @TsoaResponse<ErrorResponse>(500, 'Failed to create project')
   public async createProject(
     @Body() requestBody: CreateProjectRequest,
     @Request() request?: ExpressRequest
   ): Promise<CreateProjectResponse> {
     try {
-      const userId = request!.user!.id;
+      // Validate user authentication
+      if (!request || !request.user || !request.user.id) {
+        logger.warn('Unauthorized access attempt to createProject');
+        this.setStatus(401);
+        throw new Error('Unauthorized: User not authenticated');
+      }
+
+      const userId = request.user.id;
       const projectData = {
         ...requestBody,
         user_id: userId
@@ -269,8 +315,10 @@ export class ProjectsController extends Controller {
       };
     } catch (error) {
       logger.error('Error creating project:', { error, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
-      this.setStatus(500);
-      throw new Error('Failed to create project');
+      if (!this.getStatus()) {
+        this.setStatus(500);
+      }
+      throw error;
     }
   }
 
@@ -285,6 +333,7 @@ export class ProjectsController extends Controller {
   @Put('{id}')
   @Security('jwt')
   @SuccessResponse('200', 'Project updated successfully')
+  @TsoaResponse<ErrorResponse>(401, 'Unauthorized')
   @TsoaResponse<ErrorResponse>(404, 'Project not found')
   @TsoaResponse<ErrorResponse>(500, 'Failed to update project')
   public async updateProject(
@@ -293,7 +342,14 @@ export class ProjectsController extends Controller {
     @Request() request?: ExpressRequest
   ): Promise<UpdateProjectResponse> {
     try {
-      const userId = request!.user!.id;
+      // Validate user authentication
+      if (!request || !request.user || !request.user.id) {
+        logger.warn('Unauthorized access attempt to updateProject');
+        this.setStatus(401);
+        throw new Error('Unauthorized: User not authenticated');
+      }
+
+      const userId = request.user.id;
       const project = await ProjectModel.updateById(id, userId, requestBody);
 
       if (!project) {
@@ -329,6 +385,7 @@ export class ProjectsController extends Controller {
   @Delete('{id}')
   @Security('jwt')
   @SuccessResponse('200', 'Project deleted successfully')
+  @TsoaResponse<ErrorResponse>(401, 'Unauthorized')
   @TsoaResponse<ErrorResponse>(404, 'Project not found')
   @TsoaResponse<ErrorResponse>(500, 'Failed to delete project')
   public async deleteProject(
@@ -336,7 +393,14 @@ export class ProjectsController extends Controller {
     @Request() request?: ExpressRequest
   ): Promise<DeleteProjectResponse> {
     try {
-      const userId = request!.user!.id;
+      // Validate user authentication
+      if (!request || !request.user || !request.user.id) {
+        logger.warn('Unauthorized access attempt to deleteProject');
+        this.setStatus(401);
+        throw new Error('Unauthorized: User not authenticated');
+      }
+
+      const userId = request.user.id;
       const deleted = await ProjectModel.deleteById(id, userId);
 
       if (!deleted) {
