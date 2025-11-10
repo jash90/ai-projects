@@ -43,7 +43,54 @@ async function ensureUploadDir(): Promise<void> {
   }
 }
 
-// Get uploaded files for a project
+/**
+ * @swagger
+ * /api/files/projects/{projectId}/uploads:
+ *   get:
+ *     summary: Get uploaded files for project
+ *     tags: [Files]
+ *     description: Retrieve paginated list of uploaded files for a specific project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *           maximum: 100
+ *         description: Items per page
+ *     responses:
+ *       200:
+ *         description: Files retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PaginatedResponse'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/projects/:projectId/uploads', 
   generalLimiter,
   authenticateToken,
@@ -80,7 +127,60 @@ router.get('/projects/:projectId/uploads',
   }
 );
 
-// Upload file to project
+/**
+ * @swagger
+ * /api/files/projects/{projectId}/uploads:
+ *   post:
+ *     summary: Upload file to project
+ *     tags: [Files]
+ *     description: Upload a file to a project (max 10MB)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: File to upload
+ *             required:
+ *               - file
+ *     responses:
+ *       201:
+ *         description: File uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/FileUploadResponse'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       413:
+ *         description: File too large
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.post('/projects/:projectId/uploads', 
   uploadLimiter,
   authenticateToken,
@@ -150,7 +250,42 @@ router.post('/projects/:projectId/uploads',
   }
 );
 
-// Get file by ID (for download/view)
+/**
+ * @swagger
+ * /api/files/files/{id}:
+ *   get:
+ *     summary: Get file metadata
+ *     tags: [Files]
+ *     description: Retrieve file metadata and content
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: File ID
+ *     responses:
+ *       200:
+ *         description: File retrieved successfully
+ *         content:
+ *           application/octet-stream:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/files/:id', 
   generalLimiter,
   authenticateToken,
@@ -197,7 +332,42 @@ router.get('/files/:id',
   }
 );
 
-// Download file (with Content-Disposition: attachment)
+/**
+ * @swagger
+ * /api/files/files/{id}/download:
+ *   get:
+ *     summary: Download file
+ *     tags: [Files]
+ *     description: Download a file with attachment disposition
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: File ID
+ *     responses:
+ *       200:
+ *         description: File download initiated
+ *         content:
+ *           application/octet-stream:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/files/:id/download', 
   generalLimiter,
   authenticateToken,
@@ -244,7 +414,41 @@ router.get('/files/:id/download',
   }
 );
 
-// Delete file
+/**
+ * @swagger
+ * /api/files/files/{id}:
+ *   delete:
+ *     summary: Delete file
+ *     tags: [Files]
+ *     description: Delete a file from project and file system
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: File ID
+ *     responses:
+ *       200:
+ *         description: File deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SuccessResponse'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.delete('/files/:id', 
   generalLimiter,
   authenticateToken,
@@ -295,7 +499,62 @@ router.delete('/files/:id',
   }
 );
 
-// Get files by type for a project
+/**
+ * @swagger
+ * /api/files/projects/{projectId}/uploads/type/{mimetype}:
+ *   get:
+ *     summary: Get files by MIME type
+ *     tags: [Files]
+ *     description: Retrieve all files of a specific MIME type for a project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *       - in: path
+ *         name: mimetype
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: MIME type (e.g., application/pdf)
+ *     responses:
+ *       200:
+ *         description: Files retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     files:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/ProjectFile'
+ *                     mimetype:
+ *                       type: string
+ *                     count:
+ *                       type: number
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/projects/:projectId/uploads/type/:mimetype', 
   generalLimiter,
   authenticateToken,
@@ -337,7 +596,57 @@ router.get('/projects/:projectId/uploads/type/:mimetype',
   }
 );
 
-// Search files in a project
+/**
+ * @swagger
+ * /api/files/projects/{projectId}/uploads/search:
+ *   get:
+ *     summary: Search uploaded files
+ *     tags: [Files]
+ *     description: Search for files by filename within a project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *       - in: query
+ *         name: q
+ *         required: true
+ *         schema:
+ *           type: string
+ *           minLength: 1
+ *           maxLength: 255
+ *         description: Search query
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *           minimum: 1
+ *           maximum: 50
+ *         description: Maximum results
+ *     responses:
+ *       200:
+ *         description: Search completed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/FileSearchResults'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/projects/:projectId/uploads/search', 
   generalLimiter,
   authenticateToken,
@@ -381,7 +690,47 @@ router.get('/projects/:projectId/uploads/search',
   }
 );
 
-// Get file statistics for a project
+/**
+ * @swagger
+ * /api/files/projects/{projectId}/uploads/stats:
+ *   get:
+ *     summary: Get file statistics
+ *     tags: [Files]
+ *     description: Retrieve statistics about uploaded files in a project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *     responses:
+ *       200:
+ *         description: Statistics retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/FileStats'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/projects/:projectId/uploads/stats', 
   generalLimiter,
   authenticateToken,
@@ -417,7 +766,41 @@ router.get('/projects/:projectId/uploads/stats',
   }
 );
 
-// Migrate file to Markdown type
+/**
+ * @swagger
+ * /api/files/files/{id}/migrate-markdown:
+ *   post:
+ *     summary: Migrate file to Markdown
+ *     tags: [Files]
+ *     description: Convert a file to Markdown type for enhanced editing
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: File ID
+ *     responses:
+ *       200:
+ *         description: File migrated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SuccessResponse'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.post('/files/:id/migrate-markdown',
   generalLimiter,
   authenticateToken,

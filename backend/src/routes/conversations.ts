@@ -9,7 +9,59 @@ import logger from '../utils/logger';
 
 const router: Router = Router();
 
-// Get conversation between project and agent
+/**
+ * @swagger
+ * /api/conversations/{projectId}/{agentId}:
+ *   get:
+ *     summary: Get conversation history
+ *     tags: [Conversations]
+ *     description: Retrieve conversation history between a project and an AI agent
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *       - in: path
+ *         name: agentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Agent ID
+ *     responses:
+ *       200:
+ *         description: Conversation retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     conversation:
+ *                       $ref: '#/components/schemas/Conversation'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/:projectId/:agentId', 
   generalLimiter,
   authenticateToken,
@@ -69,7 +121,80 @@ router.get('/:projectId/:agentId',
   }
 );
 
-// Add message to conversation
+/**
+ * @swagger
+ * /api/conversations/{projectId}/{agentId}/messages:
+ *   post:
+ *     summary: Add message to conversation
+ *     tags: [Conversations]
+ *     description: Manually add a message to an existing conversation
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *       - in: path
+ *         name: agentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Agent ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               role:
+ *                 type: string
+ *                 enum: [user, assistant]
+ *                 description: Message sender role
+ *               content:
+ *                 type: string
+ *                 minLength: 1
+ *                 maxLength: 50000
+ *                 description: Message content
+ *               metadata:
+ *                 $ref: '#/components/schemas/MessageMetadata'
+ *             required:
+ *               - role
+ *               - content
+ *     responses:
+ *       201:
+ *         description: Message added successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     conversation:
+ *                       $ref: '#/components/schemas/Conversation'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.post('/:projectId/:agentId/messages', 
   generalLimiter,
   authenticateToken,
@@ -144,7 +269,55 @@ router.post('/:projectId/:agentId/messages',
   }
 );
 
-// Clear conversation
+/**
+ * @swagger
+ * /api/conversations/{projectId}/{agentId}:
+ *   delete:
+ *     summary: Delete conversation
+ *     tags: [Conversations]
+ *     description: Clear/delete all messages in a conversation
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *       - in: path
+ *         name: agentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Agent ID
+ *     responses:
+ *       200:
+ *         description: Conversation cleared successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Conversation cleared successfully
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.delete('/:projectId/:agentId', 
   generalLimiter,
   authenticateToken,
@@ -193,7 +366,52 @@ router.delete('/:projectId/:agentId',
   }
 );
 
-// Get all conversations for a project
+/**
+ * @swagger
+ * /api/conversations/{projectId}:
+ *   get:
+ *     summary: Get all conversations for project
+ *     tags: [Conversations]
+ *     description: Retrieve all conversations associated with a specific project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *     responses:
+ *       200:
+ *         description: Conversations retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     conversations:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/Conversation'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/:projectId', 
   generalLimiter,
   authenticateToken,
@@ -235,7 +453,54 @@ router.get('/:projectId',
   }
 );
 
-// Get conversation statistics
+/**
+ * @swagger
+ * /api/conversations/{projectId}/{agentId}/stats:
+ *   get:
+ *     summary: Get conversation statistics
+ *     tags: [Conversations]
+ *     description: Retrieve statistics for a specific conversation
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Project ID
+ *       - in: path
+ *         name: agentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Agent ID
+ *     responses:
+ *       200:
+ *         description: Conversation statistics retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/ConversationStats'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
 router.get('/:projectId/:agentId/stats', 
   generalLimiter,
   authenticateToken,

@@ -26,8 +26,35 @@ const toggleUserStatusSchema = Joi.object({
 });
 
 /**
- * GET /api/admin/stats
- * Get admin dashboard statistics
+ * @swagger
+ * /api/admin/stats:
+ *   get:
+ *     summary: Get admin dashboard statistics
+ *     tags: [Admin]
+ *     description: Retrieve comprehensive platform statistics for admin dashboard
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Statistics retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/AdminStats'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
  */
 router.get('/stats', async (req: Request, res: Response) => {
   try {
@@ -47,8 +74,59 @@ router.get('/stats', async (req: Request, res: Response) => {
 });
 
 /**
- * GET /api/admin/users
- * Get all users with management information
+ * @swagger
+ * /api/admin/users:
+ *   get:
+ *     summary: Get all users
+ *     tags: [Admin]
+ *     description: Retrieve paginated list of all users with filtering options
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *         description: Items per page
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search by email or username
+ *       - in: query
+ *         name: role
+ *         schema:
+ *           type: string
+ *           enum: [user, admin]
+ *         description: Filter by role
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [active, inactive]
+ *         description: Filter by account status
+ *     responses:
+ *       200:
+ *         description: Users retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserList'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
  */
 router.get('/users', async (req: Request, res: Response) => {
   try {
@@ -114,8 +192,45 @@ router.get('/users', async (req: Request, res: Response) => {
 });
 
 /**
- * GET /api/admin/users/:userId/stats
- * Get detailed stats for a specific user
+ * @swagger
+ * /api/admin/users/{userId}/stats:
+ *   get:
+ *     summary: Get user statistics
+ *     tags: [Admin]
+ *     description: Retrieve detailed usage statistics for a specific user
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: User statistics retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/UserUsageStats'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
  */
 router.get('/users/:userId/stats', async (req: Request, res: Response) => {
   try {
@@ -143,8 +258,37 @@ router.get('/users/:userId/stats', async (req: Request, res: Response) => {
 });
 
 /**
- * PUT /api/admin/token-limits
- * Update token limits (global defaults or specific user)
+ * @swagger
+ * /api/admin/token-limits:
+ *   put:
+ *     summary: Update global token limits
+ *     tags: [Admin]
+ *     description: Update global default token limits for all users
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/TokenLimitUpdate'
+ *     responses:
+ *       200:
+ *         description: Token limits updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SuccessResponse'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
  */
 router.put('/token-limits', 
   validate({ body: updateTokenLimitsSchema }),
@@ -176,8 +320,42 @@ router.put('/token-limits',
 );
 
 /**
- * GET /api/admin/token-limits
- * Get current global token limits
+ * @swagger
+ * /api/admin/token-limits:
+ *   get:
+ *     summary: Get global token limits
+ *     tags: [Admin]
+ *     description: Retrieve current global default token limits
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Token limits retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     global_limit:
+ *                       type: number
+ *                       nullable: true
+ *                     monthly_limit:
+ *                       type: number
+ *                       nullable: true
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
  */
 router.get('/token-limits', async (req: Request, res: Response) => {
   try {
@@ -197,8 +375,47 @@ router.get('/token-limits', async (req: Request, res: Response) => {
 });
 
 /**
- * PUT /api/admin/users/:userId/status
- * Toggle user active/inactive status
+ * @swagger
+ * /api/admin/users/{userId}/status:
+ *   put:
+ *     summary: Update user status
+ *     tags: [Admin]
+ *     description: Activate or deactivate a user account
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: User ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UserStatusUpdate'
+ *     responses:
+ *       200:
+ *         description: User status updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SuccessResponse'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
  */
 router.put('/users/:userId/status',
   validate({ body: toggleUserStatusSchema }),
@@ -232,8 +449,45 @@ router.put('/users/:userId/status',
 );
 
 /**
- * PUT /api/admin/users/:userId/token-limits
- * Update token limits for specific user
+ * @swagger
+ * /api/admin/users/{userId}/token-limits:
+ *   put:
+ *     summary: Update user token limits
+ *     tags: [Admin]
+ *     description: Update token limits for a specific user
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: User ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/TokenLimitUpdate'
+ *     responses:
+ *       200:
+ *         description: User token limits updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SuccessResponse'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
  */
 router.put('/users/:userId/token-limits',
   validate({ body: updateTokenLimitsSchema }),
@@ -270,8 +524,75 @@ router.put('/users/:userId/token-limits',
 );
 
 /**
- * GET /api/admin/activity
- * Get admin activity log
+ * @swagger
+ * /api/admin/activity:
+ *   get:
+ *     summary: Get admin activity log
+ *     tags: [Admin]
+ *     description: Retrieve paginated admin activity log with optional filters
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 50
+ *         description: Items per page
+ *       - in: query
+ *         name: admin_user_id
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Filter by admin user ID
+ *       - in: query
+ *         name: action_type
+ *         schema:
+ *           type: string
+ *         description: Filter by action type
+ *     responses:
+ *       200:
+ *         description: Activity log retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     activities:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/ActivityLog'
+ *                     pagination:
+ *                       type: object
+ *                       properties:
+ *                         page:
+ *                           type: number
+ *                         limit:
+ *                           type: number
+ *                         total:
+ *                           type: number
+ *                         totalPages:
+ *                           type: number
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
  */
 router.get('/activity', async (req: Request, res: Response) => {
   try {

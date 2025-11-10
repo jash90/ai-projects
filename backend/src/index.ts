@@ -26,6 +26,7 @@ import adminRoutes from './routes/admin';
 import settingsRoutes from './routes/settings';
 import debugRoutes from './routes/debug';
 import markdownRoutes from './routes/markdown';
+import { setupSwagger } from './swagger';
 
 const app: express.Express = express();
 const server = createServer(app);
@@ -152,6 +153,9 @@ app.get('/api/health', (req, res) => {
     connections: socketHandler.getConnectedUsersCount(),
   });
 });
+
+// Setup Swagger documentation
+setupSwagger(app);
 
 // API routes
 app.use('/api/auth', authRoutes);
