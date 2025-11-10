@@ -27,10 +27,8 @@ const options: swaggerJsdoc.Options = {
     },
   },
   // Paths to files containing OpenAPI definitions
-  apis: [
-    path.join(__dirname, '../routes/*.ts'),
-    path.join(__dirname, '../routes/*.js'),
-  ],
+  // Scan only compiled .js files (with preserved JSDoc comments)
+  apis: [path.join(__dirname, '../routes/*.js')],
 };
 
 /**
