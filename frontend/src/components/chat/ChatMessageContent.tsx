@@ -39,6 +39,7 @@ function detectMarkdown(text: string): boolean {
     /\*.*?\*/,             // Italic
     /`.*?`/,               // Inline code
     /```[\s\S]*?```/,      // Code blocks
+    /```mermaid[\s\S]*?```/, // Mermaid diagrams
     /^\s*[-*+]\s+/m,       // Lists
     /^\s*\d+\.\s+/m,       // Numbered lists
     /\[.*?\]\(.*?\)/,      // Links
@@ -46,6 +47,6 @@ function detectMarkdown(text: string): boolean {
     /\$.*?\$/,             // Inline math
     /\|.*\|/,              // Tables
   ]
-  
+
   return markdownPatterns.some(pattern => pattern.test(text))
 }

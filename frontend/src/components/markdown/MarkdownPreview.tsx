@@ -3,6 +3,8 @@ import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
+import rehypeSanitize from 'rehype-sanitize'
+import { MermaidDiagram } from './MermaidDiagram'
 import 'katex/dist/katex.min.css'
 import 'highlight.js/styles/github-dark.css'
 
@@ -21,7 +23,7 @@ export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
     <div className={`markdown-preview ${className || ''} prose dark:prose-invert max-w-none`}>
       <ReactMarkdown
         remarkPlugins={[remarkMath, remarkGfm]}
-        rehypePlugins={[rehypeKatex, rehypeHighlight]}
+        rehypePlugins={[rehypeKatex, rehypeHighlight, rehypeSanitize]}
         components={{
           table: ({ children, ...props }) => (
             <div className="table-wrapper my-4">
@@ -134,7 +136,15 @@ export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
           ),
           code: ({ className, children, ...props }: any) => {
             const match = /language-(\w+)/.exec(className || '')
+            const lang = match?.[1]
             const isInline = !match
+
+            // Handle Mermaid diagrams
+            if (lang === 'mermaid') {
+              return <MermaidDiagram chart={String(children).trim()} />
+            }
+
+            // Handle code blocks with syntax highlighting
             return !isInline && match ? (
               <pre className="code-block bg-muted p-4 rounded-lg my-4 whitespace-pre-wrap break-words">
                 <code className={className} {...props}>
