@@ -40,7 +40,7 @@ export function useSocket(projectId?: string, options: UseSocketOptions = {}) {
   const connect = () => {
     if (socketRef.current || !tokens?.access_token) return
 
-    const wsUrl = import.meta.env.VITE_WS_URL || window.location.origin
+    const wsUrl = import.meta.env.VITE_WS_URL || 'http://localhost:3001'
 
     socketRef.current = io(wsUrl, {
       auth: {
@@ -108,8 +108,13 @@ export function useSocket(projectId?: string, options: UseSocketOptions = {}) {
     })
 
     // Error handling
-    socket.on('error', (error: { message: string }) => {
-      console.error('Socket error:', error)
+    socket.on('error', (error: any) => {
+      console.error('Socket error:', {
+        message: error?.message || 'Unknown error',
+        type: error?.type || error?.constructor?.name || 'Unknown type',
+        description: error?.description || error,
+        timestamp: new Date().toISOString()
+      })
     })
 
     // Project events

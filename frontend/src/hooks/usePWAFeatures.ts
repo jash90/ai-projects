@@ -250,9 +250,24 @@ export function useOfflineFiles() {
     const loadCachedFiles = async () => {
       try {
         const request = indexedDB.open('PWAFiles', 1);
-        
+
+        // Ensure object store exists during upgrade
+        request.onupgradeneeded = () => {
+          const db = request.result;
+          if (!db.objectStoreNames.contains('files')) {
+            db.createObjectStore('files', { keyPath: 'id' });
+          }
+        };
+
         request.onsuccess = () => {
           const db = request.result;
+
+          // Verify object store exists before transaction
+          if (!db.objectStoreNames.contains('files')) {
+            console.warn('Files object store does not exist yet');
+            return;
+          }
+
           const transaction = db.transaction(['files'], 'readonly');
           const store = transaction.objectStore('files');
           const getAllRequest = store.getAll();
@@ -267,6 +282,16 @@ export function useOfflineFiles() {
             
             setOfflineFiles(fileMap);
           };
+
+          // Handle transaction errors
+          transaction.onerror = (error) => {
+            console.error('Transaction error:', error);
+          };
+        };
+
+        // Handle database open errors
+        request.onerror = (error) => {
+          console.error('Error opening database:', error);
         };
       } catch (error) {
         console.error('Error loading cached files:', error);

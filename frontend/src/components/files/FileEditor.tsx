@@ -49,6 +49,49 @@ export function FileEditor({ file, className }: FileEditorProps) {
         return
       }
 
+      // Check if loader script is already present in DOM
+      const existingScript = document.querySelector('script[data-monaco-loader="true"]')
+      if (existingScript) {
+        console.log('Monaco loader script already present, waiting for Monaco...')
+
+        // Wait for Monaco to be available with interval check
+        const checkInterval = setInterval(() => {
+          if (window.monaco) {
+            clearInterval(checkInterval)
+            setIsMonacoLoading(false)
+          }
+        }, 100)
+
+        // Timeout after 10 seconds
+        setTimeout(() => {
+          clearInterval(checkInterval)
+          if (!window.monaco) {
+            console.warn('Monaco loading timeout')
+            setIsMonacoLoading(false)
+          }
+        }, 10000)
+
+        return
+      }
+
+      // Check if AMD loader is already configured
+      if ((window as any).require && (window as any).require.config) {
+        console.log('AMD loader already configured, loading Monaco...')
+
+        try {
+          (window as any).require(['vs/editor/editor.main'], () => {
+            console.log('Monaco editor main loaded')
+            setIsMonacoLoading(false)
+          }, (error: any) => {
+            console.error('Failed to load Monaco:', error)
+            setIsMonacoLoading(false)
+          })
+          return
+        } catch (error) {
+          console.error('AMD loader error:', error)
+        }
+      }
+
       // Set a timeout to prevent infinite loading
       const timeout = setTimeout(() => {
         console.warn('Monaco Editor loading timeout, falling back to textarea')
@@ -59,7 +102,8 @@ export function FileEditor({ file, className }: FileEditorProps) {
         // Load Monaco Editor from CDN
         const script = document.createElement('script')
         script.src = 'https://unpkg.com/monaco-editor@0.44.0/min/vs/loader.js'
-        
+        script.setAttribute('data-monaco-loader', 'true')
+
         script.onload = () => {
           console.log('Monaco loader script loaded');
           (window as any).require.config({ 
@@ -70,6 +114,10 @@ export function FileEditor({ file, className }: FileEditorProps) {
           
           (window as any).require(['vs/editor/editor.main'], () => {
             console.log('Monaco editor main loaded')
+            clearTimeout(timeout)
+            setIsMonacoLoading(false)
+          }, (error: any) => {
+            console.error('Failed to load Monaco main:', error)
             clearTimeout(timeout)
             setIsMonacoLoading(false)
           })
