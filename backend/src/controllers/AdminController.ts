@@ -457,7 +457,34 @@ export class AdminController extends Controller {
     @Request() request?: ExpressRequest
   ): Promise<GetActivityLogResponse> {
     try {
-      let query = `
+      // Build shared filter conditions
+      const values: any[] = [];
+      let paramCount = 1;
+      let filters = 'WHERE 1=1';
+
+      if (admin_user_id) {
+        filters += ` AND aal.admin_user_id = $${paramCount}`;
+        values.push(admin_user_id);
+        paramCount++;
+      }
+
+      if (action_type) {
+        filters += ` AND aal.action_type = $${paramCount}`;
+        values.push(action_type);
+        paramCount++;
+      }
+
+      // Construct COUNT query independently
+      const countQuery = `
+        SELECT COUNT(*) as total
+        FROM admin_activity_log aal
+        ${filters}
+      `;
+      const countResult = await pool.query(countQuery, values);
+      const total = parseInt(countResult.rows[0].total, 10);
+
+      // Construct data query with the same filters
+      const query = `
         SELECT
           aal.*,
           admin_user.email as admin_email,
@@ -467,37 +494,14 @@ export class AdminController extends Controller {
         FROM admin_activity_log aal
         LEFT JOIN users admin_user ON aal.admin_user_id = admin_user.id
         LEFT JOIN users target_user ON aal.target_user_id = target_user.id
-        WHERE 1=1
+        ${filters}
+        ORDER BY aal.created_at DESC
+        LIMIT $${paramCount} OFFSET $${paramCount + 1}
       `;
 
-      const values: any[] = [];
-      let paramCount = 1;
-
-      if (admin_user_id) {
-        query += ` AND aal.admin_user_id = $${paramCount}`;
-        values.push(admin_user_id);
-        paramCount++;
-      }
-
-      if (action_type) {
-        query += ` AND aal.action_type = $${paramCount}`;
-        values.push(action_type);
-        paramCount++;
-      }
-
-      // Get total count
-      const countQuery = query.replace(
-        'SELECT aal.*, admin_user.email as admin_email, admin_user.username as admin_username, target_user.email as target_email, target_user.username as target_username FROM admin_activity_log aal LEFT JOIN users admin_user ON aal.admin_user_id = admin_user.id LEFT JOIN users target_user ON aal.target_user_id = target_user.id',
-        'SELECT COUNT(*) as total FROM admin_activity_log aal'
-      );
-      const countResult = await pool.query(countQuery, values);
-      const total = parseInt(countResult.rows[0].total, 10);
-
-      // Add pagination and ordering
-      query += ` ORDER BY aal.created_at DESC LIMIT $${paramCount} OFFSET $${paramCount + 1}`;
-      values.push(limit, (page - 1) * limit);
-
-      const result = await pool.query(query, values);
+      // Add pagination values after all filter values
+      const dataValues = [...values, limit, (page - 1) * limit];
+      const result = await pool.query(query, dataValues);
 
       return {
         success: true,
