@@ -11,24 +11,13 @@ import {
   Request
 } from 'tsoa';
 import { Request as ExpressRequest } from 'express';
+import type { User } from '../types';
 import { UserModel } from '../models/User';
 import { generateTokens, revokeToken, refreshAccessToken } from '../middleware/auth';
 import { ErrorResponse, MessageResponse } from './shared/types';
 import logger from '../utils/logger';
 
 // ===== Interfaces =====
-
-interface User {
-  id: string;
-  email: string;
-  username: string;
-  role: string;
-  token_limit_global: number | null;
-  token_limit_monthly: number | null;
-  is_active: boolean;
-  created_at: Date;
-  updated_at: Date;
-}
 
 interface Tokens {
   access_token: string;
@@ -158,8 +147,8 @@ export class AuthController extends Controller {
             email: user.email,
             username: user.username,
             role: user.role,
-            token_limit_global: user.token_limit_global ?? null,
-            token_limit_monthly: user.token_limit_monthly ?? null,
+            token_limit_global: user.token_limit_global ?? undefined,
+            token_limit_monthly: user.token_limit_monthly ?? undefined,
             is_active: user.is_active,
             created_at: user.created_at,
             updated_at: user.updated_at
@@ -229,8 +218,8 @@ export class AuthController extends Controller {
             email: user.email,
             username: user.username,
             role: user.role,
-            token_limit_global: user.token_limit_global ?? null,
-            token_limit_monthly: user.token_limit_monthly ?? null,
+            token_limit_global: user.token_limit_global ?? undefined,
+            token_limit_monthly: user.token_limit_monthly ?? undefined,
             is_active: user.is_active,
             created_at: user.created_at,
             updated_at: user.updated_at
@@ -361,8 +350,8 @@ export class AuthController extends Controller {
             email: user.email,
             username: user.username,
             role: user.role,
-            token_limit_global: user.token_limit_global ?? null,
-            token_limit_monthly: user.token_limit_monthly ?? null,
+            token_limit_global: user.token_limit_global ?? undefined,
+            token_limit_monthly: user.token_limit_monthly ?? undefined,
             is_active: user.is_active,
             created_at: user.created_at,
             updated_at: user.updated_at
@@ -410,8 +399,8 @@ export class AuthController extends Controller {
             email: user.email,
             username: user.username,
             role: user.role,
-            token_limit_global: user.token_limit_global ?? null,
-            token_limit_monthly: user.token_limit_monthly ?? null,
+            token_limit_global: user.token_limit_global ?? undefined,
+            token_limit_monthly: user.token_limit_monthly ?? undefined,
             is_active: user.is_active,
             created_at: user.created_at,
             updated_at: user.updated_at
