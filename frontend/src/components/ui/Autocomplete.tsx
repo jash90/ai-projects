@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useId } from 'react'
 import { Input } from './Input'
 import { Label } from './Label'
 import { useDebounce } from '@/hooks/useDebounce'
@@ -70,6 +70,10 @@ export function Autocomplete({
   defaultOpen = false,
   persistentOpen = false
 }: AutocompleteProps) {
+  // Generate stable unique ID for ARIA attributes when id prop is not provided
+  const generatedId = useId()
+  const baseId = id ?? generatedId
+
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const [searchQuery, setSearchQuery] = useState('')
   const [highlightedIndex, setHighlightedIndex] = useState(0)
@@ -397,18 +401,18 @@ export function Autocomplete({
   }
 
   // Generate unique IDs for ARIA relationships
-  const listboxId = `${id}-listbox`
-  const activeDescendantId = flatOptions[highlightedIndex] ? `${id}-option-${highlightedIndex}` : undefined
+  const listboxId = `${baseId}-listbox`
+  const activeDescendantId = flatOptions[highlightedIndex] ? `${baseId}-option-${highlightedIndex}` : undefined
 
   return (
     <div ref={containerRef} className={`relative ${className}`}>
-      {label && <Label htmlFor={id}>{label}</Label>}
+      {label && <Label htmlFor={baseId}>{label}</Label>}
       <div className="relative mt-1">
         <div className="flex gap-2">
           <div className="relative flex-1">
             <Input
               ref={inputRef}
-              id={id}
+              id={baseId}
               type="text"
               value={isOpen ? searchQuery : displayValue}
               onChange={handleInputChange}
@@ -650,7 +654,7 @@ export function Autocomplete({
                         const globalIndex = currentIndex + optionIndex
                         const isHighlighted = globalIndex === highlightedIndex
                         const isSelected = option.id === value
-                        const optionId = `${id}-option-${globalIndex}`
+                        const optionId = `${baseId}-option-${globalIndex}`
 
                         return (
                           <div
