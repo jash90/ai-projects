@@ -99,9 +99,11 @@ export function ModelComparisonView({
                         )}
                       </div>
                       <button
+                        type="button"
                         onClick={() => onRemove(model.id)}
                         className="text-muted-foreground hover:text-destructive transition-colors p-1"
                         title="Remove from comparison"
+                        aria-label={`Remove ${model.name} from comparison`}
                       >
                         ✕
                       </button>
