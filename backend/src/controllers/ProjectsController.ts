@@ -16,7 +16,7 @@ import {
 } from 'tsoa';
 import { Request as ExpressRequest } from 'express';
 import { ProjectModel } from '../models/Project';
-import { PaginationInfo, ErrorResponse, DeleteResponse } from './shared/types';
+import { ErrorResponse, DeleteResponse } from './shared/types';
 import logger from '../utils/logger';
 
 // ===== Interfaces =====
@@ -38,12 +38,6 @@ interface CreateProjectRequest {
 interface UpdateProjectRequest {
   name?: string;
   description?: string;
-}
-
-interface PaginationParams {
-  page?: number;
-  limit?: number;
-  search?: string;
 }
 
 // ===== Success Response Types =====
@@ -131,7 +125,7 @@ export class ProjectsController extends Controller {
         data: result
       };
     } catch (error) {
-      logger.error('Error fetching projects:', error);
+      logger.error('Error fetching projects:', { error, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(500);
       throw new Error('Failed to fetch projects');
     }
@@ -163,7 +157,7 @@ export class ProjectsController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error fetching recent projects:', error);
+      logger.error('Error fetching recent projects:', { error, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(500);
       throw new Error('Failed to fetch recent projects');
     }
@@ -197,7 +191,7 @@ export class ProjectsController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error searching projects:', error);
+      logger.error('Error searching projects:', { error, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(500);
       throw new Error('Failed to search projects');
     }
@@ -236,7 +230,7 @@ export class ProjectsController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error fetching project:', error);
+      logger.error('Error fetching project:', { error, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -270,7 +264,8 @@ export class ProjectsController extends Controller {
 
       logger.info('Project created', {
         projectId: project.id,
-        userId
+        userId,
+        correlationId: request?.headers['x-correlation-id'] || 'unknown'
       });
 
       this.setStatus(201);
@@ -281,7 +276,7 @@ export class ProjectsController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error creating project:', error);
+      logger.error('Error creating project:', { error, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(500);
       throw new Error('Failed to create project');
     }
@@ -314,7 +309,7 @@ export class ProjectsController extends Controller {
         throw new Error('Project not found');
       }
 
-      logger.info('Project updated', { projectId: id, userId, updates: Object.keys(requestBody) });
+      logger.info('Project updated', { projectId: id, userId, updates: Object.keys(requestBody), correlationId: request?.headers['x-correlation-id'] || 'unknown' });
 
       return {
         success: true,
@@ -323,7 +318,7 @@ export class ProjectsController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error updating project:', error);
+      logger.error('Error updating project:', { error, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -357,14 +352,14 @@ export class ProjectsController extends Controller {
         throw new Error('Project not found');
       }
 
-      logger.info('Project deleted', { projectId: id, userId });
+      logger.info('Project deleted', { projectId: id, userId, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
 
       return {
         success: true,
         message: 'Project deleted successfully'
       };
     } catch (error) {
-      logger.error('Error deleting project:', error);
+      logger.error('Error deleting project:', { error, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }

@@ -124,7 +124,8 @@ export class ModelsController extends Controller {
       };
     } catch (error) {
       logger.error('Failed to fetch models', {
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
+        correlationId: 'no-request-context'
       });
 
       this.setStatus(500);
@@ -167,7 +168,8 @@ export class ModelsController extends Controller {
       };
     } catch (error) {
       logger.error('Failed to fetch provider status', {
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
+        correlationId: 'no-request-context'
       });
 
       this.setStatus(500);
@@ -207,7 +209,8 @@ export class ModelsController extends Controller {
     } catch (error) {
       logger.error('Failed to fetch models by provider', {
         error: error instanceof Error ? error.message : 'Unknown error',
-        provider
+        provider,
+        correlationId: 'no-request-context'
       });
 
       this.setStatus(500);
@@ -252,7 +255,8 @@ export class ModelsController extends Controller {
 
       logger.error('Failed to fetch model by ID', {
         error: errorMessage,
-        model_id: modelId
+        model_id: modelId,
+        correlationId: 'no-request-context'
       });
 
       if (errorMessage === 'Model not found') {
@@ -291,7 +295,8 @@ export class ModelsController extends Controller {
         total_added,
         total_updated,
         total_removed,
-        results
+        results,
+        correlationId: 'no-request-context'
       });
 
       return {
@@ -305,7 +310,8 @@ export class ModelsController extends Controller {
       };
     } catch (error) {
       logger.error('Failed to sync models', {
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
+        correlationId: 'no-request-context'
       });
 
       this.setStatus(500);

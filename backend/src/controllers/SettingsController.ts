@@ -142,8 +142,10 @@ export class SettingsController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error getting user profile:', error);
-      this.setStatus(500);
+      logger.error('Error getting user profile:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
+      if (!this.getStatus()) {
+        this.setStatus(500);
+      }
       throw error;
     }
   }
@@ -208,7 +210,7 @@ export class SettingsController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error updating user profile:', error);
+      logger.error('Error updating user profile:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -246,12 +248,14 @@ export class SettingsController extends Controller {
         message: 'Password updated successfully'
       };
     } catch (error: any) {
-      logger.error('Error updating password:', error);
+      logger.error('Error updating password:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
 
-      if (error.message === 'Current password is incorrect') {
-        this.setStatus(400);
-      } else {
-        this.setStatus(500);
+      if (!this.getStatus()) {
+        if (error instanceof Error && error.message === 'Current password is incorrect') {
+          this.setStatus(400);
+        } else {
+          this.setStatus(500);
+        }
       }
 
       throw error;
@@ -280,8 +284,10 @@ export class SettingsController extends Controller {
         data: { preferences }
       };
     } catch (error) {
-      logger.error('Error getting user preferences:', error);
-      this.setStatus(500);
+      logger.error('Error getting user preferences:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
+      if (!this.getStatus()) {
+        this.setStatus(500);
+      }
       throw error;
     }
   }
@@ -310,8 +316,10 @@ export class SettingsController extends Controller {
         data: { preferences: updatedPreferences }
       };
     } catch (error) {
-      logger.error('Error updating user preferences:', error);
-      this.setStatus(500);
+      logger.error('Error updating user preferences:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
+      if (!this.getStatus()) {
+        this.setStatus(500);
+      }
       throw error;
     }
   }
@@ -334,13 +342,20 @@ export class SettingsController extends Controller {
       const userId = request.user!.id;
       const stats = await UserModel.getUserStatsById(userId);
 
+      if (!stats) {
+        this.setStatus(404);
+        throw new Error('User stats not found');
+      }
+
       return {
         success: true,
         data: { stats }
       };
     } catch (error) {
-      logger.error('Error getting user usage stats:', error);
-      this.setStatus(500);
+      logger.error('Error getting user usage stats:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
+      if (!this.getStatus()) {
+        this.setStatus(500);
+      }
       throw error;
     }
   }

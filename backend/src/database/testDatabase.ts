@@ -356,7 +356,7 @@ async function seedTestDatabase(): Promise<void> {
         'SELECT id FROM agents WHERE name = $1 AND provider = $2 AND model = $3',
         ['Test Assistant', 'anthropic', 'claude-3-sonnet-20240229']
       );
-      if (existingAgent.rowCount > 0) {
+      if ((existingAgent.rowCount ?? 0) > 0) {
         agentId = existingAgent.rows[0].id;
       } else {
         throw error;

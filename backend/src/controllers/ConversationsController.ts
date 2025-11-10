@@ -147,7 +147,7 @@ export class ConversationsController extends Controller {
         throw new Error('Access denied');
       }
 
-      logger.error('Error fetching conversation:', error);
+      logger.error('Error fetching conversation:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -206,7 +206,8 @@ export class ConversationsController extends Controller {
         agentId,
         userId,
         role,
-        messageLength: content.length
+        messageLength: content.length,
+        correlationId: request.headers['x-correlation-id'] || 'unknown'
       });
 
       this.setStatus(201);
@@ -222,7 +223,7 @@ export class ConversationsController extends Controller {
         throw new Error('Access denied');
       }
 
-      logger.error('Error adding message to conversation:', error);
+      logger.error('Error adding message to conversation:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -262,7 +263,8 @@ export class ConversationsController extends Controller {
         projectId,
         agentId,
         userId,
-        existed: cleared
+        existed: cleared,
+        correlationId: request.headers['x-correlation-id'] || 'unknown'
       });
 
       return {
@@ -275,7 +277,7 @@ export class ConversationsController extends Controller {
         throw new Error('Access denied');
       }
 
-      logger.error('Error clearing conversation:', error);
+      logger.error('Error clearing conversation:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -320,7 +322,7 @@ export class ConversationsController extends Controller {
         throw new Error('Access denied');
       }
 
-      logger.error('Error fetching project conversations:', error);
+      logger.error('Error fetching project conversations:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -366,7 +368,7 @@ export class ConversationsController extends Controller {
         throw new Error('Access denied');
       }
 
-      logger.error('Error fetching conversation stats:', error);
+      logger.error('Error fetching conversation stats:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }

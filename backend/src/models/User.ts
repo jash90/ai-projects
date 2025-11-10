@@ -108,7 +108,7 @@ export class UserModel {
   static async deleteById(id: string): Promise<boolean> {
     const query = 'DELETE FROM users WHERE id = $1';
     const result = await pool.query(query, [id]);
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   static async verifyPassword(password: string, hash: string): Promise<boolean> {
@@ -118,13 +118,13 @@ export class UserModel {
   static async emailExists(email: string): Promise<boolean> {
     const query = 'SELECT 1 FROM users WHERE email = $1 LIMIT 1';
     const result = await pool.query(query, [email]);
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   static async usernameExists(username: string): Promise<boolean> {
     const query = 'SELECT 1 FROM users WHERE username = $1 LIMIT 1';
     const result = await pool.query(query, [username]);
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   static async getProjectCount(userId: string): Promise<number> {
@@ -288,7 +288,7 @@ export class UserModel {
     `;
 
     const result = await pool.query(query, [isActive, userId]);
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   static async getGlobalTokenLimits(): Promise<{ global: number; monthly: number }> {

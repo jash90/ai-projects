@@ -128,13 +128,13 @@ export class FileModel {
     const query = `
       DELETE FROM files
       USING projects
-      WHERE files.id = $1 
-        AND files.project_id = projects.id 
+      WHERE files.id = $1
+        AND files.project_id = projects.id
         AND projects.user_id = $2
     `;
 
     const result = await pool.query(query, [id, userId]);
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   static async findByName(

@@ -10,7 +10,6 @@ import { SocketHandler } from './services/socketHandler';
 import { modelService } from './services/modelService';
 import { generalLimiter } from './middleware/rateLimiting';
 import { sanitizeInputs } from './middleware/validation';
-import { ValidateError } from 'tsoa';
 import config from './utils/config';
 import logger from './utils/logger';
 
@@ -167,9 +166,16 @@ RegisterRoutes(app);
 
 // Serve Swagger UI documentation
 app.use('/api-docs', swaggerUi.serve, async (_req: express.Request, res: express.Response) => {
-  return res.send(
-    swaggerUi.generateHTML(await import('../build/swagger.json'))
-  );
+  try {
+    const swaggerDocument = await import('../build/swagger.json');
+    return res.send(swaggerUi.generateHTML(swaggerDocument));
+  } catch (error) {
+    logger.error('Failed to load Swagger documentation:', error);
+    return res.status(503).json({
+      success: false,
+      error: 'API documentation is not available. Please run `npm run build` first.'
+    });
+  }
 });
 
 logger.info('✅ Swagger UI available at /api-docs');

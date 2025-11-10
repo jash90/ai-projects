@@ -61,12 +61,22 @@ export interface ProjectUpdate {
 }
 
 // Agent Types
+/**
+ * AI Agent configuration
+ *
+ * @remarks
+ * The `system_prompt` field is the primary field used for the agent's system prompt.
+ * The `prompt` field is maintained as an alias for backward compatibility with older code.
+ * New code should use `system_prompt`.
+ */
 export interface Agent {
   id: string;
   name: string;
   description?: string;
+  /** Primary system prompt field - use this in new code */
   system_prompt: string;
-  prompt?: string; // Alias for system_prompt for backward compatibility
+  /** @deprecated Legacy alias for system_prompt - maintained for backward compatibility */
+  prompt?: string;
   provider: 'openai' | 'anthropic' | 'openrouter';
   model: string;
   temperature: number;
@@ -224,7 +234,7 @@ export interface AuthUser {
   id: string;
   email: string;
   username: string;
-  role: string;
+  role: 'user' | 'admin';
 }
 
 // Context Types

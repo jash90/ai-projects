@@ -162,7 +162,7 @@ export class AdminController extends Controller {
         data: stats
       };
     } catch (error) {
-      logger.error('Error fetching admin stats:', error);
+      logger.error('Error fetching admin stats:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(500);
       throw new Error('Failed to fetch admin statistics');
     }
@@ -238,7 +238,7 @@ export class AdminController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error fetching users for admin:', error);
+      logger.error('Error fetching users for admin:', { error, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(500);
       throw new Error('Failed to fetch users');
     }
@@ -275,7 +275,7 @@ export class AdminController extends Controller {
         data: stats
       };
     } catch (error) {
-      logger.error('Error fetching user stats:', error);
+      logger.error('Error fetching user stats:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -314,7 +314,7 @@ export class AdminController extends Controller {
         message: updates.user_id ? 'User token limits updated' : 'Global token limits updated'
       };
     } catch (error) {
-      logger.error('Error updating token limits:', error);
+      logger.error('Error updating token limits:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -345,7 +345,7 @@ export class AdminController extends Controller {
         data: limits
       };
     } catch (error) {
-      logger.error('Error fetching token limits:', error);
+      logger.error('Error fetching token limits:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(500);
       throw new Error('Failed to fetch token limits');
     }
@@ -384,7 +384,7 @@ export class AdminController extends Controller {
         message: `User ${is_active ? 'activated' : 'deactivated'} successfully`
       };
     } catch (error) {
-      logger.error('Error updating user status:', error);
+      logger.error('Error updating user status:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -429,7 +429,7 @@ export class AdminController extends Controller {
         message: 'User token limits updated successfully'
       };
     } catch (error) {
-      logger.error('Error updating user token limits:', error);
+      logger.error('Error updating user token limits:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -518,7 +518,7 @@ export class AdminController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error fetching admin activity log:', error);
+      logger.error('Error fetching admin activity log:', { error, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(500);
       throw new Error('Failed to fetch activity log');
     }

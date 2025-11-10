@@ -96,7 +96,7 @@ export class ConversationModel {
 
     const query = 'DELETE FROM conversations WHERE project_id = $1 AND agent_id = $2';
     const result = await pool.query(query, [projectId, agentId]);
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   static async getProjectConversations(

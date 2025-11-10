@@ -150,7 +150,7 @@ export class ChatController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error fetching AI status:', error);
+      logger.error('Error fetching AI status:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(500);
       throw new Error('Failed to fetch AI status');
     }
@@ -196,7 +196,7 @@ export class ChatController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error validating AI configuration:', error);
+      logger.error('Error validating AI configuration:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }

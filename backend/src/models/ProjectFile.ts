@@ -89,27 +89,27 @@ export class ProjectFileModel {
     const query = `
       DELETE FROM project_files
       USING projects
-      WHERE project_files.id = $1 
-        AND project_files.project_id = projects.id 
+      WHERE project_files.id = $1
+        AND project_files.project_id = projects.id
         AND projects.user_id = $2
     `;
 
     const result = await pool.query(query, [id, userId]);
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   static async deleteByProjectId(projectId: string, userId: string): Promise<number> {
     // Verify user owns the project
     const projectQuery = 'SELECT 1 FROM projects WHERE id = $1 AND user_id = $2';
     const projectResult = await pool.query(projectQuery, [projectId, userId]);
-    
+
     if (projectResult.rowCount === 0) {
       throw new Error('Project not found or access denied');
     }
 
     const query = 'DELETE FROM project_files WHERE project_id = $1';
     const result = await pool.query(query, [projectId]);
-    return result.rowCount;
+    return (result.rowCount ?? 0);
   }
 
   static async getFilesByMimetype(
@@ -244,7 +244,7 @@ export class ProjectFileModel {
   static async checkFileExists(filename: string, projectId: string): Promise<boolean> {
     const query = 'SELECT 1 FROM project_files WHERE filename = $1 AND project_id = $2 LIMIT 1';
     const result = await pool.query(query, [filename, projectId]);
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   static async getFilePath(id: string, userId: string): Promise<string | null> {

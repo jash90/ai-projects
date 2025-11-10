@@ -123,7 +123,7 @@ export class ProjectModel {
   static async deleteById(id: string, userId: string): Promise<boolean> {
     const query = 'DELETE FROM projects WHERE id = $1 AND user_id = $2';
     const result = await pool.query(query, [id, userId]);
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
 

@@ -65,7 +65,7 @@ export class TokenService {
     completionTokens: number
   ): number {
     const providerPricing = MODEL_PRICING[provider];
-    const modelPricing = providerPricing[model] || providerPricing.default;
+    const modelPricing = (providerPricing as Record<string, { prompt: number; completion: number }>)[model] || providerPricing.default;
     
     // Calculate cost (pricing is per 1K tokens)
     const promptCost = (promptTokens / 1000) * modelPricing.prompt;

@@ -25,7 +25,7 @@ beforeAll(async () => {
     await redis.flushAll();
     console.log('Redis cache cleared');
   } catch (error) {
-    console.warn('Redis not available for tests:', error.message);
+    console.warn('Redis not available for tests:', error instanceof Error ? error.message : 'Unknown error');
   }
 });
 
@@ -35,14 +35,14 @@ afterEach(async () => {
   try {
     await pool.query('TRUNCATE conversations, files, project_files, projects, users, agents RESTART IDENTITY CASCADE');
   } catch (error) {
-    console.warn('Failed to clean up database:', error.message);
+    console.warn('Failed to clean up database:', error instanceof Error ? error.message : 'Unknown error');
   }
 
   // Clear Redis
   try {
     await redis.flushAll();
   } catch (error) {
-    console.warn('Redis cleanup failed:', error.message);
+    console.warn('Redis cleanup failed:', error instanceof Error ? error.message : 'Unknown error');
   }
 });
 
@@ -55,7 +55,7 @@ afterAll(async () => {
   try {
     await redis.quit();
   } catch (error) {
-    console.warn('Redis quit failed:', error.message);
+    console.warn('Redis quit failed:', error instanceof Error ? error.message : 'Unknown error');
   }
 });
 

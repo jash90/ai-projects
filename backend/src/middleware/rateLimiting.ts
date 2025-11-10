@@ -22,7 +22,7 @@ class RedisStore {
       multi.expire(redisKey, Math.ceil(windowMs / 1000));
       const results = await multi.exec();
 
-      const totalHits = results?.[0]?.[1] as number || 1;
+      const totalHits = (results && Array.isArray(results[0]) ? (results[0][1] as number) : null) || 1;
       const resetTime = new Date(Date.now() + windowMs);
 
       return { totalHits, resetTime };

@@ -116,7 +116,7 @@ export class AgentsController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error fetching agents:', error);
+      logger.error('Error fetching agents:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(500);
       throw new Error('Failed to fetch agents');
     }
@@ -154,7 +154,7 @@ export class AgentsController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error fetching agent:', error);
+      logger.error('Error fetching agent:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -180,7 +180,7 @@ export class AgentsController extends Controller {
     try {
       const agent = await AgentModel.create(requestBody);
 
-      logger.info('Agent created', { agentId: agent.id, name: agent.name, createdBy: request.user!.id });
+      logger.info('Agent created', { agentId: agent.id, name: agent.name, createdBy: request.user!.id, correlationId: request.headers['x-correlation-id'] || 'unknown' });
 
       this.setStatus(201);
       return {
@@ -190,7 +190,7 @@ export class AgentsController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error creating agent:', error);
+      logger.error('Error creating agent:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(500);
       throw new Error('Failed to create agent');
     }
@@ -222,7 +222,7 @@ export class AgentsController extends Controller {
         throw new Error('Agent not found');
       }
 
-      logger.info('Agent updated', { agentId: id, updates: Object.keys(requestBody), updatedBy: request.user!.id });
+      logger.info('Agent updated', { agentId: id, updates: Object.keys(requestBody), updatedBy: request.user!.id, correlationId: request.headers['x-correlation-id'] || 'unknown' });
 
       return {
         success: true,
@@ -231,7 +231,7 @@ export class AgentsController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error updating agent:', error);
+      logger.error('Error updating agent:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -265,7 +265,7 @@ export class AgentsController extends Controller {
         throw new Error('Agent not found');
       }
 
-      logger.info('Agent deleted', { agentId: id, deletedBy: request.user!.id });
+      logger.info('Agent deleted', { agentId: id, deletedBy: request.user!.id, correlationId: request.headers['x-correlation-id'] || 'unknown' });
 
       return {
         success: true,
@@ -277,7 +277,7 @@ export class AgentsController extends Controller {
         throw new Error('Cannot delete agent that is being used in conversations');
       }
 
-      logger.error('Error deleting agent:', error);
+      logger.error('Error deleting agent:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -320,7 +320,7 @@ export class AgentsController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error fetching agent stats:', error);
+      logger.error('Error fetching agent stats:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }

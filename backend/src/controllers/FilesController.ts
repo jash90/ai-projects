@@ -150,7 +150,7 @@ export class FilesController extends Controller {
         throw new Error('Access denied to this project');
       }
 
-      logger.error('Error fetching project files:', error);
+      logger.error('Error fetching project files:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(500);
       throw new Error('Failed to fetch files');
     }
@@ -197,7 +197,8 @@ export class FilesController extends Controller {
         projectId,
         userId,
         fileName: file.name,
-        fileType: file.type
+        fileType: file.type,
+        correlationId: request.headers['x-correlation-id'] || 'unknown'
       });
 
       this.setStatus(201);
@@ -213,7 +214,7 @@ export class FilesController extends Controller {
         throw new Error('Access denied to this project');
       }
 
-      logger.error('Error creating file:', error);
+      logger.error('Error creating file:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -254,7 +255,7 @@ export class FilesController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error fetching file:', error);
+      logger.error('Error fetching file:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -315,7 +316,8 @@ export class FilesController extends Controller {
       logger.info('File updated', {
         fileId: id,
         userId,
-        updates: Object.keys(requestBody)
+        updates: Object.keys(requestBody),
+        correlationId: request.headers['x-correlation-id'] || 'unknown'
       });
 
       return {
@@ -330,7 +332,7 @@ export class FilesController extends Controller {
         throw new Error('Access denied');
       }
 
-      logger.error('Error updating file:', error);
+      logger.error('Error updating file:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -364,14 +366,14 @@ export class FilesController extends Controller {
         throw new Error('File not found');
       }
 
-      logger.info('File deleted', { fileId: id, userId });
+      logger.info('File deleted', { fileId: id, userId, correlationId: request.headers['x-correlation-id'] || 'unknown' });
 
       return {
         success: true,
         message: 'File deleted successfully'
       };
     } catch (error) {
-      logger.error('Error deleting file:', error);
+      logger.error('Error deleting file:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -416,7 +418,7 @@ export class FilesController extends Controller {
         throw new Error('Access denied to this project');
       }
 
-      logger.error('Error searching files:', error);
+      logger.error('Error searching files:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(500);
       throw new Error('Failed to search files');
     }
@@ -459,7 +461,7 @@ export class FilesController extends Controller {
         throw new Error('Access denied to this project');
       }
 
-      logger.error('Error fetching files by type:', error);
+      logger.error('Error fetching files by type:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(500);
       throw new Error('Failed to fetch files by type');
     }
@@ -499,7 +501,7 @@ export class FilesController extends Controller {
         throw new Error('Access denied to this project');
       }
 
-      logger.error('Error fetching file stats:', error);
+      logger.error('Error fetching file stats:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(500);
       throw new Error('Failed to fetch file statistics');
     }

@@ -116,7 +116,8 @@ export class AuthController extends Controller {
   @TsoaResponse<ErrorResponse>(409, 'Email already registered or username already taken')
   @TsoaResponse<ErrorResponse>(500, 'Registration failed')
   public async register(
-    @Body() requestBody: RegisterRequest
+    @Body() requestBody: RegisterRequest,
+    @Request() request?: ExpressRequest
   ): Promise<RegisterResponse> {
     try {
       const { email, username, password } = requestBody;
@@ -146,7 +147,7 @@ export class AuthController extends Controller {
         role: user.role
       });
 
-      logger.info('User registered successfully', { userId: user.id, email: user.email });
+      logger.info('User registered successfully', { userId: user.id, email: user.email, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
 
       this.setStatus(201);
       return {
@@ -157,8 +158,8 @@ export class AuthController extends Controller {
             email: user.email,
             username: user.username,
             role: user.role,
-            token_limit_global: user.token_limit_global,
-            token_limit_monthly: user.token_limit_monthly,
+            token_limit_global: user.token_limit_global ?? null,
+            token_limit_monthly: user.token_limit_monthly ?? null,
             is_active: user.is_active,
             created_at: user.created_at,
             updated_at: user.updated_at
@@ -170,7 +171,7 @@ export class AuthController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Registration error:', error);
+      logger.error('Registration error:', { error, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -190,7 +191,8 @@ export class AuthController extends Controller {
   @TsoaResponse<ErrorResponse>(401, 'Invalid email or password')
   @TsoaResponse<ErrorResponse>(500, 'Login failed')
   public async login(
-    @Body() requestBody: LoginRequest
+    @Body() requestBody: LoginRequest,
+    @Request() request?: ExpressRequest
   ): Promise<LoginResponse> {
     try {
       const { email, password } = requestBody;
@@ -217,7 +219,7 @@ export class AuthController extends Controller {
         role: user.role
       });
 
-      logger.info('User logged in successfully', { userId: user.id, email: user.email });
+      logger.info('User logged in successfully', { userId: user.id, email: user.email, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
 
       return {
         success: true,
@@ -227,8 +229,8 @@ export class AuthController extends Controller {
             email: user.email,
             username: user.username,
             role: user.role,
-            token_limit_global: user.token_limit_global,
-            token_limit_monthly: user.token_limit_monthly,
+            token_limit_global: user.token_limit_global ?? null,
+            token_limit_monthly: user.token_limit_monthly ?? null,
             is_active: user.is_active,
             created_at: user.created_at,
             updated_at: user.updated_at
@@ -240,7 +242,7 @@ export class AuthController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Login error:', error);
+      logger.error('Login error:', { error, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -260,7 +262,8 @@ export class AuthController extends Controller {
   @TsoaResponse<ErrorResponse>(400, 'Refresh token required')
   @TsoaResponse<ErrorResponse>(401, 'Invalid refresh token')
   public async refresh(
-    @Body() requestBody: RefreshTokenRequest
+    @Body() requestBody: RefreshTokenRequest,
+    @Request() request?: ExpressRequest
   ): Promise<RefreshTokenResponse> {
     try {
       const { refresh_token } = requestBody;
@@ -279,7 +282,7 @@ export class AuthController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Token refresh error:', error);
+      logger.error('Token refresh error:', { error, correlationId: request?.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(401);
       throw new Error('Invalid refresh token');
     }
@@ -314,14 +317,14 @@ export class AuthController extends Controller {
         await revokeToken(refresh_token);
       }
 
-      logger.info('User logged out successfully', { userId: request.user!.id });
+      logger.info('User logged out successfully', { userId: request.user!.id, correlationId: request.headers['x-correlation-id'] || 'unknown' });
 
       return {
         success: true,
         message: 'Logged out successfully'
       };
     } catch (error) {
-      logger.error('Logout error:', error);
+      logger.error('Logout error:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(500);
       throw new Error('Logout failed');
     }
@@ -358,8 +361,8 @@ export class AuthController extends Controller {
             email: user.email,
             username: user.username,
             role: user.role,
-            token_limit_global: user.token_limit_global,
-            token_limit_monthly: user.token_limit_monthly,
+            token_limit_global: user.token_limit_global ?? null,
+            token_limit_monthly: user.token_limit_monthly ?? null,
             is_active: user.is_active,
             created_at: user.created_at,
             updated_at: user.updated_at
@@ -367,7 +370,7 @@ export class AuthController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error getting current user:', error);
+      logger.error('Error getting current user:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -407,8 +410,8 @@ export class AuthController extends Controller {
             email: user.email,
             username: user.username,
             role: user.role,
-            token_limit_global: user.token_limit_global,
-            token_limit_monthly: user.token_limit_monthly,
+            token_limit_global: user.token_limit_global ?? null,
+            token_limit_monthly: user.token_limit_monthly ?? null,
             is_active: user.is_active,
             created_at: user.created_at,
             updated_at: user.updated_at
@@ -417,7 +420,7 @@ export class AuthController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error verifying token:', error);
+      logger.error('Error verifying token:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }

@@ -188,8 +188,8 @@ export class DebugController extends Controller {
           username: user.username,
           is_active: user.is_active,
           role: user.role,
-          token_limit_global: user.token_limit_global,
-          token_limit_monthly: user.token_limit_monthly,
+          token_limit_global: user.token_limit_global ?? null,
+          token_limit_monthly: user.token_limit_monthly ?? null,
           created_at: user.created_at,
           updated_at: user.updated_at
         },
@@ -228,7 +228,8 @@ export class DebugController extends Controller {
         userEmail,
         canSendMessages,
         projectCount,
-        agentCount
+        agentCount,
+        correlationId: request.headers['x-correlation-id'] || 'unknown'
       });
 
       return {
@@ -236,7 +237,7 @@ export class DebugController extends Controller {
         data: debugInfo
       };
     } catch (error) {
-      logger.error('Error getting user debug info:', error);
+      logger.error('Error getting user debug info:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
@@ -283,7 +284,8 @@ export class DebugController extends Controller {
       logger.warn('Token limit check failed', {
         userId,
         tokensRequested: tokens_to_use,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
+        correlationId: request.headers['x-correlation-id'] || 'unknown'
       });
 
       this.setStatus(402);
@@ -332,7 +334,7 @@ export class DebugController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error checking AI service:', error);
+      logger.error('Error checking AI service:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       this.setStatus(500);
       throw new Error('Failed to check AI service status');
     }
@@ -372,7 +374,8 @@ export class DebugController extends Controller {
       logger.info('User token usage reset', {
         adminUserId: authUser.id,
         targetUserId: userId,
-        deletedRecords: result.rowCount
+        deletedRecords: result.rowCount,
+        correlationId: request.headers['x-correlation-id'] || 'unknown'
       });
 
       return {
@@ -383,7 +386,7 @@ export class DebugController extends Controller {
         }
       };
     } catch (error) {
-      logger.error('Error resetting user token usage:', error);
+      logger.error('Error resetting user token usage:', { error, correlationId: request.headers['x-correlation-id'] || 'unknown' });
       if (!this.getStatus()) {
         this.setStatus(500);
       }
