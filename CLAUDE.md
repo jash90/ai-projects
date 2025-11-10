@@ -27,6 +27,7 @@ This is an **AI Projects Platform** - a full-stack TypeScript application built 
 - **Winston** for structured logging
 - **Joi** for request validation
 - **Multer** for file uploads
+- **Swagger/OpenAPI 3.0** for API documentation
 
 **AI Integration**:
 - **OpenAI SDK v4.20.1** for GPT models
@@ -135,9 +136,19 @@ pnpm run clean
 │   ├── projects.ts        # Project CRUD operations
 │   ├── agents.ts          # AI agent management
 │   ├── chat.ts            # AI chat functionality
+│   ├── conversations.ts   # Conversation management
 │   ├── files.ts           # File upload/management
+│   ├── projectFiles.ts    # Project file operations
+│   ├── models.ts          # AI model listing & sync
+│   ├── usage.ts           # Token usage statistics
+│   ├── settings.ts        # User settings management
+│   ├── markdown.ts        # Markdown processing
 │   ├── admin.ts           # Admin panel endpoints
 │   └── debug.ts           # Debug/troubleshooting tools
+├── swagger/               # OpenAPI documentation
+│   ├── index.ts           # Swagger setup & configuration
+│   ├── definition.ts      # API metadata & tags
+│   └── components/        # Reusable schemas & responses
 ├── services/
 │   ├── aiService.ts       # OpenAI & Anthropic integration
 │   ├── socketHandler.ts   # WebSocket connection management
@@ -156,6 +167,8 @@ pnpm run clean
 - **File uploads**: Multer with security validation (10MB limit)
 - **Database**: PostgreSQL with connection pooling, JSONB for metadata
 - **Caching**: Redis for sessions, rate limiting, and model data
+- **API Documentation**: Swagger/OpenAPI 3.0 with interactive documentation at `/api-docs`
+- **CORS**: Configurable origin support (comma-separated list for multiple origins)
 
 ### Frontend Architecture
 
@@ -241,7 +254,9 @@ OPENAI_API_KEY=your-openai-api-key
 ANTHROPIC_API_KEY=your-anthropic-api-key
 JWT_SECRET=your-jwt-secret
 ADMIN_EMAIL=admin@example.com
-CORS_ORIGIN=http://localhost:3000
+CORS_ORIGIN=http://localhost:3000                    # Comma-separated list for multiple origins
+ENABLE_SWAGGER=true                                 # Enable API documentation (default: true in dev, false in prod)
+API_BASE_URL=http://localhost:3001                  # Base URL for API (used in Swagger docs)
 ```
 
 **Frontend** (`.env`):
@@ -326,6 +341,16 @@ if (!response.success) {
 - **Type checking** with TypeScript strict mode
 
 ## Special Features
+
+### API Documentation (Swagger/OpenAPI)
+- **Interactive documentation** at `/api-docs` endpoint
+- **OpenAPI 3.0 specification** with comprehensive endpoint documentation
+- **Try it out** functionality for testing endpoints directly from docs
+- **Authentication support**: JWT bearer token authorization in documentation UI
+- **Automatic schema generation** from JSDoc comments in route files
+- **Downloadable spec**: OpenAPI JSON specification available at `/api-docs.json`
+- **Environment-aware**: Enabled by default in development, opt-in for production
+- **Organized by tags**: Authentication, Projects, Agents, Chat, Files, Admin, Debug, etc.
 
 ### Advanced Markdown System
 - **Rich editor** with toolbar and live preview
