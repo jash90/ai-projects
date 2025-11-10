@@ -106,10 +106,11 @@ export class SocketHandler {
         const recentMessages = await MessageModel.getRecentMessages(projectId, userId, 20);
         socket.emit('message-history', { projectId, messages: recentMessages });
       } catch (messageError) {
-        logger.warn('Could not load message history (messages table does not exist):', {
+        logger.warn('Could not load message history', {
           projectId,
           userId,
-          error: messageError instanceof Error ? messageError.message : String(messageError)
+          error: messageError instanceof Error ? messageError.message : String(messageError),
+          errorStack: messageError instanceof Error ? messageError.stack : undefined
         });
         // Send empty message history - join still succeeds
         socket.emit('message-history', { projectId, messages: [] });
