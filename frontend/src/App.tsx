@@ -26,7 +26,7 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import ErrorBoundary from '@/components/ErrorBoundary'
 
 function App() {
-  const { isAuthenticated, setUser, logout } = useAuth()
+  const { isAuthenticated, user, setUser, logout } = useAuth()
   const theme = useTheme()
   useSocket()
 
@@ -134,14 +134,16 @@ function App() {
                     </DashboardLayout>
                   }
                 />
-                <Route
-                  path="/admin"
-                  element={
-                    <DashboardLayout>
-                      <AdminPage />
-                    </DashboardLayout>
-                  }
-                />
+                {user?.role === 'admin' && (
+                  <Route
+                    path="/admin"
+                    element={
+                      <DashboardLayout>
+                        <AdminPage />
+                      </DashboardLayout>
+                    }
+                  />
+                )}
                 <Route path="*" element={<Navigate to="/dashboard" replace />} />
               </>
             )}
