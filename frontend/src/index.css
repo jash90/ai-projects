@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Streamdown styles */
+@source "../node_modules/streamdown/dist/*.js";
+
 @layer base {
   /* Mobile-first responsive design */
   html {

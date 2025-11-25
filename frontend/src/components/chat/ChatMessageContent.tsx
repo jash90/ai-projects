@@ -1,4 +1,4 @@
-import { MarkdownPreview } from '@/components/markdown/MarkdownPreview'
+import { Streamdown } from 'streamdown'
 import { cn } from '@/lib/utils'
 
 interface ChatMessageContentProps {
@@ -8,45 +8,22 @@ interface ChatMessageContentProps {
 }
 
 export function ChatMessageContent({ content, isUser, className }: ChatMessageContentProps) {
-  // Detect if content contains Markdown
-  const hasMarkdown = detectMarkdown(content)
-  
-  if (hasMarkdown && !isUser) {
-    // Render AI messages as Markdown
+  // User messages are rendered as plain text
+  // AI messages use Streamdown for markdown rendering with streaming support
+  if (!isUser) {
     return (
       <div className={cn('chat-markdown-content', className)}>
-        <MarkdownPreview 
-          content={content} 
-          className="chat-markdown-preview"
-        />
+        <div className="chat-markdown-preview prose dark:prose-invert max-w-none">
+          <Streamdown>{content}</Streamdown>
+        </div>
       </div>
     )
   }
-  
-  // Render user messages and plain text as before
+
+  // Render user messages as plain text
   return (
     <div className="whitespace-pre-wrap break-words">
       {content}
     </div>
   )
-}
-
-// Simple Markdown detection
-function detectMarkdown(text: string): boolean {
-  const markdownPatterns = [
-    /#{1,6}\s+/,           // Headers
-    /\*\*.*?\*\*/,         // Bold
-    /\*.*?\*/,             // Italic
-    /`.*?`/,               // Inline code
-    /```[\s\S]*?```/,      // Code blocks
-    /```mermaid[\s\S]*?```/, // Mermaid diagrams
-    /^\s*[-*+]\s+/m,       // Lists
-    /^\s*\d+\.\s+/m,       // Numbered lists
-    /\[.*?\]\(.*?\)/,      // Links
-    /\$\$[\s\S]*?\$\$/,    // Math blocks
-    /\$.*?\$/,             // Inline math
-    /\|.*\|/,              // Tables
-  ]
-
-  return markdownPatterns.some(pattern => pattern.test(text))
 }
