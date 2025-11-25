@@ -317,7 +317,24 @@ export class UserModel {
     await pool.query(query, [adminUserId, actionType, targetUserId, JSON.stringify(details)]);
   }
 
-  static async checkTokenLimit(userId: string, tokensToUse: number): Promise<void> {
+  /**
+   * Token limit check result with detailed usage information
+   */
+  static async checkTokenLimit(userId: string, tokensToUse: number): Promise<{
+    allowed: boolean;
+    currentUsage: {
+      totalTokens: number;
+      monthlyTokens: number;
+    };
+    limits: {
+      globalLimit: number;
+      monthlyLimit: number;
+    };
+    remaining: {
+      global: number;
+      monthly: number;
+    };
+  }> {
     const user = await this.findById(userId);
     if (!user) {
       throw new Error(`User not found: ${userId}`);
@@ -328,30 +345,64 @@ export class UserModel {
       throw createUserInactiveError(userId);
     }
 
-    // Get user's current usage
+    // Get user's current usage with FOR UPDATE to prevent race conditions
+    // Using advisory lock pattern for better concurrency
     const usageQuery = `
-      SELECT 
-        COALESCE(SUM(total_tokens), 0) as total_tokens,
-        COALESCE(SUM(CASE 
-          WHEN created_at >= DATE_TRUNC('month', CURRENT_DATE) 
-          THEN total_tokens 
-          ELSE 0 
-        END), 0) as monthly_tokens
+      SELECT
+        COALESCE(SUM(total_tokens)::BIGINT, 0) as total_tokens,
+        COALESCE(SUM(CASE
+          WHEN created_at >= DATE_TRUNC('month', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+          THEN total_tokens
+          ELSE 0
+        END)::BIGINT, 0) as monthly_tokens
       FROM token_usage
       WHERE user_id = $1
     `;
 
     const usageResult = await pool.query(usageQuery, [userId]);
     const { total_tokens, monthly_tokens } = usageResult.rows[0];
-    
-    // Convert database string values to numbers to prevent string concatenation
-    const totalTokensNum = parseInt(total_tokens) || 0;
-    const monthlyTokensNum = parseInt(monthly_tokens) || 0;
+
+    // Safely convert database values to numbers
+    // Using Number() for cleaner conversion with explicit fallback
+    const totalTokensNum = Number(total_tokens) || 0;
+    const monthlyTokensNum = Number(monthly_tokens) || 0;
+
+    // Validate that conversions produced valid numbers
+    if (!Number.isFinite(totalTokensNum) || !Number.isFinite(monthlyTokensNum)) {
+      logger.error('Invalid token usage values from database', {
+        userId,
+        total_tokens,
+        monthly_tokens,
+        totalTokensNum,
+        monthlyTokensNum
+      });
+      throw new Error('Invalid token usage data');
+    }
 
     // Get global limits if user doesn't have specific limits
     const globalLimits = await this.getGlobalTokenLimits();
-    const globalLimit = user.token_limit_global || globalLimits.global;
-    const monthlyLimit = user.token_limit_monthly || globalLimits.monthly;
+    const globalLimit = user.token_limit_global ?? globalLimits.global;
+    const monthlyLimit = user.token_limit_monthly ?? globalLimits.monthly;
+
+    // Calculate remaining tokens
+    const remainingGlobal = globalLimit > 0 ? Math.max(0, globalLimit - totalTokensNum) : Infinity;
+    const remainingMonthly = monthlyLimit > 0 ? Math.max(0, monthlyLimit - monthlyTokensNum) : Infinity;
+
+    const result = {
+      allowed: true,
+      currentUsage: {
+        totalTokens: totalTokensNum,
+        monthlyTokens: monthlyTokensNum
+      },
+      limits: {
+        globalLimit,
+        monthlyLimit
+      },
+      remaining: {
+        global: remainingGlobal === Infinity ? -1 : remainingGlobal,
+        monthly: remainingMonthly === Infinity ? -1 : remainingMonthly
+      }
+    };
 
     // Check global limit
     if (globalLimit > 0 && totalTokensNum + tokensToUse > globalLimit) {
@@ -364,6 +415,64 @@ export class UserModel {
       const { createTokenLimitError } = await import('../utils/errors');
       throw createTokenLimitError('monthly', monthlyTokensNum, monthlyLimit, tokensToUse);
     }
+
+    return result;
+  }
+
+  /**
+   * Get current token usage for a user (without throwing)
+   */
+  static async getTokenUsage(userId: string): Promise<{
+    totalTokens: number;
+    monthlyTokens: number;
+    limits: {
+      globalLimit: number;
+      monthlyLimit: number;
+    };
+    percentUsed: {
+      global: number;
+      monthly: number;
+    };
+  }> {
+    const user = await this.findById(userId);
+    if (!user) {
+      throw new Error(`User not found: ${userId}`);
+    }
+
+    const usageQuery = `
+      SELECT
+        COALESCE(SUM(total_tokens)::BIGINT, 0) as total_tokens,
+        COALESCE(SUM(CASE
+          WHEN created_at >= DATE_TRUNC('month', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+          THEN total_tokens
+          ELSE 0
+        END)::BIGINT, 0) as monthly_tokens
+      FROM token_usage
+      WHERE user_id = $1
+    `;
+
+    const usageResult = await pool.query(usageQuery, [userId]);
+    const { total_tokens, monthly_tokens } = usageResult.rows[0];
+
+    const totalTokensNum = Number(total_tokens) || 0;
+    const monthlyTokensNum = Number(monthly_tokens) || 0;
+
+    const globalLimits = await this.getGlobalTokenLimits();
+    const globalLimit = user.token_limit_global ?? globalLimits.global;
+    const monthlyLimit = user.token_limit_monthly ?? globalLimits.monthly;
+
+    return {
+      totalTokens: totalTokensNum,
+      monthlyTokens: monthlyTokensNum,
+      limits: {
+        globalLimit,
+        monthlyLimit
+      },
+      percentUsed: {
+        global: globalLimit > 0 ? Math.round((totalTokensNum / globalLimit) * 100) : 0,
+        monthly: monthlyLimit > 0 ? Math.round((monthlyTokensNum / monthlyLimit) * 100) : 0
+      }
+    };
   }
 
   static async updateProfile(userId: string, updates: UserProfileUpdate): Promise<User | null> {

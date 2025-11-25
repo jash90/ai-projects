@@ -1,5 +1,6 @@
 import { TokenUsageModel } from '../models/TokenUsage';
 import logger from '../utils/logger';
+import crypto from 'crypto';
 
 // Pricing per 1K tokens (in USD)
 // Prices as of 2024 - should be updated regularly or fetched from a config
@@ -54,7 +55,59 @@ const MODEL_PRICING = {
   }
 };
 
+// Track recently used idempotency keys to prevent duplicates (TTL: 5 minutes)
+const recentIdempotencyKeys = new Map<string, number>();
+const IDEMPOTENCY_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
+// Clean up expired idempotency keys periodically
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, timestamp] of recentIdempotencyKeys.entries()) {
+    if (now - timestamp > IDEMPOTENCY_TTL_MS) {
+      recentIdempotencyKeys.delete(key);
+    }
+  }
+}, 60000); // Clean up every minute
+
+export interface TrackUsageResult {
+  success: boolean;
+  tracked: boolean;
+  error?: string;
+  isDuplicate?: boolean;
+}
+
 export class TokenService {
+  /**
+   * Generate idempotency key for a request
+   * Uses hash of user, conversation, timestamp (rounded to second), and tokens
+   */
+  static generateIdempotencyKey(params: {
+    userId: string;
+    conversationId?: string;
+    provider: string;
+    model: string;
+    promptTokens: number;
+    completionTokens: number;
+  }): string {
+    const timestamp = Math.floor(Date.now() / 1000); // Round to second
+    const data = `${params.userId}:${params.conversationId || 'none'}:${params.provider}:${params.model}:${params.promptTokens}:${params.completionTokens}:${timestamp}`;
+    return crypto.createHash('sha256').update(data).digest('hex').substring(0, 32);
+  }
+
+  /**
+   * Check if idempotency key was recently used
+   */
+  static isRecentlyUsed(key: string): boolean {
+    return recentIdempotencyKeys.has(key);
+  }
+
+  /**
+   * Mark idempotency key as used
+   */
+  static markAsUsed(key: string): void {
+    recentIdempotencyKeys.set(key, Date.now());
+  }
+
   /**
    * Calculate the cost of tokens for a specific model
    */
@@ -66,16 +119,16 @@ export class TokenService {
   ): number {
     const providerPricing = MODEL_PRICING[provider];
     const modelPricing = providerPricing[model] || providerPricing.default;
-    
+
     // Calculate cost (pricing is per 1K tokens)
     const promptCost = (promptTokens / 1000) * modelPricing.prompt;
     const completionCost = (completionTokens / 1000) * modelPricing.completion;
-    
+
     return promptCost + completionCost;
   }
 
   /**
-   * Track token usage for a request
+   * Track token usage for a request with retry logic and idempotency protection
    */
   static async trackUsage(params: {
     userId: string;
@@ -87,40 +140,108 @@ export class TokenService {
     promptTokens: number;
     completionTokens: number;
     requestType?: string;
-  }): Promise<void> {
-    try {
-      const totalTokens = params.promptTokens + params.completionTokens;
-      const estimatedCost = this.calculateCost(
-        params.provider,
-        params.model,
-        params.promptTokens,
-        params.completionTokens
-      );
-
-      await TokenUsageModel.create({
-        user_id: params.userId,
-        project_id: params.projectId,
-        agent_id: params.agentId,
-        conversation_id: params.conversationId,
-        provider: params.provider,
-        model: params.model,
-        prompt_tokens: params.promptTokens,
-        completion_tokens: params.completionTokens,
-        total_tokens: totalTokens,
-        estimated_cost: estimatedCost,
-        request_type: params.requestType
-      });
-
-      logger.info('Token usage tracked', {
-        provider: params.provider,
-        model: params.model,
-        tokens: totalTokens,
-        cost: estimatedCost.toFixed(6)
-      });
-    } catch (error) {
-      logger.error('Failed to track token usage:', error);
-      // Don't throw - we don't want to break the request if tracking fails
+    idempotencyKey?: string;
+  }): Promise<TrackUsageResult> {
+    // Validate input
+    if (!params.userId) {
+      logger.warn('Token tracking skipped: no userId provided');
+      return { success: true, tracked: false, error: 'No userId provided' };
     }
+
+    const totalTokens = params.promptTokens + params.completionTokens;
+    if (totalTokens <= 0) {
+      logger.warn('Token tracking skipped: no tokens to track');
+      return { success: true, tracked: false, error: 'No tokens to track' };
+    }
+
+    // Generate or use provided idempotency key
+    const idempotencyKey = params.idempotencyKey || this.generateIdempotencyKey({
+      userId: params.userId,
+      conversationId: params.conversationId,
+      provider: params.provider,
+      model: params.model,
+      promptTokens: params.promptTokens,
+      completionTokens: params.completionTokens,
+    });
+
+    // Check for duplicate request
+    if (this.isRecentlyUsed(idempotencyKey)) {
+      logger.warn('Token tracking skipped: duplicate request detected', {
+        idempotencyKey,
+        userId: params.userId,
+        provider: params.provider,
+      });
+      return { success: true, tracked: false, isDuplicate: true };
+    }
+
+    const estimatedCost = this.calculateCost(
+      params.provider,
+      params.model,
+      params.promptTokens,
+      params.completionTokens
+    );
+
+    // Retry logic with exponential backoff
+    const maxRetries = 3;
+    let lastError: Error | null = null;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        await TokenUsageModel.create({
+          user_id: params.userId,
+          project_id: params.projectId,
+          agent_id: params.agentId,
+          conversation_id: params.conversationId,
+          provider: params.provider,
+          model: params.model,
+          prompt_tokens: params.promptTokens,
+          completion_tokens: params.completionTokens,
+          total_tokens: totalTokens,
+          estimated_cost: estimatedCost,
+          request_type: params.requestType
+        });
+
+        // Mark as used to prevent duplicates
+        this.markAsUsed(idempotencyKey);
+
+        logger.info('Token usage tracked', {
+          provider: params.provider,
+          model: params.model,
+          tokens: totalTokens,
+          cost: estimatedCost.toFixed(6),
+          attempt
+        });
+
+        return { success: true, tracked: true };
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+
+        if (attempt < maxRetries) {
+          const delayMs = Math.pow(2, attempt) * 100; // 200ms, 400ms, 800ms
+          logger.warn(`Token tracking failed, retrying in ${delayMs}ms`, {
+            attempt,
+            maxRetries,
+            error: lastError.message
+          });
+          await new Promise(resolve => setTimeout(resolve, delayMs));
+        }
+      }
+    }
+
+    // All retries failed
+    logger.error('Failed to track token usage after all retries:', {
+      error: lastError?.message,
+      userId: params.userId,
+      provider: params.provider,
+      model: params.model,
+      tokens: totalTokens
+    });
+
+    return {
+      success: false,
+      tracked: false,
+      error: lastError?.message || 'Unknown error'
+    };
   }
 
   /**
@@ -160,11 +281,95 @@ export class TokenService {
   }
 
   /**
-   * Estimate tokens for a text (rough approximation)
-   * OpenAI's rule of thumb: 1 token ≈ 4 characters or 0.75 words
+   * Estimate tokens for a text with improved accuracy
+   * Based on OpenAI's tokenization patterns:
+   * - English: ~4 characters per token
+   * - Code: ~3.5 characters per token (more symbols)
+   * - Other languages: ~2-3 characters per token
    */
   static estimateTokens(text: string): number {
-    // Simple estimation: divide by 4 characters per token
-    return Math.ceil(text.length / 4);
+    if (!text) return 0;
+
+    // Count different character types for better estimation
+    const codePatterns = /[{}[\]();:=<>!&|+\-*/%^~`@#$\\]/g;
+    const codeCharCount = (text.match(codePatterns) || []).length;
+    const totalLength = text.length;
+
+    // Estimate code ratio
+    const codeRatio = totalLength > 0 ? codeCharCount / totalLength : 0;
+
+    // Adjust characters per token based on content type
+    // More code = fewer characters per token (3.5)
+    // More text = more characters per token (4.0)
+    const charsPerToken = 4.0 - (codeRatio * 0.5);
+
+    return Math.ceil(totalLength / charsPerToken);
+  }
+
+  /**
+   * Estimate tokens for messages and files (for pre-request limit checking)
+   * Returns a more accurate estimate without doubling
+   */
+  static estimateRequestTokens(
+    messages: Array<{ content: string; role: string }>,
+    projectFiles?: string[],
+    systemPrompt?: string
+  ): { promptTokens: number; estimatedCompletionTokens: number; total: number } {
+    let promptTokens = 0;
+
+    // System prompt tokens
+    if (systemPrompt) {
+      promptTokens += this.estimateTokens(systemPrompt);
+    }
+
+    // Message tokens (with overhead for role markers)
+    for (const msg of messages) {
+      promptTokens += this.estimateTokens(msg.content);
+      promptTokens += 4; // Role marker overhead (~4 tokens per message)
+    }
+
+    // Project files tokens
+    if (projectFiles) {
+      for (const file of projectFiles) {
+        promptTokens += this.estimateTokens(file);
+      }
+    }
+
+    // Add formatting overhead (typically 50-100 tokens)
+    promptTokens += 50;
+
+    // Estimate completion tokens based on typical response patterns
+    // Average response is 500-1000 tokens, we use conservative estimate
+    const estimatedCompletionTokens = Math.min(2000, Math.max(500, promptTokens * 0.5));
+
+    return {
+      promptTokens,
+      estimatedCompletionTokens,
+      total: promptTokens + estimatedCompletionTokens
+    };
+  }
+
+  /**
+   * Get current usage for a user (for limit checking)
+   */
+  static async getCurrentUsage(userId: string): Promise<{
+    totalTokens: number;
+    monthlyTokens: number;
+    totalCost: number;
+    monthlyCost: number;
+  }> {
+    const summary = await this.getUserSummary(userId);
+    const monthlySummary = await this.getUserSummary(
+      userId,
+      new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+      new Date()
+    );
+
+    return {
+      totalTokens: summary.total_tokens,
+      monthlyTokens: monthlySummary.total_tokens,
+      totalCost: summary.total_cost,
+      monthlyCost: monthlySummary.total_cost
+    };
   }
 }

@@ -102,7 +102,7 @@ class AIService {
     try {
       // Check token limits before processing (estimate tokens for the request)
       if (userId) {
-        const estimatedTokens = this.estimateTokens(messages, projectFiles);
+        const estimatedTokens = this.estimateTokens(messages, projectFiles, agent.system_prompt);
         await UserModel.checkTokenLimit(userId, estimatedTokens);
       }
       if (stream) {
@@ -815,27 +815,21 @@ class AIService {
     return modelData?.provider === provider && !!modelData;
   }
 
-  private estimateTokens(messages: ConversationMessage[], projectFiles?: string[]): number {
-    // Rough estimation: 1 token ≈ 4 characters for English text
-    let totalChars = 0;
-    
-    // Count message characters
-    messages.forEach(message => {
-      totalChars += message.content.length;
-    });
-    
-    // Count project file characters (if included)
-    if (projectFiles) {
-      projectFiles.forEach(file => {
-        totalChars += file.length;
-      });
-    }
-    
-    // Add some buffer for system prompts and formatting
-    const estimatedTokens = Math.ceil(totalChars / 4) + 500;
-    
-    // Add response buffer (estimate response will be similar size to input)
-    return estimatedTokens * 2;
+  /**
+   * Estimate tokens for a chat request using improved algorithm
+   * Uses TokenService.estimateRequestTokens for accurate estimation
+   */
+  private estimateTokens(
+    messages: ConversationMessage[],
+    projectFiles?: string[],
+    systemPrompt?: string
+  ): number {
+    const estimation = TokenService.estimateRequestTokens(
+      messages.map(m => ({ content: m.content, role: m.role })),
+      projectFiles,
+      systemPrompt
+    );
+    return estimation.total;
   }
 
   // Get provider status
