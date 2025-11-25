@@ -406,7 +406,7 @@ router.post('/ai/validate',
   authenticateToken,
   validate({ 
     body: Joi.object({
-      provider: Joi.string().valid('openai', 'anthropic').required(),
+      provider: Joi.string().valid('openai', 'anthropic', 'openrouter').required(),
       model: Joi.string().required()
     })
   }),

@@ -149,7 +149,7 @@ router.get('/providers/status', async (req, res) => {
  *         required: true
  *         schema:
  *           type: string
- *           enum: [openai, anthropic]
+ *           enum: [openai, anthropic, openrouter]
  *         description: AI provider name
  *     responses:
  *       200:
@@ -186,14 +186,14 @@ router.get('/providers/:provider', async (req, res) => {
   try {
     const { provider } = req.params;
     
-    if (provider !== 'openai' && provider !== 'anthropic') {
+    if (!['openai', 'anthropic', 'openrouter'].includes(provider)) {
       return res.status(400).json({
         success: false,
-        error: 'Invalid provider. Must be "openai" or "anthropic"'
+        error: 'Invalid provider. Must be "openai", "anthropic", or "openrouter"'
       });
     }
     
-    const models = await modelService.getModelsByProvider(provider);
+    const models = await modelService.getModelsByProvider(provider as 'openai' | 'anthropic' | 'openrouter');
     
     res.json({
       success: true,
