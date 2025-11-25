@@ -323,8 +323,13 @@ class ModelService {
       }
 
     } catch (error) {
-      logger.error('Failed to fetch OpenRouter models from API, using fallback list', {
-        error: error instanceof Error ? error.message : 'Unknown error'
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const isTimeout = errorMessage.includes('abort') || errorMessage.includes('timeout');
+
+      logger.warn('Using fallback OpenRouter models list - API may be unavailable', {
+        reason: isTimeout ? 'Request timeout (10s)' : errorMessage,
+        fallbackModelCount: 43, // Number of models in fallback list
+        suggestion: 'Check OpenRouter API status or network connectivity'
       });
 
       // Fallback to curated list of popular models
@@ -807,6 +812,8 @@ class ModelService {
     // Sync OpenRouter models
     if (this.openrouter) {
       try {
+        // Clear cache to force fresh fetch on manual sync
+        this.clearOpenRouterCache();
         const models = await this.fetchOpenRouterModels();
         const result = await this.syncModelsToDatabase('openrouter', models);
         results.push(result);
@@ -983,7 +990,7 @@ class ModelService {
   /**
    * Get models by provider from database
    */
-  async getModelsByProvider(provider: 'openai' | 'anthropic'): Promise<AIModel[]> {
+  async getModelsByProvider(provider: 'openai' | 'anthropic' | 'openrouter'): Promise<AIModel[]> {
     return await AIModelModel.findByProvider(provider);
   }
 
