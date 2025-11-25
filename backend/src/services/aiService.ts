@@ -64,13 +64,34 @@ class AIService {
         timeout: 120000, // 2 minutes timeout for AI processing
         maxRetries: 3, // Retry failed requests
         defaultHeaders: {
-          'HTTP-Referer': 'https://github.com/your-repo', // Optional: for rankings
-          'X-Title': 'AI Projects Platform', // Optional: for rankings
+          'HTTP-Referer': process.env.APP_URL || 'https://ai-projects-platform.app', // For OpenRouter rankings
+          'X-Title': 'AI Projects Platform', // For OpenRouter rankings
         },
       });
       logger.info('OpenRouter client initialized successfully');
     } else {
       logger.warn('OpenRouter API key not configured');
+    }
+  }
+
+  /**
+   * Check if a model supports custom temperature settings
+   * Some models (like o1, o3) only work with default temperature
+   */
+  private modelSupportsTemperature(model: string): boolean {
+    // Models that don't support custom temperature
+    const noTempModels = ['o1', 'o3', 'o1-preview', 'o1-mini'];
+    return !noTempModels.some(m => model.includes(m));
+  }
+
+  /**
+   * Validate OpenRouter model format (must be provider/model-name)
+   */
+  private validateOpenRouterModel(model: string): void {
+    if (!model.includes('/')) {
+      throw new Error(
+        `Invalid OpenRouter model format: "${model}". Expected format: "provider/model-name" (e.g., "anthropic/claude-3-sonnet")`
+      );
     }
   }
 
@@ -538,6 +559,9 @@ class AIService {
       throw new Error('OpenRouter API key not configured');
     }
 
+    // Validate model format
+    this.validateOpenRouterModel(agent.model);
+
     // Build system message with agent prompt and file context
     let systemContent = agent.system_prompt;
     if (projectFiles && projectFiles.length > 0) {
@@ -553,43 +577,78 @@ class AIService {
       }))
     ];
 
-    const completion = await this.openrouter.chat.completions.create({
+    // Build request params with conditional temperature
+    const requestParams: any = {
       model: agent.model,
       messages: openrouterMessages,
-      temperature: agent.temperature,
       max_tokens: agent.max_tokens,
-    });
+    };
 
-    const choice = completion.choices[0];
-    if (!choice.message.content) {
-      throw new Error('No response content from OpenRouter');
+    // Only include temperature if the model supports it
+    if (this.modelSupportsTemperature(agent.model)) {
+      requestParams.temperature = agent.temperature;
     }
 
-    // Track token usage if user context is provided
-    if (userId && completion.usage) {
-      await TokenService.trackUsage({
-        userId,
-        projectId,
-        agentId: agent.id,
-        conversationId,
+    try {
+      const completion = await this.openrouter.chat.completions.create(requestParams);
+
+      const choice = completion.choices[0];
+      if (!choice.message.content) {
+        throw new Error('No response content from OpenRouter');
+      }
+
+      const promptTokens = completion.usage?.prompt_tokens || 0;
+      const completionTokens = completion.usage?.completion_tokens || 0;
+      const totalTokens = completion.usage?.total_tokens || 0;
+
+      // Track token usage if user context is provided
+      if (userId && completion.usage) {
+        await TokenService.trackUsage({
+          userId,
+          projectId,
+          agentId: agent.id,
+          conversationId,
+          provider: 'openrouter',
+          model: agent.model,
+          promptTokens,
+          completionTokens,
+          requestType: 'chat'
+        });
+      }
+
+      logger.info('OpenRouter chat completed', {
         provider: 'openrouter',
         model: agent.model,
-        promptTokens: completion.usage.prompt_tokens || 0,
-        completionTokens: completion.usage.completion_tokens || 0,
-        requestType: 'chat'
+        promptTokens,
+        completionTokens,
+        totalTokens
       });
-    }
 
-    return {
-      content: choice.message.content,
-      metadata: {
+      return {
+        content: choice.message.content,
+        metadata: {
+          model: agent.model,
+          tokens: totalTokens,
+          prompt_tokens: promptTokens,
+          completion_tokens: completionTokens,
+          files: projectFiles
+        }
+      };
+    } catch (error: any) {
+      logger.error('OpenRouter API error details:', {
+        error: error.message,
         model: agent.model,
-        tokens: completion.usage?.total_tokens,
-        prompt_tokens: completion.usage?.prompt_tokens,
-        completion_tokens: completion.usage?.completion_tokens,
-        files: projectFiles
+        status: error.status,
+        code: error.code
+      });
+
+      if (error?.error?.message) {
+        throw new Error(`OpenRouter API error: ${error.error.message}`);
+      } else if (error?.message) {
+        throw new Error(`OpenRouter API error: ${error.message}`);
       }
-    };
+      throw new Error('Unknown error occurred with OpenRouter API');
+    }
   }
 
   private async streamChatWithOpenRouter(
@@ -604,6 +663,9 @@ class AIService {
       throw new Error('OpenRouter API key not configured');
     }
 
+    // Validate model format
+    this.validateOpenRouterModel(agent.model);
+
     // Build system message with agent prompt and file context
     let systemContent = agent.system_prompt;
     if (projectFiles && projectFiles.length > 0) {
@@ -619,17 +681,40 @@ class AIService {
       }))
     ];
 
-    const stream = await this.openrouter.chat.completions.create({
+    // Build request params with conditional temperature
+    const requestParams: any = {
       model: agent.model,
       messages: openrouterMessages,
-      temperature: agent.temperature,
       max_tokens: agent.max_tokens,
       stream: true, // Enable streaming
-    });
-
-    return {
-      stream: this.processOpenRouterStream(stream, agent, userId, projectId, conversationId, projectFiles)
     };
+
+    // Only include temperature if the model supports it
+    if (this.modelSupportsTemperature(agent.model)) {
+      requestParams.temperature = agent.temperature;
+    }
+
+    try {
+      const stream = await this.openrouter.chat.completions.create(requestParams);
+
+      return {
+        stream: this.processOpenRouterStream(stream, agent, userId, projectId, conversationId, projectFiles)
+      };
+    } catch (error: any) {
+      logger.error('OpenRouter streaming API error details:', {
+        error: error.message,
+        model: agent.model,
+        status: error.status,
+        code: error.code
+      });
+
+      if (error?.error?.message) {
+        throw new Error(`OpenRouter API error: ${error.error.message}`);
+      } else if (error?.message) {
+        throw new Error(`OpenRouter API error: ${error.message}`);
+      }
+      throw new Error('Unknown error occurred with OpenRouter API');
+    }
   }
 
   private async *processOpenRouterStream(
@@ -677,6 +762,15 @@ class AIService {
         });
       }
 
+      logger.info('OpenRouter streaming chat completed', {
+        provider: 'openrouter',
+        model: agent.model,
+        promptTokens,
+        completionTokens,
+        totalTokens,
+        responseLength: fullContent.length
+      });
+
       return {
         content: fullContent,
         metadata: {
@@ -687,8 +781,13 @@ class AIService {
           files: projectFiles
         }
       };
-    } catch (error) {
-      logger.error('OpenRouter streaming error:', error);
+    } catch (error: any) {
+      logger.error('OpenRouter streaming error:', {
+        error: error.message,
+        model: agent.model,
+        status: error.status,
+        code: error.code
+      });
       throw error;
     }
   }
