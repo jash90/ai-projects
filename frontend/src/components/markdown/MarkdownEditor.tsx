@@ -1,10 +1,27 @@
 import { useState, useEffect } from 'react'
-import MDEditor from '@uiw/react-md-editor'
+import MDEditor, { commands } from '@uiw/react-md-editor'
+import type { ICommand } from '@uiw/react-md-editor'
 import { MarkdownPreview } from './MarkdownPreview'
 import { MarkdownToolbar } from './MarkdownToolbar'
 import { useMarkdownEditor } from './hooks/useMarkdownEditor'
 import { cn } from '@/lib/utils'
 import './markdown.css'
+
+// Custom Mermaid command for the toolbar
+const mermaidCommand: ICommand = {
+  name: 'mermaid',
+  keyCommand: 'mermaid',
+  buttonProps: { 'aria-label': 'Insert Mermaid diagram', title: 'Insert Mermaid diagram' },
+  icon: (
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+      <path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z" />
+    </svg>
+  ),
+  execute: (_state, api) => {
+    const template = `\n\`\`\`mermaid\ngraph TD\n    A[Start] --> B{Decision}\n    B -->|Yes| C[Action 1]\n    B -->|No| D[Action 2]\n    C --> E[End]\n    D --> E\n\`\`\`\n`
+    api.replaceSelection(template)
+  },
+}
 
 interface MarkdownEditorProps {
   content: string
@@ -75,12 +92,31 @@ export function MarkdownEditor({
               visibleDragbar={true}
               textareaProps={{
                 placeholder: 'Start writing your Markdown...',
-                style: { 
+                style: {
                   fontSize: 14,
                   fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
                 }
               }}
               preview="edit"
+              commands={[
+                commands.bold,
+                commands.italic,
+                commands.strikethrough,
+                commands.hr,
+                commands.divider,
+                commands.link,
+                commands.quote,
+                commands.code,
+                commands.codeBlock,
+                commands.image,
+                commands.table,
+                commands.divider,
+                commands.unorderedListCommand,
+                commands.orderedListCommand,
+                commands.checkedListCommand,
+                commands.divider,
+                mermaidCommand,
+              ]}
             />
           </div>
         )}
@@ -102,6 +138,25 @@ export function MarkdownEditor({
                 enableScroll={true}
                 visibleDragbar={true}
                 preview="edit"
+                commands={[
+                  commands.bold,
+                  commands.italic,
+                  commands.strikethrough,
+                  commands.hr,
+                  commands.divider,
+                  commands.link,
+                  commands.quote,
+                  commands.code,
+                  commands.codeBlock,
+                  commands.image,
+                  commands.table,
+                  commands.divider,
+                  commands.unorderedListCommand,
+                  commands.orderedListCommand,
+                  commands.checkedListCommand,
+                  commands.divider,
+                  mermaidCommand,
+                ]}
               />
             </div>
             <div className="preview-pane flex-1 overflow-y-auto p-4 min-h-0">
