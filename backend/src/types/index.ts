@@ -118,7 +118,32 @@ export interface MessageMetadata {
   processing_time?: number;
   prompt_tokens?: number;
   completion_tokens?: number;
+  attachments?: ChatFileAttachment[];
 }
+
+// Chat file attachment types (for multimodal LLM support)
+export interface ChatFileAttachment {
+  id?: string;
+  filename: string;
+  mimetype: string;
+  size: number;
+  data: string; // base64 encoded data
+}
+
+// Supported file types for LLM chat attachments
+export const SUPPORTED_CHAT_FILE_TYPES = [
+  'image/png',
+  'image/jpeg',
+  'image/jpg',
+  'image/gif',
+  'image/webp',
+  'application/pdf',
+] as const;
+
+export type SupportedChatFileType = typeof SUPPORTED_CHAT_FILE_TYPES[number];
+
+export const MAX_CHAT_FILE_SIZE = 20 * 1024 * 1024; // 20MB max per file
+export const MAX_CHAT_FILES_COUNT = 5; // Max 5 files per message
 
 // File Types (for project files)
 export interface File {
