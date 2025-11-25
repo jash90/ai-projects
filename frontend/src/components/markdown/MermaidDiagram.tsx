@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import mermaid from 'mermaid';
+import DOMPurify from 'dompurify';
 
 interface MermaidDiagramProps {
   chart: string;
@@ -54,7 +55,12 @@ export function MermaidDiagram({ chart, id }: MermaidDiagramProps) {
 
         // Render the diagram
         const { svg: renderedSvg } = await mermaid.render(diagramId, chart);
-        setSvg(renderedSvg);
+
+        // Sanitize SVG for defense-in-depth against potential mermaid vulnerabilities
+        const sanitizedSvg = DOMPurify.sanitize(renderedSvg, {
+          USE_PROFILES: { svg: true, svgFilters: true },
+        });
+        setSvg(sanitizedSvg);
       } catch (err) {
         console.error('Mermaid rendering error:', err);
         setError(err instanceof Error ? err.message : 'Failed to render diagram');
