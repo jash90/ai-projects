@@ -1,0 +1,11 @@
+{
+  "name": "@claude-projects/shared",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./src/constants.ts",
+  "types": "./src/constants.ts",
+  "exports": {
+    ".": "./src/constants.ts",
+    "./constants": "./src/constants.ts"
+  }
+}

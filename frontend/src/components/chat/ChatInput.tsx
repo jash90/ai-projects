@@ -5,9 +5,15 @@ import { cn } from '@/lib/utils'
 import {
   ChatFileAttachment,
   SUPPORTED_CHAT_FILE_TYPES,
+  SupportedChatFileType,
   MAX_CHAT_FILE_SIZE,
   MAX_CHAT_FILES_COUNT
 } from '@/types'
+
+// Generate unique ID for attachments to enable immutable state updates
+const generateAttachmentId = (file: File): string => {
+  return `${file.name}-${file.lastModified}-${file.size}`;
+};
 
 interface ChatInputProps {
   onSendMessage: (message: string, attachments?: ChatFileAttachment[]) => void
@@ -73,19 +79,20 @@ function ChatInput({
     if (!files) return
 
     setFileError(null)
+
+    const currentCount = attachments.length
+    const availableSlots = MAX_CHAT_FILES_COUNT - currentCount
+    const filesToProcess = Array.from(files).slice(0, availableSlots)
+
+    if (files.length > availableSlots) {
+      setFileError(`Maximum ${MAX_CHAT_FILES_COUNT} files allowed`)
+    }
+
+    // Validate and create attachments with IDs (no preview yet)
     const newAttachments: ChatFileAttachment[] = []
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i]
-
-      // Check file count limit
-      if (attachments.length + newAttachments.length >= MAX_CHAT_FILES_COUNT) {
-        setFileError(`Maximum ${MAX_CHAT_FILES_COUNT} files allowed`)
-        break
-      }
-
+    for (const file of filesToProcess) {
       // Check file type
-      if (!SUPPORTED_CHAT_FILE_TYPES.includes(file.type as any)) {
+      if (!SUPPORTED_CHAT_FILE_TYPES.includes(file.type as SupportedChatFileType)) {
         setFileError(`Unsupported file type: ${file.type}. Supported: images, PDF`)
         continue
       }
@@ -96,22 +103,36 @@ function ChatInput({
         continue
       }
 
-      // Create preview for images
-      const attachment: ChatFileAttachment = { file }
+      // Create attachment with unique ID (preview will be added immutably)
+      newAttachments.push({
+        id: generateAttachmentId(file),
+        file,
+        preview: undefined
+      })
+    }
+
+    // Add attachments to state first
+    if (newAttachments.length > 0) {
+      setAttachments(prev => [...prev, ...newAttachments])
+    }
+
+    // Then generate previews asynchronously with IMMUTABLE updates
+    for (const { id, file } of newAttachments) {
       if (file.type.startsWith('image/')) {
         const reader = new FileReader()
-        reader.onload = (e) => {
-          attachment.preview = e.target?.result as string
-          setAttachments(prev => [...prev])
+        reader.onload = (readerEvent) => {
+          const preview = readerEvent.target?.result as string
+          // IMMUTABLE UPDATE: Replace the attachment with a new object
+          setAttachments(prev =>
+            prev.map(att =>
+              att.id === id
+                ? { ...att, preview } // Create NEW object with preview
+                : att
+            )
+          )
         }
         reader.readAsDataURL(file)
       }
-
-      newAttachments.push(attachment)
-    }
-
-    if (newAttachments.length > 0) {
-      setAttachments(prev => [...prev, ...newAttachments])
     }
 
     // Reset input
@@ -159,7 +180,7 @@ function ChatInput({
         <div className="flex flex-wrap gap-2 mb-3">
           {attachments.map((attachment, index) => (
             <div
-              key={index}
+              key={attachment.id}
               className="relative group flex items-center gap-2 bg-muted rounded-lg p-2 pr-8"
             >
               {attachment.preview ? (
