@@ -3,7 +3,7 @@ import { Dialog } from '@/components/ui/Dialog'
 import { Button } from '@/components/ui/Button'
 import { FileTypeService } from '@/services/fileTypeService'
 import { useFiles } from '@/stores/fileStore'
-import { File as FileType } from '@/types'
+import { TextFile as FileType } from '@/types'
 
 interface MarkdownMigrationDialogProps {
   open: boolean

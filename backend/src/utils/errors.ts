@@ -193,6 +193,20 @@ export const createRateLimitError = (resetTime: Date): RateLimitExceededError =>
   return new RateLimitExceededError(resetTime);
 };
 
+export const createValidationError = (details: {
+  message: string;
+  userMessage?: string;
+  metadata?: Record<string, any>;
+}): AppError => {
+  return new AppError({
+    code: ErrorCode.VALIDATION_ERROR,
+    message: details.message,
+    userMessage: details.userMessage || 'Invalid input provided',
+    statusCode: 400,
+    metadata: details.metadata
+  });
+};
+
 // Error type guard
 export const isAppError = (error: any): error is AppError => {
   return error instanceof AppError;

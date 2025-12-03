@@ -26,6 +26,22 @@ export interface StreamingChatResponse {
   stream: AsyncGenerator<string, ChatResponse, unknown>;
 }
 
+// Anthropic-supported image MIME types
+type AnthropicMediaType = 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp';
+
+/**
+ * Normalize image MIME type for Anthropic API compatibility.
+ * Handles 'image/jpg' which browsers may report but Anthropic doesn't accept.
+ */
+function normalizeImageMimeType(mimetype: string): AnthropicMediaType | null {
+  // Normalize image/jpg to image/jpeg
+  const normalized = mimetype === 'image/jpg' ? 'image/jpeg' : mimetype;
+  const validTypes: AnthropicMediaType[] = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+  return validTypes.includes(normalized as AnthropicMediaType)
+    ? (normalized as AnthropicMediaType)
+    : null;
+}
+
 class AIService {
   private openai: OpenAI | null = null;
   private anthropic: Anthropic | null = null;
@@ -453,15 +469,17 @@ class AIService {
         // Add images first
         for (const attachment of attachments) {
           if (attachment.mimetype.startsWith('image/')) {
-            const mediaType = attachment.mimetype as 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp';
-            contentParts.push({
-              type: 'image',
-              source: {
-                type: 'base64',
-                media_type: mediaType,
-                data: attachment.data
-              }
-            });
+            const mediaType = normalizeImageMimeType(attachment.mimetype);
+            if (mediaType) {
+              contentParts.push({
+                type: 'image',
+                source: {
+                  type: 'base64',
+                  media_type: mediaType,
+                  data: attachment.data
+                }
+              });
+            }
           } else if (attachment.mimetype === 'application/pdf') {
             // Anthropic supports PDF as document type
             contentParts.push({
@@ -588,15 +606,17 @@ class AIService {
         // Add images first
         for (const attachment of attachments) {
           if (attachment.mimetype.startsWith('image/')) {
-            const mediaType = attachment.mimetype as 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp';
-            contentParts.push({
-              type: 'image',
-              source: {
-                type: 'base64',
-                media_type: mediaType,
-                data: attachment.data
-              }
-            });
+            const mediaType = normalizeImageMimeType(attachment.mimetype);
+            if (mediaType) {
+              contentParts.push({
+                type: 'image',
+                source: {
+                  type: 'base64',
+                  media_type: mediaType,
+                  data: attachment.data
+                }
+              });
+            }
           } else if (attachment.mimetype === 'application/pdf') {
             contentParts.push({
               type: 'document',
