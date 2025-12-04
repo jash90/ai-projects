@@ -1,12 +1,12 @@
 import { create } from 'zustand'
-import { File, FileCreate } from '@/types'
+import { TextFile, FileCreate } from '@/types'
 import { projectFilesApi } from '@/lib/api'
 
 interface FileState {
   // Files by project ID
-  filesByProject: Record<string, File[]>
+  filesByProject: Record<string, TextFile[]>
   // Current file being edited
-  currentFile: File | null
+  currentFile: TextFile | null
   // Files being saved (by file ID)
   savingFiles: Set<string>
   isLoading: boolean
@@ -14,13 +14,13 @@ interface FileState {
   
   // Actions
   fetchProjectFiles: (projectId: string) => Promise<void>
-  getProjectFiles: (projectId: string) => File[]
-  getFileById: (fileId: string) => File | null
-  createFile: (projectId: string, data: FileCreate) => Promise<File>
+  getProjectFiles: (projectId: string) => TextFile[]
+  getFileById: (fileId: string) => TextFile | null
+  createFile: (projectId: string, data: FileCreate) => Promise<TextFile>
   updateFileContent: (fileId: string, content: string) => void
   saveFileContent: (fileId: string) => Promise<void>
   deleteFile: (fileId: string) => Promise<void>
-  setCurrentFile: (file: File | null) => void
+  setCurrentFile: (file: TextFile | null) => void
   isSaving: (fileId: string) => boolean
   clearError: () => void
 }
@@ -243,7 +243,7 @@ export const useFiles = create<FileState>((set, get) => ({
     }
   },
 
-  setCurrentFile: (file: File | null) => {
+  setCurrentFile: (file: TextFile | null) => {
     set({ currentFile: file })
   },
 

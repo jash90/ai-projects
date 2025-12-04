@@ -17,7 +17,7 @@ import {
   Wifi,
   Upload,
 } from 'lucide-react'
-import { Agent, File as FileType } from '@/types'
+import { Agent, TextFile as FileType } from '@/types'
 import { useProjects } from '@/stores/projectStore'
 import { useAgents } from '@/stores/agentStore'
 import { useFiles } from '@/stores/fileStore'

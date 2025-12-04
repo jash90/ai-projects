@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { Conversation, ConversationMessage } from '@/types'
+import { Conversation, ConversationMessage, ChatFileAttachment } from '@/types'
 import { conversationsApi, chatApi } from '@/lib/api'
 import { formatChatErrorMessage } from '@/utils/errorMessages'
 
@@ -9,11 +9,11 @@ interface ConversationState {
   // Sending states by project-agent key
   sendingStates: Record<string, boolean>
   error: string | null
-  
+
   // Actions
   getConversation: (projectId: string, agentId: string) => Promise<Conversation>
-  sendMessage: (projectId: string, agentId: string, content: string, includeFiles?: boolean) => Promise<void>
-  sendStreamingMessage: (projectId: string, agentId: string, content: string, includeFiles?: boolean) => Promise<void>
+  sendMessage: (projectId: string, agentId: string, content: string, includeFiles?: boolean, attachments?: ChatFileAttachment[]) => Promise<void>
+  sendStreamingMessage: (projectId: string, agentId: string, content: string, includeFiles?: boolean, attachments?: ChatFileAttachment[]) => Promise<void>
   clearConversation: (projectId: string, agentId: string) => Promise<void>
   clearError: () => void
 }
@@ -58,22 +58,29 @@ export const conversationStore = create<ConversationState>((set, get) => ({
     }
   },
 
-  sendMessage: async (projectId: string, agentId: string, content: string, includeFiles = true) => {
+  sendMessage: async (projectId: string, agentId: string, content: string, includeFiles = true, attachments?: ChatFileAttachment[]) => {
     const key = getConversationKey(projectId, agentId)
-    
+
     set(state => ({
       sendingStates: { ...state.sendingStates, [key]: true },
       error: null
     }))
 
     try {
-      // Add optimistic user message
+      // Add optimistic user message with attachment metadata
       const tempMessage: ConversationMessage = {
         id: `temp-${Date.now()}`,
         role: 'user',
         content,
         timestamp: new Date().toISOString(),
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
+        metadata: attachments && attachments.length > 0 ? {
+          attachments: attachments.map(a => ({
+            filename: a.file.name,
+            mimetype: a.file.type,
+            size: a.file.size
+          }))
+        } : undefined
       }
 
       set(state => {
@@ -92,10 +99,12 @@ export const conversationStore = create<ConversationState>((set, get) => ({
         return state
       })
 
-      // Send message to backend
+      // Send message to backend with files
+      const files = attachments?.map(a => a.file)
       const response = await chatApi.sendMessage(projectId, agentId, {
         message: content,
-        includeFiles: includeFiles
+        includeFiles: includeFiles,
+        files: files
       })
 
       if (response.success) {
@@ -181,22 +190,29 @@ export const conversationStore = create<ConversationState>((set, get) => ({
     }
   },
 
-  sendStreamingMessage: async (projectId: string, agentId: string, content: string, includeFiles = true) => {
+  sendStreamingMessage: async (projectId: string, agentId: string, content: string, includeFiles = true, attachments?: ChatFileAttachment[]) => {
     const key = getConversationKey(projectId, agentId)
-    
+
     set(state => ({
       sendingStates: { ...state.sendingStates, [key]: true },
       error: null
     }))
 
     try {
-      // Add optimistic user message
+      // Add optimistic user message with attachment metadata
       const tempMessage: ConversationMessage = {
         id: `temp-${Date.now()}`,
         role: 'user',
         content,
         timestamp: new Date().toISOString(),
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
+        metadata: attachments && attachments.length > 0 ? {
+          attachments: attachments.map(a => ({
+            filename: a.file.name,
+            mimetype: a.file.type,
+            size: a.file.size
+          }))
+        } : undefined
       }
 
       set(state => {
@@ -240,11 +256,12 @@ export const conversationStore = create<ConversationState>((set, get) => ({
         return state
       })
 
-      // Start streaming
+      // Start streaming with files
+      const files = attachments?.map(a => a.file)
       await chatApi.sendStreamingMessage(
         projectId,
         agentId,
-        { message: content, includeFiles },
+        { message: content, includeFiles, files },
         (chunk: string) => {
           // Update streaming message content
           set(state => {
