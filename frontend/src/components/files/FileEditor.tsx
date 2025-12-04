@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Save, RotateCcw, Maximize2, Minimize2 } from 'lucide-react'
-import { File as FileType } from '@/types'
+import { TextFile as FileType } from '@/types'
 import { useFiles } from '@/stores/fileStore'
 import { Button } from '@/components/ui/Button'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
