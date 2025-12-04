@@ -5,7 +5,10 @@
     "moduleResolution": "bundler",
     "strict": true,
     "declaration": true,
-    "outDir": "./dist"
+    "declarationMap": true,
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "rootDir": "./src"
   },
   "include": ["src/**/*"]
 }

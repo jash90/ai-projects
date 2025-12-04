@@ -9,7 +9,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
-      '@claude-projects/shared': resolve(__dirname, '../shared-types/src/constants.ts'),
     },
   },
   server: {
