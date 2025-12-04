@@ -26,6 +26,7 @@ import adminRoutes from './routes/admin';
 import settingsRoutes from './routes/settings';
 import debugRoutes from './routes/debug';
 import markdownRoutes from './routes/markdown';
+import threadRoutes from './routes/threads';
 import { setupSwagger } from './swagger';
 
 const app: express.Express = express();
@@ -171,6 +172,7 @@ app.use('/api/admin', adminRoutes);  // Admin routes
 app.use('/api/settings', settingsRoutes);  // User settings routes
 app.use('/api/debug', debugRoutes);  // Debug routes (development/testing)
 app.use('/api/markdown', markdownRoutes); // Markdown routes
+app.use('/api/threads', threadRoutes);    // Thread-based chat routes
 
 // 404 handler
 app.use('*', (req, res) => {

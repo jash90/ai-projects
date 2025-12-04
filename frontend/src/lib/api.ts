@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios'
-import { ApiResponse, AuthTokens, PaginatedResponse, User, UserPreferences, AdminStats, UserManagement, UserUsageStats, TokenLimitUpdate, AdminActivity } from '@/types'
+import { ApiResponse, AuthTokens, PaginatedResponse, User, UserPreferences, AdminStats, UserManagement, UserUsageStats, TokenLimitUpdate, AdminActivity, Thread, ThreadMessage } from '@/types'
 import { authStore } from '@/stores/authStore'
 
 class ApiClient {
@@ -578,6 +578,129 @@ export const adminApi = {
         totalPages: number;
       };
     }>>('/admin/activity', params),
+};
+
+// Threads API
+export const threadsApi = {
+  // Get all threads for a project
+  getThreads: (projectId: string) =>
+    apiClient.get<ApiResponse<{ threads: Thread[] }>>(`/threads/projects/${projectId}`),
+
+  // Create a new thread
+  createThread: (projectId: string, title?: string) =>
+    apiClient.post<ApiResponse<{ thread: Thread }>>(`/threads/projects/${projectId}`, { title }),
+
+  // Get thread by ID
+  getThread: (threadId: string) =>
+    apiClient.get<ApiResponse<{ thread: Thread }>>(`/threads/${threadId}`),
+
+  // Update thread
+  updateThread: (threadId: string, title: string) =>
+    apiClient.put<ApiResponse<{ thread: Thread }>>(`/threads/${threadId}`, { title }),
+
+  // Delete thread
+  deleteThread: (threadId: string) =>
+    apiClient.delete<ApiResponse>(`/threads/${threadId}`),
+
+  // Get messages for a thread
+  getMessages: (threadId: string) =>
+    apiClient.get<ApiResponse<{ messages: ThreadMessage[] }>>(`/threads/${threadId}/messages`),
+
+  // Send a chat message in a thread
+  sendMessage: (
+    threadId: string,
+    agentId: string,
+    data: { message: string; includeFiles?: boolean; stream?: boolean }
+  ) =>
+    apiClient.post<ApiResponse<{ message: ThreadMessage; messages: ThreadMessage[]; response: any }>>(
+      `/threads/${threadId}/chat`,
+      { ...data, agentId }
+    ),
+
+  // Send streaming message in a thread
+  sendStreamingMessage: async (
+    threadId: string,
+    agentId: string,
+    data: { message: string; includeFiles?: boolean },
+    onChunk: (chunk: string) => void,
+    onComplete: (response: any) => void,
+    onError: (error: string) => void
+  ) => {
+    const token = authStore.getState().tokens?.access_token;
+    const baseURL = import.meta.env.VITE_API_URL || '/api';
+
+    try {
+      const response = await fetch(`${baseURL}/threads/${threadId}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...data,
+          agentId,
+          stream: true
+        })
+      });
+
+      if (!response.ok) {
+        try {
+          const errorData = await response.json();
+          const error = new Error(errorData.error || errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+          (error as any).errorData = errorData;
+          throw error;
+        } catch (parseError) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('No response body');
+      }
+
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+
+              if (data.type === 'chunk') {
+                onChunk(data.content);
+              } else if (data.type === 'complete') {
+                onComplete(data);
+              } else if (data.type === 'error') {
+                onError(data.error);
+              }
+            } catch (e) {
+              console.warn('Failed to parse SSE data:', line);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      if (error instanceof Error && (error as any).errorData) {
+        onError((error as any).errorData);
+      } else {
+        onError(error instanceof Error ? error.message : 'Unknown error');
+      }
+    }
+  },
+
+  // Delete a message
+  deleteMessage: (threadId: string, messageId: string) =>
+    apiClient.delete<ApiResponse>(`/threads/${threadId}/messages/${messageId}`),
 };
 
 // Settings API

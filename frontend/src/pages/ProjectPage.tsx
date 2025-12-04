@@ -26,7 +26,7 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { AgentPanel } from '@/components/agents/AgentPanel'
 import { FileExplorer } from '@/components/files/FileExplorer'
 import { FileEditor } from '@/components/files/FileEditor'
-import { Chat } from '@/components/chat/Chat'
+import { ThreadChat } from '@/components/chat/ThreadChat'
 import { MobileNavigation, useIsMobile } from '@/components/ui/MobileNavigation'
 import { usePWAFeatures, useOfflineFiles } from '@/hooks/usePWAFeatures'
 import { cn } from '@/lib/utils'
@@ -443,7 +443,7 @@ function ProjectPage() {
         {/* Mobile Content */}
         <div className="flex-1 overflow-hidden">
           {mobileView === 'chat' && (
-            <Chat
+            <ThreadChat
               project={currentProject}
               agent={selectedAgent}
               className="h-full"
@@ -625,7 +625,7 @@ function ProjectPage() {
 
         {/* Center Panel - Chat */}
         <div className="flex-1 flex flex-col">
-          <Chat
+          <ThreadChat
             project={currentProject}
             agent={selectedAgent}
             onToggleSidebar={() => setLeftPanelCollapsed(!leftPanelCollapsed)}
