@@ -146,23 +146,23 @@ export class UserModel {
 
   static async getUserStatsById(userId: string): Promise<UserUsageStats | null> {
     const query = `
-      SELECT 
+      SELECT
         u.id as user_id,
         u.email,
         u.username,
         u.token_limit_global,
         u.token_limit_monthly,
-        COALESCE(SUM(tu.total_tokens), 0) as total_tokens,
-        COALESCE(SUM(CASE 
-          WHEN tu.created_at >= DATE_TRUNC('month', CURRENT_DATE) 
-          THEN tu.total_tokens 
-          ELSE 0 
-        END), 0) as monthly_tokens,
+        COALESCE(SUM(tu.total_tokens)::BIGINT, 0) as total_tokens,
+        COALESCE(SUM(CASE
+          WHEN tu.created_at >= DATE_TRUNC('month', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+          THEN tu.total_tokens
+          ELSE 0
+        END)::BIGINT, 0) as monthly_tokens,
         COALESCE(SUM(tu.estimated_cost), 0) as total_cost,
-        COALESCE(SUM(CASE 
-          WHEN tu.created_at >= DATE_TRUNC('month', CURRENT_DATE) 
-          THEN tu.estimated_cost 
-          ELSE 0 
+        COALESCE(SUM(CASE
+          WHEN tu.created_at >= DATE_TRUNC('month', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+          THEN tu.estimated_cost
+          ELSE 0
         END), 0) as monthly_cost,
         COUNT(DISTINCT p.id) as project_count,
         MAX(tu.created_at) as last_active
@@ -174,38 +174,55 @@ export class UserModel {
     `;
 
     const result = await pool.query(query, [userId]);
-    return result.rows[0] || null;
+    if (!result.rows[0]) return null;
+
+    // Get global limits for fallback
+    const globalLimits = await this.getGlobalTokenLimits();
+    const row = result.rows[0];
+
+    // Convert to proper numbers and apply fallback limits
+    return {
+      ...row,
+      total_tokens: Number(row.total_tokens) || 0,
+      monthly_tokens: Number(row.monthly_tokens) || 0,
+      total_cost: Number(row.total_cost) || 0,
+      monthly_cost: Number(row.monthly_cost) || 0,
+      project_count: Number(row.project_count) || 0,
+      // Apply fallback limits if user doesn't have specific ones
+      token_limit_global: row.token_limit_global ?? globalLimits.global,
+      token_limit_monthly: row.token_limit_monthly ?? globalLimits.monthly,
+    };
   }
 
   static async getAdminStats(): Promise<AdminStats> {
     const statsQuery = `
-      SELECT 
+      SELECT
         (SELECT COUNT(*) FROM users) as total_users,
         (SELECT COUNT(*) FROM users WHERE is_active = true) as active_users,
         (SELECT COUNT(*) FROM projects) as total_projects,
         (SELECT COUNT(*) FROM messages) as total_messages,
-        (SELECT COALESCE(SUM(total_tokens), 0) FROM token_usage) as total_tokens_used,
+        (SELECT COALESCE(SUM(total_tokens)::BIGINT, 0) FROM token_usage) as total_tokens_used,
         (SELECT COALESCE(SUM(estimated_cost), 0) FROM token_usage) as total_cost,
-        (SELECT COALESCE(SUM(total_tokens), 0) FROM token_usage WHERE created_at >= DATE_TRUNC('month', CURRENT_DATE)) as monthly_tokens,
-        (SELECT COALESCE(SUM(estimated_cost), 0) FROM token_usage WHERE created_at >= DATE_TRUNC('month', CURRENT_DATE)) as monthly_cost
+        (SELECT COALESCE(SUM(total_tokens)::BIGINT, 0) FROM token_usage WHERE created_at >= DATE_TRUNC('month', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')) as monthly_tokens,
+        (SELECT COALESCE(SUM(estimated_cost), 0) FROM token_usage WHERE created_at >= DATE_TRUNC('month', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')) as monthly_cost
     `;
 
     const topUsersQuery = `
-      SELECT 
+      SELECT
         u.id as user_id,
         u.email,
         u.username,
-        COALESCE(SUM(tu.total_tokens), 0) as total_tokens,
-        COALESCE(SUM(CASE 
-          WHEN tu.created_at >= DATE_TRUNC('month', CURRENT_DATE) 
-          THEN tu.total_tokens 
-          ELSE 0 
-        END), 0) as monthly_tokens,
+        COALESCE(SUM(tu.total_tokens)::BIGINT, 0) as total_tokens,
+        COALESCE(SUM(CASE
+          WHEN tu.created_at >= DATE_TRUNC('month', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+          THEN tu.total_tokens
+          ELSE 0
+        END)::BIGINT, 0) as monthly_tokens,
         COALESCE(SUM(tu.estimated_cost), 0) as total_cost,
-        COALESCE(SUM(CASE 
-          WHEN tu.created_at >= DATE_TRUNC('month', CURRENT_DATE) 
-          THEN tu.estimated_cost 
-          ELSE 0 
+        COALESCE(SUM(CASE
+          WHEN tu.created_at >= DATE_TRUNC('month', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+          THEN tu.estimated_cost
+          ELSE 0
         END), 0) as monthly_cost,
         COUNT(DISTINCT p.id) as project_count,
         MAX(tu.created_at) as last_active
