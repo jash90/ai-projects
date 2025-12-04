@@ -38,8 +38,8 @@ RUN apk add --no-cache curl
 # Copy built application from builder
 COPY --from=builder /app/frontend/dist /usr/share/nginx/html
 
-# Copy nginx configuration
-COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx configuration from builder stage
+COPY --from=builder /app/frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
