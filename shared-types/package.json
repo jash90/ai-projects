@@ -2,10 +2,23 @@
   "name": "@claude-projects/shared",
   "version": "1.0.0",
   "type": "module",
-  "main": "./src/constants.ts",
-  "types": "./src/constants.ts",
+  "main": "./dist/constants.js",
+  "types": "./dist/constants.d.ts",
   "exports": {
-    ".": "./src/constants.ts",
-    "./constants": "./src/constants.ts"
-  }
+    ".": {
+      "types": "./dist/constants.d.ts",
+      "import": "./dist/constants.js"
+    },
+    "./constants": {
+      "types": "./dist/constants.d.ts",
+      "import": "./dist/constants.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "files": [
+    "dist"
+  ]
 }
