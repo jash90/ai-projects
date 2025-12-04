@@ -348,6 +348,42 @@ export interface UserSettings {
   };
 }
 
+// Thread Types
+export interface Thread {
+  id: string;
+  project_id: string;
+  title: string;
+  created_at: string;
+  updated_at: string;
+  message_count?: number;
+  last_message?: string;
+  last_agent_id?: string;
+  last_agent_name?: string;
+}
+
+export interface ThreadMessage {
+  id: string;
+  thread_id: string;
+  agent_id: string | null;
+  agent_name?: string;
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  metadata: Record<string, any>;
+  created_at: string;
+  // Frontend-only properties
+  isLoading?: boolean;
+  error?: string;
+}
+
+export interface ThreadCreate {
+  project_id: string;
+  title?: string;
+}
+
+export interface ThreadUpdate {
+  title?: string;
+}
+
 // Admin Types
 export interface AdminStats {
   total_users: number;
