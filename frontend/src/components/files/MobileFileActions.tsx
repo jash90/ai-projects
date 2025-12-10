@@ -13,7 +13,7 @@ import {
   Archive,
   X
 } from 'lucide-react';
-import { File as FileType } from '@/types';
+import { TextFile as FileType } from '@/types';
 import { Button } from '@/components/ui/Button';
 import { cn, getFileExtension } from '@/lib/utils';
 

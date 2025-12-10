@@ -23,6 +23,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@claude-projects/shared": "workspace:*",
     "@anthropic-ai/sdk": "^0.60.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",

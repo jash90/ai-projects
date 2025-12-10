@@ -8,16 +8,26 @@ WORKDIR /app
 # Enable pnpm
 RUN corepack enable pnpm
 
-# Copy package files
-COPY package*.json ./
+# Copy workspace configuration
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
 
-# Install dependencies
+# Copy package.json from each workspace package
+COPY backend/package.json ./backend/
+COPY frontend/package.json ./frontend/
+COPY shared-types/package.json ./shared-types/
+
+# Install all workspace dependencies
 RUN pnpm install
 
-# Copy source code
-COPY . .
+# Copy source code for shared-types and backend (skip frontend source)
+COPY shared-types/ ./shared-types/
+COPY backend/ ./backend/
 
-# Build the application
+# Build shared-types first, then backend
+WORKDIR /app/shared-types
+RUN pnpm run build
+
+WORKDIR /app/backend
 RUN pnpm run build
 
 # Create uploads directory
@@ -30,5 +40,5 @@ EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:3001/api/health || exit 1
 
-# Start the application
-CMD ["pnpm", "start"]
+# Start the backend
+CMD ["node", "dist/index.js"]

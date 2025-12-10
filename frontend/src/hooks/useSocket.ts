@@ -40,9 +40,12 @@ export function useSocket(projectId?: string, options: UseSocketOptions = {}) {
   const connect = () => {
     if (socketRef.current || !tokens?.access_token) return
 
-    const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:3001'
+    // Use same origin (Vite proxy) in development, or configured URL in production
+    // Empty VITE_WS_URL means use current origin (works with Vite proxy)
+    const wsUrl = import.meta.env.VITE_WS_URL || window.location.origin
 
     socketRef.current = io(wsUrl, {
+      path: '/socket.io',
       auth: {
         token: tokens.access_token,
       },
