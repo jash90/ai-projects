@@ -1,10 +1,17 @@
-// Re-export shared constants (single source of truth)
-export {
-  SUPPORTED_CHAT_FILE_TYPES,
-  SupportedChatFileType,
-  MAX_CHAT_FILE_SIZE,
-  MAX_CHAT_FILES_COUNT
-} from '@claude-projects/shared';
+// Chat file attachment constants (inlined to avoid ESM/CJS compatibility issues)
+export const SUPPORTED_CHAT_FILE_TYPES = [
+  'image/png',
+  'image/jpeg',
+  'image/jpg',
+  'image/gif',
+  'image/webp',
+  'application/pdf',
+] as const;
+
+export type SupportedChatFileType = typeof SUPPORTED_CHAT_FILE_TYPES[number];
+
+export const MAX_CHAT_FILE_SIZE = 20 * 1024 * 1024; // 20MB max per file
+export const MAX_CHAT_FILES_COUNT = 5; // Max 5 files per message
 
 // User Types
 export interface User {
