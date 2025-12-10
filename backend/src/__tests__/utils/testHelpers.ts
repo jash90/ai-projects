@@ -49,13 +49,13 @@ export class TestHelpers {
 
   static generateTokens(userId: string): AuthTokens {
     const access_token = jwt.sign(
-      { userId },
+      { user_id: userId },
       process.env.JWT_SECRET || 'test-secret',
       { expiresIn: '1h' }
     );
 
     const refresh_token = jwt.sign(
-      { userId },
+      { user_id: userId },
       process.env.JWT_SECRET || 'test-secret',
       { expiresIn: '7d' }
     );
@@ -127,8 +127,11 @@ export class TestHelpers {
     return result.rows[0];
   }
 
-  static async authenticatedRequest(app: any, tokens: AuthTokens) {
-    return request(app).set('Authorization', `Bearer ${tokens.access_token}`);
+  static authenticatedRequest(app: any, tokens: AuthTokens) {
+    const agent = request.agent(app);
+    // Set auth header for all subsequent requests
+    agent.set('Authorization', `Bearer ${tokens.access_token}`);
+    return agent;
   }
 
   static async seedDatabase() {
@@ -177,7 +180,7 @@ export class TestHelpers {
   }
 
   static async cleanDatabase() {
-    const tables = ['conversations', 'files', 'project_files', 'projects', 'users'];
+    const tables = ['token_usage', 'conversations', 'files', 'project_files', 'projects', 'users', 'agents', 'ai_models'];
     for (const table of tables) {
       await pool.query(`TRUNCATE ${table} RESTART IDENTITY CASCADE`);
     }
