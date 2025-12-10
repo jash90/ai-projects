@@ -1,7 +1,18 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { Plus, FolderOpen, MessageSquare, Clock, BarChart3, Shield } from 'lucide-react'
+import {
+  Plus,
+  FolderOpen,
+  MessageSquare,
+  Clock,
+  BarChart3,
+  Shield,
+  ArrowRight,
+  Sparkles,
+  TrendingUp,
+  FileText,
+} from 'lucide-react'
 import { projectsApi } from '@/lib/api'
 import { useAuth } from '@/stores/authStore'
 import { formatDate, formatRelativeTime } from '@/lib/utils'
@@ -9,6 +20,8 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import { NewProjectDialog } from '@/components/projects/NewProjectDialog'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Button } from '@/components/ui/Button'
+import { Card, CardContent, CardHeader, CardTitle, StatCard } from '@/components/ui/Card'
+import { Badge } from '@/components/ui/Badge'
 
 const DashboardPage: React.FC = () => {
   const { user } = useAuth()
@@ -27,9 +40,9 @@ const DashboardPage: React.FC = () => {
 
   const projects = projectsData?.data?.items || []
   const recentProjects = recentProjectsData?.data?.projects || []
+  const totalMessages = projects.reduce((acc, project) => acc + (project.message_count || 0), 0)
 
   const handleNewProjectSuccess = (projectId: string) => {
-    // Navigate to the new project
     navigate(`/projects/${projectId}`)
   }
 
@@ -39,202 +52,251 @@ const DashboardPage: React.FC = () => {
       <PageHeader
         title={`Welcome back, ${user?.username}`}
         subtitle="Manage your projects and collaborate with AI agents"
+        variant="gradient"
         actions={
           <Button
             onClick={() => setShowNewProjectDialog(true)}
-            className="flex items-center gap-2"
+            variant="gradient"
+            leftIcon={<Plus className="w-4 h-4" />}
           >
-            <Plus className="w-4 h-4" />
             New Project
           </Button>
         }
       />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in">
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-card rounded-lg border border-border p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                <FolderOpen className="w-6 h-6 text-primary" />
-              </div>
-              <div>
-                <p className="text-2xl font-semibold text-card-foreground">
-                  {projectsData?.data?.total || 0}
-                </p>
-                <p className="text-muted-foreground">Total Projects</p>
-              </div>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+          <StatCard
+            title="Total Projects"
+            value={projectsData?.data?.total || 0}
+            icon={<FolderOpen className="w-6 h-6" />}
+            variant="primary"
+            trend={projects.length > 0 ? { value: 12, isPositive: true } : undefined}
+          />
 
-          <div className="bg-card rounded-lg border border-border p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center">
-                <MessageSquare className="w-6 h-6 text-green-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-semibold text-card-foreground">
-                  {projects.reduce((acc, project) => acc + (project.message_count || 0), 0)}
-                </p>
-                <p className="text-muted-foreground">Total Messages</p>
-              </div>
-            </div>
-          </div>
+          <StatCard
+            title="Total Messages"
+            value={totalMessages.toLocaleString()}
+            icon={<MessageSquare className="w-6 h-6" />}
+            variant="success"
+          />
 
-          <div className="bg-card rounded-lg border border-border p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center">
-                <Clock className="w-6 h-6 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-semibold text-card-foreground">
-                  {recentProjects.length}
-                </p>
-                <p className="text-muted-foreground">Active This Week</p>
-              </div>
-            </div>
-          </div>
+          <StatCard
+            title="Active This Week"
+            value={recentProjects.length}
+            icon={<Clock className="w-6 h-6" />}
+            variant="info"
+          />
 
-          <Link to="/usage" className="bg-card rounded-lg border border-border p-6 hover:bg-accent transition-colors">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center">
-                <BarChart3 className="w-6 h-6 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-lg font-semibold text-card-foreground">
-                  Usage Stats
-                </p>
-                <p className="text-muted-foreground">View token usage</p>
-              </div>
-            </div>
-          </Link>
-
-          {user?.role === 'admin' && (
-            <Link to="/admin" className="bg-card rounded-lg border border-border p-6 hover:bg-accent transition-colors">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center">
-                  <Shield className="w-6 h-6 text-red-600" />
-                </div>
-                <div>
-                  <p className="text-lg font-semibold text-card-foreground">
-                    Admin Panel
+          <Card
+            variant="interactive"
+            className="cursor-pointer"
+            onClick={() => navigate('/usage')}
+          >
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-muted-foreground">Usage Stats</p>
+                  <p className="text-lg font-semibold text-foreground">View token usage</p>
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    <TrendingUp className="w-3 h-3" />
+                    Track your AI usage
                   </p>
-                  <p className="text-muted-foreground">Manage users & limits</p>
+                </div>
+                <div className="rounded-xl p-3 bg-accent">
+                  <BarChart3 className="h-6 w-6 text-accent-foreground" />
                 </div>
               </div>
-            </Link>
-          )}
+            </CardContent>
+          </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Admin Link (if admin) */}
+        {user?.role === 'admin' && (
+          <Card
+            variant="interactive"
+            className="border-destructive/20 bg-destructive/5 hover:bg-destructive/10"
+            onClick={() => navigate('/admin')}
+          >
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-destructive/10 rounded-xl flex items-center justify-center">
+                    <Shield className="w-6 h-6 text-destructive" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">Admin Panel</p>
+                    <p className="text-sm text-muted-foreground">Manage users, token limits, and system settings</p>
+                  </div>
+                </div>
+                <ArrowRight className="w-5 h-5 text-muted-foreground" />
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Recent Projects */}
           <div className="lg:col-span-2">
-            <div className="bg-card rounded-lg border border-border">
-              <div className="p-6 border-b border-border">
-                <h2 className="text-lg font-semibold text-card-foreground">
+            <Card variant="elevated">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <Clock className="w-5 h-5 text-primary" />
                   Recent Projects
-                </h2>
-              </div>
-              
-              <div className="p-6">
+                </CardTitle>
+                {recentProjects.length > 0 && (
+                  <Badge variant="secondary" size="sm">
+                    {recentProjects.length} active
+                  </Badge>
+                )}
+              </CardHeader>
+
+              <CardContent>
                 {isLoadingRecent ? (
-                  <div className="flex justify-center py-8">
+                  <div className="flex justify-center py-12">
                     <LoadingSpinner />
                   </div>
                 ) : recentProjects.length > 0 ? (
-                  <div className="space-y-4">
-                    {recentProjects.map((project) => (
+                  <div className="space-y-3">
+                    {recentProjects.map((project, index) => (
                       <Link
                         key={project.id}
                         to={`/projects/${project.id}`}
-                        className="block p-4 rounded-lg border border-border hover:bg-muted/50 transition-colors"
+                        className="block p-4 rounded-xl border border-border bg-background hover:bg-muted/50 hover:border-primary/20 transition-all duration-200 group animate-fade-in"
+                        style={{ animationDelay: `${index * 50}ms` }}
                       >
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <h3 className="font-medium text-card-foreground">
-                              {project.name}
-                            </h3>
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-medium text-foreground group-hover:text-primary transition-colors truncate">
+                                {project.name}
+                              </h3>
+                              {index === 0 && (
+                                <Badge variant="success" size="sm" dot>
+                                  Most Recent
+                                </Badge>
+                              )}
+                            </div>
                             {project.description && (
-                              <p className="text-sm text-muted-foreground mt-1">
+                              <p className="text-sm text-muted-foreground mt-1 line-clamp-1">
                                 {project.description}
                               </p>
                             )}
-                            <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-                              <span>{project.message_count || 0} messages</span>
-                              <span>{project.file_count || 0} files</span>
-                              <span>{formatRelativeTime(project.updated_at)}</span>
+                            <div className="flex items-center gap-4 mt-3">
+                              <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                                <MessageSquare className="w-3.5 h-3.5" />
+                                {project.message_count || 0} messages
+                              </span>
+                              <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                                <FileText className="w-3.5 h-3.5" />
+                                {project.file_count || 0} files
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                {formatRelativeTime(project.updated_at)}
+                              </span>
                             </div>
                           </div>
+                          <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all opacity-0 group-hover:opacity-100" />
                         </div>
                       </Link>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <FolderOpen className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>No recent projects</p>
-                    <p className="text-sm">Create your first project to get started</p>
-                  </div>
+                  <EmptyState
+                    icon={<Sparkles className="w-12 h-12" />}
+                    title="No recent projects"
+                    description="Create your first project to get started with AI collaboration"
+                    action={
+                      <Button
+                        onClick={() => setShowNewProjectDialog(true)}
+                        variant="gradient"
+                        leftIcon={<Plus className="w-4 h-4" />}
+                      >
+                        Create Project
+                      </Button>
+                    }
+                  />
                 )}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
 
-          {/* All Projects */}
+          {/* All Projects Sidebar */}
           <div>
-            <div className="bg-card rounded-lg border border-border">
-              <div className="p-6 border-b border-border">
-                <h2 className="text-lg font-semibold text-card-foreground">
+            <Card variant="elevated">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FolderOpen className="w-5 h-5 text-primary" />
                   All Projects
-                </h2>
-              </div>
-              
-              <div className="p-6">
+                </CardTitle>
+              </CardHeader>
+
+              <CardContent>
                 {isLoadingProjects ? (
                   <div className="flex justify-center py-8">
                     <LoadingSpinner />
                   </div>
                 ) : projects.length > 0 ? (
-                  <div className="space-y-3">
-                    {projects.slice(0, 5).map((project) => (
+                  <div className="space-y-2">
+                    {projects.slice(0, 6).map((project, index) => (
                       <Link
                         key={project.id}
                         to={`/projects/${project.id}`}
-                        className="block p-3 rounded-md hover:bg-muted/50 transition-colors"
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors group animate-fade-in"
+                        style={{ animationDelay: `${index * 30}ms` }}
                       >
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-primary/10 rounded-md flex items-center justify-center">
-                            <FolderOpen className="w-4 h-4 text-primary" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-card-foreground truncate">
-                              {project.name}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {formatDate(project.updated_at)}
-                            </p>
-                          </div>
+                        <div className="w-9 h-9 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                          <FolderOpen className="w-4 h-4 text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-foreground truncate text-sm group-hover:text-primary transition-colors">
+                            {project.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {formatDate(project.updated_at)}
+                          </p>
                         </div>
                       </Link>
                     ))}
-                    
-                    {projects.length > 5 && (
+
+                    {projects.length > 6 && (
                       <Link
                         to="/projects"
-                        className="block p-3 text-center text-primary hover:text-primary/90 text-sm font-medium"
+                        className="flex items-center justify-center gap-2 p-3 text-primary hover:text-primary-hover text-sm font-medium transition-colors"
                       >
-                        View all {projects.length} projects →
+                        View all {projects.length} projects
+                        <ArrowRight className="w-4 h-4" />
                       </Link>
                     )}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <FolderOpen className="w-8 h-8 mx-auto mb-3 opacity-50" />
-                    <p className="text-sm">No projects yet</p>
-                  </div>
+                  <EmptyState
+                    icon={<FolderOpen className="w-8 h-8" />}
+                    title="No projects yet"
+                    description="Start by creating a new project"
+                    compact
+                  />
                 )}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
+
+            {/* Quick Tips Card */}
+            <Card variant="bordered" className="mt-6">
+              <CardContent className="p-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-info/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="w-4 h-4 text-info" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm text-foreground">Quick Tip</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Add files to your project to give AI agents context for better assistance.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </main>
@@ -248,5 +310,31 @@ const DashboardPage: React.FC = () => {
     </div>
   )
 }
+
+// Empty State Component
+interface EmptyStateProps {
+  icon: React.ReactNode
+  title: string
+  description: string
+  action?: React.ReactNode
+  compact?: boolean
+}
+
+const EmptyState: React.FC<EmptyStateProps> = ({
+  icon,
+  title,
+  description,
+  action,
+  compact = false,
+}) => (
+  <div className={`text-center ${compact ? 'py-6' : 'py-12'}`}>
+    <div className={`mx-auto mb-4 text-muted-foreground/40 ${compact ? '' : 'animate-pulse-soft'}`}>
+      {icon}
+    </div>
+    <p className={`font-medium text-muted-foreground ${compact ? 'text-sm' : ''}`}>{title}</p>
+    <p className={`text-muted-foreground mt-1 ${compact ? 'text-xs' : 'text-sm'}`}>{description}</p>
+    {action && <div className="mt-4">{action}</div>}
+  </div>
+)
 
 export default DashboardPage

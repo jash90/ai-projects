@@ -1,3 +1,11 @@
+// Re-export shared constants (single source of truth)
+export {
+  SUPPORTED_CHAT_FILE_TYPES,
+  MAX_CHAT_FILE_SIZE,
+  MAX_CHAT_FILES_COUNT
+} from '@claude-projects/shared';
+export type { SupportedChatFileType } from '@claude-projects/shared';
+
 // User Types
 export interface User {
   id: string;
@@ -140,10 +148,25 @@ export interface MessageMetadata {
   tokens?: number;
   model?: string;
   processing_time?: number;
+  attachments?: ChatFileAttachmentInfo[];
 }
 
-// File Types (for project files)
-export interface File {
+// Chat file attachment types (for multimodal LLM support)
+export interface ChatFileAttachment {
+  id: string; // Unique identifier for reliable state updates
+  file: File; // Browser File object
+  preview?: string; // Data URL for image preview
+}
+
+export interface ChatFileAttachmentInfo {
+  filename: string;
+  mimetype: string;
+  size: number;
+}
+
+// File Types (for project text files)
+// Named TextFile to avoid collision with browser's native File type
+export interface TextFile {
   id: string;
   project_id: string;
   name: string;

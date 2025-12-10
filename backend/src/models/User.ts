@@ -179,11 +179,11 @@ export class UserModel {
 
   static async getAdminStats(): Promise<AdminStats> {
     const statsQuery = `
-      SELECT 
+      SELECT
         (SELECT COUNT(*) FROM users) as total_users,
         (SELECT COUNT(*) FROM users WHERE is_active = true) as active_users,
         (SELECT COUNT(*) FROM projects) as total_projects,
-        (SELECT COUNT(*) FROM messages) as total_messages,
+        (SELECT COALESCE(SUM(jsonb_array_length(messages)), 0) FROM conversations) as total_messages,
         (SELECT COALESCE(SUM(total_tokens), 0) FROM token_usage) as total_tokens_used,
         (SELECT COALESCE(SUM(estimated_cost), 0) FROM token_usage) as total_cost,
         (SELECT COALESCE(SUM(total_tokens), 0) FROM token_usage WHERE created_at >= DATE_TRUNC('month', CURRENT_DATE)) as monthly_tokens,
@@ -562,8 +562,14 @@ export class UserModel {
 
   static async getUserPreferences(userId: string): Promise<UserPreferences> {
     try {
-      // For now, return default preferences since we don't have a preferences table
-      // This can be extended later with a user_preferences table
+      const query = `SELECT preferences FROM users WHERE id = $1`;
+      const result = await pool.query(query, [userId]);
+
+      if (result.rows[0]?.preferences) {
+        return result.rows[0].preferences;
+      }
+
+      // Return default preferences if none set
       return {
         theme: 'system',
         notifications_enabled: true,
@@ -577,9 +583,19 @@ export class UserModel {
 
   static async updateUserPreferences(userId: string, preferences: UserPreferences): Promise<UserPreferences> {
     try {
-      // For now, just return the preferences since we don't have a preferences table
-      // This can be extended later with a user_preferences table
-      logger.info(`User ${userId} preferences updated:`, preferences);
+      const query = `
+        UPDATE users
+        SET preferences = $2, updated_at = NOW()
+        WHERE id = $1
+        RETURNING preferences
+      `;
+      const result = await pool.query(query, [userId, JSON.stringify(preferences)]);
+
+      if (result.rows[0]?.preferences) {
+        logger.info(`User ${userId} preferences updated:`, preferences);
+        return result.rows[0].preferences;
+      }
+
       return preferences;
     } catch (error) {
       logger.error('Error updating user preferences:', error);
