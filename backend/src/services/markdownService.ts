@@ -44,9 +44,27 @@ class MarkdownService {
       const html = this.renderToHtml(markdown)
       const fullHtml = this.wrapHtmlForPdf(html)
       
+      // Railway 512MB optimization: minimize Chromium memory usage
       const browser = await puppeteer.launch({
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        headless: 'new',
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',      // Critical: use /tmp instead of /dev/shm (Docker memory)
+          '--disable-gpu',                 // No GPU acceleration needed
+          '--disable-extensions',          // No extensions
+          '--single-process',              // Reduces memory footprint
+          '--no-zygote',                   // Disable zygote process
+          '--disable-background-networking',
+          '--disable-default-apps',
+          '--disable-sync',
+          '--disable-translate',
+          '--hide-scrollbars',
+          '--mute-audio',
+          '--no-first-run',
+          '--js-flags=--max-old-space-size=128'  // Limit Chromium JS heap to 128MB
+        ]
       })
       
       const page = await browser.newPage()
