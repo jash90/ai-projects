@@ -230,9 +230,11 @@ async function startServer(): Promise<void> {
     await seedDatabase();
     logger.info('Database seeded successfully');
 
-    // Initialize model service and sync AI models
-    await modelService.initialize();
-    logger.info('Model service initialized successfully');
+    // Initialize model service and sync AI models in background (non-blocking)
+    // This prevents Railway health check timeout (30s) when API sync takes too long
+    modelService.initialize()
+      .then(() => logger.info('Model service initialized successfully'))
+      .catch(err => logger.error('Background model sync failed (non-fatal):', err.message));
 
     // Configure server timeouts for long AI processing
     server.timeout = 180000; // 3 minutes
