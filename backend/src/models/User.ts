@@ -179,11 +179,11 @@ export class UserModel {
 
   static async getAdminStats(): Promise<AdminStats> {
     const statsQuery = `
-      SELECT 
+      SELECT
         (SELECT COUNT(*) FROM users) as total_users,
         (SELECT COUNT(*) FROM users WHERE is_active = true) as active_users,
         (SELECT COUNT(*) FROM projects) as total_projects,
-        (SELECT COUNT(*) FROM messages) as total_messages,
+        (SELECT COALESCE(SUM(jsonb_array_length(messages)), 0) FROM conversations) as total_messages,
         (SELECT COALESCE(SUM(total_tokens), 0) FROM token_usage) as total_tokens_used,
         (SELECT COALESCE(SUM(estimated_cost), 0) FROM token_usage) as total_cost,
         (SELECT COALESCE(SUM(total_tokens), 0) FROM token_usage WHERE created_at >= DATE_TRUNC('month', CURRENT_DATE)) as monthly_tokens,
