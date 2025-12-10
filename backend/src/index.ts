@@ -312,7 +312,8 @@ process.on('uncaughtException', (error) => {
 
 process.on('unhandledRejection', (reason, promise) => {
   logger.error('Unhandled rejection at:', { promise, reason });
-  process.exit(1);
+  // Don't call process.exit() - allow server to continue running
+  // Background tasks like model sync may fail without crashing the server
 });
 
 // Start the server
