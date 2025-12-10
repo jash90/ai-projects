@@ -24,6 +24,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/Badge'
 import { settingsApi } from '@/lib/api'
 import { useAuth } from '@/stores/authStore'
+import { uiStore } from '@/stores/uiStore'
 import { UserPreferences } from '@/types'
 import { formatNumber, formatCurrency, cn } from '@/lib/utils'
 import toast from 'react-hot-toast'
@@ -130,6 +131,11 @@ const SettingsPage: React.FC = () => {
   const handlePreferenceChange = (key: keyof UserPreferences, value: any) => {
     const updatedPreferences = { ...preferences, [key]: value }
     updatePreferencesMutation.mutate(updatedPreferences)
+
+    // Natychmiast zaaplikuj theme do UI
+    if (key === 'theme') {
+      uiStore.getState().setTheme(value)
+    }
   }
 
   const tabs = [

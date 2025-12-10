@@ -21,7 +21,7 @@ type LoginFormData = z.infer<typeof loginSchema>
 const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
-  const { login } = useAuth()
+  const { login, syncPreferencesFromServer } = useAuth()
 
   const {
     register,
@@ -33,9 +33,11 @@ const LoginPage: React.FC = () => {
 
   const loginMutation = useMutation({
     mutationFn: authApi.login,
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       if (response.success && response.data) {
         login(response.data.user, response.data.tokens)
+        // Sync preferences (theme) from server after login
+        await syncPreferencesFromServer()
         toast.success('Welcome back!')
         navigate('/')
       }

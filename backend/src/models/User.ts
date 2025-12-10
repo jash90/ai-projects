@@ -453,8 +453,14 @@ export class UserModel {
 
   static async getUserPreferences(userId: string): Promise<UserPreferences> {
     try {
-      // For now, return default preferences since we don't have a preferences table
-      // This can be extended later with a user_preferences table
+      const query = `SELECT preferences FROM users WHERE id = $1`;
+      const result = await pool.query(query, [userId]);
+
+      if (result.rows[0]?.preferences) {
+        return result.rows[0].preferences;
+      }
+
+      // Return default preferences if none set
       return {
         theme: 'system',
         notifications_enabled: true,
@@ -468,9 +474,19 @@ export class UserModel {
 
   static async updateUserPreferences(userId: string, preferences: UserPreferences): Promise<UserPreferences> {
     try {
-      // For now, just return the preferences since we don't have a preferences table
-      // This can be extended later with a user_preferences table
-      logger.info(`User ${userId} preferences updated:`, preferences);
+      const query = `
+        UPDATE users
+        SET preferences = $2, updated_at = NOW()
+        WHERE id = $1
+        RETURNING preferences
+      `;
+      const result = await pool.query(query, [userId, JSON.stringify(preferences)]);
+
+      if (result.rows[0]?.preferences) {
+        logger.info(`User ${userId} preferences updated:`, preferences);
+        return result.rows[0].preferences;
+      }
+
       return preferences;
     } catch (error) {
       logger.error('Error updating user preferences:', error);
