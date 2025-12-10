@@ -168,6 +168,40 @@ async function runMigrations(): Promise<void> {
       `);
     }
 
+    // Create user_management_view for admin panel
+    await client.query(`
+      CREATE OR REPLACE VIEW user_management_view AS
+      SELECT
+        u.id,
+        u.email,
+        u.username,
+        u.role,
+        u.is_active,
+        u.token_limit_global,
+        u.token_limit_monthly,
+        u.created_at,
+        u.updated_at,
+        COALESCE(p.project_count, 0) as project_count,
+        COALESCE(tu.total_tokens, 0) as total_tokens,
+        COALESCE(tu.monthly_tokens, 0) as monthly_tokens,
+        COALESCE(tu.total_cost, 0) as total_cost
+      FROM users u
+      LEFT JOIN (
+        SELECT user_id, COUNT(*) as project_count
+        FROM projects
+        GROUP BY user_id
+      ) p ON u.id = p.user_id
+      LEFT JOIN (
+        SELECT
+          user_id,
+          SUM(total_tokens) as total_tokens,
+          SUM(CASE WHEN created_at >= DATE_TRUNC('month', CURRENT_DATE) THEN total_tokens ELSE 0 END) as monthly_tokens,
+          SUM(estimated_cost) as total_cost
+        FROM token_usage
+        GROUP BY user_id
+      ) tu ON u.id = tu.user_id
+    `);
+
     await client.query('COMMIT');
     logger.info('Database migrations completed successfully');
   } catch (error) {
