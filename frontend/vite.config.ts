@@ -27,7 +27,8 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true,
+    // Disable source maps in production to save ~50MB runtime memory
+    sourcemap: process.env.NODE_ENV !== 'production',
     rollupOptions: {
       output: {
         manualChunks: {

@@ -313,6 +313,32 @@ process.on('unhandledRejection', (reason, promise) => {
   process.exit(1);
 });
 
+// Memory monitoring for Railway 512MB containers
+const MEMORY_WARNING_THRESHOLD_MB = 350;  // Warn at 350MB
+const MEMORY_CHECK_INTERVAL_MS = 60000;   // Check every minute
+
+setInterval(() => {
+  const usage = process.memoryUsage();
+  const heapUsedMB = Math.round(usage.heapUsed / 1024 / 1024);
+  const heapTotalMB = Math.round(usage.heapTotal / 1024 / 1024);
+  const rssMB = Math.round(usage.rss / 1024 / 1024);
+
+  if (heapUsedMB > MEMORY_WARNING_THRESHOLD_MB) {
+    logger.warn('High memory usage detected', {
+      heapUsed: `${heapUsedMB}MB`,
+      heapTotal: `${heapTotalMB}MB`,
+      rss: `${rssMB}MB`,
+      threshold: `${MEMORY_WARNING_THRESHOLD_MB}MB`
+    });
+  } else {
+    logger.debug('Memory usage', {
+      heapUsed: `${heapUsedMB}MB`,
+      heapTotal: `${heapTotalMB}MB`,
+      rss: `${rssMB}MB`
+    });
+  }
+}, MEMORY_CHECK_INTERVAL_MS);
+
 // Start the server
 startServer();
 
