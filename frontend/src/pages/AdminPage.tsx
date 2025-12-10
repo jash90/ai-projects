@@ -21,10 +21,14 @@ import {
   Settings,
   Sparkles,
   Hash,
+  Bot,
+  Plus,
+  Trash2,
 } from 'lucide-react';
 import { useAuth } from '@/stores/authStore';
-import { adminApi } from '@/lib/api';
-import { AdminStats, UserManagement, TokenLimitUpdate } from '@/types';
+import { adminApi, agentsApi } from '@/lib/api';
+import { AdminStats, UserManagement, TokenLimitUpdate, Agent, AgentCreate, AgentUpdate } from '@/types';
+import { AgentDialog } from '@/components/agents/AgentDialog';
 import { formatNumber, formatCurrency, formatDate } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -36,7 +40,7 @@ import toast from 'react-hot-toast';
 
 export default function AdminPage() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'users' | 'limits'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'users' | 'limits' | 'agents'>('dashboard');
 
   // Redirect non-admin users
   useEffect(() => {
@@ -67,14 +71,23 @@ export default function AdminPage() {
     enabled: user?.role === 'admin',
   });
 
+  // Fetch agents
+  const { data: agentsData, isLoading: agentsLoading, refetch: refetchAgents } = useQuery({
+    queryKey: ['admin', 'agents'],
+    queryFn: () => agentsApi.getAgents(),
+    enabled: user?.role === 'admin',
+  });
+
   const stats = statsData?.data;
   const users = usersData?.data?.users || [];
   const globalLimits = limitsData?.data;
+  const agents = agentsData?.data?.agents || [];
 
   const handleRefreshAll = () => {
     refetchStats();
     refetchUsers();
     refetchLimits();
+    refetchAgents();
     toast.success('Data refreshed successfully');
   };
 
@@ -119,9 +132,10 @@ export default function AdminPage() {
           { id: 'dashboard', label: 'Dashboard', icon: TrendingUp },
           { id: 'users', label: 'User Management', icon: Users },
           { id: 'limits', label: 'Token Limits', icon: Target },
+          { id: 'agents', label: 'Agents', icon: Bot },
         ]}
         activeTab={activeTab}
-        onTabChange={(tabId) => setActiveTab(tabId as 'dashboard' | 'users' | 'limits')}
+        onTabChange={(tabId) => setActiveTab(tabId as 'dashboard' | 'users' | 'limits' | 'agents')}
         variant="gradient"
         className="bg-gradient-to-r from-accent/10 via-primary/5 to-accent/10"
       />
@@ -145,6 +159,14 @@ export default function AdminPage() {
             globalLimits={globalLimits}
             loading={limitsLoading}
             onRefresh={refetchLimits}
+          />
+        )}
+
+        {activeTab === 'agents' && (
+          <AgentsTab
+            agents={agents}
+            loading={agentsLoading}
+            onRefresh={refetchAgents}
           />
         )}
       </main>
@@ -1044,6 +1066,314 @@ function UserDetailsModal({
           )}
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+// Agents Tab Component
+function AgentsTab({
+  agents,
+  loading,
+  onRefresh,
+}: {
+  agents: Agent[];
+  loading: boolean;
+  onRefresh: () => void;
+}) {
+  const queryClient = useQueryClient();
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
+
+  // Create agent mutation
+  const createMutation = useMutation({
+    mutationFn: (data: AgentCreate) => agentsApi.createAgent(data),
+    onSuccess: () => {
+      toast.success('Agent created successfully');
+      queryClient.invalidateQueries({ queryKey: ['admin', 'agents'] });
+      onRefresh();
+      setShowCreateDialog(false);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to create agent');
+    },
+  });
+
+  // Update agent mutation
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: AgentUpdate }) => agentsApi.updateAgent(id, data),
+    onSuccess: () => {
+      toast.success('Agent updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['admin', 'agents'] });
+      onRefresh();
+      setEditingAgent(null);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to update agent');
+    },
+  });
+
+  // Delete agent mutation
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => agentsApi.deleteAgent(id),
+    onSuccess: () => {
+      toast.success('Agent deleted successfully');
+      queryClient.invalidateQueries({ queryKey: ['admin', 'agents'] });
+      onRefresh();
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to delete agent');
+    },
+  });
+
+  const handleCreateAgent = async (data: AgentCreate | AgentUpdate) => {
+    await createMutation.mutateAsync(data as AgentCreate);
+  };
+
+  const handleUpdateAgent = async (data: AgentCreate | AgentUpdate) => {
+    if (!editingAgent) return;
+    await updateMutation.mutateAsync({ id: editingAgent.id, data: data as AgentUpdate });
+  };
+
+  const handleDeleteAgent = (agent: Agent) => {
+    if (confirm(`Are you sure you want to delete "${agent.name}"? This action cannot be undone.`)) {
+      deleteMutation.mutate(agent.id);
+    }
+  };
+
+  const getProviderIcon = (provider: string) => {
+    switch (provider) {
+      case 'openai':
+        return '🤖';
+      case 'anthropic':
+        return '🧠';
+      default:
+        return '⚡';
+    }
+  };
+
+  const getProviderColor = (provider: string) => {
+    switch (provider) {
+      case 'openai':
+        return 'bg-green-500/10 text-green-600 border-green-500/20';
+      case 'anthropic':
+        return 'bg-blue-500/10 text-blue-600 border-blue-500/20';
+      default:
+        return 'bg-gray-500/10 text-gray-600 border-gray-500/20';
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <div className="text-center">
+          <LoadingSpinner className="mx-auto mb-4" />
+          <p className="text-sm text-muted-foreground">Loading agents...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Agents Table */}
+      <Card variant="elevated">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <Bot className="w-5 h-5 text-primary" />
+                Agent Management
+              </CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">
+                Create and manage AI agents for conversations
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" size="sm">
+                {agents.length} agents
+              </Badge>
+              <Button
+                onClick={() => setShowCreateDialog(true)}
+                variant="gradient"
+                size="sm"
+                leftIcon={<Plus className="h-4 w-4" />}
+              >
+                New Agent
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+
+        <CardContent className="p-0">
+          {agents.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                <Bot className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-2">No Agents Yet</h3>
+              <p className="text-muted-foreground mb-6">Create your first AI agent to get started</p>
+              <Button
+                onClick={() => setShowCreateDialog(true)}
+                variant="gradient"
+                leftIcon={<Plus className="h-4 w-4" />}
+              >
+                Create Agent
+              </Button>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-muted/30 border-y border-border">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      Agent
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      Provider
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      Model
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      Settings
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      Created
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {agents.map((agent, index) => (
+                    <tr
+                      key={agent.id}
+                      className="hover:bg-muted/30 transition-colors animate-fade-in"
+                      style={{ animationDelay: `${index * 30}ms` }}
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                            <Bot className="w-5 h-5 text-primary" />
+                          </div>
+                          <div>
+                            <p className="font-medium text-foreground">{agent.name}</p>
+                            {agent.description && (
+                              <p className="text-sm text-muted-foreground line-clamp-1 max-w-[200px]">
+                                {agent.description}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <Badge
+                          variant="outline"
+                          size="sm"
+                          className={getProviderColor(agent.provider)}
+                        >
+                          {getProviderIcon(agent.provider)} {agent.provider}
+                        </Badge>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-sm text-foreground font-mono">{agent.model}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm space-y-1">
+                          <p className="text-muted-foreground">
+                            Temp: <span className="text-foreground font-medium">{agent.temperature}</span>
+                          </p>
+                          <p className="text-muted-foreground">
+                            Tokens: <span className="text-foreground font-medium">{formatNumber(agent.max_tokens)}</span>
+                          </p>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-sm text-muted-foreground">{formatDate(agent.created_at)}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-1">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setEditingAgent(agent)}
+                            className="h-8 w-8 p-0"
+                            title="Edit agent"
+                          >
+                            <Edit className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleDeleteAgent(agent)}
+                            disabled={deleteMutation.isPending}
+                            className="h-8 w-8 p-0 hover:text-destructive"
+                            title="Delete agent"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Information Card */}
+      <Card variant="bordered" className="bg-info/5 border-info/20">
+        <CardContent className="p-6">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-info/10 flex items-center justify-center flex-shrink-0">
+              <Info className="h-5 w-5 text-info" />
+            </div>
+            <div>
+              <h4 className="font-semibold text-foreground mb-3">
+                Agent Management Information
+              </h4>
+              <div className="text-sm text-muted-foreground space-y-2">
+                <p className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-info" />
+                  Agents are AI assistants that users can select for conversations in their projects
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-info" />
+                  Each agent has a unique system prompt that defines its personality and capabilities
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-info" />
+                  Only administrators can create, edit, or delete agents
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-info" />
+                  Agents that are being used in conversations cannot be deleted
+                </p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Create Agent Dialog */}
+      <AgentDialog
+        open={showCreateDialog}
+        onClose={() => setShowCreateDialog(false)}
+        onSubmit={handleCreateAgent}
+        title="Create New Agent"
+      />
+
+      {/* Edit Agent Dialog */}
+      <AgentDialog
+        open={!!editingAgent}
+        onClose={() => setEditingAgent(null)}
+        onSubmit={handleUpdateAgent}
+        title="Edit Agent"
+        agent={editingAgent}
+      />
     </div>
   );
 }

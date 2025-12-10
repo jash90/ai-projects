@@ -106,7 +106,7 @@ const RegisterPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const navigate = useNavigate()
-  const { login } = useAuth()
+  const { login, syncPreferencesFromServer } = useAuth()
 
   const {
     register,
@@ -121,9 +121,11 @@ const RegisterPage: React.FC = () => {
 
   const registerMutation = useMutation({
     mutationFn: authApi.register,
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       if (response.success && response.data) {
         login(response.data.user, response.data.tokens)
+        // Sync preferences (theme) from server after registration
+        await syncPreferencesFromServer()
         toast.success('Account created successfully!')
         navigate('/')
       }
