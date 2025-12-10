@@ -221,8 +221,16 @@ app.use(errorHandler);
 
 // Initialize database and start server
 async function startServer(): Promise<void> {
+  logger.info('Starting server...', {
+    nodeEnv: process.env.NODE_ENV,
+    port: process.env.PORT || config.port,
+    databaseUrl: config.database_url ? 'configured' : 'MISSING',
+    redisUrl: config.redis_url ? 'configured' : 'MISSING',
+  });
+
   try {
     // Initialize database connection
+    logger.info('Connecting to database...');
     await initializeDatabase();
     logger.info('Database initialized successfully');
 
