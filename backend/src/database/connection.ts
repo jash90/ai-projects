@@ -8,7 +8,7 @@ export const pool = new Pool({
   connectionString: config.database_url,
   max: 20,
   idleTimeoutMillis: 60000, // 60 seconds
-  connectionTimeoutMillis: 10000, // 10 seconds
+  connectionTimeoutMillis: 30000, // 30 seconds - increased for Railway cold starts
   query_timeout: 120000, // 2 minutes for long queries
   statement_timeout: 120000, // 2 minutes for long statements
 });
@@ -17,7 +17,7 @@ export const pool = new Pool({
 export const redis: RedisClientType = createClient({
   url: config.redis_url,
   socket: {
-    connectTimeout: 10000, // 10 seconds
+    connectTimeout: 30000, // 30 seconds - increased for Railway cold starts
     keepAlive: 30000, // 30 seconds
   },
 });

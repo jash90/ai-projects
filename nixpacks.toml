@@ -2,13 +2,13 @@
 nixPkgs = ["nodejs-18_x", "pnpm"]
 
 [phases.install]
-cmds = ["pnpm install"]
+cmds = ["pnpm install --frozen-lockfile"]
 
 [phases.build]
 cmds = ["pnpm exec nx run-many -t build"]
 
 [start]
-cmd = "/app/start.sh"
+cmd = "node backend/dist/index.js"
 
 [variables]
 NODE_ENV = "production"
