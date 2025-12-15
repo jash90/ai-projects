@@ -1,11 +1,12 @@
+import type { MouseEvent } from 'react'
 import { useEffect } from 'react'
-import { Thread } from '@/types'
-import { threadStore, useThreads, useActiveThread, useThreadsLoading } from '@/stores/threadStore'
-import { cn } from '@/lib/utils'
 import { formatDistanceToNow } from 'date-fns'
-import toast from 'react-hot-toast'
 // Polish locale is intentionally hardcoded - this app is Polish-only
 import { pl } from 'date-fns/locale'
+import toast from 'react-hot-toast'
+import { Thread } from '../../types'
+import { cn } from '../../lib/utils'
+import { threadStore, useThreads, useActiveThread, useThreadsLoading } from '../../stores/threadStore'
 
 interface ThreadListProps {
   projectId: string
@@ -42,7 +43,7 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
     onThreadSelect?.(thread)
   }
 
-  const handleDeleteThread = async (e: React.MouseEvent, threadId: string) => {
+  const handleDeleteThread = async (e: MouseEvent, threadId: string) => {
     e.stopPropagation()
     if (confirm('Are you sure you want to delete this conversation?')) {
       try {
