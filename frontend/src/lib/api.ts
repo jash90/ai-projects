@@ -481,13 +481,34 @@ export const filesApi = {
     apiClient.get<ApiResponse<{ project_id: string; total_files: number; file_types: any[] }>>(`/projects/${projectId}/files/stats`),
 }
 
-// Uploaded Files API (for binary files)
+// Token usage API
+export interface CurrentUsageResponse {
+  totalTokens: number;
+  monthlyTokens: number;
+  limits: {
+    globalLimit: number;
+    monthlyLimit: number;
+  };
+  percentUsed: {
+    global: number;
+    monthly: number;
+  };
+  remaining: {
+    global: number;
+    monthly: number;
+  };
+}
+
 export const usageApi = {
+  // Get current token usage with limits (optimized endpoint)
+  getCurrentUsage: () =>
+    apiClient.get<ApiResponse<CurrentUsageResponse>>('/usage/current'),
+
   getSummary: (projectId?: string, agentId?: string, startDate?: string, endDate?: string) => {
     const params: any = {}
     if (startDate) params.startDate = startDate
     if (endDate) params.endDate = endDate
-    
+
     if (projectId) {
       return apiClient.get<ApiResponse<any>>(`/projects/${projectId}/usage`, params)
     } else if (agentId) {
@@ -596,7 +617,7 @@ export const adminApi = {
 
   // Global token limits
   getGlobalTokenLimits: () =>
-    apiClient.get<ApiResponse<{ global: number; monthly: number }>>('/admin/token-limits'),
+    apiClient.get<ApiResponse<{ global_limit: number; monthly_limit: number }>>('/admin/token-limits'),
 
   updateGlobalTokenLimits: (limits: Omit<TokenLimitUpdate, 'user_id'>) =>
     apiClient.put<ApiResponse>('/admin/token-limits', limits),

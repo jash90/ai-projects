@@ -3,6 +3,7 @@ import { authenticateToken } from '../middleware/auth';
 import { validate } from '../middleware/validation';
 import { generalLimiter } from '../middleware/rateLimiting';
 import { TokenService } from '../services/tokenService';
+import { UserModel } from '../models/User';
 import logger from '../utils/logger';
 import Joi from 'joi';
 
@@ -10,7 +11,106 @@ const router: Router = Router();
 
 /**
  * @swagger
- * /api/usage/usage/summary:
+ * /api/usage/current:
+ *   get:
+ *     summary: Get current token usage and limits
+ *     tags: [Usage]
+ *     description: Retrieve current user's token usage, limits, and percentage used
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Current usage retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     totalTokens:
+ *                       type: number
+ *                       description: Total tokens used (all time)
+ *                     monthlyTokens:
+ *                       type: number
+ *                       description: Tokens used this month
+ *                     limits:
+ *                       type: object
+ *                       properties:
+ *                         globalLimit:
+ *                           type: number
+ *                           description: Global token limit
+ *                         monthlyLimit:
+ *                           type: number
+ *                           description: Monthly token limit
+ *                     percentUsed:
+ *                       type: object
+ *                       properties:
+ *                         global:
+ *                           type: number
+ *                           description: Percentage of global limit used
+ *                         monthly:
+ *                           type: number
+ *                           description: Percentage of monthly limit used
+ *                     remaining:
+ *                       type: object
+ *                       properties:
+ *                         global:
+ *                           type: number
+ *                           description: Remaining global tokens (-1 if unlimited)
+ *                         monthly:
+ *                           type: number
+ *                           description: Remaining monthly tokens (-1 if unlimited)
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
+router.get('/current',
+  generalLimiter,
+  authenticateToken,
+  async (req: Request, res: Response) => {
+    try {
+      const userId = req.user!.id;
+      const usage = await UserModel.getTokenUsage(userId);
+
+      // Calculate remaining tokens
+      const remainingGlobal = usage.limits.globalLimit > 0
+        ? Math.max(0, usage.limits.globalLimit - usage.totalTokens)
+        : -1;
+      const remainingMonthly = usage.limits.monthlyLimit > 0
+        ? Math.max(0, usage.limits.monthlyLimit - usage.monthlyTokens)
+        : -1;
+
+      res.json({
+        success: true,
+        data: {
+          ...usage,
+          remaining: {
+            global: remainingGlobal,
+            monthly: remainingMonthly
+          }
+        }
+      });
+    } catch (error) {
+      logger.error('Error fetching current usage:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Failed to fetch current usage'
+      });
+    }
+  }
+);
+
+/**
+ * @swagger
+ * /api/usage/summary:
  *   get:
  *     summary: Get usage summary
  *     tags: [Usage]
@@ -52,7 +152,7 @@ const router: Router = Router();
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
-router.get('/usage/summary',
+router.get('/summary',
   generalLimiter,
   authenticateToken,
   validate({
@@ -88,7 +188,7 @@ router.get('/usage/summary',
 
 /**
  * @swagger
- * /api/usage/usage/stats:
+ * /api/usage/stats:
  *   get:
  *     summary: Get detailed usage statistics
  *     tags: [Usage]
@@ -133,7 +233,7 @@ router.get('/usage/summary',
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
-router.get('/usage/stats',
+router.get('/stats',
   generalLimiter,
   authenticateToken,
   validate({

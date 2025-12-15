@@ -12,7 +12,7 @@ export class UserModel {
   static async create(userData: UserCreate): Promise<User> {
     const { email, username, password } = userData;
     const passwordHash = await bcrypt.hash(password, 12);
-    
+
     // Check if this is the admin user
     const isAdmin = email === config.admin.email;
     const role = isAdmin ? 'admin' : 'user';
@@ -24,9 +24,9 @@ export class UserModel {
     `;
 
     const result = await pool.query(query, [
-      email, 
-      username, 
-      passwordHash, 
+      email,
+      username,
+      passwordHash,
       role,
       config.admin.default_token_limit_global,
       config.admin.default_token_limit_monthly,
@@ -39,7 +39,7 @@ export class UserModel {
     const query = `
       SELECT id, email, username, role, token_limit_global, token_limit_monthly, is_active, created_at, updated_at
       FROM users
-      WHERE email = $1
+      WHERE LOWER(email) = LOWER($1)
     `;
 
     const result = await pool.query(query, [email]);
@@ -50,7 +50,7 @@ export class UserModel {
     const query = `
       SELECT id, email, username, role, token_limit_global, token_limit_monthly, is_active, password_hash, created_at, updated_at
       FROM users
-      WHERE email = $1
+      WHERE LOWER(email) = LOWER($1)
     `;
 
     const result = await pool.query(query, [email]);
@@ -116,7 +116,7 @@ export class UserModel {
   }
 
   static async emailExists(email: string): Promise<boolean> {
-    const query = 'SELECT 1 FROM users WHERE email = $1 LIMIT 1';
+    const query = 'SELECT 1 FROM users WHERE LOWER(email) = LOWER($1) LIMIT 1';
     const result = await pool.query(query, [email]);
     return result.rowCount > 0;
   }
@@ -139,30 +139,30 @@ export class UserModel {
       SELECT * FROM user_management_view
       ORDER BY created_at DESC
     `;
-    
+
     const result = await pool.query(query);
     return result.rows;
   }
 
   static async getUserStatsById(userId: string): Promise<UserUsageStats | null> {
     const query = `
-      SELECT 
+      SELECT
         u.id as user_id,
         u.email,
         u.username,
         u.token_limit_global,
         u.token_limit_monthly,
-        COALESCE(SUM(tu.total_tokens), 0) as total_tokens,
-        COALESCE(SUM(CASE 
-          WHEN tu.created_at >= DATE_TRUNC('month', CURRENT_DATE) 
-          THEN tu.total_tokens 
-          ELSE 0 
-        END), 0) as monthly_tokens,
+        COALESCE(SUM(tu.total_tokens)::BIGINT, 0) as total_tokens,
+        COALESCE(SUM(CASE
+          WHEN tu.created_at >= DATE_TRUNC('month', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+          THEN tu.total_tokens
+          ELSE 0
+        END)::BIGINT, 0) as monthly_tokens,
         COALESCE(SUM(tu.estimated_cost), 0) as total_cost,
-        COALESCE(SUM(CASE 
-          WHEN tu.created_at >= DATE_TRUNC('month', CURRENT_DATE) 
-          THEN tu.estimated_cost 
-          ELSE 0 
+        COALESCE(SUM(CASE
+          WHEN tu.created_at >= DATE_TRUNC('month', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+          THEN tu.estimated_cost
+          ELSE 0
         END), 0) as monthly_cost,
         COUNT(DISTINCT p.id) as project_count,
         MAX(tu.created_at) as last_active
@@ -174,38 +174,55 @@ export class UserModel {
     `;
 
     const result = await pool.query(query, [userId]);
-    return result.rows[0] || null;
+    if (!result.rows[0]) return null;
+
+    // Get global limits for fallback
+    const globalLimits = await this.getGlobalTokenLimits();
+    const row = result.rows[0];
+
+    // Convert to proper numbers and apply fallback limits
+    return {
+      ...row,
+      total_tokens: Number(row.total_tokens) || 0,
+      monthly_tokens: Number(row.monthly_tokens) || 0,
+      total_cost: Number(row.total_cost) || 0,
+      monthly_cost: Number(row.monthly_cost) || 0,
+      project_count: Number(row.project_count) || 0,
+      // Apply fallback limits if user doesn't have specific ones
+      token_limit_global: row.token_limit_global ?? globalLimits.global,
+      token_limit_monthly: row.token_limit_monthly ?? globalLimits.monthly,
+    };
   }
 
   static async getAdminStats(): Promise<AdminStats> {
     const statsQuery = `
-      SELECT
-        (SELECT COUNT(*) FROM users) as total_users,
-        (SELECT COUNT(*) FROM users WHERE is_active = true) as active_users,
-        (SELECT COUNT(*) FROM projects) as total_projects,
-        (SELECT COALESCE(SUM(jsonb_array_length(messages)), 0) FROM conversations) as total_messages,
-        (SELECT COALESCE(SUM(total_tokens), 0) FROM token_usage) as total_tokens_used,
-        (SELECT COALESCE(SUM(estimated_cost), 0) FROM token_usage) as total_cost,
-        (SELECT COALESCE(SUM(total_tokens), 0) FROM token_usage WHERE created_at >= DATE_TRUNC('month', CURRENT_DATE)) as monthly_tokens,
-        (SELECT COALESCE(SUM(estimated_cost), 0) FROM token_usage WHERE created_at >= DATE_TRUNC('month', CURRENT_DATE)) as monthly_cost
+        SELECT
+                (SELECT COUNT(*) FROM users) as total_users,
+                (SELECT COUNT(*) FROM users WHERE is_active = true) as active_users,
+                (SELECT COUNT(*) FROM projects) as total_projects,
+                (SELECT COALESCE(SUM(jsonb_array_length(messages)), 0) FROM conversations) as total_messages,
+                (SELECT COALESCE(SUM(total_tokens)::BIGINT, 0) FROM token_usage) as total_tokens_used,
+                (SELECT COALESCE(SUM(estimated_cost), 0) FROM token_usage) as total_cost,
+                (SELECT COALESCE(SUM(total_tokens), 0) FROM token_usage WHERE created_at >= DATE_TRUNC('month', CURRENT_DATE)) as monthly_tokens,
+                (SELECT COALESCE(SUM(estimated_cost), 0) FROM token_usage WHERE created_at >= DATE_TRUNC('month', CURRENT_DATE)) as monthly_cost
     `;
 
     const topUsersQuery = `
-      SELECT 
+      SELECT
         u.id as user_id,
         u.email,
         u.username,
-        COALESCE(SUM(tu.total_tokens), 0) as total_tokens,
-        COALESCE(SUM(CASE 
-          WHEN tu.created_at >= DATE_TRUNC('month', CURRENT_DATE) 
-          THEN tu.total_tokens 
-          ELSE 0 
-        END), 0) as monthly_tokens,
+        COALESCE(SUM(tu.total_tokens)::BIGINT, 0) as total_tokens,
+        COALESCE(SUM(CASE
+          WHEN tu.created_at >= DATE_TRUNC('month', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+          THEN tu.total_tokens
+          ELSE 0
+        END)::BIGINT, 0) as monthly_tokens,
         COALESCE(SUM(tu.estimated_cost), 0) as total_cost,
-        COALESCE(SUM(CASE 
-          WHEN tu.created_at >= DATE_TRUNC('month', CURRENT_DATE) 
-          THEN tu.estimated_cost 
-          ELSE 0 
+        COALESCE(SUM(CASE
+          WHEN tu.created_at >= DATE_TRUNC('month', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+          THEN tu.estimated_cost
+          ELSE 0
         END), 0) as monthly_cost,
         COUNT(DISTINCT p.id) as project_count,
         MAX(tu.created_at) as last_active
@@ -253,7 +270,7 @@ export class UserModel {
             SET ${fields.join(', ')}
             WHERE id = $${paramCount}
           `;
-          
+
           await pool.query(query, values);
         }
       } else {
@@ -317,7 +334,24 @@ export class UserModel {
     await pool.query(query, [adminUserId, actionType, targetUserId, JSON.stringify(details)]);
   }
 
-  static async checkTokenLimit(userId: string, tokensToUse: number): Promise<void> {
+  /**
+   * Token limit check result with detailed usage information
+   */
+  static async checkTokenLimit(userId: string, tokensToUse: number): Promise<{
+    allowed: boolean;
+    currentUsage: {
+      totalTokens: number;
+      monthlyTokens: number;
+    };
+    limits: {
+      globalLimit: number;
+      monthlyLimit: number;
+    };
+    remaining: {
+      global: number;
+      monthly: number;
+    };
+  }> {
     const user = await this.findById(userId);
     if (!user) {
       throw new Error(`User not found: ${userId}`);
@@ -328,42 +362,155 @@ export class UserModel {
       throw createUserInactiveError(userId);
     }
 
-    // Get user's current usage
+    // Use PostgreSQL advisory lock to prevent race conditions
+    // Advisory locks are session-level and released automatically on transaction end
+    // We use a hash of the user ID as the lock key
+    const client = await pool.connect();
+
+    try {
+      await client.query('BEGIN');
+
+      // Acquire advisory lock for this user (using hashtext for consistent numeric key)
+      // pg_advisory_xact_lock is transaction-scoped and automatically released on COMMIT/ROLLBACK
+      await client.query(
+        `SELECT pg_advisory_xact_lock(hashtext($1))`,
+        [`token_limit_${userId}`]
+      );
+
+      // Get user's current usage within the transaction
+      const usageQuery = `
+        SELECT
+          COALESCE(SUM(total_tokens)::BIGINT, 0) as total_tokens,
+          COALESCE(SUM(CASE
+            WHEN created_at >= DATE_TRUNC('month', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+            THEN total_tokens
+            ELSE 0
+          END)::BIGINT, 0) as monthly_tokens
+        FROM token_usage
+        WHERE user_id = $1
+      `;
+
+      const usageResult = await client.query(usageQuery, [userId]);
+      const { total_tokens, monthly_tokens } = usageResult.rows[0];
+
+      // Safely convert database values to numbers
+      // Using Number() for cleaner conversion with explicit fallback
+      const totalTokensNum = Number(total_tokens) || 0;
+      const monthlyTokensNum = Number(monthly_tokens) || 0;
+
+      // Validate that conversions produced valid numbers
+      if (!Number.isFinite(totalTokensNum) || !Number.isFinite(monthlyTokensNum)) {
+        logger.error('Invalid token usage values from database', {
+          userId,
+          total_tokens,
+          monthly_tokens,
+          totalTokensNum,
+          monthlyTokensNum
+        });
+        throw new Error('Invalid token usage data');
+      }
+
+      // Get global limits if user doesn't have specific limits
+      const globalLimits = await this.getGlobalTokenLimits();
+      const globalLimit = user.token_limit_global ?? globalLimits.global;
+      const monthlyLimit = user.token_limit_monthly ?? globalLimits.monthly;
+
+      // Calculate remaining tokens
+      const remainingGlobal = globalLimit > 0 ? Math.max(0, globalLimit - totalTokensNum) : Infinity;
+      const remainingMonthly = monthlyLimit > 0 ? Math.max(0, monthlyLimit - monthlyTokensNum) : Infinity;
+
+      const result = {
+        allowed: true,
+        currentUsage: {
+          totalTokens: totalTokensNum,
+          monthlyTokens: monthlyTokensNum
+        },
+        limits: {
+          globalLimit,
+          monthlyLimit
+        },
+        remaining: {
+          global: remainingGlobal === Infinity ? -1 : remainingGlobal,
+          monthly: remainingMonthly === Infinity ? -1 : remainingMonthly
+        }
+      };
+
+      // Check global limit
+      if (globalLimit > 0 && totalTokensNum + tokensToUse > globalLimit) {
+        const { createTokenLimitError } = await import('../utils/errors');
+        throw createTokenLimitError('global', totalTokensNum, globalLimit, tokensToUse);
+      }
+
+      // Check monthly limit
+      if (monthlyLimit > 0 && monthlyTokensNum + tokensToUse > monthlyLimit) {
+        const { createTokenLimitError } = await import('../utils/errors');
+        throw createTokenLimitError('monthly', monthlyTokensNum, monthlyLimit, tokensToUse);
+      }
+
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  /**
+   * Get current token usage for a user (without throwing)
+   */
+  static async getTokenUsage(userId: string): Promise<{
+    totalTokens: number;
+    monthlyTokens: number;
+    limits: {
+      globalLimit: number;
+      monthlyLimit: number;
+    };
+    percentUsed: {
+      global: number;
+      monthly: number;
+    };
+  }> {
+    const user = await this.findById(userId);
+    if (!user) {
+      throw new Error(`User not found: ${userId}`);
+    }
+
     const usageQuery = `
-      SELECT 
-        COALESCE(SUM(total_tokens), 0) as total_tokens,
-        COALESCE(SUM(CASE 
-          WHEN created_at >= DATE_TRUNC('month', CURRENT_DATE) 
-          THEN total_tokens 
-          ELSE 0 
-        END), 0) as monthly_tokens
+      SELECT
+        COALESCE(SUM(total_tokens)::BIGINT, 0) as total_tokens,
+        COALESCE(SUM(CASE
+          WHEN created_at >= DATE_TRUNC('month', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+          THEN total_tokens
+          ELSE 0
+        END)::BIGINT, 0) as monthly_tokens
       FROM token_usage
       WHERE user_id = $1
     `;
 
     const usageResult = await pool.query(usageQuery, [userId]);
     const { total_tokens, monthly_tokens } = usageResult.rows[0];
-    
-    // Convert database string values to numbers to prevent string concatenation
-    const totalTokensNum = parseInt(total_tokens) || 0;
-    const monthlyTokensNum = parseInt(monthly_tokens) || 0;
 
-    // Get global limits if user doesn't have specific limits
+    const totalTokensNum = Number(total_tokens) || 0;
+    const monthlyTokensNum = Number(monthly_tokens) || 0;
+
     const globalLimits = await this.getGlobalTokenLimits();
-    const globalLimit = user.token_limit_global || globalLimits.global;
-    const monthlyLimit = user.token_limit_monthly || globalLimits.monthly;
+    const globalLimit = user.token_limit_global ?? globalLimits.global;
+    const monthlyLimit = user.token_limit_monthly ?? globalLimits.monthly;
 
-    // Check global limit
-    if (globalLimit > 0 && totalTokensNum + tokensToUse > globalLimit) {
-      const { createTokenLimitError } = await import('../utils/errors');
-      throw createTokenLimitError('global', totalTokensNum, globalLimit, tokensToUse);
-    }
-
-    // Check monthly limit
-    if (monthlyLimit > 0 && monthlyTokensNum + tokensToUse > monthlyLimit) {
-      const { createTokenLimitError } = await import('../utils/errors');
-      throw createTokenLimitError('monthly', monthlyTokensNum, monthlyLimit, tokensToUse);
-    }
+    return {
+      totalTokens: totalTokensNum,
+      monthlyTokens: monthlyTokensNum,
+      limits: {
+        globalLimit,
+        monthlyLimit
+      },
+      percentUsed: {
+        global: globalLimit > 0 ? Math.round((totalTokensNum / globalLimit) * 100) : 0,
+        monthly: monthlyLimit > 0 ? Math.round((monthlyTokensNum / monthlyLimit) * 100) : 0
+      }
+    };
   }
 
   static async updateProfile(userId: string, updates: UserProfileUpdate): Promise<User | null> {
@@ -442,7 +589,7 @@ export class UserModel {
         FROM users
         WHERE id = $1
       `;
-      
+
       const result = await pool.query(query, [userId]);
       return result.rows[0] || null;
     } catch (error) {

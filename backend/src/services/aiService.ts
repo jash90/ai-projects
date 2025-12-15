@@ -119,7 +119,7 @@ class AIService {
     try {
       // Check token limits before processing (estimate tokens for the request)
       if (userId) {
-        const estimatedTokens = this.estimateTokens(messages, projectFiles);
+        const estimatedTokens = this.estimateTokens(messages, projectFiles, agent.system_prompt);
         await UserModel.checkTokenLimit(userId, estimatedTokens);
       }
       if (stream) {
@@ -380,11 +380,13 @@ class AIService {
     let totalTokens = 0;
     let promptTokens = 0;
     let completionTokens = 0;
+    let streamError: Error | null = null;
+    let tokensTracked = false;
 
     try {
       for await (const chunk of stream) {
         const delta = chunk.choices[0]?.delta;
-        
+
         if (delta?.content) {
           fullContent += delta.content;
           yield delta.content;
@@ -411,6 +413,7 @@ class AIService {
           completionTokens,
           requestType: 'chat_stream'
         });
+        tokensTracked = true;
       }
 
       return {
@@ -424,8 +427,40 @@ class AIService {
         }
       };
     } catch (error) {
+      streamError = error as Error;
       logger.error('OpenAI streaming error:', error);
       throw error;
+    } finally {
+      // Track partial usage if stream failed and we have content but haven't tracked yet
+      if (streamError && userId && fullContent.length > 0 && !tokensTracked) {
+        try {
+          // Estimate tokens for partial content if we don't have actual counts
+          const estimatedCompletionTokens = completionTokens > 0
+            ? completionTokens
+            : TokenService.estimateTokens(fullContent);
+
+          logger.warn('Tracking partial token usage after stream failure', {
+            userId,
+            model: agent.model,
+            estimatedTokens: estimatedCompletionTokens,
+            contentLength: fullContent.length
+          });
+
+          await TokenService.trackUsage({
+            userId,
+            projectId,
+            agentId: agent.id,
+            conversationId,
+            provider: 'openai',
+            model: agent.model,
+            promptTokens: promptTokens || 0,
+            completionTokens: estimatedCompletionTokens,
+            requestType: 'chat_stream_partial'
+          });
+        } catch (trackingError) {
+          logger.error('Failed to track partial token usage:', trackingError);
+        }
+      }
     }
   }
 
@@ -687,6 +722,8 @@ class AIService {
     let fullContent = '';
     let totalInputTokens = 0;
     let totalOutputTokens = 0;
+    let streamError: Error | null = null;
+    let tokensTracked = false;
 
     try {
       for await (const chunk of stream) {
@@ -721,6 +758,7 @@ class AIService {
           completionTokens: totalOutputTokens,
           requestType: 'chat_stream'
         });
+        tokensTracked = true;
       }
 
       return {
@@ -734,8 +772,40 @@ class AIService {
         }
       };
     } catch (error) {
+      streamError = error as Error;
       logger.error('Anthropic streaming error:', error);
       throw error;
+    } finally {
+      // Track partial usage if stream failed and we have content but haven't tracked yet
+      if (streamError && userId && fullContent.length > 0 && !tokensTracked) {
+        try {
+          // Estimate tokens for partial content if we don't have actual counts
+          const estimatedOutputTokens = totalOutputTokens > 0
+            ? totalOutputTokens
+            : TokenService.estimateTokens(fullContent);
+
+          logger.warn('Tracking partial token usage after Anthropic stream failure', {
+            userId,
+            model: agent.model,
+            estimatedTokens: estimatedOutputTokens,
+            contentLength: fullContent.length
+          });
+
+          await TokenService.trackUsage({
+            userId,
+            projectId,
+            agentId: agent.id,
+            conversationId,
+            provider: 'anthropic',
+            model: agent.model,
+            promptTokens: totalInputTokens || 0,
+            completionTokens: estimatedOutputTokens,
+            requestType: 'chat_stream_partial'
+          });
+        } catch (trackingError) {
+          logger.error('Failed to track partial Anthropic token usage:', trackingError);
+        }
+      }
     }
   }
 
@@ -989,6 +1059,8 @@ class AIService {
     let totalTokens = 0;
     let promptTokens = 0;
     let completionTokens = 0;
+    let streamError: Error | null = null;
+    let tokensTracked = false;
 
     try {
       for await (const chunk of stream) {
@@ -1020,6 +1092,7 @@ class AIService {
           completionTokens,
           requestType: 'chat_stream'
         });
+        tokensTracked = true;
       }
 
       logger.info('OpenRouter streaming chat completed', {
@@ -1042,6 +1115,7 @@ class AIService {
         }
       };
     } catch (error: any) {
+      streamError = error;
       logger.error('OpenRouter streaming error:', {
         error: error.message,
         model: agent.model,
@@ -1049,6 +1123,37 @@ class AIService {
         code: error.code
       });
       throw error;
+    } finally {
+      // Track partial usage if stream failed and we have content but haven't tracked yet
+      if (streamError && userId && fullContent.length > 0 && !tokensTracked) {
+        try {
+          // Estimate tokens for partial content if we don't have actual counts
+          const estimatedCompletionTokens = completionTokens > 0
+            ? completionTokens
+            : TokenService.estimateTokens(fullContent);
+
+          logger.warn('Tracking partial token usage after OpenRouter stream failure', {
+            userId,
+            model: agent.model,
+            estimatedTokens: estimatedCompletionTokens,
+            contentLength: fullContent.length
+          });
+
+          await TokenService.trackUsage({
+            userId,
+            projectId,
+            agentId: agent.id,
+            conversationId,
+            provider: 'openrouter',
+            model: agent.model,
+            promptTokens: promptTokens || 0,
+            completionTokens: estimatedCompletionTokens,
+            requestType: 'chat_stream_partial'
+          });
+        } catch (trackingError) {
+          logger.error('Failed to track partial OpenRouter token usage:', trackingError);
+        }
+      }
     }
   }
 
@@ -1075,27 +1180,21 @@ class AIService {
     return modelData?.provider === provider && !!modelData;
   }
 
-  private estimateTokens(messages: ConversationMessage[], projectFiles?: string[]): number {
-    // Rough estimation: 1 token ≈ 4 characters for English text
-    let totalChars = 0;
-    
-    // Count message characters
-    messages.forEach(message => {
-      totalChars += message.content.length;
-    });
-    
-    // Count project file characters (if included)
-    if (projectFiles) {
-      projectFiles.forEach(file => {
-        totalChars += file.length;
-      });
-    }
-    
-    // Add some buffer for system prompts and formatting
-    const estimatedTokens = Math.ceil(totalChars / 4) + 500;
-    
-    // Add response buffer (estimate response will be similar size to input)
-    return estimatedTokens * 2;
+  /**
+   * Estimate tokens for a chat request using improved algorithm
+   * Uses TokenService.estimateRequestTokens for accurate estimation
+   */
+  private estimateTokens(
+    messages: ConversationMessage[],
+    projectFiles?: string[],
+    systemPrompt?: string
+  ): number {
+    const estimation = TokenService.estimateRequestTokens(
+      messages.map(m => ({ content: m.content, role: m.role })),
+      projectFiles,
+      systemPrompt
+    );
+    return estimation.total;
   }
 
   // Get provider status
