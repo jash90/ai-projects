@@ -171,7 +171,7 @@ app.use('/api/models', modelRoutes);
 app.use('/api', projectFileRoutes); // Project file routes include projects/:id/files
 app.use('/api', fileRoutes);         // Uploaded file routes
 app.use('/api', chatRoutes);         // Chat routes
-app.use('/api', usageRoutes);        // Token usage routes
+app.use('/api/usage', usageRoutes);   // Token usage routes
 app.use('/api/admin', adminRoutes);  // Admin routes
 app.use('/api/settings', settingsRoutes);  // User settings routes
 app.use('/api/debug', debugRoutes);  // Debug routes (development/testing)
