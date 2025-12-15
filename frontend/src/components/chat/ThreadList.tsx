@@ -1,8 +1,6 @@
 import type { MouseEvent } from 'react'
 import { useEffect } from 'react'
 import { formatDistanceToNow } from 'date-fns'
-// Polish locale is intentionally hardcoded - this app is Polish-only
-import { pl } from 'date-fns/locale'
 import toast from 'react-hot-toast'
 import { Thread } from '../../types'
 import { cn } from '../../lib/utils'
@@ -57,7 +55,7 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
 
   const formatTime = (dateString: string) => {
     try {
-      return formatDistanceToNow(new Date(dateString), { addSuffix: true, locale: pl })
+      return formatDistanceToNow(new Date(dateString), { addSuffix: true })
     } catch {
       return ''
     }
