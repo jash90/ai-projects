@@ -110,7 +110,7 @@ router.get('/current',
 
 /**
  * @swagger
- * /api/usage/usage/summary:
+ * /api/usage/summary:
  *   get:
  *     summary: Get usage summary
  *     tags: [Usage]
@@ -152,7 +152,7 @@ router.get('/current',
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
-router.get('/usage/summary',
+router.get('/summary',
   generalLimiter,
   authenticateToken,
   validate({
@@ -188,7 +188,7 @@ router.get('/usage/summary',
 
 /**
  * @swagger
- * /api/usage/usage/stats:
+ * /api/usage/stats:
  *   get:
  *     summary: Get detailed usage statistics
  *     tags: [Usage]
@@ -233,7 +233,7 @@ router.get('/usage/summary',
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
-router.get('/usage/stats',
+router.get('/stats',
   generalLimiter,
   authenticateToken,
   validate({

@@ -129,19 +129,48 @@ describe('TokenService', () => {
       expect(result.promptTokens).toBeGreaterThan(20);
     });
 
-    it('should cap estimated completion tokens', () => {
-      const messages = [{ role: 'user', content: 'Short question' }];
+    it('should use dynamic estimation for short prompts (≤100 tokens)', () => {
+      // Short prompt: "Hello" is ~2 tokens + overhead
+      const messages = [{ role: 'user', content: 'Hello' }];
       const result = TokenService.estimateRequestTokens(messages);
 
-      // Completion tokens should be at least 500 (minimum)
-      expect(result.estimatedCompletionTokens).toBeGreaterThanOrEqual(500);
-      // And at most 2000 (maximum)
-      expect(result.estimatedCompletionTokens).toBeLessThanOrEqual(2000);
+      // For short prompts (≤100 tokens): floor=32, cap=200, ratio=1.0
+      expect(result.estimatedCompletionTokens).toBeGreaterThanOrEqual(32);
+      expect(result.estimatedCompletionTokens).toBeLessThanOrEqual(200);
+    });
+
+    it('should use dynamic estimation for medium prompts (100-1000 tokens)', () => {
+      // Medium prompt: ~200 tokens worth of content
+      const messages = [{ role: 'user', content: 'x '.repeat(400) }]; // ~200 tokens
+      const result = TokenService.estimateRequestTokens(messages);
+
+      // For medium prompts (100-1000): floor=64, cap=1000, ratio=0.4
+      expect(result.estimatedCompletionTokens).toBeGreaterThanOrEqual(64);
+      expect(result.estimatedCompletionTokens).toBeLessThanOrEqual(1000);
+    });
+
+    it('should use dynamic estimation for large prompts (>1000 tokens)', () => {
+      // Large prompt: ~2000 tokens worth of content
+      const messages = [{ role: 'user', content: 'word '.repeat(4000) }]; // ~2000 tokens
+      const result = TokenService.estimateRequestTokens(messages);
+
+      // For large prompts (>1000): floor=128, ratio=0.3, cap=4000 (default)
+      expect(result.estimatedCompletionTokens).toBeGreaterThanOrEqual(128);
+      expect(result.estimatedCompletionTokens).toBeLessThanOrEqual(4000);
+    });
+
+    it('should not force 500 tokens minimum for tiny prompts', () => {
+      // Very short prompt should NOT get forced to 500 tokens anymore
+      const messages = [{ role: 'user', content: 'Hi' }];
+      const result = TokenService.estimateRequestTokens(messages);
+
+      // Old behavior was minimum 500 - now it should be much less for short prompts
+      expect(result.estimatedCompletionTokens).toBeLessThan(500);
     });
   });
 
   describe('generateIdempotencyKey', () => {
-    it('should generate consistent keys for same input', () => {
+    it('should generate unique keys for each call (includes random nonce)', () => {
       const params = {
         userId: 'user-123',
         conversationId: 'conv-456',
@@ -151,17 +180,15 @@ describe('TokenService', () => {
         completionTokens: 50,
       };
 
-      // Mock Date.now to return consistent value
-      const now = Date.now();
-      jest.spyOn(Date, 'now').mockReturnValue(now);
-
+      // With the random nonce, each call should generate a unique key
+      // This prevents collisions when same params are used in quick succession
       const key1 = TokenService.generateIdempotencyKey(params);
       const key2 = TokenService.generateIdempotencyKey(params);
 
-      expect(key1).toBe(key2);
+      // Keys should be different due to random nonce
+      expect(key1).not.toBe(key2);
       expect(key1).toHaveLength(32);
-
-      jest.restoreAllMocks();
+      expect(key2).toHaveLength(32);
     });
 
     it('should generate different keys for different users', () => {

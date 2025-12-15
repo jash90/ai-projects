@@ -89,8 +89,9 @@ export class TokenService {
     promptTokens: number;
     completionTokens: number;
   }): string {
-    const timestamp = Math.floor(Date.now() / 1000); // Round to second
-    const data = `${params.userId}:${params.conversationId || 'none'}:${params.provider}:${params.model}:${params.promptTokens}:${params.completionTokens}:${timestamp}`;
+    const timestamp = Date.now(); // Millisecond precision for uniqueness
+    const nonce = crypto.randomBytes(4).toString('hex'); // 8 char random nonce for extra uniqueness
+    const data = `${params.userId}:${params.conversationId || 'none'}:${params.provider}:${params.model}:${params.promptTokens}:${params.completionTokens}:${timestamp}:${nonce}`;
     return crypto.createHash('sha256').update(data).digest('hex').substring(0, 32);
   }
 
@@ -307,6 +308,39 @@ export class TokenService {
   }
 
   /**
+   * Estimate completion tokens based on prompt size
+   * Uses dynamic ratios for different prompt lengths:
+   * - Short prompts (≤100 tokens): expect concise responses, 1:1 ratio
+   * - Medium prompts (100-1000 tokens): moderate response, 0.4 ratio
+   * - Large prompts (>1000 tokens): code analysis etc., 0.3 ratio
+   */
+  private static estimateCompletionTokens(promptTokens: number): number {
+    let ratio: number;
+    let floor: number;
+    let cap: number;
+
+    if (promptTokens <= 100) {
+      // Short prompts: expect concise responses
+      ratio = 1.0;
+      floor = 32;
+      cap = 200;
+    } else if (promptTokens <= 1000) {
+      // Medium prompts: moderate response
+      ratio = 0.4;
+      floor = 64;
+      cap = 1000;
+    } else {
+      // Large prompts: code analysis, detailed explanations, etc.
+      ratio = 0.3;
+      floor = 128;
+      // Configurable max for large-code analysis scenarios
+      cap = Number(process.env.MAX_ESTIMATED_COMPLETION_TOKENS) || 4000;
+    }
+
+    return Math.min(cap, Math.max(floor, Math.round(promptTokens * ratio)));
+  }
+
+  /**
    * Estimate tokens for messages and files (for pre-request limit checking)
    * Returns a more accurate estimate without doubling
    */
@@ -338,9 +372,8 @@ export class TokenService {
     // Add formatting overhead (typically 50-100 tokens)
     promptTokens += 50;
 
-    // Estimate completion tokens based on typical response patterns
-    // Average response is 500-1000 tokens, we use conservative estimate
-    const estimatedCompletionTokens = Math.min(2000, Math.max(500, promptTokens * 0.5));
+    // Estimate completion tokens using dynamic ratio based on prompt size
+    const estimatedCompletionTokens = this.estimateCompletionTokens(promptTokens);
 
     return {
       promptTokens,

@@ -39,7 +39,7 @@ export class UserModel {
     const query = `
       SELECT id, email, username, role, token_limit_global, token_limit_monthly, is_active, created_at, updated_at
       FROM users
-      WHERE email = $1
+      WHERE LOWER(email) = LOWER($1)
     `;
 
     const result = await pool.query(query, [email]);
@@ -50,7 +50,7 @@ export class UserModel {
     const query = `
       SELECT id, email, username, role, token_limit_global, token_limit_monthly, is_active, password_hash, created_at, updated_at
       FROM users
-      WHERE email = $1
+      WHERE LOWER(email) = LOWER($1)
     `;
 
     const result = await pool.query(query, [email]);
@@ -116,7 +116,7 @@ export class UserModel {
   }
 
   static async emailExists(email: string): Promise<boolean> {
-    const query = 'SELECT 1 FROM users WHERE email = $1 LIMIT 1';
+    const query = 'SELECT 1 FROM users WHERE LOWER(email) = LOWER($1) LIMIT 1';
     const result = await pool.query(query, [email]);
     return result.rowCount > 0;
   }
