@@ -23,7 +23,7 @@ export interface ChatResponse {
 }
 
 export interface StreamingChatResponse {
-  stream: AsyncGenerator<string, ChatResponse, unknown>;
+  stream: AsyncGenerator<string | ChatResponse, void, unknown>;
 }
 
 // Anthropic-supported image MIME types
@@ -375,7 +375,7 @@ class AIService {
     projectId?: string,
     conversationId?: string,
     projectFiles?: string[]
-  ): AsyncGenerator<string, ChatResponse, unknown> {
+  ): AsyncGenerator<string | ChatResponse, void, unknown> {
     let fullContent = '';
     let totalTokens = 0;
     let promptTokens = 0;
@@ -416,7 +416,8 @@ class AIService {
         tokensTracked = true;
       }
 
-      return {
+      // Yield the final response (not return!) so the for-await-of loop can process it
+      yield {
         content: fullContent,
         metadata: {
           model: agent.model,
@@ -718,7 +719,7 @@ class AIService {
     projectId?: string,
     conversationId?: string,
     projectFiles?: string[]
-  ): AsyncGenerator<string, ChatResponse, unknown> {
+  ): AsyncGenerator<string | ChatResponse, void, unknown> {
     let fullContent = '';
     let totalInputTokens = 0;
     let totalOutputTokens = 0;
@@ -761,7 +762,8 @@ class AIService {
         tokensTracked = true;
       }
 
-      return {
+      // Yield the final response (not return!) so the for-await-of loop can process it
+      yield {
         content: fullContent,
         metadata: {
           model: agent.model,
@@ -1054,7 +1056,7 @@ class AIService {
     projectId?: string,
     conversationId?: string,
     projectFiles?: string[]
-  ): AsyncGenerator<string, ChatResponse, unknown> {
+  ): AsyncGenerator<string | ChatResponse, void, unknown> {
     let fullContent = '';
     let totalTokens = 0;
     let promptTokens = 0;
@@ -1104,7 +1106,8 @@ class AIService {
         responseLength: fullContent.length
       });
 
-      return {
+      // Yield the final response (not return!) so the for-await-of loop can process it
+      yield {
         content: fullContent,
         metadata: {
           model: agent.model,
