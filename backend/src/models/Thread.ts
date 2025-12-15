@@ -73,7 +73,7 @@ export class ThreadModel {
   static async findById(threadId: string, userId: string): Promise<Thread | null> {
     const query = `
       SELECT t.id, t.project_id, t.title, t.created_at, t.updated_at,
-             (SELECT COUNT(*) FROM thread_messages WHERE thread_id = t.id) as message_count
+             (SELECT COUNT(*)::int FROM thread_messages WHERE thread_id = t.id) as message_count
       FROM threads t
       JOIN projects p ON t.project_id = p.id
       WHERE t.id = $1 AND p.user_id = $2
@@ -102,7 +102,7 @@ export class ThreadModel {
         t.title,
         t.created_at,
         t.updated_at,
-        (SELECT COUNT(*) FROM thread_messages WHERE thread_id = t.id) as message_count,
+        (SELECT COUNT(*)::int FROM thread_messages WHERE thread_id = t.id) as message_count,
         (
           SELECT content
           FROM thread_messages
