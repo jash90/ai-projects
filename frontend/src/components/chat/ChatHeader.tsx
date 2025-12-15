@@ -5,6 +5,7 @@ import { Project, Agent } from '@/types'
 import { Button } from '@/components/ui/Button'
 import { StreamingToggle } from './StreamingToggle'
 import { cn, getInitials, generateColorFromString } from '@/lib/utils'
+import { useAuth } from '@/stores/authStore'
 
 interface ChatHeaderProps {
   project: Project
@@ -34,6 +35,8 @@ function ChatHeader({
   extraActions
 }: ChatHeaderProps) {
   const [showMenu, setShowMenu] = useState(false)
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'admin'
 
   const getProviderIcon = (provider: string) => {
     switch (provider) {
@@ -80,12 +83,14 @@ function ChatHeader({
             <span className="text-sm text-foreground">{agent.name}</span>
           </div>
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <span className={cn('text-xs', getProviderColor(agent.provider))}>
-                {getProviderIcon(agent.provider)}
-              </span>
-              <span className="text-xs">{agent.model}</span>
-            </div>
+            {isAdmin && (
+              <div className="flex items-center gap-1">
+                <span className={cn('text-xs', getProviderColor(agent.provider))}>
+                  {getProviderIcon(agent.provider)}
+                </span>
+                <span className="text-xs">{agent.model}</span>
+              </div>
+            )}
             <div className="flex items-center gap-1">
               <div
                 className={cn(

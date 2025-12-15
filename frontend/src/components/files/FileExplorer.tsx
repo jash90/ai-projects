@@ -10,7 +10,7 @@ import {
   Trash2,
   Copy,
 } from 'lucide-react'
-import { File as FileType } from '@/types'
+import { TextFile as FileType } from '@/types'
 import { useFiles } from '@/stores/fileStore'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'

@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useState } from 'react'
-import { Project, Agent } from '@/types'
+import { Project, Agent, ChatFileAttachment } from '@/types'
 import { ChatHeader } from './ChatHeader'
 import { ChatMessages } from './ChatMessages'
 import { ChatInput } from './ChatInput'
@@ -54,9 +54,8 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
     loadConversation()
   }, [project.id, agent.id])
 
-  const handleSendMessage = useCallback(async (content: string) => {
-    if (!content.trim() || isSending) return
-
+  const handleSendMessage = useCallback(async (content: string, attachments?: ChatFileAttachment[]) => {
+    if ((!content.trim() && (!attachments || attachments.length === 0)) || isSending) return
 
     // Check token limits before sending
     if (!canSendMessage) {
@@ -74,23 +73,25 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
     try {
       if (streaming) {
         await conversationStore.getState().sendStreamingMessage(
-          project.id, 
-          agent.id, 
-          content, 
-          includeFiles
+          project.id,
+          agent.id,
+          content,
+          includeFiles,
+          attachments
         )
       } else {
         await conversationStore.getState().sendMessage(
-          project.id, 
-          agent.id, 
-          content, 
-          includeFiles
+          project.id,
+          agent.id,
+          content,
+          includeFiles,
+          attachments
         )
       }
-      
+
       // Refresh usage data after sending message
       refreshUsage()
-      
+
       // Send via socket for real-time updates (optional)
       if (socketConnected) {
         sendSocketMessage({
@@ -101,10 +102,10 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
       }
     } catch (error) {
       console.error('Failed to send message:', error)
-      
+
       // Refresh usage data after error to update token limit banner
       refreshUsage()
-      
+
       // Get the formatted error message from the conversation store
       const conversationError = conversationStore.getState().error
       if (conversationError) {

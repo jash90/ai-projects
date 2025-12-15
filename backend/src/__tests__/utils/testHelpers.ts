@@ -49,13 +49,13 @@ export class TestHelpers {
 
   static generateTokens(userId: string): AuthTokens {
     const access_token = jwt.sign(
-      { userId },
+      { user_id: userId },
       process.env.JWT_SECRET || 'test-secret',
       { expiresIn: '1h' }
     );
 
     const refresh_token = jwt.sign(
-      { userId },
+      { user_id: userId },
       process.env.JWT_SECRET || 'test-secret',
       { expiresIn: '7d' }
     );
@@ -127,8 +127,26 @@ export class TestHelpers {
     return result.rows[0];
   }
 
-  static async authenticatedRequest(app: any, tokens: AuthTokens) {
-    return request(app).set('Authorization', `Bearer ${tokens.access_token}`);
+  static authenticatedRequest(app: any, tokens: AuthTokens) {
+    const agent = request.agent(app);
+    const authHeader = `Bearer ${tokens.access_token}`;
+
+    // Wrap HTTP methods to automatically add Authorization header per request
+    const originalGet = agent.get.bind(agent);
+    const originalPost = agent.post.bind(agent);
+    const originalPut = agent.put.bind(agent);
+    const originalDelete = agent.delete.bind(agent);
+    const originalPatch = agent.patch.bind(agent);
+
+    const addAuth = (req: any) => req.set('Authorization', authHeader);
+
+    agent.get = (url: string) => addAuth(originalGet(url));
+    agent.post = (url: string) => addAuth(originalPost(url));
+    agent.put = (url: string) => addAuth(originalPut(url));
+    agent.delete = (url: string) => addAuth(originalDelete(url));
+    agent.patch = (url: string) => addAuth(originalPatch(url));
+
+    return agent;
   }
 
   static async seedDatabase() {
@@ -177,7 +195,7 @@ export class TestHelpers {
   }
 
   static async cleanDatabase() {
-    const tables = ['conversations', 'files', 'project_files', 'projects', 'users'];
+    const tables = ['token_usage', 'conversations', 'files', 'project_files', 'projects', 'users', 'agents', 'ai_models'];
     for (const table of tables) {
       await pool.query(`TRUNCATE ${table} RESTART IDENTITY CASCADE`);
     }

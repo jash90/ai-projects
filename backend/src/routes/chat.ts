@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import Joi from 'joi';
+import multer from 'multer';
 import { AgentModel } from '../models/Agent';
 import { ConversationModel } from '../models/Conversation';
 import { FileModel } from '../models/File';
@@ -8,8 +9,30 @@ import { authenticateToken } from '../middleware/auth';
 import { validate, commonSchemas } from '../middleware/validation';
 import { aiLimiter, generalLimiter } from '../middleware/rateLimiting';
 import { asyncHandler } from '../middleware/errorHandler';
-import { createResourceNotFoundError, createAIServiceError, isAppError } from '../utils/errors';
+import { createResourceNotFoundError, createAIServiceError, isAppError, createValidationError } from '../utils/errors';
 import logger from '../utils/logger';
+import {
+  ChatFileAttachment,
+  SUPPORTED_CHAT_FILE_TYPES,
+  MAX_CHAT_FILE_SIZE,
+  MAX_CHAT_FILES_COUNT
+} from '../types';
+
+// Configure multer for chat file uploads
+const chatUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: MAX_CHAT_FILE_SIZE,
+    files: MAX_CHAT_FILES_COUNT,
+  },
+  fileFilter: (req, file, cb) => {
+    if (SUPPORTED_CHAT_FILE_TYPES.includes(file.mimetype as any)) {
+      cb(null, true);
+    } else {
+      cb(new Error(`Unsupported file type: ${file.mimetype}. Supported types: ${SUPPORTED_CHAT_FILE_TYPES.join(', ')}`));
+    }
+  },
+});
 
 const router: Router = Router();
 
@@ -19,7 +42,7 @@ const router: Router = Router();
  *   post:
  *     summary: Send message to AI agent
  *     tags: [Chat]
- *     description: Send a chat message to an AI agent and receive a response (streaming or regular)
+ *     description: Send a chat message to an AI agent and receive a response (streaming or regular). Supports file attachments (images, PDFs).
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -40,6 +63,33 @@ const router: Router = Router();
  *     requestBody:
  *       required: true
  *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 minLength: 1
+ *                 maxLength: 50000
+ *                 description: User message to send to AI
+ *               includeFiles:
+ *                 type: string
+ *                 enum: ['true', 'false']
+ *                 default: 'true'
+ *                 description: Include project files in context
+ *               stream:
+ *                 type: string
+ *                 enum: ['true', 'false']
+ *                 default: 'false'
+ *                 description: Enable streaming response
+ *               files:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *                 description: File attachments (images, PDFs - max 5 files, 20MB each)
+ *             required:
+ *               - message
  *         application/json:
  *           schema:
  *             type: object
@@ -87,25 +137,97 @@ const router: Router = Router();
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
-router.post('/projects/:projectId/agents/:agentId/chat', 
+router.post('/projects/:projectId/agents/:agentId/chat',
   aiLimiter, // Use AI-specific rate limiting
   authenticateToken,
-  validate({ 
-    params: Joi.object({ 
+  // Handle both multipart/form-data (with files) and application/json
+  (req: Request, res: Response, next) => {
+    const contentType = req.headers['content-type'] || '';
+    if (contentType.includes('multipart/form-data')) {
+      chatUpload.array('files', MAX_CHAT_FILES_COUNT)(req, res, (err) => {
+        if (err) {
+          if (err instanceof multer.MulterError) {
+            if (err.code === 'LIMIT_FILE_SIZE') {
+              return res.status(400).json({
+                success: false,
+                error: `File too large. Maximum size is ${MAX_CHAT_FILE_SIZE / 1024 / 1024}MB`
+              });
+            }
+            if (err.code === 'LIMIT_FILE_COUNT') {
+              return res.status(400).json({
+                success: false,
+                error: `Too many files. Maximum is ${MAX_CHAT_FILES_COUNT} files`
+              });
+            }
+          }
+          return res.status(400).json({
+            success: false,
+            error: err.message
+          });
+        }
+        next();
+      });
+    } else {
+      next();
+    }
+  },
+  validate({
+    params: Joi.object({
       projectId: commonSchemas.uuid,
       agentId: commonSchemas.uuid
-    }),
-    body: Joi.object({
-      message: Joi.string().min(1).max(50000).required(),
-      includeFiles: Joi.boolean().default(true),
-      stream: Joi.boolean().default(false)
     })
   }),
   asyncHandler(async (req: Request, res: Response) => {
     try {
       const { projectId, agentId } = req.params;
-      const { message, includeFiles, stream } = req.body;
       const userId = req.user!.id;
+
+      // Handle both JSON and form-data
+      let message: string;
+      let includeFiles: boolean;
+      let stream: boolean;
+
+      if (req.is('multipart/form-data')) {
+        message = req.body.message;
+        includeFiles = req.body.includeFiles !== 'false';
+        stream = req.body.stream === 'true';
+      } else {
+        message = req.body.message;
+        includeFiles = req.body.includeFiles !== false;
+        stream = req.body.stream === true;
+      }
+
+      // Validate message
+      if (!message || message.length < 1 || message.length > 50000) {
+        return res.status(400).json({
+          success: false,
+          error: 'Message is required and must be between 1 and 50000 characters'
+        });
+      }
+
+      // Process file attachments
+      const attachments: ChatFileAttachment[] = [];
+      const uploadedFiles = req.files as Express.Multer.File[] | undefined;
+
+      if (uploadedFiles && uploadedFiles.length > 0) {
+        for (const file of uploadedFiles) {
+          attachments.push({
+            filename: file.originalname,
+            mimetype: file.mimetype,
+            size: file.size,
+            data: file.buffer.toString('base64')
+          });
+        }
+
+        logger.info('Chat message with file attachments', {
+          projectId,
+          agentId,
+          userId,
+          fileCount: attachments.length,
+          fileTypes: attachments.map(f => f.mimetype),
+          totalSize: attachments.reduce((sum, f) => sum + f.size, 0)
+        });
+      }
 
       // Get agent
       const agent = await AgentModel.findById(agentId);
@@ -122,11 +244,18 @@ router.post('/projects/:projectId/agents/:agentId/chat',
 
       const messages = conversation ? conversation.messages : [];
 
-      // Add user message
+      // Add user message with attachment metadata
       const userMessage = {
         role: 'user' as const,
         content: message,
-        timestamp: new Date()
+        timestamp: new Date(),
+        metadata: attachments.length > 0 ? {
+          attachments: attachments.map(a => ({
+            filename: a.filename,
+            mimetype: a.mimetype,
+            size: a.size
+          }))
+        } : undefined
       };
 
       messages.push(userMessage);
@@ -136,14 +265,14 @@ router.post('/projects/:projectId/agents/:agentId/chat',
       if (includeFiles) {
         try {
           const files = await FileModel.findByProjectId(projectId, userId);
-          projectFiles = files.map(file => 
+          projectFiles = files.map(file =>
             `File: ${file.name} (${file.type})\n${file.content}`
           );
         } catch (error) {
-          logger.warn('Failed to load project files for context', { 
-            projectId, 
-            userId, 
-            error: error instanceof Error ? error.message : 'Unknown error' 
+          logger.warn('Failed to load project files for context', {
+            projectId,
+            userId,
+            error: error instanceof Error ? error.message : 'Unknown error'
           });
         }
       }
@@ -153,6 +282,7 @@ router.post('/projects/:projectId/agents/:agentId/chat',
         agent,
         messages,
         projectFiles,
+        attachments: attachments.length > 0 ? attachments : undefined,
         userId,
         projectId,
         conversationId: conversation?.id,
@@ -215,7 +345,8 @@ router.post('/projects/:projectId/agents/:agentId/chat',
                 aiResponseLength: finalResponse.content.length,
                 totalMessages: messages.length,
                 includeFiles,
-                fileCount: projectFiles.length
+                fileCount: projectFiles.length,
+                attachmentCount: attachments.length
               });
             }
           }
@@ -261,7 +392,8 @@ router.post('/projects/:projectId/agents/:agentId/chat',
           aiResponseLength: regularResponse.content.length,
           totalMessages: messages.length,
           includeFiles,
-          fileCount: projectFiles.length
+          fileCount: projectFiles.length,
+          attachmentCount: attachments.length
         });
 
         res.json({

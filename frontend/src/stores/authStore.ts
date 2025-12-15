@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { User, AuthTokens } from '@/types'
+import { settingsApi } from '@/lib/api'
+import { uiStore } from './uiStore'
 
 interface AuthState {
   user: User | null
@@ -16,6 +18,7 @@ interface AuthActions {
   login: (user: User, tokens: AuthTokens) => void
   logout: () => void
   updateUser: (updates: Partial<User>) => void
+  syncPreferencesFromServer: () => Promise<void>
 }
 
 type AuthStore = AuthState & AuthActions
@@ -66,6 +69,20 @@ export const authStore = create<AuthStore>()(
           set({
             user: { ...currentUser, ...updates }
           })
+        }
+      },
+
+      syncPreferencesFromServer: async () => {
+        try {
+          const response = await settingsApi.getPreferences()
+          if (response.data?.preferences) {
+            const { theme } = response.data.preferences
+            if (theme) {
+              uiStore.getState().setTheme(theme)
+            }
+          }
+        } catch (error) {
+          console.error('Failed to sync preferences from server:', error)
         }
       },
     }),

@@ -1,3 +1,18 @@
+// Chat file attachment constants (inlined to avoid ESM/CJS compatibility issues)
+export const SUPPORTED_CHAT_FILE_TYPES = [
+  'image/png',
+  'image/jpeg',
+  'image/jpg',
+  'image/gif',
+  'image/webp',
+  'application/pdf',
+] as const;
+
+export type SupportedChatFileType = typeof SUPPORTED_CHAT_FILE_TYPES[number];
+
+export const MAX_CHAT_FILE_SIZE = 20 * 1024 * 1024; // 20MB max per file
+export const MAX_CHAT_FILES_COUNT = 5; // Max 5 files per message
+
 // User Types
 export interface User {
   id: string;
@@ -118,6 +133,24 @@ export interface MessageMetadata {
   processing_time?: number;
   prompt_tokens?: number;
   completion_tokens?: number;
+  attachments?: ChatFileAttachmentInfo[];
+}
+
+// Chat file attachment types (for multimodal LLM support)
+// Full attachment with base64 data for sending to AI
+export interface ChatFileAttachment {
+  id?: string;
+  filename: string;
+  mimetype: string;
+  size: number;
+  data: string; // base64 encoded data
+}
+
+// Attachment info for storing in message metadata (without base64 data)
+export interface ChatFileAttachmentInfo {
+  filename: string;
+  mimetype: string;
+  size: number;
 }
 
 // File Types (for project files)

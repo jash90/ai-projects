@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { 
-  ArrowLeft, 
-  PanelLeftOpen, 
-  PanelLeftClose, 
-  Menu, 
-  X, 
-  Bot, 
-  FileText, 
+import {
+  ArrowLeft,
+  PanelLeftOpen,
+  PanelLeftClose,
+  Menu,
+  X,
+  Bot,
+  FileText,
   MessageSquare,
   Maximize2,
   Minimize2,
@@ -16,8 +16,11 @@ import {
   WifiOff,
   Wifi,
   Upload,
+  Code,
+  Sparkles,
+  FolderOpen,
 } from 'lucide-react'
-import { Agent, File as FileType } from '@/types'
+import { Agent, TextFile as FileType } from '@/types'
 import { useProjects } from '@/stores/projectStore'
 import { useAgents } from '@/stores/agentStore'
 import { useFiles } from '@/stores/fileStore'
@@ -29,6 +32,8 @@ import { FileEditor } from '@/components/files/FileEditor'
 import { ThreadChat } from '@/components/chat/ThreadChat'
 import { MobileNavigation, useIsMobile } from '@/components/ui/MobileNavigation'
 import { usePWAFeatures, useOfflineFiles } from '@/hooks/usePWAFeatures'
+import { Card, CardContent } from '@/components/ui/Card'
+import { Badge } from '@/components/ui/Badge'
 import { cn } from '@/lib/utils'
 
 type MobileView = 'chat' | 'agents' | 'files' | 'editor'
@@ -37,33 +42,33 @@ function ProjectPage() {
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
   const isMobile = useIsMobile()
-  
+
   const { currentProject, fetchProject, isLoading: isLoadingProject } = useProjects()
   const { agents, fetchAgents } = useAgents()
   const { } = useFiles()
-  
+
   // PWA features
-  const { 
-    isOffline, 
-    isInstalled, 
-    canInstall, 
-    install, 
-    share, 
-    vibrate 
+  const {
+    isOffline,
+    isInstalled,
+    canInstall,
+    install,
+    share,
+    vibrate
   } = usePWAFeatures()
-  
-  const { 
-    offlineFiles, 
-    pendingUploads, 
-    hasOfflineFiles, 
-    hasPendingUploads 
+
+  const {
+    offlineFiles,
+    pendingUploads,
+    hasOfflineFiles,
+    hasPendingUploads
   } = useOfflineFiles()
-  
+
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null)
   const [selectedFile, setSelectedFile] = useState<FileType | null>(null)
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(isMobile)
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState(isMobile)
-  
+
   // Mobile-specific states
   const [mobileView, setMobileView] = useState<MobileView>('chat')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -126,7 +131,7 @@ function ProjectPage() {
   const handleMobileViewChange = (view: MobileView) => {
     setMobileView(view)
     setMobileMenuOpen(false)
-    
+
     // Haptic feedback on mobile
     if (isMobile) {
       vibrate(50)
@@ -135,13 +140,13 @@ function ProjectPage() {
 
   const handleShareProject = async () => {
     if (!currentProject) return
-    
+
     const shareData = {
       title: `AI Projects - ${currentProject.name}`,
       text: currentProject.description || 'Check out this AI project!',
       url: window.location.href
     }
-    
+
     const success = await share(shareData)
     if (success && isMobile) {
       vibrate([100, 50, 100])
@@ -159,9 +164,11 @@ function ProjectPage() {
 
   if (isLoadingProject) {
     return (
-      <div className="h-screen flex items-center justify-center">
-        <div className="text-center">
-          <LoadingSpinner className="w-8 h-8 mb-2" />
+      <div className="h-screen flex items-center justify-center bg-background">
+        <div className="text-center animate-fade-in">
+          <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+            <LoadingSpinner className="w-8 h-8" />
+          </div>
           <p className="text-muted-foreground">Loading project...</p>
         </div>
       </div>
@@ -170,34 +177,42 @@ function ProjectPage() {
 
   if (!currentProject) {
     return (
-      <div className="h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Project not found</h2>
-          <p className="text-muted-foreground mb-4">
-            The project you're looking for doesn't exist or you don't have access to it.
-          </p>
-          <Button onClick={() => navigate('/dashboard')}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
-          </Button>
-        </div>
+      <div className="h-screen flex items-center justify-center bg-background p-4">
+        <Card variant="bordered" className="max-w-md w-full animate-fade-in">
+          <CardContent className="p-8 text-center">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-destructive/10 flex items-center justify-center">
+              <FolderOpen className="w-8 h-8 text-destructive" />
+            </div>
+            <h2 className="text-xl font-semibold text-foreground mb-2">Project not found</h2>
+            <p className="text-muted-foreground mb-6">
+              The project you're looking for doesn't exist or you don't have access to it.
+            </p>
+            <Button onClick={() => navigate('/dashboard')} variant="gradient" leftIcon={<ArrowLeft className="w-4 h-4" />}>
+              Back to Dashboard
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     )
   }
 
   if (!selectedAgent) {
     return (
-      <div className="h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">No AI agents available</h2>
-          <p className="text-muted-foreground mb-4">
-            You need at least one AI agent to use this project.
-          </p>
-          <Button onClick={() => navigate('/dashboard')}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
-          </Button>
-        </div>
+      <div className="h-screen flex items-center justify-center bg-background p-4">
+        <Card variant="bordered" className="max-w-md w-full animate-fade-in">
+          <CardContent className="p-8 text-center">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-warning/10 flex items-center justify-center">
+              <Bot className="w-8 h-8 text-warning" />
+            </div>
+            <h2 className="text-xl font-semibold text-foreground mb-2">No AI agents available</h2>
+            <p className="text-muted-foreground mb-6">
+              You need at least one AI agent to use this project.
+            </p>
+            <Button onClick={() => navigate('/dashboard')} variant="gradient" leftIcon={<ArrowLeft className="w-4 h-4" />}>
+              Back to Dashboard
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     )
   }
@@ -207,19 +222,19 @@ function ProjectPage() {
     return (
       <div className="h-screen flex flex-col bg-background">
         {/* Mobile Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border bg-card safe-area-top">
-          <div className="flex items-center gap-3 min-w-0 flex-1">
+        <div className="flex items-center justify-between p-3 border-b border-border bg-card/95 backdrop-blur-sm safe-area-top">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate('/dashboard')}
-              className="shrink-0"
+              className="shrink-0 h-8 w-8 p-0"
             >
               <ArrowLeft className="w-4 h-4" />
             </Button>
-            
+
             <div className="min-w-0 flex-1">
-              <h1 className="text-lg font-semibold text-foreground truncate">
+              <h1 className="text-base font-semibold text-foreground truncate">
                 {currentProject.name}
               </h1>
               {currentProject.description && !mobileMenuOpen && (
@@ -230,24 +245,20 @@ function ProjectPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 shrink-0">
             {/* PWA Status Indicators */}
             {isOffline && (
-              <div className="flex items-center gap-1 px-2 py-1 bg-orange-100 dark:bg-orange-900/30 rounded-md">
-                <WifiOff className="w-3 h-3 text-orange-600 dark:text-orange-400" />
-                <span className="text-xs text-orange-600 dark:text-orange-400 font-medium">
-                  Offline
-                </span>
-              </div>
+              <Badge variant="warning" size="sm" className="gap-1">
+                <WifiOff className="w-3 h-3" />
+                <span className="hidden xs:inline">Offline</span>
+              </Badge>
             )}
-            
+
             {hasPendingUploads && (
-              <div className="flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 rounded-md">
-                <Upload className="w-3 h-3 text-blue-600 dark:text-blue-400" />
-                <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">
-                  {pendingUploads.length}
-                </span>
-              </div>
+              <Badge variant="info" size="sm" className="gap-1">
+                <Upload className="w-3 h-3" />
+                {pendingUploads.length}
+              </Badge>
             )}
 
             {/* Install App Button */}
@@ -256,7 +267,7 @@ function ProjectPage() {
                 variant="ghost"
                 size="sm"
                 onClick={handleInstallApp}
-                className="p-2"
+                className="h-8 w-8 p-0"
                 title="Install App"
               >
                 <Download className="w-4 h-4" />
@@ -268,7 +279,7 @@ function ProjectPage() {
               variant="ghost"
               size="sm"
               onClick={handleShareProject}
-              className="p-2"
+              className="h-8 w-8 p-0"
               title="Share Project"
             >
               <Share className="w-4 h-4" />
@@ -279,7 +290,7 @@ function ProjectPage() {
               variant="ghost"
               size="sm"
               onClick={toggleFullscreen}
-              className="p-2"
+              className="h-8 w-8 p-0"
               title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
             >
               {isFullscreen ? (
@@ -294,7 +305,7 @@ function ProjectPage() {
               variant="ghost"
               size="sm"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2"
+              className="h-8 w-8 p-0"
               title="Menu"
             >
               {mobileMenuOpen ? (
@@ -308,18 +319,19 @@ function ProjectPage() {
 
         {/* Mobile Menu Overlay */}
         {mobileMenuOpen && (
-          <div className="absolute inset-0 z-50 bg-black/50" onClick={() => setMobileMenuOpen(false)} />
+          <div className="absolute inset-0 z-50 bg-black/60 backdrop-blur-sm animate-fade-in" onClick={() => setMobileMenuOpen(false)} />
         )}
 
         {/* Mobile Menu */}
         <div className={cn(
-          "absolute top-16 right-0 w-80 max-w-[90vw] bg-card border border-border rounded-bl-lg shadow-lg z-50 transform transition-transform duration-300",
-          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+          "absolute top-14 right-2 w-72 max-w-[90vw] bg-card border border-border rounded-xl shadow-design-lg z-50 transform transition-all duration-300 origin-top-right",
+          mobileMenuOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"
         )}>
           <div className="p-4 space-y-4">
+            {/* View Buttons */}
             <div className="grid grid-cols-2 gap-2">
               <Button
-                variant={mobileView === 'chat' ? 'default' : 'outline'}
+                variant={mobileView === 'chat' ? 'gradient' : 'outline'}
                 size="sm"
                 onClick={() => handleMobileViewChange('chat')}
                 className="flex items-center gap-2"
@@ -327,9 +339,9 @@ function ProjectPage() {
                 <MessageSquare className="w-4 h-4" />
                 Chat
               </Button>
-              
+
               <Button
-                variant={mobileView === 'agents' ? 'default' : 'outline'}
+                variant={mobileView === 'agents' ? 'gradient' : 'outline'}
                 size="sm"
                 onClick={() => handleMobileViewChange('agents')}
                 className="flex items-center gap-2"
@@ -337,9 +349,9 @@ function ProjectPage() {
                 <Bot className="w-4 h-4" />
                 Agents
               </Button>
-              
+
               <Button
-                variant={mobileView === 'files' ? 'default' : 'outline'}
+                variant={mobileView === 'files' ? 'gradient' : 'outline'}
                 size="sm"
                 onClick={() => handleMobileViewChange('files')}
                 className="flex items-center gap-2"
@@ -347,101 +359,102 @@ function ProjectPage() {
                 <FileText className="w-4 h-4" />
                 Files
               </Button>
-              
+
               <Button
-                variant={mobileView === 'editor' ? 'default' : 'outline'}
+                variant={mobileView === 'editor' ? 'gradient' : 'outline'}
                 size="sm"
                 onClick={() => handleMobileViewChange('editor')}
                 className="flex items-center gap-2"
                 disabled={!selectedFile}
               >
-                <FileText className="w-4 h-4" />
+                <Code className="w-4 h-4" />
                 Editor
               </Button>
             </div>
 
-            {/* PWA Status */}
-            <div className="space-y-2 pt-2 border-t border-border">
-              <div className="text-xs font-medium text-muted-foreground">Status:</div>
-              <div className="flex items-center gap-2 text-sm">
+            {/* Connection Status */}
+            <div className="p-3 rounded-xl bg-muted/30 space-y-2">
+              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</div>
+              <div className="flex items-center gap-2">
                 {isOffline ? (
-                  <div className="flex items-center gap-2 text-orange-600 dark:text-orange-400">
-                    <WifiOff className="w-3 h-3" />
-                    <span>Offline Mode</span>
-                  </div>
+                  <Badge variant="warning" size="sm" dot>
+                    <WifiOff className="w-3 h-3 mr-1" />
+                    Offline Mode
+                  </Badge>
                 ) : (
-                  <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
-                    <Wifi className="w-3 h-3" />
-                    <span>Online</span>
-                  </div>
+                  <Badge variant="success" size="sm" dot>
+                    <Wifi className="w-3 h-3 mr-1" />
+                    Online
+                  </Badge>
                 )}
               </div>
-              
+
               {hasOfflineFiles && (
-                <div className="text-sm text-muted-foreground">
+                <p className="text-xs text-muted-foreground">
                   {offlineFiles.size} files available offline
-                </div>
+                </p>
               )}
-              
+
               {hasPendingUploads && (
-                <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
+                <div className="flex items-center gap-2 text-xs text-info">
                   <Upload className="w-3 h-3" />
                   <span>{pendingUploads.length} files pending upload</span>
                 </div>
               )}
             </div>
 
-            {/* Current selections */}
-            <div className="space-y-2 pt-2 border-t border-border">
-              <div className="text-xs font-medium text-muted-foreground">Current Selection:</div>
-              <div className="text-sm">
-                <div className="flex items-center gap-2">
-                  <Bot className="w-3 h-3" />
-                  <span className="truncate">
+            {/* Current Selections */}
+            <div className="p-3 rounded-xl bg-muted/30 space-y-2">
+              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Current Selection</div>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sm">
+                  <div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Bot className="w-3 h-3 text-primary" />
+                  </div>
+                  <span className="text-foreground truncate">
                     {selectedAgent?.name || 'No agent selected'}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 mt-1">
-                  <FileText className="w-3 h-3" />
-                  <span className="truncate">
+                <div className="flex items-center gap-2 text-sm">
+                  <div className="w-6 h-6 rounded-lg bg-accent/10 flex items-center justify-center">
+                    <FileText className="w-3 h-3 text-accent-foreground" />
+                  </div>
+                  <span className="text-foreground truncate">
                     {selectedFile?.name || 'No file selected'}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* PWA Actions */}
-            <div className="space-y-2 pt-2 border-t border-border">
-              <div className="text-xs font-medium text-muted-foreground">Actions:</div>
-              <div className="grid grid-cols-2 gap-2">
+            {/* Quick Actions */}
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleShareProject}
+                className="flex-1"
+                leftIcon={<Share className="w-3 h-3" />}
+              >
+                Share
+              </Button>
+
+              {canInstall && !isInstalled && (
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={handleShareProject}
-                  className="flex items-center gap-2 text-xs"
+                  onClick={handleInstallApp}
+                  className="flex-1"
+                  leftIcon={<Download className="w-3 h-3" />}
                 >
-                  <Share className="w-3 h-3" />
-                  Share
+                  Install
                 </Button>
-                
-                {canInstall && !isInstalled && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleInstallApp}
-                    className="flex items-center gap-2 text-xs"
-                  >
-                    <Download className="w-3 h-3" />
-                    Install
-                  </Button>
-                )}
-              </div>
+              )}
             </div>
           </div>
         </div>
 
         {/* Mobile Content */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden animate-fade-in">
           {mobileView === 'chat' && (
             <ThreadChat
               project={currentProject}
@@ -449,9 +462,9 @@ function ProjectPage() {
               className="h-full"
             />
           )}
-          
+
           {mobileView === 'agents' && (
-            <div className="h-full bg-card">
+            <div className="h-full bg-card/50">
               <AgentPanel
                 selectedAgentId={selectedAgent?.id}
                 onAgentSelect={handleAgentSelect}
@@ -459,9 +472,9 @@ function ProjectPage() {
               />
             </div>
           )}
-          
+
           {mobileView === 'files' && (
-            <div className="h-full bg-card">
+            <div className="h-full bg-card/50">
               <FileExplorer
                 projectId={currentProject.id}
                 selectedFileId={selectedFile?.id}
@@ -470,7 +483,7 @@ function ProjectPage() {
               />
             </div>
           )}
-          
+
           {mobileView === 'editor' && (
             <div className="h-full">
               <FileEditor
@@ -482,48 +495,61 @@ function ProjectPage() {
         </div>
 
         {/* Mobile Bottom Navigation */}
-        <div className="border-t border-border bg-card safe-area-bottom">
+        <div className="border-t border-border bg-card/95 backdrop-blur-sm safe-area-bottom">
           <div className="grid grid-cols-4 gap-1 p-2">
-            <Button
-              variant={mobileView === 'chat' ? 'default' : 'ghost'}
-              size="sm"
+            <button
               onClick={() => setMobileView('chat')}
-              className="flex flex-col items-center gap-1 py-3 h-auto"
+              className={cn(
+                'flex flex-col items-center gap-1 py-2.5 rounded-xl transition-all duration-200',
+                mobileView === 'chat'
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+              )}
             >
-              <MessageSquare className="w-4 h-4" />
-              <span className="text-xs">Chat</span>
-            </Button>
-            
-            <Button
-              variant={mobileView === 'agents' ? 'default' : 'ghost'}
-              size="sm"
+              <MessageSquare className="w-5 h-5" />
+              <span className="text-[10px] font-medium">Chat</span>
+            </button>
+
+            <button
               onClick={() => setMobileView('agents')}
-              className="flex flex-col items-center gap-1 py-3 h-auto"
+              className={cn(
+                'flex flex-col items-center gap-1 py-2.5 rounded-xl transition-all duration-200',
+                mobileView === 'agents'
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+              )}
             >
-              <Bot className="w-4 h-4" />
-              <span className="text-xs">Agents</span>
-            </Button>
-            
-            <Button
-              variant={mobileView === 'files' ? 'default' : 'ghost'}
-              size="sm"
+              <Bot className="w-5 h-5" />
+              <span className="text-[10px] font-medium">Agents</span>
+            </button>
+
+            <button
               onClick={() => setMobileView('files')}
-              className="flex flex-col items-center gap-1 py-3 h-auto"
+              className={cn(
+                'flex flex-col items-center gap-1 py-2.5 rounded-xl transition-all duration-200',
+                mobileView === 'files'
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+              )}
             >
-              <FileText className="w-4 h-4" />
-              <span className="text-xs">Files</span>
-            </Button>
-            
-            <Button
-              variant={mobileView === 'editor' ? 'default' : 'ghost'}
-              size="sm"
+              <FileText className="w-5 h-5" />
+              <span className="text-[10px] font-medium">Files</span>
+            </button>
+
+            <button
               onClick={() => setMobileView('editor')}
-              className="flex flex-col items-center gap-1 py-3 h-auto"
               disabled={!selectedFile}
+              className={cn(
+                'flex flex-col items-center gap-1 py-2.5 rounded-xl transition-all duration-200',
+                mobileView === 'editor'
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
+                !selectedFile && 'opacity-50 cursor-not-allowed'
+              )}
             >
-              <FileText className="w-4 h-4" />
-              <span className="text-xs">Editor</span>
-            </Button>
+              <Code className="w-5 h-5" />
+              <span className="text-[10px] font-medium">Editor</span>
+            </button>
           </div>
         </div>
       </div>
@@ -534,30 +560,50 @@ function ProjectPage() {
   return (
     <div className="h-screen flex flex-col bg-background">
       {/* Top Navigation */}
-      <div className="flex items-center gap-4 p-4 border-b border-border bg-card">
+      <div className="flex items-center gap-4 px-4 py-3 border-b border-border bg-card/95 backdrop-blur-sm">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => navigate('/dashboard')}
           className="flex items-center gap-2"
+          leftIcon={<ArrowLeft className="w-4 h-4" />}
         >
-          <ArrowLeft className="w-4 h-4" />
           Dashboard
         </Button>
-        
-        <div className="flex-1">
-          <h1 className="text-lg font-semibold text-foreground">{currentProject.name}</h1>
-          {currentProject.description && (
-            <p className="text-sm text-muted-foreground">{currentProject.description}</p>
-          )}
+
+        <div className="h-6 w-px bg-border" />
+
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-primary" />
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-base font-semibold text-foreground truncate">{currentProject.name}</h1>
+              {currentProject.description && (
+                <p className="text-xs text-muted-foreground truncate">{currentProject.description}</p>
+              )}
+            </div>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
+          {/* Selected Agent Indicator */}
+          {selectedAgent && (
+            <Badge variant="secondary" size="sm" className="hidden sm:flex gap-1.5">
+              <Bot className="w-3 h-3" />
+              {selectedAgent.name}
+            </Badge>
+          )}
+
+          <div className="h-6 w-px bg-border mx-1.5 hidden md:block" />
+
           <Button
             variant="ghost"
             size="sm"
             onClick={toggleFullscreen}
-            className="hidden md:flex"
+            className="hidden md:flex h-8 w-8 p-0"
+            title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
           >
             {isFullscreen ? (
               <Minimize2 className="w-4 h-4" />
@@ -565,12 +611,13 @@ function ProjectPage() {
               <Maximize2 className="w-4 h-4" />
             )}
           </Button>
-          
+
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setLeftPanelCollapsed(!leftPanelCollapsed)}
-            className="hidden md:flex"
+            className="hidden md:flex h-8 w-8 p-0"
+            title={leftPanelCollapsed ? "Show Sidebar" : "Hide Sidebar"}
           >
             {leftPanelCollapsed ? (
               <PanelLeftOpen className="w-4 h-4" />
@@ -578,20 +625,21 @@ function ProjectPage() {
               <PanelLeftClose className="w-4 h-4" />
             )}
           </Button>
-          
+
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setRightPanelCollapsed(!rightPanelCollapsed)}
-            className="hidden lg:flex"
+            className="hidden lg:flex h-8 w-8 p-0"
+            title={rightPanelCollapsed ? "Show Editor" : "Hide Editor"}
           >
             {rightPanelCollapsed ? (
-              <PanelLeftOpen className="w-4 h-4" />
+              <Code className="w-4 h-4" />
             ) : (
-              <PanelLeftClose className="w-4 h-4" />
+              <X className="w-4 h-4" />
             )}
           </Button>
-          
+
           <MobileNavigation />
         </div>
       </div>
@@ -600,31 +648,47 @@ function ProjectPage() {
       <div className="flex-1 flex overflow-hidden">
         {/* Left Panel - Agents & Files */}
         <div className={cn(
-          'flex flex-col border-r border-border bg-card transition-all duration-300',
-          leftPanelCollapsed ? 'w-0 overflow-hidden' : 'w-80'
+          'flex flex-col border-r border-border bg-card/50 transition-all duration-300 ease-in-out',
+          leftPanelCollapsed ? 'w-0 overflow-hidden' : 'w-72 xl:w-80'
         )}>
           {/* Agent Panel */}
-          <div className="h-1/2 border-b border-border">
-            <AgentPanel
-              selectedAgentId={selectedAgent?.id}
-              onAgentSelect={handleAgentSelect}
-              className="h-full"
-            />
+          <div className="h-1/2 border-b border-border overflow-hidden">
+            <div className="h-full flex flex-col">
+              <div className="px-4 py-3 border-b border-border/50 bg-muted/30">
+                <div className="flex items-center gap-2">
+                  <Bot className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-medium text-foreground">AI Agents</span>
+                </div>
+              </div>
+              <AgentPanel
+                selectedAgentId={selectedAgent?.id}
+                onAgentSelect={handleAgentSelect}
+                className="flex-1 overflow-y-auto"
+              />
+            </div>
           </div>
-          
+
           {/* File Explorer */}
-          <div className="h-1/2">
-            <FileExplorer
-              projectId={currentProject.id}
-              selectedFileId={selectedFile?.id}
-              onFileSelect={handleFileSelect}
-              className="h-full"
-            />
+          <div className="h-1/2 overflow-hidden">
+            <div className="h-full flex flex-col">
+              <div className="px-4 py-3 border-b border-border/50 bg-muted/30">
+                <div className="flex items-center gap-2">
+                  <FolderOpen className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-medium text-foreground">Project Files</span>
+                </div>
+              </div>
+              <FileExplorer
+                projectId={currentProject.id}
+                selectedFileId={selectedFile?.id}
+                onFileSelect={handleFileSelect}
+                className="flex-1 overflow-y-auto"
+              />
+            </div>
           </div>
         </div>
 
         {/* Center Panel - Chat */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0">
           <ThreadChat
             project={currentProject}
             agent={selectedAgent}
@@ -635,13 +699,30 @@ function ProjectPage() {
 
         {/* Right Panel - File Editor */}
         <div className={cn(
-          'border-l border-border bg-background transition-all duration-300',
-          rightPanelCollapsed ? 'w-0 overflow-hidden' : 'w-1/2 lg:w-2/5'
+          'border-l border-border bg-background transition-all duration-300 ease-in-out overflow-hidden',
+          rightPanelCollapsed ? 'w-0' : 'w-[45%] lg:w-2/5'
         )}>
-          <FileEditor
-            file={selectedFile}
-            className="h-full"
-          />
+          {!rightPanelCollapsed && (
+            <div className="h-full flex flex-col">
+              <div className="px-4 py-3 border-b border-border bg-muted/30 flex items-center justify-between">
+                <div className="flex items-center gap-2 min-w-0">
+                  <Code className="w-4 h-4 text-primary shrink-0" />
+                  <span className="text-sm font-medium text-foreground truncate">
+                    {selectedFile?.name || 'No file selected'}
+                  </span>
+                </div>
+                {selectedFile && (
+                  <Badge variant="secondary" size="sm">
+                    {selectedFile.name.split('.').pop() || 'txt'}
+                  </Badge>
+                )}
+              </div>
+              <FileEditor
+                file={selectedFile}
+                className="flex-1 overflow-hidden"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
