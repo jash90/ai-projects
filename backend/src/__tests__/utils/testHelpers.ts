@@ -129,8 +129,23 @@ export class TestHelpers {
 
   static authenticatedRequest(app: any, tokens: AuthTokens) {
     const agent = request.agent(app);
-    // Set auth header for all subsequent requests
-    agent.set('Authorization', `Bearer ${tokens.access_token}`);
+    const authHeader = `Bearer ${tokens.access_token}`;
+
+    // Wrap HTTP methods to automatically add Authorization header per request
+    const originalGet = agent.get.bind(agent);
+    const originalPost = agent.post.bind(agent);
+    const originalPut = agent.put.bind(agent);
+    const originalDelete = agent.delete.bind(agent);
+    const originalPatch = agent.patch.bind(agent);
+
+    const addAuth = (req: any) => req.set('Authorization', authHeader);
+
+    agent.get = (url: string) => addAuth(originalGet(url));
+    agent.post = (url: string) => addAuth(originalPost(url));
+    agent.put = (url: string) => addAuth(originalPut(url));
+    agent.delete = (url: string) => addAuth(originalDelete(url));
+    agent.patch = (url: string) => addAuth(originalPatch(url));
+
     return agent;
   }
 

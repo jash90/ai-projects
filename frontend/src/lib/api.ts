@@ -617,7 +617,7 @@ export const adminApi = {
 
   // Global token limits
   getGlobalTokenLimits: () =>
-    apiClient.get<ApiResponse<{ global: number; monthly: number }>>('/admin/token-limits'),
+    apiClient.get<ApiResponse<{ global_limit: number; monthly_limit: number }>>('/admin/token-limits'),
 
   updateGlobalTokenLimits: (limits: Omit<TokenLimitUpdate, 'user_id'>) =>
     apiClient.put<ApiResponse>('/admin/token-limits', limits),

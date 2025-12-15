@@ -681,8 +681,8 @@ function TokenLimitsTab({
 
   const handleEdit = () => {
     setTempLimits({
-      global: globalLimits?.global || 0,
-      monthly: globalLimits?.monthly || 0,
+      global: globalLimits?.global_limit || 0,
+      monthly: globalLimits?.monthly_limit || 0,
     });
     setEditing(true);
   };
@@ -804,7 +804,7 @@ function TokenLimitsTab({
                   </div>
                 </div>
                 <p className="text-3xl font-bold text-foreground">
-                  {formatNumber(globalLimits?.global || 0)}
+                  {formatNumber(globalLimits?.global_limit || 0)}
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">tokens per user</p>
               </div>
@@ -820,7 +820,7 @@ function TokenLimitsTab({
                   </div>
                 </div>
                 <p className="text-3xl font-bold text-foreground">
-                  {formatNumber(globalLimits?.monthly || 0)}
+                  {formatNumber(globalLimits?.monthly_limit || 0)}
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">tokens per month</p>
               </div>

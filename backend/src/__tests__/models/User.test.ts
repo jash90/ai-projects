@@ -127,19 +127,29 @@ describe('UserModel', () => {
       expect(user).toBeNull();
     });
 
-    it('should match email exactly (case sensitive)', async () => {
-      // Note: Email lookup is case-sensitive at database level
+    it('should match email case-insensitively', async () => {
+      // Note: Email lookup is now case-insensitive to prevent duplicate accounts
       const testUser = await TestHelpers.createTestUser({
         email: 'Test@Example.COM'
       });
 
-      // Case-sensitive lookup - different case should not match
+      // Case-insensitive lookup - different case should now match
       const user = await UserModel.findByEmail('test@example.com');
-      expect(user).toBeNull();
+      expect(user).toMatchObject({
+        id: testUser.id,
+        username: testUser.username
+      });
 
-      // Exact case should match
+      // Exact case should also match
       const exactMatch = await UserModel.findByEmail('Test@Example.COM');
       expect(exactMatch).toMatchObject({
+        id: testUser.id,
+        username: testUser.username
+      });
+
+      // Uppercase variation should match
+      const uppercaseMatch = await UserModel.findByEmail('TEST@EXAMPLE.COM');
+      expect(uppercaseMatch).toMatchObject({
         id: testUser.id,
         username: testUser.username
       });
