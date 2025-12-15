@@ -63,6 +63,17 @@ BEGIN
     LOOP
       msg_role := msg->>'role';
       msg_content := msg->>'content';
+
+      -- Skip messages with missing or NULL role/content
+      IF msg_role IS NULL OR msg_content IS NULL THEN
+        CONTINUE;
+      END IF;
+
+      -- Validate role is one of the allowed values
+      IF msg_role NOT IN ('user', 'assistant', 'system') THEN
+        CONTINUE;
+      END IF;
+
       msg_metadata := COALESCE(msg->'metadata', '{}'::jsonb);
       msg_timestamp := COALESCE((msg->>'timestamp')::timestamp with time zone, conv.created_at);
 

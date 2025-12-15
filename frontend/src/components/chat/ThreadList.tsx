@@ -3,6 +3,7 @@ import { Thread } from '@/types'
 import { threadStore, useThreads, useActiveThread, useThreadsLoading } from '@/stores/threadStore'
 import { cn } from '@/lib/utils'
 import { formatDistanceToNow } from 'date-fns'
+// Polish locale is intentionally hardcoded - this app is Polish-only
 import { pl } from 'date-fns/locale'
 
 interface ThreadListProps {

@@ -388,8 +388,8 @@ router.post('/:threadId/chat',
         content: message
       }, userId);
 
-      // Auto-update thread title from first message if needed
-      await ThreadModel.updateTitleFromFirstMessage(threadId);
+      // Auto-update thread title from first message if needed (with ownership check)
+      await ThreadModel.updateTitleFromFirstMessage(threadId, userId);
 
       // Get recent messages for context
       const recentMessages = await ThreadMessageModel.getRecentMessages(threadId, userId, 20);
@@ -401,6 +401,9 @@ router.post('/:threadId/chat',
         timestamp: m.created_at
       }));
 
+      // Track warnings for partial failures
+      const warnings: string[] = [];
+
       // Get project files for context if requested
       let projectFiles: string[] = [];
       if (includeFiles) {
@@ -410,11 +413,13 @@ router.post('/:threadId/chat',
             `File: ${file.name} (${file.type})\n${file.content}`
           );
         } catch (error) {
-          logger.warn('Failed to load project files for context', {
+          const errorMsg = 'Failed to load project files for context';
+          logger.warn(errorMsg, {
             projectId: thread.project_id,
             userId,
             error: error instanceof Error ? error.message : 'Unknown error'
           });
+          warnings.push(errorMsg);
         }
       }
 
@@ -468,7 +473,8 @@ router.post('/:threadId/chat',
                 response: {
                   content: finalResponse.content,
                   metadata: finalResponse.metadata
-                }
+                },
+                warnings: warnings.length > 0 ? warnings : undefined
               })}\n\n`);
 
               logger.info('Streaming chat message processed', {
@@ -523,7 +529,8 @@ router.post('/:threadId/chat',
             response: {
               content: regularResponse.content,
               metadata: regularResponse.metadata
-            }
+            },
+            warnings: warnings.length > 0 ? warnings : undefined
           }
         });
       }

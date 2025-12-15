@@ -23,7 +23,6 @@ import {
 import { Agent, TextFile as FileType } from '@/types'
 import { useProjects } from '@/stores/projectStore'
 import { useAgents } from '@/stores/agentStore'
-import { useFiles } from '@/stores/fileStore'
 import { Button } from '@/components/ui/Button'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { AgentPanel } from '@/components/agents/AgentPanel'
@@ -45,7 +44,6 @@ function ProjectPage() {
 
   const { currentProject, fetchProject, isLoading: isLoadingProject } = useProjects()
   const { agents, fetchAgents } = useAgents()
-  const { } = useFiles()
 
   // PWA features
   const {
