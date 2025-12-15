@@ -3,6 +3,7 @@ import { Thread } from '@/types'
 import { threadStore, useThreads, useActiveThread, useThreadsLoading } from '@/stores/threadStore'
 import { cn } from '@/lib/utils'
 import { formatDistanceToNow } from 'date-fns'
+import toast from 'react-hot-toast'
 // Polish locale is intentionally hardcoded - this app is Polish-only
 import { pl } from 'date-fns/locale'
 
@@ -19,7 +20,10 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
 
   useEffect(() => {
     if (projectId) {
-      threadStore.getState().fetchThreads(projectId).catch(console.error)
+      threadStore.getState().fetchThreads(projectId).catch((error) => {
+        console.error('Failed to fetch threads:', error)
+        toast.error('Failed to load conversations')
+      })
     }
   }, [projectId])
 
@@ -29,6 +33,7 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
       onThreadSelect?.(thread)
     } catch (error) {
       console.error('Failed to create thread:', error)
+      toast.error('Failed to create conversation')
     }
   }
 
@@ -44,6 +49,7 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
         await threadStore.getState().deleteThread(threadId, projectId)
       } catch (error) {
         console.error('Failed to delete thread:', error)
+        toast.error('Failed to delete conversation')
       }
     }
   }
