@@ -362,78 +362,99 @@ export class UserModel {
       throw createUserInactiveError(userId);
     }
 
-    // Get user's current usage with FOR UPDATE to prevent race conditions
-    // Using advisory lock pattern for better concurrency
-    const usageQuery = `
-      SELECT
-        COALESCE(SUM(total_tokens)::BIGINT, 0) as total_tokens,
-        COALESCE(SUM(CASE
-          WHEN created_at >= DATE_TRUNC('month', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
-          THEN total_tokens
-          ELSE 0
-        END)::BIGINT, 0) as monthly_tokens
-      FROM token_usage
-      WHERE user_id = $1
-    `;
+    // Use PostgreSQL advisory lock to prevent race conditions
+    // Advisory locks are session-level and released automatically on transaction end
+    // We use a hash of the user ID as the lock key
+    const client = await pool.connect();
 
-    const usageResult = await pool.query(usageQuery, [userId]);
-    const { total_tokens, monthly_tokens } = usageResult.rows[0];
+    try {
+      await client.query('BEGIN');
 
-    // Safely convert database values to numbers
-    // Using Number() for cleaner conversion with explicit fallback
-    const totalTokensNum = Number(total_tokens) || 0;
-    const monthlyTokensNum = Number(monthly_tokens) || 0;
+      // Acquire advisory lock for this user (using hashtext for consistent numeric key)
+      // pg_advisory_xact_lock is transaction-scoped and automatically released on COMMIT/ROLLBACK
+      await client.query(
+        `SELECT pg_advisory_xact_lock(hashtext($1))`,
+        [`token_limit_${userId}`]
+      );
 
-    // Validate that conversions produced valid numbers
-    if (!Number.isFinite(totalTokensNum) || !Number.isFinite(monthlyTokensNum)) {
-      logger.error('Invalid token usage values from database', {
-        userId,
-        total_tokens,
-        monthly_tokens,
-        totalTokensNum,
-        monthlyTokensNum
-      });
-      throw new Error('Invalid token usage data');
-    }
+      // Get user's current usage within the transaction
+      const usageQuery = `
+        SELECT
+          COALESCE(SUM(total_tokens)::BIGINT, 0) as total_tokens,
+          COALESCE(SUM(CASE
+            WHEN created_at >= DATE_TRUNC('month', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+            THEN total_tokens
+            ELSE 0
+          END)::BIGINT, 0) as monthly_tokens
+        FROM token_usage
+        WHERE user_id = $1
+      `;
 
-    // Get global limits if user doesn't have specific limits
-    const globalLimits = await this.getGlobalTokenLimits();
-    const globalLimit = user.token_limit_global ?? globalLimits.global;
-    const monthlyLimit = user.token_limit_monthly ?? globalLimits.monthly;
+      const usageResult = await client.query(usageQuery, [userId]);
+      const { total_tokens, monthly_tokens } = usageResult.rows[0];
 
-    // Calculate remaining tokens
-    const remainingGlobal = globalLimit > 0 ? Math.max(0, globalLimit - totalTokensNum) : Infinity;
-    const remainingMonthly = monthlyLimit > 0 ? Math.max(0, monthlyLimit - monthlyTokensNum) : Infinity;
+      // Safely convert database values to numbers
+      // Using Number() for cleaner conversion with explicit fallback
+      const totalTokensNum = Number(total_tokens) || 0;
+      const monthlyTokensNum = Number(monthly_tokens) || 0;
 
-    const result = {
-      allowed: true,
-      currentUsage: {
-        totalTokens: totalTokensNum,
-        monthlyTokens: monthlyTokensNum
-      },
-      limits: {
-        globalLimit,
-        monthlyLimit
-      },
-      remaining: {
-        global: remainingGlobal === Infinity ? -1 : remainingGlobal,
-        monthly: remainingMonthly === Infinity ? -1 : remainingMonthly
+      // Validate that conversions produced valid numbers
+      if (!Number.isFinite(totalTokensNum) || !Number.isFinite(monthlyTokensNum)) {
+        logger.error('Invalid token usage values from database', {
+          userId,
+          total_tokens,
+          monthly_tokens,
+          totalTokensNum,
+          monthlyTokensNum
+        });
+        throw new Error('Invalid token usage data');
       }
-    };
 
-    // Check global limit
-    if (globalLimit > 0 && totalTokensNum + tokensToUse > globalLimit) {
-      const { createTokenLimitError } = await import('../utils/errors');
-      throw createTokenLimitError('global', totalTokensNum, globalLimit, tokensToUse);
+      // Get global limits if user doesn't have specific limits
+      const globalLimits = await this.getGlobalTokenLimits();
+      const globalLimit = user.token_limit_global ?? globalLimits.global;
+      const monthlyLimit = user.token_limit_monthly ?? globalLimits.monthly;
+
+      // Calculate remaining tokens
+      const remainingGlobal = globalLimit > 0 ? Math.max(0, globalLimit - totalTokensNum) : Infinity;
+      const remainingMonthly = monthlyLimit > 0 ? Math.max(0, monthlyLimit - monthlyTokensNum) : Infinity;
+
+      const result = {
+        allowed: true,
+        currentUsage: {
+          totalTokens: totalTokensNum,
+          monthlyTokens: monthlyTokensNum
+        },
+        limits: {
+          globalLimit,
+          monthlyLimit
+        },
+        remaining: {
+          global: remainingGlobal === Infinity ? -1 : remainingGlobal,
+          monthly: remainingMonthly === Infinity ? -1 : remainingMonthly
+        }
+      };
+
+      // Check global limit
+      if (globalLimit > 0 && totalTokensNum + tokensToUse > globalLimit) {
+        const { createTokenLimitError } = await import('../utils/errors');
+        throw createTokenLimitError('global', totalTokensNum, globalLimit, tokensToUse);
+      }
+
+      // Check monthly limit
+      if (monthlyLimit > 0 && monthlyTokensNum + tokensToUse > monthlyLimit) {
+        const { createTokenLimitError } = await import('../utils/errors');
+        throw createTokenLimitError('monthly', monthlyTokensNum, monthlyLimit, tokensToUse);
+      }
+
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
     }
-
-    // Check monthly limit
-    if (monthlyLimit > 0 && monthlyTokensNum + tokensToUse > monthlyLimit) {
-      const { createTokenLimitError } = await import('../utils/errors');
-      throw createTokenLimitError('monthly', monthlyTokensNum, monthlyLimit, tokensToUse);
-    }
-
-    return result;
   }
 
   /**
