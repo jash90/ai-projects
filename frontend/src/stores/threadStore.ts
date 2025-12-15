@@ -381,12 +381,27 @@ export const threadStore = create<ThreadState>()(
             },
             // onComplete
             (response: any) => {
+              // Validate response.messages exists and is an array
+              const messages: ThreadMessage[] = Array.isArray(response?.messages) ? response.messages : []
+
+              // Ensure isLoading is false on all messages
+              const messagesWithLoadingReset = messages.map((msg: ThreadMessage) => ({
+                ...msg,
+                isLoading: false
+              }))
+
               set(state => ({
                 messagesByThread: {
                   ...state.messagesByThread,
-                  [threadId]: response.messages
+                  [threadId]: messagesWithLoadingReset
                 }
               }))
+
+              // Update thread metadata with defensive access
+              const messageCount = messages.length
+              const lastMessage = messageCount > 0
+                ? messages[messageCount - 1]?.content ?? ''
+                : ''
 
               // Update thread in list
               set(state => {
@@ -397,8 +412,8 @@ export const threadStore = create<ThreadState>()(
                       return {
                         ...t,
                         updated_at: new Date().toISOString(),
-                        message_count: response.messages.length,
-                        last_message: response.messages[response.messages.length - 1]?.content
+                        message_count: messageCount,
+                        last_message: lastMessage
                       }
                     }
                     return t

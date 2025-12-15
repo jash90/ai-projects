@@ -184,11 +184,11 @@ export class ThreadModel {
   }
 
   /**
-   * Auto-generate title from first message
+   * Auto-generate title from first message (only if user owns the thread via project)
    */
-  static async updateTitleFromFirstMessage(threadId: string): Promise<void> {
+  static async updateTitleFromFirstMessage(threadId: string, userId: string): Promise<boolean> {
     const query = `
-      UPDATE threads
+      UPDATE threads t
       SET title = (
         SELECT CASE
           WHEN LENGTH(content) > 50 THEN SUBSTRING(content, 1, 47) || '...'
@@ -199,10 +199,15 @@ export class ThreadModel {
         ORDER BY created_at ASC
         LIMIT 1
       )
-      WHERE id = $1 AND title = 'New conversation'
+      FROM projects p
+      WHERE t.id = $1
+        AND t.title = 'New conversation'
+        AND t.project_id = p.id
+        AND p.user_id = $2
     `;
 
-    await pool.query(query, [threadId]);
+    const result = await pool.query(query, [threadId, userId]);
+    return (result.rowCount ?? 0) > 0;
   }
 }
 
