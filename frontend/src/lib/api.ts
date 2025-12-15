@@ -316,13 +316,36 @@ export const conversationsApi = {
 
 // Chat API
 export const chatApi = {
-  sendMessage: (projectId: string, agentId: string, data: { message: string; includeFiles?: boolean; stream?: boolean }) =>
-    apiClient.post<ApiResponse<{ conversation: any; response: any }>>(`/projects/${projectId}/agents/${agentId}/chat`, data),
+  sendMessage: async (
+    projectId: string,
+    agentId: string,
+    data: { message: string; includeFiles?: boolean; stream?: boolean; files?: File[] }
+  ) => {
+    // If files are included, use FormData
+    if (data.files && data.files.length > 0) {
+      const formData = new FormData()
+      formData.append('message', data.message)
+      formData.append('includeFiles', String(data.includeFiles !== false))
+      formData.append('stream', String(data.stream === true))
+      data.files.forEach(file => formData.append('files', file))
+
+      return apiClient.postFormData<ApiResponse<{ conversation: any; response: any }>>(
+        `/projects/${projectId}/agents/${agentId}/chat`,
+        formData
+      )
+    }
+
+    // Otherwise use JSON
+    return apiClient.post<ApiResponse<{ conversation: any; response: any }>>(
+      `/projects/${projectId}/agents/${agentId}/chat`,
+      { message: data.message, includeFiles: data.includeFiles, stream: data.stream }
+    )
+  },
 
   sendStreamingMessage: async (
     projectId: string,
     agentId: string,
-    data: { message: string; includeFiles?: boolean },
+    data: { message: string; includeFiles?: boolean; files?: File[] },
     onChunk: (chunk: string) => void,
     onComplete: (response: any) => void,
     onError: (error: string) => void
@@ -331,23 +354,39 @@ export const chatApi = {
     const baseURL = import.meta.env.VITE_API_URL || '/api';
 
     try {
-      const response = await fetch(`${baseURL}/projects/${projectId}/agents/${agentId}/chat`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
+      let body: FormData | string;
+      const headers: Record<string, string> = {
+        'Authorization': `Bearer ${token}`
+      };
+
+      // If files are included, use FormData
+      if (data.files && data.files.length > 0) {
+        const formData = new FormData()
+        formData.append('message', data.message)
+        formData.append('includeFiles', String(data.includeFiles !== false))
+        formData.append('stream', 'true')
+        data.files.forEach(file => formData.append('files', file))
+        body = formData
+        // Don't set Content-Type for FormData - browser will set it with boundary
+      } else {
+        headers['Content-Type'] = 'application/json'
+        body = JSON.stringify({
           ...data,
           stream: true
         })
+      }
+
+      const response = await fetch(`${baseURL}/projects/${projectId}/agents/${agentId}/chat`, {
+        method: 'POST',
+        headers,
+        body
       });
 
       if (!response.ok) {
         // Try to extract error message from response body
         try {
           const errorData = await response.json();
-          
+
           // Create a structured error that preserves all error information
           const error = new Error(errorData.error || errorData.message || `HTTP ${response.status}: ${response.statusText}`);
           (error as any).errorData = errorData;
@@ -368,7 +407,7 @@ export const chatApi = {
 
       while (true) {
         const { done, value } = await reader.read();
-        
+
         if (done) break;
 
         buffer += decoder.decode(value, { stream: true });
@@ -379,7 +418,7 @@ export const chatApi = {
           if (line.startsWith('data: ')) {
             try {
               const data = JSON.parse(line.slice(6));
-              
+
               if (data.type === 'chunk') {
                 onChunk(data.content);
               } else if (data.type === 'complete') {
@@ -442,13 +481,34 @@ export const filesApi = {
     apiClient.get<ApiResponse<{ project_id: string; total_files: number; file_types: any[] }>>(`/projects/${projectId}/files/stats`),
 }
 
-// Uploaded Files API (for binary files)
+// Token usage API
+export interface CurrentUsageResponse {
+  totalTokens: number;
+  monthlyTokens: number;
+  limits: {
+    globalLimit: number;
+    monthlyLimit: number;
+  };
+  percentUsed: {
+    global: number;
+    monthly: number;
+  };
+  remaining: {
+    global: number;
+    monthly: number;
+  };
+}
+
 export const usageApi = {
+  // Get current token usage with limits (optimized endpoint)
+  getCurrentUsage: () =>
+    apiClient.get<ApiResponse<CurrentUsageResponse>>('/usage/current'),
+
   getSummary: (projectId?: string, agentId?: string, startDate?: string, endDate?: string) => {
     const params: any = {}
     if (startDate) params.startDate = startDate
     if (endDate) params.endDate = endDate
-    
+
     if (projectId) {
       return apiClient.get<ApiResponse<any>>(`/projects/${projectId}/usage`, params)
     } else if (agentId) {
@@ -557,7 +617,7 @@ export const adminApi = {
 
   // Global token limits
   getGlobalTokenLimits: () =>
-    apiClient.get<ApiResponse<{ global: number; monthly: number }>>('/admin/token-limits'),
+    apiClient.get<ApiResponse<{ global_limit: number; monthly_limit: number }>>('/admin/token-limits'),
 
   updateGlobalTokenLimits: (limits: Omit<TokenLimitUpdate, 'user_id'>) =>
     apiClient.put<ApiResponse>('/admin/token-limits', limits),

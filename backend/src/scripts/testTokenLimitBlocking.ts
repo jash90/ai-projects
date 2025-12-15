@@ -338,10 +338,10 @@ async function checkTokenLimitInTestDB(userId: string, tokensToUse: number): Pro
 
     const usageResult = await client.query(usageQuery, [userId]);
     const { total_tokens, monthly_tokens } = usageResult.rows[0];
-    
-    // Convert string values to numbers
-    const totalTokensNum = parseInt(total_tokens);
-    const monthlyTokensNum = parseInt(monthly_tokens);
+
+    // Convert string values to numbers using Number() for consistency with production code
+    const totalTokensNum = Number(total_tokens) || 0;
+    const monthlyTokensNum = Number(monthly_tokens) || 0;
 
     // Get global limits from test database
     const globalLimitsQuery = `
@@ -357,8 +357,9 @@ async function checkTokenLimitInTestDB(userId: string, tokensToUse: number): Pro
       globalLimits[row.limit_type as 'global' | 'monthly'] = row.limit_value;
     });
 
-    const globalLimit = user.token_limit_global || globalLimits.global;
-    const monthlyLimit = user.token_limit_monthly || globalLimits.monthly;
+    // Use nullish coalescing (??) to handle 0 as a valid value (unlimited)
+    const globalLimit = user.token_limit_global ?? globalLimits.global;
+    const monthlyLimit = user.token_limit_monthly ?? globalLimits.monthly;
 
     // Check global limit
     if (globalLimit > 0 && totalTokensNum + tokensToUse > globalLimit) {

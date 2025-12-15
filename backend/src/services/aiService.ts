@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 import Anthropic from '@anthropic-ai/sdk';
-import { Agent, ConversationMessage, MessageMetadata } from '../types';
+import { Agent, ConversationMessage, MessageMetadata, ChatFileAttachment } from '../types';
 import config from '../utils/config';
 import logger from '../utils/logger';
 import { TokenService } from './tokenService';
@@ -10,6 +10,7 @@ export interface ChatRequest {
   agent: Agent;
   messages: ConversationMessage[];
   projectFiles?: string[];
+  attachments?: ChatFileAttachment[];
   userId?: string;
   projectId?: string;
   conversationId?: string;
@@ -23,6 +24,22 @@ export interface ChatResponse {
 
 export interface StreamingChatResponse {
   stream: AsyncGenerator<string, ChatResponse, unknown>;
+}
+
+// Anthropic-supported image MIME types
+type AnthropicMediaType = 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp';
+
+/**
+ * Normalize image MIME type for Anthropic API compatibility.
+ * Handles 'image/jpg' which browsers may report but Anthropic doesn't accept.
+ */
+function normalizeImageMimeType(mimetype: string): AnthropicMediaType | null {
+  // Normalize image/jpg to image/jpeg
+  const normalized = mimetype === 'image/jpg' ? 'image/jpeg' : mimetype;
+  const validTypes: AnthropicMediaType[] = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+  return validTypes.includes(normalized as AnthropicMediaType)
+    ? (normalized as AnthropicMediaType)
+    : null;
 }
 
 class AIService {
@@ -96,23 +113,23 @@ class AIService {
   }
 
   async chat(request: ChatRequest): Promise<ChatResponse | StreamingChatResponse> {
-    const { agent, messages, projectFiles, userId, projectId, conversationId, stream = false } = request;
+    const { agent, messages, projectFiles, attachments, userId, projectId, conversationId, stream = false } = request;
     const startTime = Date.now();
 
     try {
       // Check token limits before processing (estimate tokens for the request)
       if (userId) {
-        const estimatedTokens = this.estimateTokens(messages, projectFiles);
+        const estimatedTokens = this.estimateTokens(messages, projectFiles, agent.system_prompt);
         await UserModel.checkTokenLimit(userId, estimatedTokens);
       }
       if (stream) {
         // Return streaming response
         if (agent.provider === 'openai') {
-          return await this.streamChatWithOpenAI(agent, messages, projectFiles, userId, projectId, conversationId);
+          return await this.streamChatWithOpenAI(agent, messages, projectFiles, attachments, userId, projectId, conversationId);
         } else if (agent.provider === 'anthropic') {
-          return await this.streamChatWithAnthropic(agent, messages, projectFiles, userId, projectId, conversationId);
+          return await this.streamChatWithAnthropic(agent, messages, projectFiles, attachments, userId, projectId, conversationId);
         } else if (agent.provider === 'openrouter') {
-          return await this.streamChatWithOpenRouter(agent, messages, projectFiles, userId, projectId, conversationId);
+          return await this.streamChatWithOpenRouter(agent, messages, projectFiles, attachments, userId, projectId, conversationId);
         } else {
           throw new Error(`Unsupported AI provider: ${agent.provider}`);
         }
@@ -121,11 +138,11 @@ class AIService {
         let response: ChatResponse;
 
         if (agent.provider === 'openai') {
-          response = await this.chatWithOpenAI(agent, messages, projectFiles, userId, projectId, conversationId);
+          response = await this.chatWithOpenAI(agent, messages, projectFiles, attachments, userId, projectId, conversationId);
         } else if (agent.provider === 'anthropic') {
-          response = await this.chatWithAnthropic(agent, messages, projectFiles, userId, projectId, conversationId);
+          response = await this.chatWithAnthropic(agent, messages, projectFiles, attachments, userId, projectId, conversationId);
         } else if (agent.provider === 'openrouter') {
-          response = await this.chatWithOpenRouter(agent, messages, projectFiles, userId, projectId, conversationId);
+          response = await this.chatWithOpenRouter(agent, messages, projectFiles, attachments, userId, projectId, conversationId);
         } else {
           throw new Error(`Unsupported AI provider: ${agent.provider}`);
         }
@@ -139,7 +156,8 @@ class AIService {
           processing_time: processingTime,
           input_messages: messages.length,
           output_length: response.content.length,
-          tokens: response.metadata.tokens
+          tokens: response.metadata.tokens,
+          attachments: attachments?.length || 0
         });
 
         return response;
@@ -159,6 +177,7 @@ class AIService {
     agent: Agent,
     messages: ConversationMessage[],
     projectFiles?: string[],
+    attachments?: ChatFileAttachment[],
     userId?: string,
     projectId?: string,
     conversationId?: string
@@ -173,14 +192,48 @@ class AIService {
       systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
     }
 
-    // Convert messages to OpenAI format
+    // Convert messages to OpenAI format with multimodal support
     const openaiMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
       { role: 'system', content: systemContent },
-      ...messages.map(msg => ({
+      ...messages.slice(0, -1).map(msg => ({
         role: msg.role as 'user' | 'assistant',
         content: msg.content
       }))
     ];
+
+    // Handle the last message with potential attachments
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage) {
+      if (attachments && attachments.length > 0 && lastMessage.role === 'user') {
+        // Build multimodal content for the last user message
+        const contentParts: OpenAI.Chat.Completions.ChatCompletionContentPart[] = [
+          { type: 'text', text: lastMessage.content }
+        ];
+
+        for (const attachment of attachments) {
+          if (attachment.mimetype.startsWith('image/')) {
+            contentParts.push({
+              type: 'image_url',
+              image_url: {
+                url: `data:${attachment.mimetype};base64,${attachment.data}`,
+                detail: 'auto'
+              }
+            });
+          }
+          // Note: PDFs would need to be handled differently (e.g., convert to text or use document API)
+        }
+
+        openaiMessages.push({
+          role: 'user',
+          content: contentParts
+        });
+      } else {
+        openaiMessages.push({
+          role: lastMessage.role as 'user' | 'assistant',
+          content: lastMessage.content
+        });
+      }
+    }
 
     // Some newer models only support default temperature (1.0)
     const modelsRequiringDefaultTemp = ['gpt-5', 'gpt-5-high', 'o1', 'o3'];
@@ -235,6 +288,7 @@ class AIService {
     agent: Agent,
     messages: ConversationMessage[],
     projectFiles?: string[],
+    attachments?: ChatFileAttachment[],
     userId?: string,
     projectId?: string,
     conversationId?: string
@@ -249,14 +303,47 @@ class AIService {
       systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
     }
 
-    // Convert messages to OpenAI format
+    // Convert messages to OpenAI format with multimodal support
     const openaiMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
       { role: 'system', content: systemContent },
-      ...messages.map(msg => ({
+      ...messages.slice(0, -1).map(msg => ({
         role: msg.role as 'user' | 'assistant',
         content: msg.content
       }))
     ];
+
+    // Handle the last message with potential attachments
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage) {
+      if (attachments && attachments.length > 0 && lastMessage.role === 'user') {
+        // Build multimodal content for the last user message
+        const contentParts: OpenAI.Chat.Completions.ChatCompletionContentPart[] = [
+          { type: 'text', text: lastMessage.content }
+        ];
+
+        for (const attachment of attachments) {
+          if (attachment.mimetype.startsWith('image/')) {
+            contentParts.push({
+              type: 'image_url',
+              image_url: {
+                url: `data:${attachment.mimetype};base64,${attachment.data}`,
+                detail: 'auto'
+              }
+            });
+          }
+        }
+
+        openaiMessages.push({
+          role: 'user',
+          content: contentParts
+        });
+      } else {
+        openaiMessages.push({
+          role: lastMessage.role as 'user' | 'assistant',
+          content: lastMessage.content
+        });
+      }
+    }
 
     // Some newer models only support default temperature (1.0)
     const modelsRequiringDefaultTemp = ['gpt-5', 'gpt-5-high', 'o1', 'o3'];
@@ -293,11 +380,13 @@ class AIService {
     let totalTokens = 0;
     let promptTokens = 0;
     let completionTokens = 0;
+    let streamError: Error | null = null;
+    let tokensTracked = false;
 
     try {
       for await (const chunk of stream) {
         const delta = chunk.choices[0]?.delta;
-        
+
         if (delta?.content) {
           fullContent += delta.content;
           yield delta.content;
@@ -324,6 +413,7 @@ class AIService {
           completionTokens,
           requestType: 'chat_stream'
         });
+        tokensTracked = true;
       }
 
       return {
@@ -337,8 +427,40 @@ class AIService {
         }
       };
     } catch (error) {
+      streamError = error as Error;
       logger.error('OpenAI streaming error:', error);
       throw error;
+    } finally {
+      // Track partial usage if stream failed and we have content but haven't tracked yet
+      if (streamError && userId && fullContent.length > 0 && !tokensTracked) {
+        try {
+          // Estimate tokens for partial content if we don't have actual counts
+          const estimatedCompletionTokens = completionTokens > 0
+            ? completionTokens
+            : TokenService.estimateTokens(fullContent);
+
+          logger.warn('Tracking partial token usage after stream failure', {
+            userId,
+            model: agent.model,
+            estimatedTokens: estimatedCompletionTokens,
+            contentLength: fullContent.length
+          });
+
+          await TokenService.trackUsage({
+            userId,
+            projectId,
+            agentId: agent.id,
+            conversationId,
+            provider: 'openai',
+            model: agent.model,
+            promptTokens: promptTokens || 0,
+            completionTokens: estimatedCompletionTokens,
+            requestType: 'chat_stream_partial'
+          });
+        } catch (trackingError) {
+          logger.error('Failed to track partial token usage:', trackingError);
+        }
+      }
     }
   }
 
@@ -346,17 +468,18 @@ class AIService {
     agent: Agent,
     messages: ConversationMessage[],
     projectFiles?: string[],
+    attachments?: ChatFileAttachment[],
     userId?: string,
     projectId?: string,
     conversationId?: string
   ): Promise<ChatResponse> {
     logger.info(`Anthropic client check: ${!!this.anthropic}`);
     logger.info(`Anthropic messages check: ${!!this.anthropic?.messages}`);
-    
+
     if (!this.anthropic) {
       throw new Error('Anthropic API key not configured');
     }
-    
+
     const actualModel = agent.model;
 
     // Build system message with agent prompt and file context
@@ -365,15 +488,67 @@ class AIService {
       systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
     }
 
-    // Convert messages to Anthropic format
-    const anthropicMessages = messages.map(msg => ({
-      role: msg.role,
+    // Convert messages to Anthropic format with multimodal support
+    const anthropicMessages: Anthropic.Messages.MessageParam[] = messages.slice(0, -1).map(msg => ({
+      role: msg.role as 'user' | 'assistant',
       content: msg.content
     }));
 
+    // Handle the last message with potential attachments
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage) {
+      if (attachments && attachments.length > 0 && lastMessage.role === 'user') {
+        // Build multimodal content for the last user message
+        const contentParts: Anthropic.Messages.ContentBlockParam[] = [];
+
+        // Add images first
+        for (const attachment of attachments) {
+          if (attachment.mimetype.startsWith('image/')) {
+            const mediaType = normalizeImageMimeType(attachment.mimetype);
+            if (mediaType) {
+              contentParts.push({
+                type: 'image',
+                source: {
+                  type: 'base64',
+                  media_type: mediaType,
+                  data: attachment.data
+                }
+              });
+            }
+          } else if (attachment.mimetype === 'application/pdf') {
+            // Anthropic supports PDF as document type
+            contentParts.push({
+              type: 'document',
+              source: {
+                type: 'base64',
+                media_type: 'application/pdf',
+                data: attachment.data
+              }
+            } as any); // Type assertion needed for document type
+          }
+        }
+
+        // Add text last
+        contentParts.push({
+          type: 'text',
+          text: lastMessage.content
+        });
+
+        anthropicMessages.push({
+          role: 'user',
+          content: contentParts
+        });
+      } else {
+        anthropicMessages.push({
+          role: lastMessage.role as 'user' | 'assistant',
+          content: lastMessage.content
+        });
+      }
+    }
+
     try {
       const completion = await this.anthropic.messages.create({
-        model: actualModel, // Use the mapped model name
+        model: actualModel,
         max_tokens: agent.max_tokens,
         temperature: agent.temperature,
         system: systemContent,
@@ -430,13 +605,14 @@ class AIService {
     agent: Agent,
     messages: ConversationMessage[],
     projectFiles?: string[],
+    attachments?: ChatFileAttachment[],
     userId?: string,
     projectId?: string,
     conversationId?: string
   ): Promise<StreamingChatResponse> {
     logger.info(`Anthropic client check: ${!!this.anthropic}`);
     logger.info(`Anthropic messages check: ${!!this.anthropic?.messages}`);
-    
+
     if (!this.anthropic) {
       throw new Error('Anthropic API key not configured');
     }
@@ -449,11 +625,62 @@ class AIService {
       systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
     }
 
-    // Convert messages to Anthropic format
-    const anthropicMessages = messages.map(msg => ({
-      role: msg.role,
+    // Convert messages to Anthropic format with multimodal support
+    const anthropicMessages: Anthropic.Messages.MessageParam[] = messages.slice(0, -1).map(msg => ({
+      role: msg.role as 'user' | 'assistant',
       content: msg.content
     }));
+
+    // Handle the last message with potential attachments
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage) {
+      if (attachments && attachments.length > 0 && lastMessage.role === 'user') {
+        // Build multimodal content for the last user message
+        const contentParts: Anthropic.Messages.ContentBlockParam[] = [];
+
+        // Add images first
+        for (const attachment of attachments) {
+          if (attachment.mimetype.startsWith('image/')) {
+            const mediaType = normalizeImageMimeType(attachment.mimetype);
+            if (mediaType) {
+              contentParts.push({
+                type: 'image',
+                source: {
+                  type: 'base64',
+                  media_type: mediaType,
+                  data: attachment.data
+                }
+              });
+            }
+          } else if (attachment.mimetype === 'application/pdf') {
+            contentParts.push({
+              type: 'document',
+              source: {
+                type: 'base64',
+                media_type: 'application/pdf',
+                data: attachment.data
+              }
+            } as any);
+          }
+        }
+
+        // Add text last
+        contentParts.push({
+          type: 'text',
+          text: lastMessage.content
+        });
+
+        anthropicMessages.push({
+          role: 'user',
+          content: contentParts
+        });
+      } else {
+        anthropicMessages.push({
+          role: lastMessage.role as 'user' | 'assistant',
+          content: lastMessage.content
+        });
+      }
+    }
 
     try {
       const stream = await this.anthropic.messages.create({
@@ -462,7 +689,7 @@ class AIService {
         temperature: agent.temperature,
         system: systemContent,
         messages: anthropicMessages,
-        stream: true, // Enable streaming
+        stream: true,
       });
 
       return {
@@ -470,7 +697,7 @@ class AIService {
       };
     } catch (error: any) {
       logger.error('Anthropic streaming API error details:', error);
-      
+
       // Handle different error types
       if (error?.response?.data?.error?.message) {
         throw new Error(`Anthropic API error: ${error.response.data.error.message}`);
@@ -495,6 +722,8 @@ class AIService {
     let fullContent = '';
     let totalInputTokens = 0;
     let totalOutputTokens = 0;
+    let streamError: Error | null = null;
+    let tokensTracked = false;
 
     try {
       for await (const chunk of stream) {
@@ -529,6 +758,7 @@ class AIService {
           completionTokens: totalOutputTokens,
           requestType: 'chat_stream'
         });
+        tokensTracked = true;
       }
 
       return {
@@ -542,8 +772,40 @@ class AIService {
         }
       };
     } catch (error) {
+      streamError = error as Error;
       logger.error('Anthropic streaming error:', error);
       throw error;
+    } finally {
+      // Track partial usage if stream failed and we have content but haven't tracked yet
+      if (streamError && userId && fullContent.length > 0 && !tokensTracked) {
+        try {
+          // Estimate tokens for partial content if we don't have actual counts
+          const estimatedOutputTokens = totalOutputTokens > 0
+            ? totalOutputTokens
+            : TokenService.estimateTokens(fullContent);
+
+          logger.warn('Tracking partial token usage after Anthropic stream failure', {
+            userId,
+            model: agent.model,
+            estimatedTokens: estimatedOutputTokens,
+            contentLength: fullContent.length
+          });
+
+          await TokenService.trackUsage({
+            userId,
+            projectId,
+            agentId: agent.id,
+            conversationId,
+            provider: 'anthropic',
+            model: agent.model,
+            promptTokens: totalInputTokens || 0,
+            completionTokens: estimatedOutputTokens,
+            requestType: 'chat_stream_partial'
+          });
+        } catch (trackingError) {
+          logger.error('Failed to track partial Anthropic token usage:', trackingError);
+        }
+      }
     }
   }
 
@@ -551,6 +813,7 @@ class AIService {
     agent: Agent,
     messages: ConversationMessage[],
     projectFiles?: string[],
+    attachments?: ChatFileAttachment[],
     userId?: string,
     projectId?: string,
     conversationId?: string
@@ -571,11 +834,44 @@ class AIService {
     // Convert messages to OpenAI format (OpenRouter is OpenAI-compatible)
     const openrouterMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
       { role: 'system', content: systemContent },
-      ...messages.map(msg => ({
+      ...messages.slice(0, -1).map(msg => ({
         role: msg.role as 'user' | 'assistant',
         content: msg.content
       }))
     ];
+
+    // Handle the last message with potential attachments
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage) {
+      if (attachments && attachments.length > 0 && lastMessage.role === 'user') {
+        // Build multimodal content for the last user message
+        const contentParts: OpenAI.Chat.Completions.ChatCompletionContentPart[] = [
+          { type: 'text', text: lastMessage.content }
+        ];
+
+        for (const attachment of attachments) {
+          if (attachment.mimetype.startsWith('image/')) {
+            contentParts.push({
+              type: 'image_url',
+              image_url: {
+                url: `data:${attachment.mimetype};base64,${attachment.data}`,
+                detail: 'auto'
+              }
+            });
+          }
+        }
+
+        openrouterMessages.push({
+          role: 'user',
+          content: contentParts
+        });
+      } else {
+        openrouterMessages.push({
+          role: lastMessage.role as 'user' | 'assistant',
+          content: lastMessage.content
+        });
+      }
+    }
 
     // Build request params with conditional temperature
     const requestParams: any = {
@@ -655,6 +951,7 @@ class AIService {
     agent: Agent,
     messages: ConversationMessage[],
     projectFiles?: string[],
+    attachments?: ChatFileAttachment[],
     userId?: string,
     projectId?: string,
     conversationId?: string
@@ -675,18 +972,51 @@ class AIService {
     // Convert messages to OpenAI format (OpenRouter is OpenAI-compatible)
     const openrouterMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
       { role: 'system', content: systemContent },
-      ...messages.map(msg => ({
+      ...messages.slice(0, -1).map(msg => ({
         role: msg.role as 'user' | 'assistant',
         content: msg.content
       }))
     ];
+
+    // Handle the last message with potential attachments
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage) {
+      if (attachments && attachments.length > 0 && lastMessage.role === 'user') {
+        // Build multimodal content for the last user message
+        const contentParts: OpenAI.Chat.Completions.ChatCompletionContentPart[] = [
+          { type: 'text', text: lastMessage.content }
+        ];
+
+        for (const attachment of attachments) {
+          if (attachment.mimetype.startsWith('image/')) {
+            contentParts.push({
+              type: 'image_url',
+              image_url: {
+                url: `data:${attachment.mimetype};base64,${attachment.data}`,
+                detail: 'auto'
+              }
+            });
+          }
+        }
+
+        openrouterMessages.push({
+          role: 'user',
+          content: contentParts
+        });
+      } else {
+        openrouterMessages.push({
+          role: lastMessage.role as 'user' | 'assistant',
+          content: lastMessage.content
+        });
+      }
+    }
 
     // Build request params with conditional temperature
     const requestParams: any = {
       model: agent.model,
       messages: openrouterMessages,
       max_tokens: agent.max_tokens,
-      stream: true, // Enable streaming
+      stream: true,
     };
 
     // Only include temperature if the model supports it
@@ -729,6 +1059,8 @@ class AIService {
     let totalTokens = 0;
     let promptTokens = 0;
     let completionTokens = 0;
+    let streamError: Error | null = null;
+    let tokensTracked = false;
 
     try {
       for await (const chunk of stream) {
@@ -760,6 +1092,7 @@ class AIService {
           completionTokens,
           requestType: 'chat_stream'
         });
+        tokensTracked = true;
       }
 
       logger.info('OpenRouter streaming chat completed', {
@@ -782,6 +1115,7 @@ class AIService {
         }
       };
     } catch (error: any) {
+      streamError = error;
       logger.error('OpenRouter streaming error:', {
         error: error.message,
         model: agent.model,
@@ -789,6 +1123,37 @@ class AIService {
         code: error.code
       });
       throw error;
+    } finally {
+      // Track partial usage if stream failed and we have content but haven't tracked yet
+      if (streamError && userId && fullContent.length > 0 && !tokensTracked) {
+        try {
+          // Estimate tokens for partial content if we don't have actual counts
+          const estimatedCompletionTokens = completionTokens > 0
+            ? completionTokens
+            : TokenService.estimateTokens(fullContent);
+
+          logger.warn('Tracking partial token usage after OpenRouter stream failure', {
+            userId,
+            model: agent.model,
+            estimatedTokens: estimatedCompletionTokens,
+            contentLength: fullContent.length
+          });
+
+          await TokenService.trackUsage({
+            userId,
+            projectId,
+            agentId: agent.id,
+            conversationId,
+            provider: 'openrouter',
+            model: agent.model,
+            promptTokens: promptTokens || 0,
+            completionTokens: estimatedCompletionTokens,
+            requestType: 'chat_stream_partial'
+          });
+        } catch (trackingError) {
+          logger.error('Failed to track partial OpenRouter token usage:', trackingError);
+        }
+      }
     }
   }
 
@@ -815,27 +1180,21 @@ class AIService {
     return modelData?.provider === provider && !!modelData;
   }
 
-  private estimateTokens(messages: ConversationMessage[], projectFiles?: string[]): number {
-    // Rough estimation: 1 token ≈ 4 characters for English text
-    let totalChars = 0;
-    
-    // Count message characters
-    messages.forEach(message => {
-      totalChars += message.content.length;
-    });
-    
-    // Count project file characters (if included)
-    if (projectFiles) {
-      projectFiles.forEach(file => {
-        totalChars += file.length;
-      });
-    }
-    
-    // Add some buffer for system prompts and formatting
-    const estimatedTokens = Math.ceil(totalChars / 4) + 500;
-    
-    // Add response buffer (estimate response will be similar size to input)
-    return estimatedTokens * 2;
+  /**
+   * Estimate tokens for a chat request using improved algorithm
+   * Uses TokenService.estimateRequestTokens for accurate estimation
+   */
+  private estimateTokens(
+    messages: ConversationMessage[],
+    projectFiles?: string[],
+    systemPrompt?: string
+  ): number {
+    const estimation = TokenService.estimateRequestTokens(
+      messages.map(m => ({ content: m.content, role: m.role })),
+      projectFiles,
+      systemPrompt
+    );
+    return estimation.total;
   }
 
   // Get provider status

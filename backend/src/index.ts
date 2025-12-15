@@ -100,15 +100,19 @@ app.use(helmet({
   } : false, // Disable in development for easier debugging
 }));
 
-// Health check endpoint (before other middleware)
+// Health check endpoint (before other middleware) - responds immediately for Railway
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || 'development',
+    database: isDatabaseReady ? 'connected' : 'initializing'
   });
 });
+
+// Track database readiness (declared here for healthcheck access, set in startServer)
+let isDatabaseReady = false;
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
@@ -143,8 +147,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// Health check endpoint
-app.get('/api/health', (req, res) => {
+// Detailed health check endpoint (for debugging, not used by Railway)
+app.get('/api/health/detailed', (req, res) => {
   res.json({
     success: true,
     message: 'Server is healthy',
@@ -152,6 +156,7 @@ app.get('/api/health', (req, res) => {
     uptime: process.uptime(),
     memory: process.memoryUsage(),
     connections: socketHandler.getConnectedUsersCount(),
+    database: isDatabaseReady ? 'connected' : 'initializing'
   });
 });
 
@@ -167,7 +172,7 @@ app.use('/api/models', modelRoutes);
 app.use('/api', projectFileRoutes); // Project file routes include projects/:id/files
 app.use('/api', fileRoutes);         // Uploaded file routes
 app.use('/api', chatRoutes);         // Chat routes
-app.use('/api', usageRoutes);        // Token usage routes
+app.use('/api/usage', usageRoutes);   // Token usage routes
 app.use('/api/admin', adminRoutes);  // Admin routes
 app.use('/api/settings', settingsRoutes);  // User settings routes
 app.use('/api/debug', debugRoutes);  // Debug routes (development/testing)
@@ -223,8 +228,49 @@ app.use(errorHandler);
 
 // Initialize database and start server
 async function startServer(): Promise<void> {
+  logger.info('Starting server...', {
+    nodeEnv: process.env.NODE_ENV,
+    port: process.env.PORT || config.port,
+    databaseUrl: config.database_url ? 'configured' : 'MISSING',
+    redisUrl: config.redis_url ? 'configured' : 'MISSING',
+  });
+
+  // Configure server timeouts for long AI processing
+  server.timeout = 180000; // 3 minutes
+  server.keepAliveTimeout = 65000; // 65 seconds
+  server.headersTimeout = 66000; // 66 seconds (slightly higher than keepAliveTimeout)
+
+  // START SERVER IMMEDIATELY for Railway healthcheck
+  // Database initialization happens after server is listening
+  const PORT = parseInt(process.env.PORT || config.port.toString(), 10);
+  server.listen(PORT, '0.0.0.0', () => {
+    logger.info(`Server started on port ${PORT} - healthcheck ready, initializing database...`, {
+      environment: process.env.NODE_ENV,
+      port: PORT,
+      cors_origin: config.cors_origin,
+      timeout: server.timeout,
+    });
+  });
+
+  // Socket.IO connection logging
+  io.engine.on('connection_error', (err) => {
+    logger.error('Socket.IO connection error:', err);
+  });
+
+  io.on('connection', (socket) => {
+    logger.debug('Socket.IO client connected', { socketId: socket.id });
+
+    socket.on('disconnect', (reason) => {
+      logger.debug('Socket.IO client disconnected', {
+        socketId: socket.id,
+        reason
+      });
+    });
+  });
+
+  // Initialize database AFTER server is listening (non-blocking for healthcheck)
   try {
-    // Initialize database connection
+    logger.info('Connecting to database...');
     await initializeDatabase();
     logger.info('Database initialized successfully');
 
@@ -232,45 +278,17 @@ async function startServer(): Promise<void> {
     await seedDatabase();
     logger.info('Database seeded successfully');
 
-    // Initialize model service and sync AI models
-    await modelService.initialize();
-    logger.info('Model service initialized successfully');
+    isDatabaseReady = true;
+    logger.info('Server fully ready - database connected');
 
-    // Configure server timeouts for long AI processing
-    server.timeout = 180000; // 3 minutes
-    server.keepAliveTimeout = 65000; // 65 seconds
-    server.headersTimeout = 66000; // 66 seconds (slightly higher than keepAliveTimeout)
-
-    // Start server
-    const PORT = parseInt(process.env.PORT || config.port.toString(), 10);
-    server.listen(PORT, '0.0.0.0', () => {
-      logger.info(`Server started on port ${PORT}`, {
-        environment: process.env.NODE_ENV,
-        port: PORT,
-        cors_origin: config.cors_origin,
-        timeout: server.timeout,
-      });
-    });
-
-    // Socket.IO connection logging
-    io.engine.on('connection_error', (err) => {
-      logger.error('Socket.IO connection error:', err);
-    });
-
-    io.on('connection', (socket) => {
-      logger.debug('Socket.IO client connected', { socketId: socket.id });
-      
-      socket.on('disconnect', (reason) => {
-        logger.debug('Socket.IO client disconnected', { 
-          socketId: socket.id, 
-          reason 
-        });
-      });
-    });
+    // Initialize model service and sync AI models in background (non-blocking)
+    modelService.initialize()
+      .then(() => logger.info('Model service initialized successfully'))
+      .catch(err => logger.error('Background model sync failed (non-fatal):', err.message));
 
   } catch (error) {
-    logger.error('Failed to start server:', error);
-    process.exit(1);
+    logger.error('Database initialization failed (server still running for healthcheck):', error);
+    // Don't exit - keep server running for healthcheck, but API routes will fail gracefully
   }
 }
 
@@ -312,7 +330,8 @@ process.on('uncaughtException', (error) => {
 
 process.on('unhandledRejection', (reason, promise) => {
   logger.error('Unhandled rejection at:', { promise, reason });
-  process.exit(1);
+  // Don't call process.exit() - allow server to continue running
+  // Background tasks like model sync may fail without crashing the server
 });
 
 // Start the server

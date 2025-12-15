@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import Joi from 'joi';
 import { AgentModel } from '../models/Agent';
 import { authenticateToken } from '../middleware/auth';
+import { requireAdmin } from '../middleware/adminAuth';
 import { validate, commonSchemas } from '../middleware/validation';
 import { generalLimiter, creationLimiter } from '../middleware/rateLimiting';
 import logger from '../utils/logger';
@@ -181,9 +182,10 @@ router.get('/:id',
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
-router.post('/', 
+router.post('/',
   creationLimiter,
   authenticateToken,
+  requireAdmin,
   validate({ body: commonSchemas.agent.create }),
   async (req: Request, res: Response) => {
     try {
@@ -259,12 +261,13 @@ router.post('/',
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
-router.put('/:id', 
+router.put('/:id',
   generalLimiter,
   authenticateToken,
-  validate({ 
+  requireAdmin,
+  validate({
     params: Joi.object({ id: commonSchemas.uuid }),
-    body: commonSchemas.agent.update 
+    body: commonSchemas.agent.update
   }),
   async (req: Request, res: Response) => {
     try {
@@ -343,9 +346,10 @@ router.put('/:id',
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
-router.delete('/:id', 
+router.delete('/:id',
   generalLimiter,
   authenticateToken,
+  requireAdmin,
   validate({ params: Joi.object({ id: commonSchemas.uuid }) }),
   async (req: Request, res: Response) => {
     try {

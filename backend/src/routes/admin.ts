@@ -360,10 +360,14 @@ router.put('/token-limits',
 router.get('/token-limits', async (req: Request, res: Response) => {
   try {
     const limits = await UserModel.getGlobalTokenLimits();
-    
+
+    // Standardize response field names to match API schema
     res.json({
       success: true,
-      data: limits
+      data: {
+        global_limit: limits.global,
+        monthly_limit: limits.monthly
+      }
     });
   } catch (error) {
     logger.error('Error fetching token limits:', error);

@@ -1,11 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { settingsApi } from '@/lib/api';
+import { usageApi } from '@/lib/api';
 import { useAuth } from '@/stores/authStore';
-
-// System default token limits (matching backend defaults)
-const DEFAULT_GLOBAL_LIMIT = 1000000;  // 1M tokens
-const DEFAULT_MONTHLY_LIMIT = 100000;  // 100K tokens/month
 
 interface TokenLimits {
   globalLimit: number | null;
@@ -33,15 +29,15 @@ export function useTokenLimits() {
     remainingMonthlyTokens: null,
   });
 
-  // Fetch user's current usage statistics
-  const { data: usageData, refetch: refetchUsage } = useQuery({
-    queryKey: ['user-usage'],
+  // Fetch user's current usage statistics from optimized endpoint
+  const { data: usageData, refetch: refetchUsage, isLoading: queryLoading } = useQuery({
+    queryKey: ['user-usage-current'],
     queryFn: async () => {
-      const response = await settingsApi.getUsage();
+      const response = await usageApi.getCurrentUsage();
       if (response.success && response.data) {
-        return response.data.stats;
+        return response.data;
       }
-      throw new Error(response.error || 'Failed to fetch usage');
+      throw new Error((response as any).error || 'Failed to fetch usage');
     },
     enabled: !!user,
     refetchInterval: 30000, // Refetch every 30 seconds
@@ -49,44 +45,37 @@ export function useTokenLimits() {
   });
 
   useEffect(() => {
-    if (!user || !usageData) {
+    if (!user) {
       setLimits(prev => ({ ...prev, canSendMessage: false }));
       return;
     }
 
-    // Determine effective limits (user-specific from usageData or system defaults)
-    const effectiveGlobalLimit = usageData.token_limit_global ?? DEFAULT_GLOBAL_LIMIT;
-    const effectiveMonthlyLimit = usageData.token_limit_monthly ?? DEFAULT_MONTHLY_LIMIT;
+    if (!usageData) {
+      // While loading, allow sending (backend will block if needed)
+      setLimits(prev => ({ ...prev, canSendMessage: user.is_active }));
+      return;
+    }
 
-    // Current usage
-    const globalUsage = usageData.total_tokens || 0;
-    const monthlyUsage = usageData.monthly_tokens || 0;
+    // Data comes pre-calculated from the backend
+    const { totalTokens, monthlyTokens, limits: usageLimits, remaining } = usageData;
 
-    // Check if limits are exceeded
-    const isGlobalLimitExceeded = effectiveGlobalLimit !== null && effectiveGlobalLimit > 0 && globalUsage >= effectiveGlobalLimit;
-    const isMonthlyLimitExceeded = effectiveMonthlyLimit !== null && effectiveMonthlyLimit > 0 && monthlyUsage >= effectiveMonthlyLimit;
-
-    // Calculate remaining tokens
-    const remainingGlobalTokens = effectiveGlobalLimit !== null && effectiveGlobalLimit > 0 
-      ? Math.max(0, effectiveGlobalLimit - globalUsage) 
-      : null;
-    const remainingMonthlyTokens = effectiveMonthlyLimit !== null && effectiveMonthlyLimit > 0 
-      ? Math.max(0, effectiveMonthlyLimit - monthlyUsage) 
-      : null;
+    // Check if limits are exceeded (remaining === 0 means exceeded)
+    const isGlobalLimitExceeded = usageLimits.globalLimit > 0 && remaining.global === 0;
+    const isMonthlyLimitExceeded = usageLimits.monthlyLimit > 0 && remaining.monthly === 0;
 
     // Can send message if neither limit is exceeded and user is active
     const canSendMessage = user.is_active && !isGlobalLimitExceeded && !isMonthlyLimitExceeded;
 
     setLimits({
-      globalLimit: effectiveGlobalLimit,
-      monthlyLimit: effectiveMonthlyLimit,
-      globalUsage,
-      monthlyUsage,
+      globalLimit: usageLimits.globalLimit,
+      monthlyLimit: usageLimits.monthlyLimit,
+      globalUsage: totalTokens,
+      monthlyUsage: monthlyTokens,
       isGlobalLimitExceeded,
       isMonthlyLimitExceeded,
       canSendMessage,
-      remainingGlobalTokens,
-      remainingMonthlyTokens,
+      remainingGlobalTokens: remaining.global === -1 ? null : remaining.global,
+      remainingMonthlyTokens: remaining.monthly === -1 ? null : remaining.monthly,
     });
   }, [user, usageData]);
 
@@ -117,14 +106,14 @@ export function useTokenLimits() {
     if (limits.globalLimit && limits.remainingGlobalTokens !== null) {
       const globalUsagePercent = (limits.globalUsage / limits.globalLimit) * 100;
       if (globalUsagePercent >= 90) {
-        return `Approaching global token limit: ${limits.remainingGlobalTokens} tokens remaining.`;
+        return `Approaching global token limit: ${limits.remainingGlobalTokens.toLocaleString()} tokens remaining.`;
       }
     }
 
     if (limits.monthlyLimit && limits.remainingMonthlyTokens !== null) {
       const monthlyUsagePercent = (limits.monthlyUsage / limits.monthlyLimit) * 100;
       if (monthlyUsagePercent >= 90) {
-        return `Approaching monthly token limit: ${limits.remainingMonthlyTokens} tokens remaining.`;
+        return `Approaching monthly token limit: ${limits.remainingMonthlyTokens.toLocaleString()} tokens remaining.`;
       }
     }
 
@@ -133,11 +122,11 @@ export function useTokenLimits() {
 
   // Function to get progress percentages
   const getProgressPercentages = () => {
-    const globalProgress = limits.globalLimit && limits.globalLimit > 0 
+    const globalProgress = limits.globalLimit && limits.globalLimit > 0
       ? Math.min(100, (limits.globalUsage / limits.globalLimit) * 100)
       : 0;
-    
-    const monthlyProgress = limits.monthlyLimit && limits.monthlyLimit > 0 
+
+    const monthlyProgress = limits.monthlyLimit && limits.monthlyLimit > 0
       ? Math.min(100, (limits.monthlyUsage / limits.monthlyLimit) * 100)
       : 0;
 
@@ -149,6 +138,6 @@ export function useTokenLimits() {
     refreshUsage,
     getLimitStatusMessage,
     getProgressPercentages,
-    isLoading: !usageData,
+    isLoading: queryLoading,
   };
 }

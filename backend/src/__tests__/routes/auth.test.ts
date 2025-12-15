@@ -290,7 +290,7 @@ describe('Auth Routes', () => {
     });
   });
 
-  describe('PUT /api/auth/me', () => {
+  describe('PUT /api/auth/profile', () => {
     let testUser: any;
     let tokens: any;
 
@@ -305,7 +305,7 @@ describe('Auth Routes', () => {
       };
 
       const response = await TestHelpers.authenticatedRequest(app, tokens)
-        .put('/api/auth/me')
+        .put('/api/auth/profile')
         .send(updateData);
 
       expect(response.status).toBe(200);
@@ -327,7 +327,7 @@ describe('Auth Routes', () => {
       };
 
       const response = await TestHelpers.authenticatedRequest(app, tokens)
-        .put('/api/auth/me')
+        .put('/api/auth/profile')
         .send(updateData);
 
       expect(response.status).toBe(200);
@@ -350,7 +350,7 @@ describe('Auth Routes', () => {
       };
 
       const response = await TestHelpers.authenticatedRequest(app, tokens)
-        .put('/api/auth/me')
+        .put('/api/auth/profile')
         .send(updateData);
 
       TestHelpers.expectValidationError(response, 'password');
@@ -358,7 +358,7 @@ describe('Auth Routes', () => {
 
     it('should reject unauthenticated request', async () => {
       const response = await request(app)
-        .put('/api/auth/me')
+        .put('/api/auth/profile')
         .send({ username: 'newname' });
 
       TestHelpers.expectAuthError(response);

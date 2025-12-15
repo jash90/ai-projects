@@ -1,4 +1,4 @@
-import { File as FileType } from '@/types'
+import { TextFile as FileType } from '@/types'
 
 export class FileTypeService {
   /**
