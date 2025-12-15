@@ -656,7 +656,7 @@ function TokenLimitsTab({
   loading,
   onRefresh,
 }: {
-  globalLimits: { global: number; monthly: number } | undefined;
+  globalLimits: { global_limit: number; monthly_limit: number } | undefined;
   loading: boolean;
   onRefresh: () => void;
 }) {

@@ -19,7 +19,7 @@ interface AdminState {
   }
   
   // Token Limits
-  globalTokenLimits: { global: number; monthly: number } | null
+  globalTokenLimits: { global_limit: number; monthly_limit: number } | null
   tokenLimitsLoading: boolean
   
   // Activity Log
@@ -58,7 +58,7 @@ interface AdminActions {
   updateUser: (userId: string, updates: Partial<UserManagement>) => void
   
   // Token limits actions
-  setGlobalTokenLimits: (limits: { global: number; monthly: number }) => void
+  setGlobalTokenLimits: (limits: { global_limit: number; monthly_limit: number }) => void
   setTokenLimitsLoading: (loading: boolean) => void
   
   // Activity actions
