@@ -23,13 +23,12 @@ import {
 import { Agent, TextFile as FileType } from '@/types'
 import { useProjects } from '@/stores/projectStore'
 import { useAgents } from '@/stores/agentStore'
-import { useFiles } from '@/stores/fileStore'
 import { Button } from '@/components/ui/Button'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { AgentPanel } from '@/components/agents/AgentPanel'
 import { FileExplorer } from '@/components/files/FileExplorer'
 import { FileEditor } from '@/components/files/FileEditor'
-import { Chat } from '@/components/chat/Chat'
+import { ThreadChat } from '@/components/chat/ThreadChat'
 import { MobileNavigation, useIsMobile } from '@/components/ui/MobileNavigation'
 import { usePWAFeatures, useOfflineFiles } from '@/hooks/usePWAFeatures'
 import { Card, CardContent } from '@/components/ui/Card'
@@ -42,33 +41,32 @@ function ProjectPage() {
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
   const isMobile = useIsMobile()
-  
+
   const { currentProject, fetchProject, isLoading: isLoadingProject } = useProjects()
   const { agents, fetchAgents } = useAgents()
-  const { } = useFiles()
-  
+
   // PWA features
-  const { 
-    isOffline, 
-    isInstalled, 
-    canInstall, 
-    install, 
-    share, 
-    vibrate 
+  const {
+    isOffline,
+    isInstalled,
+    canInstall,
+    install,
+    share,
+    vibrate
   } = usePWAFeatures()
-  
-  const { 
-    offlineFiles, 
-    pendingUploads, 
-    hasOfflineFiles, 
-    hasPendingUploads 
+
+  const {
+    offlineFiles,
+    pendingUploads,
+    hasOfflineFiles,
+    hasPendingUploads
   } = useOfflineFiles()
-  
+
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null)
   const [selectedFile, setSelectedFile] = useState<FileType | null>(null)
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(isMobile)
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState(isMobile)
-  
+
   // Mobile-specific states
   const [mobileView, setMobileView] = useState<MobileView>('chat')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -131,7 +129,7 @@ function ProjectPage() {
   const handleMobileViewChange = (view: MobileView) => {
     setMobileView(view)
     setMobileMenuOpen(false)
-    
+
     // Haptic feedback on mobile
     if (isMobile) {
       vibrate(50)
@@ -140,13 +138,13 @@ function ProjectPage() {
 
   const handleShareProject = async () => {
     if (!currentProject) return
-    
+
     const shareData = {
       title: `AI Projects - ${currentProject.name}`,
       text: currentProject.description || 'Check out this AI project!',
       url: window.location.href
     }
-    
+
     const success = await share(shareData)
     if (success && isMobile) {
       vibrate([100, 50, 100])
@@ -456,7 +454,7 @@ function ProjectPage() {
         {/* Mobile Content */}
         <div className="flex-1 overflow-hidden animate-fade-in">
           {mobileView === 'chat' && (
-            <Chat
+            <ThreadChat
               project={currentProject}
               agent={selectedAgent}
               className="h-full"
@@ -689,7 +687,7 @@ function ProjectPage() {
 
         {/* Center Panel - Chat */}
         <div className="flex-1 flex flex-col min-w-0">
-          <Chat
+          <ThreadChat
             project={currentProject}
             agent={selectedAgent}
             onToggleSidebar={() => setLeftPanelCollapsed(!leftPanelCollapsed)}

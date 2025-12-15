@@ -18,11 +18,12 @@ interface ChatHeaderProps {
   streaming?: boolean
   onToggleStreaming?: (enabled: boolean) => void
   className?: string
+  extraActions?: React.ReactNode
 }
 
-function ChatHeader({ 
-  project, 
-  agent, 
+function ChatHeader({
+  project,
+  agent,
   isConnected = false,
   includeFiles = true,
   onToggleFiles,
@@ -30,7 +31,8 @@ function ChatHeader({
   onToggleSidebar,
   streaming = true,
   onToggleStreaming,
-  className 
+  className,
+  extraActions
 }: ChatHeaderProps) {
   const [showMenu, setShowMenu] = useState(false)
   const { user } = useAuth()
@@ -105,6 +107,9 @@ function ChatHeader({
       </div>
 
       <div className="flex items-center gap-2">
+        {/* Extra Actions */}
+        {extraActions}
+
         {/* Streaming Toggle */}
         {onToggleStreaming && (
           <StreamingToggle
