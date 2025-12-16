@@ -1,6 +1,15 @@
 {
   "backToDashboard": "Back to Dashboard",
   "dashboard": "Dashboard",
+  "sidePanel": {
+    "tabs": {
+      "agents": "Agents",
+      "files": "Files",
+      "editor": "Editor"
+    },
+    "noFileSelected": "No file selected",
+    "selectFile": "Select a file from Files tab to edit"
+  },
   "desktop": {
     "actions": {
       "enterFullscreen": "Enter Fullscreen",

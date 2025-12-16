@@ -1,6 +1,15 @@
 {
   "backToDashboard": "Powrót do pulpitu",
   "dashboard": "Pulpit",
+  "sidePanel": {
+    "tabs": {
+      "agents": "Agenci",
+      "files": "Pliki",
+      "editor": "Edytor"
+    },
+    "noFileSelected": "Nie wybrano pliku",
+    "selectFile": "Wybierz plik z zakładki Pliki, aby edytować"
+  },
   "desktop": {
     "actions": {
       "enterFullscreen": "Pełny ekran",
