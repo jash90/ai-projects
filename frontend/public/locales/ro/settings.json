@@ -8,6 +8,10 @@
       "theme": "Temă",
       "title": "Aspect"
     },
+    "language": {
+      "title": "Limbă",
+      "description": "Alege limba ta preferată"
+    },
     "notifications": {
       "description": "Alege ce notificări dorești să primești",
       "email": {

@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
-import { User, LogOut, Shield, Settings } from 'lucide-react'
+import { User, LogOut, Shield, Settings, Globe } from 'lucide-react'
+import { LanguageSelector } from './LanguageSelector'
 import { useAuth } from '@/stores/authStore'
 
 interface UserMenuProps {
@@ -80,7 +81,17 @@ export function UserMenu({ className = '', showAdminLink = true }: UserMenuProps
               {t('userMenu.adminPanel')}
             </Link>
           )}
-          
+
+          <div className="border-t border-border my-1"></div>
+
+          <div className="px-2 py-1">
+            <div className="flex items-center gap-2 px-2 py-1 text-sm text-muted-foreground">
+              <Globe className="w-4 h-4" />
+              {t('userMenu.language')}
+            </div>
+            <LanguageSelector variant="dropdown" className="mt-1" />
+          </div>
+
           <div className="border-t border-border my-1"></div>
           
           <button

@@ -18,11 +18,11 @@
       "pending": "Auto-save: Pending",
       "upToDate": "Auto-save: Up to date"
     },
-    "characters_one": "editor.characters",
-    "characters_other": "editor.characters",
+    "characters_one": "{{count}} character",
+    "characters_other": "{{count}} characters",
     "language": "Language: {{language}}",
-    "lines_one": "editor.lines",
-    "lines_other": "editor.lines",
+    "lines_one": "{{count}} line",
+    "lines_other": "{{count}} lines",
     "loading": "Loading editor...",
     "noFile": {
       "description": "Select a file from the explorer to start editing",
@@ -54,12 +54,12 @@
       "description": "Create your first file to get started",
       "title": "No files in this project"
     },
-    "fileCount_one": "explorer.fileCount",
+    "fileCount_one": "{{count}} file",
     "fileCount_other": "{{count}} files",
     "noResults": "No files match your search",
     "searchPlaceholder": "Search files...",
-    "shown_one": "explorer.shown",
-    "shown_other": "explorer.shown",
+    "shown_one": "{{count}} shown",
+    "shown_other": "{{count}} shown",
     "title": "Files",
     "uploadTitle": "Upload files from computer"
   },
@@ -70,8 +70,8 @@
     "done": "Done",
     "dropzone": {
       "active": "Drop files here",
-      "andMore_one": "upload.dropzone.andMore",
-      "andMore_other": "upload.dropzone.andMore",
+      "andMore_one": "and {{count}} more file",
+      "andMore_other": "and {{count}} more files",
       "description": "Drag and drop files here, or click to select files",
       "maxSize": "Maximum file size: {{size}}MB",
       "supportedTypes": "Supported types: {{types}}",
@@ -81,7 +81,7 @@
       "tooLarge": "File \"{{name}}\" is too large. Maximum size is {{maxSize}}MB.",
       "unsupportedType": "File type not supported. Allowed types: {{types}}"
     },
-    "success_one": "upload.success",
+    "success_one": "{{count}} file uploaded successfully!",
     "success_other": "{{count}} files uploaded successfully!",
     "title": "Upload Files to Project",
     "uploading": "Uploading Files"

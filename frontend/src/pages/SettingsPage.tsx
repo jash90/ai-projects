@@ -18,11 +18,13 @@ import {
   Coins,
   FolderOpen,
   Check,
+  Globe,
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { LanguageSelector } from '@/components/ui/LanguageSelector'
 import { settingsApi } from '@/lib/api'
 import { useAuth } from '@/stores/authStore'
 import { uiStore } from '@/stores/uiStore'
@@ -376,6 +378,24 @@ const SettingsPage: React.FC = () => {
                       ))}
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+
+              {/* Language Settings */}
+              <Card variant="elevated">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+                      <Globe className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <CardTitle>{t('preferences.language.title')}</CardTitle>
+                      <CardDescription>{t('preferences.language.description')}</CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <LanguageSelector variant="grid" />
                 </CardContent>
               </Card>
 

@@ -13,8 +13,8 @@
       "title": "No projects yet"
     },
     "title": "All Projects",
-    "viewAll_one": "allProjects.viewAll",
-    "viewAll_other": "allProjects.viewAll"
+    "viewAll_one": "View {{count}} project",
+    "viewAll_other": "View all {{count}} projects"
   },
   "header": {
     "subtitle": "Manage your projects and collaborate with AI agents",

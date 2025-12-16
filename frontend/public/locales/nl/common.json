@@ -49,6 +49,7 @@
   "userMenu": {
     "admin": "Beheerder",
     "adminPanel": "Beheerderspaneel",
+    "language": "Taal",
     "logout": "Uitloggen",
     "settings": "Instellingen"
   }

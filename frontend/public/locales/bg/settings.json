@@ -8,6 +8,10 @@
       "theme": "Тема",
       "title": "Външен вид"
     },
+    "language": {
+      "title": "Език",
+      "description": "Изберете предпочитания език"
+    },
     "notifications": {
       "description": "Изберете какви известия искате да получавате",
       "email": {

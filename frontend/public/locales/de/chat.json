@@ -28,11 +28,11 @@
   "input": {
     "attachFile": "Datei anhängen",
     "attachFiles": "Dateien anhängen (Bilder, PDF)",
-    "characters_one": "Eingabezeichen",
-    "characters_other": "Eingabezeichen",
+    "characters_one": "{{count}} Zeichen",
+    "characters_other": "{{count}} Zeichen",
     "fileTooLarge": "Datei zu groß: {{name}}. Maximalgröße: {{maxSize}}MB",
-    "maxFilesError_one": "input.maxFilesError",
-    "maxFilesError_other": "input.maxFilesError",
+    "maxFilesError_one": "Maximal {{count}} Datei erlaubt",
+    "maxFilesError_other": "Maximal {{count}} Dateien erlaubt",
     "placeholder": "Geben Sie Ihre Nachricht ein...",
     "send": "Senden",
     "sendMessage": "Nachricht senden",
@@ -42,8 +42,8 @@
   "limits": {
     "global": "Globales Limit",
     "monthly": "Monatliches Limit",
-    "remaining_one": "limits.remaining",
-    "remaining_other": "limits.remaining"
+    "remaining_one": "{{count}} Token verbleibend",
+    "remaining_other": "{{count}} Token verbleibend"
   },
   "message": {
     "error": "Fehler",

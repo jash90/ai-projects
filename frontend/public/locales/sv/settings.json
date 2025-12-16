@@ -8,6 +8,10 @@
       "theme": "Tema",
       "title": "Utseende"
     },
+    "language": {
+      "title": "Språk",
+      "description": "Välj ditt föredragna språk"
+    },
     "notifications": {
       "description": "Välj vilka meddelanden du vill ta emot",
       "email": {

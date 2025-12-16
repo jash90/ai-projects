@@ -8,6 +8,10 @@
       "theme": "Tema",
       "title": "Udseende"
     },
+    "language": {
+      "title": "Sprog",
+      "description": "Vælg dit foretrukne sprog"
+    },
     "notifications": {
       "description": "Vælg hvilke meddelelser du ønsker at modtage",
       "email": {

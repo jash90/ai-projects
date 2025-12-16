@@ -49,6 +49,7 @@
   "userMenu": {
     "admin": "Admin",
     "adminPanel": "Panneau d'administration",
+    "language": "Langue",
     "logout": "Déconnexion",
     "settings": "Paramètres"
   }

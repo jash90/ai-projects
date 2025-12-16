@@ -49,6 +49,7 @@
   "userMenu": {
     "admin": "Admin",
     "adminPanel": "Admin Panel",
+    "language": "Jazyk",
     "logout": "Odhlásit se",
     "settings": "Nastavení"
   }

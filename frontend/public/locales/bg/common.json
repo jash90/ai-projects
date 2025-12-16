@@ -49,6 +49,7 @@
   "userMenu": {
     "admin": "Администратор",
     "adminPanel": "Административен панел",
+    "language": "Език",
     "logout": "Изход",
     "settings": "Настройки"
   }

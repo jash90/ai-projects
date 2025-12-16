@@ -8,6 +8,10 @@
       "theme": "Téma",
       "title": "Megjelenés"
     },
+    "language": {
+      "title": "Nyelv",
+      "description": "Válassza ki a kívánt nyelvet"
+    },
     "notifications": {
       "description": "Válassza ki, milyen értesítéseket szeretne kapni",
       "email": {

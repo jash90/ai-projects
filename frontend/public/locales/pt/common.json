@@ -49,6 +49,7 @@
   "userMenu": {
     "admin": "Admin",
     "adminPanel": "Painel de Administração",
+    "language": "Idioma",
     "logout": "Sair",
     "settings": "Configurações"
   }

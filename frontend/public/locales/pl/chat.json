@@ -28,15 +28,15 @@
   "input": {
     "attachFile": "Załącz plik",
     "attachFiles": "Załącz pliki (obrazy, PDF)",
-    "characters_one": "input.znaki",
-    "characters_few": "wprowadzonych {{count}} znaki",
-    "characters_many": "wprowadzonych {{count}} znaków",
-    "characters_other": "input.znaki",
+    "characters_one": "{{count}} znak",
+    "characters_few": "{{count}} znaki",
+    "characters_many": "{{count}} znaków",
+    "characters_other": "{{count}} znaków",
     "fileTooLarge": "Plik za duży: {{name}}. Maksymalny rozmiar: {{maxSize}}MB",
-    "maxFilesError_one": "input.błądMaksPlików",
-    "maxFilesError_few": "Możesz przesłać maksymalnie {{count}} plik",
-    "maxFilesError_many": "Możesz przesłać maksymalnie {{count}} plików",
-    "maxFilesError_other": "input.błądMaksPlików",
+    "maxFilesError_one": "Maksymalnie {{count}} plik dozwolony",
+    "maxFilesError_few": "Maksymalnie {{count}} pliki dozwolone",
+    "maxFilesError_many": "Maksymalnie {{count}} plików dozwolonych",
+    "maxFilesError_other": "Maksymalnie {{count}} plików dozwolonych",
     "placeholder": "Wpisz wiadomość...",
     "send": "Wyślij",
     "sendMessage": "Wyślij wiadomość",
@@ -46,10 +46,10 @@
   "limits": {
     "global": "Limit globalny",
     "monthly": "Limit miesięczny",
-    "remaining_one": "limits.pozostało",
-    "remaining_few": "Pozostało {{count}} limitu",
-    "remaining_many": "Pozostało {{count}} limitów",
-    "remaining_other": "limits.pozostało"
+    "remaining_one": "{{count}} token pozostały",
+    "remaining_few": "{{count}} tokeny pozostałe",
+    "remaining_many": "{{count}} tokenów pozostało",
+    "remaining_other": "{{count}} tokenów pozostało"
   },
   "message": {
     "error": "Błąd",

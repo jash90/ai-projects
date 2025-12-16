@@ -8,6 +8,10 @@
       "theme": "Téma",
       "title": "Vzhled"
     },
+    "language": {
+      "title": "Jazyk",
+      "description": "Vyberte svůj preferovaný jazyk"
+    },
     "notifications": {
       "description": "Vyberte, jaké oznámení chcete přijímat",
       "email": {
