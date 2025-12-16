@@ -1,64 +1,72 @@
 {
   "cta": {
-    "installPwa": "Nainštalovať PWA",
-    "start": "Začnite budovať dnes",
-    "subtitle": "Pridajte sa k tisícom vývojárov, ktorí budujú budúcnosť s vývojom poháňaným AI, dizajnom orientovaným na mobilné zariadenia a bezpečnosťou na úrovni podniku.",
-    "title": "Pripravení zrevolucionizovať svoj vývojový zážitok?"
+    "installPwa": "Nainštalovať aplikáciu",
+    "start": "Začnite stavať zadarmo",
+    "subtitle": "Pridajte sa k tímom, ktoré už stavajú inteligentnejšie s AI. Zadarmo na začiatok, bez potreby kreditnej karty.",
+    "title": "Pripravení stavať s AI?"
   },
   "features": {
     "items": {
       "ai": {
         "category": "AI",
-        "description": "Dynamické riadenie modelov s OpenAI GPT a modelmi Anthropic Claude. Špecializované AI agenti s jedinečnými osobnosťami a schopnosťami.",
-        "title": "Pokročilá integrácia AI"
+        "description": "Vyberte si z modelov GPT-4, Claude a ďalších AI modelov. Vytvorte vlastných agentov prispôsobených vašim projektom.",
+        "title": "Inteligentní AI asistenti"
       },
       "analytics": {
         "category": "Analytika",
-        "description": "Komplexné monitorovanie používania AI API, nákladov na projekt, administratívne konfigurovateľné limity a analytika používania.",
-        "title": "Sledovanie používania tokenov"
+        "description": "Sledujte používanie AI a náklady na projekt. Nastavte rozpočty a nikdy nebuďte prekvapení faktúrami.",
+        "title": "Sledovanie používania a nákladov"
       },
       "collaboration": {
         "category": "Spolupráca",
-        "description": "Konverzácie poháňané WebSocket s indikátormi písania, streamovanými odpoveďami a trvalou históriou chatu.",
-        "title": "Chat a spolupráca v reálnom čase"
+        "description": "Chat s AI v reálnom čase. Sledujte odpovede, ako sa generujú. Vaša história konverzácie je vždy uložená.",
+        "title": "Chat s AI v reálnom čase"
       },
       "management": {
-        "category": "Manažment",
-        "description": "Podpora viacerých projektov, správa súborov (20+ typov), agenti špecifickí pre projekt a spolupráca na súboroch v reálnom čase.",
-        "title": "Pokročilý manažment projektov"
+        "category": "Projekty",
+        "description": "Organizujte prácu v projektoch. Nahrávajte dokumenty, obrázky a kód. Vaša AI si pamätá kontext.",
+        "title": "Organizácia projektov"
       },
       "mobile": {
         "category": "Mobilné",
-        "description": "Progresívna webová aplikácia s offline podporou, inštaláciou natívnej aplikácie, dotykovo optimalizovaným rozhraním a mobilnou navigáciou.",
-        "title": "Mobilná PWA"
+        "description": "Nainštalujte ako aplikáciu na akékoľvek zariadenie. Pracujte na svojom telefóne, tablete alebo počítači s rovnakým skvelým zážitkom.",
+        "title": "Funguje všade"
       },
       "performance": {
-        "category": "Výkon",
-        "description": "PostgreSQL s Redis cachingom, poolingom pripojení, rozdelením kódu, service workers a optimalizáciou pre mobilné zariadenia.",
-        "title": "Architektúra s vysokým výkonom"
+        "category": "Platforma",
+        "description": "Nainštalujte na akékoľvek zariadenie, pracujte offline, synchronizujte automaticky. Rýchlo a spoľahlivo, nech ste kdekoľvek.",
+        "title": "Pracujte kdekoľvek"
       },
       "pwa": {
-        "category": "PWA",
-        "description": "Service worker s inteligentným cachingom, synchronizáciou na pozadí, offline prístupom k súborom a správou frontov.",
-        "title": "Offline funkcie"
+        "category": "Offline",
+        "description": "Pokračujte v práci bez internetu. Vaše zmeny sa automaticky synchronizujú, keď sa vrátite online.",
+        "title": "Offline režim"
       },
       "security": {
         "category": "Bezpečnosť",
-        "description": "Riadenie prístupu na základe rolí, administrátorský panel, správa používateľov, limity tokenov, protokolovanie aktivít a komplexná bezpečnosť.",
-        "title": "Bezpečnosť podniku a administrátor"
+        "description": "Bezpečnosť na úrovni podniku s povoleniami tímu, limitmi používania a kompletnými auditnými stopami.",
+        "title": "Bezpečnosť tímu"
       },
       "ux": {
-        "category": "Používateľský zážitok",
-        "description": "Komplexné nastavenia pre profil, bezpečnosť, preferencie, tmavý/svetlý režim a osobné štatistiky používania.",
-        "title": "Nastavenia a preferencie používateľa"
+        "category": "Prispôsobenie",
+        "description": "Personalizujte svoje pracovisko s tmavým/svetlým režimom, preferenciami notifikácií a vlastnými nastaveniami.",
+        "title": "Vaše pracovisko, váš spôsob"
       }
     },
-    "subtitle": "Platforma na úrovni podniku s pokročilou integráciou AI, dizajnom orientovaným na mobilné zariadenia a komplexnými vývojovými nástrojmi vytvorenými pre moderné tímy.",
+    "subtitle": "Všetko, čo potrebujete na stavbu s AI. Jednoduché na začiatok, dostatočne silné pre tímy.",
     "techStack": {
       "subtitle": "Stack pripravený na produkciu s TypeScript, React 18, Node.js, PostgreSQL a integráciou AI",
-      "title": "Vytvorené s modernými technológiami"
+      "title": "Vytvorené s modernými technológiami",
+      "categories": {
+        "ai": "AI",
+        "backend": "Backend",
+        "database": "Databáza",
+        "frontend": "Frontend",
+        "mobile": "Mobilné",
+        "realtime": "V reálnom čase"
+      }
     },
-    "title": "Funkcie pripravené na produkciu"
+    "title": "Všetko, čo potrebujete"
   },
   "footer": {
     "company": {
@@ -68,7 +76,7 @@
       "contact": "Kontakt",
       "title": "Spoločnosť"
     },
-    "copyright": "© 2024 AI Projects. Všetky práva vyhradené.",
+    "copyright": "© 2025 AI Projects. Všetky práva vyhradené.",
     "product": {
       "api": "API",
       "documentation": "Dokumentácia",
@@ -86,14 +94,14 @@
     "tagline": "Budúcnosť vývoja je tu. Vytvárajte úžasné projekty s pomocou AI."
   },
   "hero": {
-    "badge": "Platforma na vývoj AI pripravená na produkciu",
+    "badge": "AI pracovisko pre moderné tímy",
     "cta": {
       "demo": "Pozrieť si demo",
       "start": "Začnite stavať zadarmo"
     },
-    "subtitle": "Plnohodnotná platforma s pokročilými AI agentmi, spoluprácou v reálnom čase, dizajnom mobilných PWA, podnikateľskou bezpečnosťou a komplexným riadením projektov. Pracujte kdekoľvek a kedykoľvek.",
-    "title": "Budúcnosť",
-    "titleHighlight": "vývoja poháňaného AI"
+    "subtitle": "Vytvárajte projekty s AI asistentmi, ktorí rozumejú vášmu kontextu. Spolupracujte v reálnom čase, pracujte offline a spravujte všetko zo svojho telefónu alebo počítača.",
+    "title": "Stavajte inteligentnejšie",
+    "titleHighlight": "s AI"
   },
   "nav": {
     "features": "Funkcie",
@@ -111,11 +119,11 @@
         "cta": "Kontaktovať predaj",
         "features": [
           "Všetko v Pro",
-          "Admin panel & RBAC",
-          "Vlastné limity tokenov",
-          "Záznam činnosti",
-          "SSO & súlad",
-          "Zákaznícka podpora"
+          "Admin panel a tímové úlohy",
+          "Vlastné limity používania",
+          "Auditné záznamy aktivít",
+          "Integrácia SSO",
+          "Zasvätená podpora"
         ],
         "name": "Podnik",
         "price": "Na mieru"
@@ -124,9 +132,9 @@
         "cta": "Začať Pro skúšku",
         "features": [
           "Neobmedzené projekty",
-          "GPT-4 + Claude modely",
-          "Spolupráca v reálnom čase",
-          "Pokročilé spravovanie súborov",
+          "GPT-4 a Claude",
+          "Tímová spolupráca",
+          "Neobmedzené súbory",
           "Analytika používania",
           "Prioritná podpora"
         ],
@@ -137,44 +145,44 @@
       "starter": {
         "cta": "Začať zadarmo",
         "features": [
-          "5 AI projektov",
-          "OpenAI GPT modely",
-          "Prístup k mobilnej PWA",
-          "Offline funkcie",
+          "5 projektov",
+          "Prístup k GPT-4",
+          "Mobilná aplikácia",
+          "Pracujte offline",
           "Podpora komunity"
         ],
         "name": "Začiatočník",
         "price": "$0"
       }
     },
-    "subtitle": "Plnohodnotná platforma s integráciou AI, mobilnou PWA, administrátorskými ovládacími prvkami a podnikateľskou bezpečnosťou. Začnite zadarmo, škálujte podľa rastu.",
-    "title": "Ceny na úrovni podniku pre tímy všetkých veľkostí"
+    "subtitle": "Začnite zadarmo, upgradujte, keď potrebujete viac. Žiadne prekvapenia, zrušte kedykoľvek.",
+    "title": "Jednoduché, transparentné ceny"
   },
   "stats": {
-    "activeDevelopers": "Aktívni vývojári",
-    "projectsBuilt": "Vytvorené AI projekty",
-    "rating": "Hodnotenie PWA obchodu",
-    "uptime": "SLA dostupnosti"
+    "activeDevelopers": "Vytvorené projekty",
+    "projectsBuilt": "AI konverzácie",
+    "rating": "Spokojnosť používateľov",
+    "uptime": "Dostupnosť"
   },
   "testimonials": {
     "items": {
       "elena": {
-        "content": "Spolupráca v reálnom čase s integráciou WebSocket je bezproblémová. Služobný pracovník a stratégie cachovania robia z tejto platformy najrýchlejší vývojový nástroj, aký som kedy použila.",
+        "content": "Chat v reálnom čase s AI je neuveriteľne rýchly. Dostávam okamžité odpovede, zatiaľ čo je môj kód stále čerstvý v mojej mysli.",
         "name": "Elena Rodriguez",
-        "role": "DevOps inžinier"
+        "role": "Softvérový vývojár"
       },
       "marcus": {
-        "content": "Admin panel nám poskytuje úplnú kontrolu nad používaním AI naším tímom. Sledovanie tokenov a funkcie správy používateľov nám ušetrili tisíce na nákladoch API.",
+        "content": "Znížili sme naše náklady na AI o 40 % vďaka sledovaniu využitia. Teraz presne viem, ktoré projekty používajú čo, a môžem nastaviť limity pre tím.",
         "name": "Marcus Johnson",
         "role": "Inžiniersky manažér"
       },
       "sarah": {
-        "content": "Dizajn mobilnej PWA je neuveriteľný. Môžem kódovať na svojom telefóne počas dochádzania a bezproblémovo pokračovať na desktopovom počítači. Offline funkcie sú revolučné.",
+        "content": "Milujem, že môžem začať konverzáciu s AI na svojom telefóne počas obeda a pokračovať na svojom laptopu v kancelárii. Všetko sa jednoducho synchronizuje.",
         "name": "Sarah Chen",
-        "role": "Senior full-stack vývojár"
+        "role": "Produktový dizajnér"
       }
     },
-    "subtitle": "Pozrite sa, čo hovorí naša komunita vývojárov o AI projektoch.",
-    "title": "Milované vývojármi po celom svete"
+    "subtitle": "Pridajte sa k tisícom tímov, ktoré už budujú s AI projektmi.",
+    "title": "Dôveryhodné tímami po celom svete"
   }
 }

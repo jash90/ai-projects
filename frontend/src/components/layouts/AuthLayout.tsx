@@ -1,11 +1,15 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { Sparkles, Bot, FolderOpen, MessageSquare } from 'lucide-react'
+import { LanguageSelector } from '@/components/ui/LanguageSelector'
 
 interface AuthLayoutProps {
   children: React.ReactNode
 }
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
+  const { t } = useTranslation('auth')
+
   return (
     <div className="min-h-screen flex bg-background">
       {/* Left side - Branding with gradient background */}
@@ -38,9 +42,9 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm shadow-design-lg mb-4">
                 <Sparkles className="w-8 h-8 text-white" />
               </div>
-              <h1 className="text-4xl font-bold tracking-tight">AI Projects</h1>
+              <h1 className="text-4xl font-bold tracking-tight">{t('authLayout.brand')}</h1>
               <p className="text-lg text-white/80">
-                Your intelligent workspace for collaborative AI development
+                {t('authLayout.tagline')}
               </p>
             </div>
 
@@ -48,18 +52,18 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
             <div className="space-y-4 text-left">
               <FeatureItem
                 icon={<Bot className="w-5 h-5" />}
-                title="Multiple AI Agents"
-                description="Specialized agents with unique capabilities"
+                title={t('authLayout.features.agents.title')}
+                description={t('authLayout.features.agents.description')}
               />
               <FeatureItem
                 icon={<FolderOpen className="w-5 h-5" />}
-                title="Project Management"
-                description="Organize files and context for each project"
+                title={t('authLayout.features.projects.title')}
+                description={t('authLayout.features.projects.description')}
               />
               <FeatureItem
                 icon={<MessageSquare className="w-5 h-5" />}
-                title="Real-time Chat"
-                description="Seamless collaboration with AI assistants"
+                title={t('authLayout.features.chat.title')}
+                description={t('authLayout.features.chat.description')}
               />
             </div>
 
@@ -68,15 +72,15 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
               <div className="flex justify-center gap-8">
                 <div className="text-center">
                   <div className="text-2xl font-bold">10K+</div>
-                  <div className="text-sm text-white/60">Projects Created</div>
+                  <div className="text-sm text-white/60">{t('authLayout.stats.projects')}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold">50+</div>
-                  <div className="text-sm text-white/60">AI Models</div>
+                  <div className="text-sm text-white/60">{t('authLayout.stats.models')}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold">99.9%</div>
-                  <div className="text-sm text-white/60">Uptime</div>
+                  <div className="text-sm text-white/60">{t('authLayout.stats.uptime')}</div>
                 </div>
               </div>
             </div>
@@ -93,8 +97,13 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
               <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold text-foreground">AI Projects</span>
+              <span className="text-xl font-bold text-foreground">{t('authLayout.brand')}</span>
             </div>
+          </div>
+
+          {/* Language selector */}
+          <div className="flex justify-end mb-4">
+            <LanguageSelector variant="dropdown" />
           </div>
 
           {/* Auth form container */}
@@ -105,13 +114,13 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
           {/* Footer */}
           <div className="mt-6 text-center text-sm text-muted-foreground">
             <p>
-              By continuing, you agree to our{' '}
+              {t('authLayout.footer.agreement')}{' '}
               <a href="#" className="text-primary hover:text-primary-hover underline-offset-4 hover:underline">
-                Terms of Service
+                {t('authLayout.footer.terms')}
               </a>{' '}
-              and{' '}
+              {t('authLayout.footer.and')}{' '}
               <a href="#" className="text-primary hover:text-primary-hover underline-offset-4 hover:underline">
-                Privacy Policy
+                {t('authLayout.footer.privacy')}
               </a>
             </p>
           </div>

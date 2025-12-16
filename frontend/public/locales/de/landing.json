@@ -1,64 +1,72 @@
 {
   "cta": {
-    "installPwa": "PWA installieren",
-    "start": "Heute mit dem Bauen beginnen",
-    "subtitle": "Schließen Sie sich Tausenden von Entwicklern an, die die Zukunft mit KI-gestützter Entwicklung, mobil-first Design und Unternehmenssicherheit gestalten.",
-    "title": "Bereit, Ihr Entwicklungserlebnis zu revolutionieren?"
+    "installPwa": "App installieren",
+    "start": "Kostenlos starten",
+    "subtitle": "Schließen Sie sich Teams an, die bereits intelligenter mit KI arbeiten. Kostenlos starten, keine Kreditkarte erforderlich.",
+    "title": "Bereit, mit KI zu bauen?"
   },
   "features": {
     "items": {
       "ai": {
         "category": "KI",
-        "description": "Dynamisches Modellmanagement mit OpenAI GPT und Anthropic Claude Modellen. Spezialisierte KI-Agenten mit einzigartigen Persönlichkeiten und Fähigkeiten.",
-        "title": "Erweiterte KI-Integration"
+        "description": "Wählen Sie aus GPT-4, Claude und anderen KI-Modellen. Erstellen Sie benutzerdefinierte Agenten, die auf Ihre Projekte zugeschnitten sind.",
+        "title": "Intelligente KI-Assistenten"
       },
       "analytics": {
         "category": "Analytik",
-        "description": "Umfassende Überwachung der Nutzung der KI-API, Kosten pro Projekt, administrierbare Limits und Nutzungsanalysen.",
-        "title": "Token-Nutzungsverfolgung"
+        "description": "Verfolgen Sie die KI-Nutzung und Kosten pro Projekt. Setzen Sie Budgets und lassen Sie sich nie von Rechnungen überraschen.",
+        "title": "Nutzungs- & Kostenverfolgung"
       },
       "collaboration": {
         "category": "Zusammenarbeit",
-        "description": "WebSocket-gestützte Gespräche mit Tippindikatoren, Streaming-Antworten und persistentem Chatverlauf.",
-        "title": "Echtzeit-Chat & Zusammenarbeit"
+        "description": "Chatten Sie in Echtzeit mit KI. Sehen Sie Antworten, während sie generiert werden. Ihre Gesprächshistorie wird immer gespeichert.",
+        "title": "Echtzeit-KI-Chat"
       },
       "management": {
-        "category": "Management",
-        "description": "Unterstützung für mehrere Projekte, Dateiverwaltung (über 20 Typen), projektspezifische Agenten und Echtzeit-Dateizusammenarbeit.",
-        "title": "Erweitertes Projektmanagement"
+        "category": "Projekte",
+        "description": "Organisieren Sie die Arbeit in Projekten. Laden Sie Dokumente, Bilder und Code hoch. Ihre KI erinnert sich an den Kontext.",
+        "title": "Projektorganisation"
       },
       "mobile": {
         "category": "Mobil",
-        "description": "Progressive Web App mit Offline-Unterstützung, nativer App-Installation, touch-optimierter Benutzeroberfläche und mobiler Navigation.",
-        "title": "Mobil-First PWA"
+        "description": "Installieren Sie die App auf jedem Gerät. Arbeiten Sie auf Ihrem Telefon, Tablet oder Desktop mit demselben großartigen Erlebnis.",
+        "title": "Überall einsetzbar"
       },
       "performance": {
-        "category": "Leistung",
-        "description": "PostgreSQL mit Redis-Caching, Verbindungs-Pooling, Code-Splitting, Service-Worker und mobiler Optimierung.",
-        "title": "Hochleistungsarchitektur"
+        "category": "Plattform",
+        "description": "Installieren Sie auf jedem Gerät, arbeiten Sie offline, synchronisieren Sie automatisch. Schnell und zuverlässig, wo immer Sie sind.",
+        "title": "Überall arbeiten"
       },
       "pwa": {
-        "category": "PWA",
-        "description": "Service-Worker mit intelligentem Caching, Hintergrundsynchronisierung, Offline-Dateizugriff und Warteschlangenmanagement.",
-        "title": "Offline-Funktionen"
+        "category": "Offline",
+        "description": "Arbeiten Sie ohne Internet. Ihre Änderungen werden automatisch synchronisiert, wenn Sie wieder online sind.",
+        "title": "Offline-Modus"
       },
       "security": {
         "category": "Sicherheit",
-        "description": "Rollenbasierte Zugriffskontrolle, Admin-Panel, Benutzerverwaltung, Token-Limits, Aktivitätsprotokollierung und umfassende Sicherheit.",
-        "title": "Unternehmenssicherheit & Admin"
+        "description": "Sicherheit auf Unternehmensniveau mit Teamberechtigungen, Nutzungslimits und vollständigen Prüfprotokollen.",
+        "title": "Team-Sicherheit"
       },
       "ux": {
-        "category": "Benutzererfahrung",
-        "description": "Umfassende Einstellungen für Profil, Sicherheit, Präferenzen, Dunkel-/Hellmodus und persönliche Nutzungsstatistiken.",
-        "title": "Benutzereinstellungen & Präferenzen"
+        "category": "Anpassung",
+        "description": "Personalisieren Sie Ihren Arbeitsbereich mit Dunkel-/Hellmodus, Benachrichtigungseinstellungen und benutzerdefinierten Einstellungen.",
+        "title": "Ihr Arbeitsbereich, Ihre Art"
       }
     },
-    "subtitle": "Plattform auf Unternehmensniveau mit erweiterter KI-Integration, mobil-first Design und umfassenden Entwicklungstools, die für moderne Teams entwickelt wurden.",
+    "subtitle": "Alles, was Sie brauchen, um mit KI zu bauen. Einfach zu starten, leistungsstark genug für Teams.",
     "techStack": {
       "subtitle": "Produktionsbereiter Stack mit TypeScript, React 18, Node.js, PostgreSQL und KI-Integration",
-      "title": "Mit modernen Technologien gebaut"
+      "title": "Mit modernen Technologien gebaut",
+      "categories": {
+        "ai": "KI",
+        "backend": "Backend",
+        "database": "Datenbank",
+        "frontend": "Frontend",
+        "mobile": "Mobil",
+        "realtime": "Echtzeit"
+      }
     },
-    "title": "Produktionsbereite Funktionen"
+    "title": "Alles, was Sie brauchen"
   },
   "footer": {
     "company": {
@@ -68,7 +76,7 @@
       "contact": "Kontakt",
       "title": "Unternehmen"
     },
-    "copyright": "© 2024 AI Projects. Alle Rechte vorbehalten.",
+    "copyright": "© 2025 KI-Projekte. Alle Rechte vorbehalten.",
     "product": {
       "api": "API",
       "documentation": "Dokumentation",
@@ -86,14 +94,14 @@
     "tagline": "Die Zukunft der Entwicklung ist hier. Erstellen Sie erstaunliche Projekte mit KI-Unterstützung."
   },
   "hero": {
-    "badge": "Produktionsbereite KI-Entwicklungsplattform",
+    "badge": "KI-Arbeitsbereich für moderne Teams",
     "cta": {
       "demo": "Demo ansehen",
       "start": "Kostenlos starten"
     },
-    "subtitle": "Vollständige Plattform mit fortschrittlichen KI-Agenten, Echtzeit-Zusammenarbeit, mobil-first PWA-Design, Unternehmenssicherheit und umfassendem Projektmanagement. Arbeiten Sie überall und jederzeit.",
-    "title": "Die Zukunft von",
-    "titleHighlight": "KI-gestützter Entwicklung"
+    "subtitle": "Erstellen Sie Projekte mit KI-Assistenten, die Ihren Kontext verstehen. Arbeiten Sie in Echtzeit zusammen, offline und verwalten Sie alles von Ihrem Telefon oder Desktop.",
+    "title": "Intelligenter bauen",
+    "titleHighlight": "mit KI"
   },
   "nav": {
     "features": "Funktionen",
@@ -111,10 +119,10 @@
         "cta": "Vertrieb kontaktieren",
         "features": [
           "Alles in Pro",
-          "Admin-Panel & RBAC",
-          "Benutzerdefinierte Token-Limits",
-          "Aktivitätsprotokollierung",
-          "SSO & Compliance",
+          "Admin-Panel & Teamrollen",
+          "Benutzerdefinierte Nutzungslimits",
+          "Aktivitätsprüfprotokolle",
+          "SSO-Integration",
           "Dedizierter Support"
         ],
         "name": "Unternehmen",
@@ -124,11 +132,11 @@
         "cta": "Pro-Testversion starten",
         "features": [
           "Unbegrenzte Projekte",
-          "GPT-4 + Claude-Modelle",
-          "Echtzeit-Zusammenarbeit",
-          "Erweiterte Dateiverwaltung",
+          "GPT-4 & Claude",
+          "Teamzusammenarbeit",
+          "Unbegrenzte Dateien",
           "Nutzungsanalysen",
-          "Priorisierter Support"
+          "Prioritätsupport"
         ],
         "name": "Professionell",
         "popular": "Am Beliebtesten",
@@ -137,44 +145,44 @@
       "starter": {
         "cta": "Kostenlos starten",
         "features": [
-          "5 KI-Projekte",
-          "OpenAI GPT-Modelle",
-          "Zugriff auf mobile PWA",
-          "Offline-Funktionen",
+          "5 Projekte",
+          "Zugang zu GPT-4",
+          "Mobile App",
+          "Offline arbeiten",
           "Community-Support"
         ],
         "name": "Starter",
         "price": "$0"
       }
     },
-    "subtitle": "Voll ausgestattete Plattform mit KI-Integration, mobiler PWA, Admin-Kontrollen und Unternehmenssicherheit. Kostenlos starten, skalieren, während Sie wachsen.",
-    "title": "Preise auf Unternehmensniveau für Teams jeder Größe"
+    "subtitle": "Kostenlos starten, upgraden, wenn Sie mehr benötigen. Keine Überraschungen, jederzeit kündigen.",
+    "title": "Einfache, transparente Preisgestaltung"
   },
   "stats": {
-    "activeDevelopers": "Aktive Entwickler",
-    "projectsBuilt": "Erstellte KI-Projekte",
-    "rating": "PWA Store Bewertung",
-    "uptime": "Uptime SLA"
+    "activeDevelopers": "Erstellte Projekte",
+    "projectsBuilt": "KI-Gespräche",
+    "rating": "Benutzerzufriedenheit",
+    "uptime": "Verfügbarkeit"
   },
   "testimonials": {
     "items": {
       "elena": {
-        "content": "Die Echtzeit-Zusammenarbeit mit WebSocket-Integration ist nahtlos. Der Service-Worker und die Caching-Strategien machen dies zur schnellsten Entwicklungsplattform, die ich je genutzt habe.",
+        "content": "Der Echtzeit-Chat mit KI ist unglaublich reaktionsschnell. Ich bekomme sofortige Antworten, während mein Code noch frisch in meinem Kopf ist.",
         "name": "Elena Rodriguez",
-        "role": "DevOps-Ingenieurin"
+        "role": "Softwareentwickler"
       },
       "marcus": {
-        "content": "Das Admin-Panel gibt uns die volle Kontrolle über die KI-Nutzung unseres Teams. Token-Tracking und Benutzerverwaltungsfunktionen haben uns Tausende an API-Kosten gespart.",
+        "content": "Wir haben unsere KI-Kosten um 40 % gesenkt, dank der Nutzungstracking. Jetzt weiß ich genau, welche Projekte was verwenden, und kann Grenzen für das Team setzen.",
         "name": "Marcus Johnson",
         "role": "Engineering-Manager"
       },
       "sarah": {
-        "content": "Das mobil-first PWA-Design ist unglaublich. Ich kann während der Fahrten auf meinem Handy programmieren und nahtlos auf dem Desktop weitermachen. Die Offline-Funktionen sind ein echter Game-Changer.",
+        "content": "Ich liebe es, dass ich während des Mittagessens auf meinem Handy ein Gespräch mit der KI beginnen und es dann auf meinem Laptop im Büro fortsetzen kann. Alles synchronisiert sich einfach.",
         "name": "Sarah Chen",
-        "role": "Senior Full-Stack-Entwicklerin"
+        "role": "Produktdesigner"
       }
     },
-    "subtitle": "Sehen Sie, was unsere Community von Entwicklern über KI-Projekte zu sagen hat.",
-    "title": "Von Entwicklern weltweit geliebt"
+    "subtitle": "Schließen Sie sich Tausenden von Teams an, die bereits mit KI-Projekten arbeiten.",
+    "title": "Vertraut von Teams weltweit"
   }
 }

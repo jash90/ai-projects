@@ -1,64 +1,72 @@
 {
   "cta": {
-    "installPwa": "Install PWA",
-    "start": "Start Building Today",
-    "subtitle": "Join thousands of developers building the future with AI-powered development, mobile-first design, and enterprise-grade security.",
-    "title": "Ready to revolutionize your development experience?"
+    "installPwa": "Install App",
+    "start": "Start Building Free",
+    "subtitle": "Join teams already building smarter with AI. Free to start, no credit card required.",
+    "title": "Ready to build with AI?"
   },
   "features": {
     "items": {
       "ai": {
         "category": "AI",
-        "description": "Dynamic model management with OpenAI GPT and Anthropic Claude models. Specialized AI agents with unique personalities and capabilities.",
-        "title": "Advanced AI Integration"
+        "description": "Choose from GPT-4, Claude and other AI models. Create custom agents tailored to your projects.",
+        "title": "Smart AI Assistants"
       },
       "analytics": {
         "category": "Analytics",
-        "description": "Comprehensive monitoring of AI API usage, costs per project, admin-configurable limits, and usage analytics.",
-        "title": "Token Usage Tracking"
+        "description": "Track AI usage and costs per project. Set budgets and never get surprised by bills.",
+        "title": "Usage & Cost Tracking"
       },
       "collaboration": {
         "category": "Collaboration",
-        "description": "WebSocket-powered conversations with typing indicators, streaming responses, and persistent chat history.",
-        "title": "Real-time Chat & Collaboration"
+        "description": "Chat with AI in real-time. See responses as they're generated. Your conversation history is always saved.",
+        "title": "Real-time AI Chat"
       },
       "management": {
-        "category": "Management",
-        "description": "Multi-project support, file management (20+ types), project-specific agents, and real-time file collaboration.",
-        "title": "Advanced Project Management"
+        "category": "Projects",
+        "description": "Organize work in projects. Upload documents, images, and code. Your AI remembers the context.",
+        "title": "Project Organization"
       },
       "mobile": {
         "category": "Mobile",
-        "description": "Progressive Web App with offline support, native app installation, touch-optimized interface, and mobile navigation.",
-        "title": "Mobile-First PWA"
+        "description": "Install as an app on any device. Work on your phone, tablet, or desktop with the same great experience.",
+        "title": "Works Everywhere"
       },
       "performance": {
-        "category": "Performance",
-        "description": "PostgreSQL with Redis caching, connection pooling, code splitting, service workers, and mobile optimization.",
-        "title": "High Performance Architecture"
+        "category": "Platform",
+        "description": "Install on any device, work offline, sync automatically. Fast and reliable wherever you are.",
+        "title": "Work Anywhere"
       },
       "pwa": {
-        "category": "PWA",
-        "description": "Service worker with intelligent caching, background sync, offline file access, and queue management.",
-        "title": "Offline Capabilities"
+        "category": "Offline",
+        "description": "Keep working without internet. Your changes sync automatically when you're back online.",
+        "title": "Offline Mode"
       },
       "security": {
         "category": "Security",
-        "description": "Role-based access control, admin panel, user management, token limits, activity logging, and comprehensive security.",
-        "title": "Enterprise Security & Admin"
+        "description": "Enterprise-grade security with team permissions, usage limits, and complete audit trails.",
+        "title": "Team Security"
       },
       "ux": {
-        "category": "User Experience",
-        "description": "Comprehensive settings for profile, security, preferences, dark/light mode, and personal usage statistics.",
-        "title": "User Settings & Preferences"
+        "category": "Customization",
+        "description": "Personalize your workspace with dark/light mode, notification preferences, and custom settings.",
+        "title": "Your Workspace, Your Way"
       }
     },
-    "subtitle": "Enterprise-grade platform with advanced AI integration, mobile-first design, and comprehensive development tools built for modern teams.",
+    "subtitle": "Everything you need to build with AI. Simple to start, powerful enough for teams.",
     "techStack": {
+      "categories": {
+        "ai": "AI",
+        "backend": "Backend",
+        "database": "Database",
+        "frontend": "Frontend",
+        "mobile": "Mobile",
+        "realtime": "Real-time"
+      },
       "subtitle": "Production-ready stack with TypeScript, React 18, Node.js, PostgreSQL, and AI integration",
       "title": "Built with Modern Technologies"
     },
-    "title": "Production-Ready Features"
+    "title": "Everything You Need"
   },
   "footer": {
     "company": {
@@ -68,7 +76,7 @@
       "contact": "Contact",
       "title": "Company"
     },
-    "copyright": "© 2024 AI Projects. All rights reserved.",
+    "copyright": "© 2025 AI Projects. All rights reserved.",
     "product": {
       "api": "API",
       "documentation": "Documentation",
@@ -86,14 +94,14 @@
     "tagline": "The future of development is here. Build amazing projects with AI assistance."
   },
   "hero": {
-    "badge": "Production-Ready AI Development Platform",
+    "badge": "AI Workspace for Modern Teams",
     "cta": {
       "demo": "Watch Demo",
       "start": "Start Building Free"
     },
-    "subtitle": "Full-stack platform with advanced AI agents, real-time collaboration, mobile-first PWA design, enterprise security, and comprehensive project management. Work anywhere, anytime.",
-    "title": "The Future of",
-    "titleHighlight": "AI-Powered Development"
+    "subtitle": "Create projects with AI assistants that understand your context. Collaborate in real-time, work offline, and manage everything from your phone or desktop.",
+    "title": "Build Smarter",
+    "titleHighlight": "with AI"
   },
   "nav": {
     "features": "Features",
@@ -111,10 +119,10 @@
         "cta": "Contact Sales",
         "features": [
           "Everything in Pro",
-          "Admin panel & RBAC",
-          "Custom token limits",
-          "Activity logging",
-          "SSO & compliance",
+          "Admin panel & team roles",
+          "Custom usage limits",
+          "Activity audit logs",
+          "SSO integration",
           "Dedicated support"
         ],
         "name": "Enterprise",
@@ -124,9 +132,9 @@
         "cta": "Start Pro Trial",
         "features": [
           "Unlimited projects",
-          "GPT-4 + Claude models",
-          "Real-time collaboration",
-          "Advanced file management",
+          "GPT-4 & Claude",
+          "Team collaboration",
+          "Unlimited files",
           "Usage analytics",
           "Priority support"
         ],
@@ -137,44 +145,44 @@
       "starter": {
         "cta": "Get Started Free",
         "features": [
-          "5 AI projects",
-          "OpenAI GPT models",
-          "Mobile PWA access",
-          "Offline capabilities",
+          "5 projects",
+          "GPT-4 access",
+          "Mobile app",
+          "Work offline",
           "Community support"
         ],
         "name": "Starter",
         "price": "$0"
       }
     },
-    "subtitle": "Full-featured platform with AI integration, mobile PWA, admin controls, and enterprise security. Start free, scale as you grow.",
-    "title": "Enterprise-grade pricing for teams of all sizes"
+    "subtitle": "Start free, upgrade when you need more. No surprises, cancel anytime.",
+    "title": "Simple, Transparent Pricing"
   },
   "stats": {
-    "activeDevelopers": "Active Developers",
-    "projectsBuilt": "AI Projects Built",
-    "rating": "PWA Store Rating",
-    "uptime": "Uptime SLA"
+    "activeDevelopers": "Projects Created",
+    "projectsBuilt": "AI Conversations",
+    "rating": "User Satisfaction",
+    "uptime": "Uptime"
   },
   "testimonials": {
     "items": {
       "elena": {
-        "content": "Real-time collaboration with WebSocket integration is seamless. The service worker and caching strategies make this the fastest development platform I've used.",
+        "content": "The real-time chat with AI is incredibly responsive. I get instant answers while my code is still fresh in my mind.",
         "name": "Elena Rodriguez",
-        "role": "DevOps Engineer"
+        "role": "Software Developer"
       },
       "marcus": {
-        "content": "The admin panel gives us complete control over our team's AI usage. Token tracking and user management features have saved us thousands in API costs.",
+        "content": "We cut our AI costs by 40% thanks to the usage tracking. Now I know exactly which projects use what, and can set limits for the team.",
         "name": "Marcus Johnson",
         "role": "Engineering Manager"
       },
       "sarah": {
-        "content": "The mobile-first PWA design is incredible. I can code on my phone during commutes and seamlessly continue on desktop. The offline capabilities are a game-changer.",
+        "content": "I love that I can start a conversation with AI on my phone during lunch and pick it up on my laptop at the office. Everything just syncs.",
         "name": "Sarah Chen",
-        "role": "Senior Full-stack Developer"
+        "role": "Product Designer"
       }
     },
-    "subtitle": "See what our community of developers has to say about AI Projects.",
-    "title": "Loved by developers worldwide"
+    "subtitle": "Join thousands of teams already building with AI Projects.",
+    "title": "Trusted by Teams Worldwide"
   }
 }

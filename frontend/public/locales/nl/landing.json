@@ -1,64 +1,72 @@
 {
   "cta": {
-    "installPwa": "Installeer PWA",
-    "start": "Vandaag beginnen met bouwen",
-    "subtitle": "Sluit je aan bij duizenden ontwikkelaars die de toekomst vormgeven met AI-gestuurde ontwikkeling, mobiel-eerst ontwerp en beveiliging van ondernemingsniveau.",
-    "title": "Klaar om je ontwikkelervaring te revolutioneren?"
+    "installPwa": "Installeer App",
+    "start": "Begin Gratis Bouwen",
+    "subtitle": "Sluit je aan bij teams die al slimmer bouwen met AI. Gratis om te beginnen, geen creditcard vereist.",
+    "title": "Klaar om te bouwen met AI?"
   },
   "features": {
     "items": {
       "ai": {
         "category": "AI",
-        "description": "Dynamisch modelbeheer met OpenAI GPT en Anthropic Claude-modellen. Gespecialiseerde AI-agenten met unieke persoonlijkheden en mogelijkheden.",
-        "title": "Geavanceerde AI-integratie"
+        "description": "Kies uit GPT-4, Claude en andere AI-modellen. Maak aangepaste agenten die zijn afgestemd op jouw projecten.",
+        "title": "Slimme AI Assistenten"
       },
       "analytics": {
         "category": "Analytics",
-        "description": "Uitgebreide monitoring van AI API-gebruik, kosten per project, door de beheerder configureerbare limieten en gebruiksanalyses.",
-        "title": "Tokengebruik Tracking"
+        "description": "Volg het gebruik van AI en kosten per project. Stel budgetten in en laat je nooit verrassen door rekeningen.",
+        "title": "Gebruik & Kosten Tracking"
       },
       "collaboration": {
         "category": "Samenwerking",
-        "description": "WebSocket-gestuurde gesprekken met typindicatoren, streamingreacties en persistente chatgeschiedenis.",
-        "title": "Realtime Chat & Samenwerking"
+        "description": "Chat in real-time met AI. Zie antwoorden terwijl ze worden gegenereerd. Je gespreksgeschiedenis wordt altijd opgeslagen.",
+        "title": "Real-time AI Chat"
       },
       "management": {
-        "category": "Beheer",
-        "description": "Ondersteuning voor meerdere projecten, bestandsbeheer (20+ types), project-specifieke agenten en realtime bestands-samenwerking.",
-        "title": "Geavanceerd Projectbeheer"
+        "category": "Projecten",
+        "description": "Organiseer werk in projecten. Upload documenten, afbeeldingen en code. Jouw AI onthoudt de context.",
+        "title": "Projectorganisatie"
       },
       "mobile": {
         "category": "Mobiel",
-        "description": "Progressieve webapp met offline ondersteuning, installatie van native apps, touch-geoptimaliseerde interface en mobiele navigatie.",
-        "title": "Mobiel-Eerst PWA"
+        "description": "Installeer als een app op elk apparaat. Werk op je telefoon, tablet of desktop met dezelfde geweldige ervaring.",
+        "title": "Werkt Overal"
       },
       "performance": {
-        "category": "Prestaties",
-        "description": "PostgreSQL met Redis-caching, verbinding pooling, code splitting, service workers en mobiele optimalisatie.",
-        "title": "Hoge Prestatie Architectuur"
+        "category": "Platform",
+        "description": "Installeer op elk apparaat, werk offline, synchroniseer automatisch. Snel en betrouwbaar, waar je ook bent.",
+        "title": "Werk Waar Je Maar Wilt"
       },
       "pwa": {
-        "category": "PWA",
-        "description": "Service worker met intelligente caching, achtergrond synchronisatie, offline bestands toegang en queue management.",
-        "title": "Offline Mogelijkheden"
+        "category": "Offline",
+        "description": "Blijf werken zonder internet. Je wijzigingen synchroniseren automatisch wanneer je weer online bent.",
+        "title": "Offline Modus"
       },
       "security": {
         "category": "Beveiliging",
-        "description": "Rolgebaseerde toegangscontrole, beheerderspaneel, gebruikersbeheer, tokenlimieten, activiteitslogging en uitgebreide beveiliging.",
-        "title": "Enterprise Beveiliging & Beheer"
+        "description": "Beveiliging van ondernemingsniveau met teamrechten, gebruikslimieten en volledige audit trails.",
+        "title": "Team Beveiliging"
       },
       "ux": {
-        "category": "Gebruikerservaring",
-        "description": "Uitgebreide instellingen voor profiel, beveiliging, voorkeuren, donker/licht modus en persoonlijke gebruiksstatistieken.",
-        "title": "Gebruikersinstellingen & Voorkeuren"
+        "category": "Aanpassing",
+        "description": "Personaliseer je werkruimte met donker/licht modus, notificatievoorkeuren en aangepaste instellingen.",
+        "title": "Jouw Werkruimte, Jouw Manier"
       }
     },
-    "subtitle": "Platform van ondernemingsniveau met geavanceerde AI-integratie, mobiel-eerst ontwerp en uitgebreide ontwikkeltools gebouwd voor moderne teams.",
+    "subtitle": "Alles wat je nodig hebt om met AI te bouwen. Eenvoudig om te beginnen, krachtig genoeg voor teams.",
     "techStack": {
       "subtitle": "Productieklaar stack met TypeScript, React 18, Node.js, PostgreSQL en AI-integratie",
-      "title": "Gebouwd met Moderne Technologieën"
+      "title": "Gebouwd met Moderne Technologieën",
+      "categories": {
+        "ai": "AI",
+        "backend": "Backend",
+        "database": "Database",
+        "frontend": "Frontend",
+        "mobile": "Mobiel",
+        "realtime": "Real-time"
+      }
     },
-    "title": "Productieklare Kenmerken"
+    "title": "Alles Wat Je Nodig Hebt"
   },
   "footer": {
     "company": {
@@ -68,7 +76,7 @@
       "contact": "Contact",
       "title": "Bedrijf"
     },
-    "copyright": "© 2024 AI Projects. Alle rechten voorbehouden.",
+    "copyright": "© 2025 AI Projects. Alle rechten voorbehouden.",
     "product": {
       "api": "API",
       "documentation": "Documentatie",
@@ -86,14 +94,14 @@
     "tagline": "De toekomst van ontwikkeling is hier. Bouw geweldige projecten met AI-assistentie."
   },
   "hero": {
-    "badge": "Productieklaar AI Ontwikkelingsplatform",
+    "badge": "AI Werkruimte voor Moderne Teams",
     "cta": {
       "demo": "Bekijk Demo",
       "start": "Begin Gratis met Bouwen"
     },
-    "subtitle": "Volledige stack platform met geavanceerde AI-agenten, realtime samenwerking, mobile-first PWA-ontwerp, enterprise-beveiliging en uitgebreide projectbeheer. Werk overal, altijd.",
-    "title": "De Toekomst van",
-    "titleHighlight": "AI-Aangedreven Ontwikkeling"
+    "subtitle": "Creëer projecten met AI-assistenten die jouw context begrijpen. Werk samen in real-time, werk offline en beheer alles vanaf je telefoon of desktop.",
+    "title": "Slimmer Bouwen",
+    "titleHighlight": "met AI"
   },
   "nav": {
     "features": "Kenmerken",
@@ -111,10 +119,10 @@
         "cta": "Neem Contact Op met Verkoop",
         "features": [
           "Alles in Pro",
-          "Beheerderspaneel & RBAC",
-          "Aangepaste tokenlimieten",
-          "Activiteitenlogboek",
-          "SSO & naleving",
+          "Beheerderspaneel & teamrollen",
+          "Aangepaste gebruikslimieten",
+          "Activiteit auditlogs",
+          "SSO-integratie",
           "Toegewijde ondersteuning"
         ],
         "name": "Enterprise",
@@ -124,11 +132,11 @@
         "cta": "Start Pro Proefperiode",
         "features": [
           "Onbeperkte projecten",
-          "GPT-4 + Claude-modellen",
-          "Realtime samenwerking",
-          "Geavanceerd bestandbeheer",
+          "GPT-4 & Claude",
+          "Team samenwerking",
+          "Onbeperkte bestanden",
           "Gebruik analytics",
-          "Prioriteitsondersteuning"
+          "Prioriteit ondersteuning"
         ],
         "name": "Professioneel",
         "popular": "Meest Populair",
@@ -137,44 +145,44 @@
       "starter": {
         "cta": "Begin Gratis",
         "features": [
-          "5 AI-projecten",
-          "OpenAI GPT-modellen",
-          "Toegang tot Mobile PWA",
-          "Offline mogelijkheden",
+          "5 projecten",
+          "Toegang tot GPT-4",
+          "Mobiele app",
+          "Werk offline",
           "Gemeenschapssteun"
         ],
         "name": "Starter",
         "price": "$0"
       }
     },
-    "subtitle": "Volledig platform met AI-integratie, mobile PWA, beheerderscontroles en enterprise-beveiliging. Begin gratis, schaal op naarmate je groeit.",
-    "title": "Enterprise-prijzen voor teams van elke grootte"
+    "subtitle": "Begin gratis, upgrade wanneer je meer nodig hebt. Geen verrassingen, annuleer op elk moment.",
+    "title": "Eenvoudige, Transparante Prijzen"
   },
   "stats": {
-    "activeDevelopers": "Actieve Ontwikkelaars",
-    "projectsBuilt": "Gebouwde AI-projecten",
-    "rating": "PWA Store Beoordeling",
-    "uptime": "Uptime SLA"
+    "activeDevelopers": "Gemaakte Projecten",
+    "projectsBuilt": "AI Gesprekken",
+    "rating": "Gebruikerstevredenheid",
+    "uptime": "Uptime"
   },
   "testimonials": {
     "items": {
       "elena": {
-        "content": "Realtime samenwerking met WebSocket-integratie is naadloos. De service worker en cachingstrategieën maken dit het snelste ontwikkelingsplatform dat ik heb gebruikt.",
+        "content": "De real-time chat met AI is ongelooflijk responsief. Ik krijg directe antwoorden terwijl mijn code nog vers in mijn hoofd zit.",
         "name": "Elena Rodriguez",
-        "role": "DevOps Ingenieur"
+        "role": "Softwareontwikkelaar"
       },
       "marcus": {
-        "content": "Het beheerderspaneel geeft ons volledige controle over het AI-gebruik van ons team. Tokentracking en gebruikersbeheerfuncties hebben ons duizenden aan API-kosten bespaard.",
+        "content": "We hebben onze AI-kosten met 40% verlaagd dankzij het gebruikstraceren. Nu weet ik precies welke projecten wat gebruiken en kan ik limieten voor het team instellen.",
         "name": "Marcus Johnson",
         "role": "Engineering Manager"
       },
       "sarah": {
-        "content": "Het mobile-first PWA-ontwerp is ongelooflijk. Ik kan coderen op mijn telefoon tijdens het reizen en naadloos verdergaan op desktop. De offline mogelijkheden zijn een game-changer.",
+        "content": "Ik vind het geweldig dat ik een gesprek met AI kan beginnen op mijn telefoon tijdens de lunch en het kan voortzetten op mijn laptop op kantoor. Alles synchroniseert gewoon.",
         "name": "Sarah Chen",
-        "role": "Senior Full-stack Ontwikkelaar"
+        "role": "Productontwerper"
       }
     },
-    "subtitle": "Bekijk wat onze gemeenschap van ontwikkelaars te zeggen heeft over AI-projecten.",
-    "title": "Geliefd bij ontwikkelaars wereldwijd"
+    "subtitle": "Sluit je aan bij duizenden teams die al bouwen met AI-projecten.",
+    "title": "Vertrouwd door teams wereldwijd"
   }
 }
