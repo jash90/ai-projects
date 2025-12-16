@@ -1,13 +1,16 @@
+import { useTranslation } from 'react-i18next'
 import { UsageStats } from '@/components/usage/UsageStats'
 import { PageHeader } from '@/components/ui/PageHeader'
 
 export function UsagePage() {
+  const { t } = useTranslation('dashboard')
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <PageHeader
-        title="API Usage & Statistics"
-        subtitle="Monitor your token usage and costs across different AI providers"
+        title={t('usagePage.title')}
+        subtitle={t('usagePage.subtitle')}
         showBackButton
         backTo="/dashboard"
         variant="gradient"

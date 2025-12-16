@@ -1,0 +1,139 @@
+{
+  "dialog": {
+    "buttons": {
+      "cancel": "Annuller",
+      "create": "Opret Agent",
+      "creating": "Opretter...",
+      "update": "Opdater Agent",
+      "updating": "Opdaterer..."
+    },
+    "fields": {
+      "changeModel": "dialog.fields.changeModel",
+      "description": "Beskrivelse",
+      "descriptionPlaceholder": "Beskriv hvad denne agent gør...",
+      "maxTokens": "Maks Tokens",
+      "maxTokensHint": "Maksimal svar længde",
+      "model": "Model",
+      "modelSelect": "Vælg model...",
+      "name": "Agentnavn *",
+      "namePlaceholder": "Min AI Assistent",
+      "noModelSelected": "dialog.fields.noModelSelected",
+      "notConfigured": "dialog.fields.notConfigured",
+      "provider": "Udbyder",
+      "providerNotConfigured": "dialog.fields.providerNotConfigured",
+      "providerSettings": "dialog.fields.providerSettings",
+      "selectModel": "dialog.fields.selectModel",
+      "systemPrompt": "System Prompt *",
+      "systemPromptHint": "dialog.fields.systemPromptHint",
+      "systemPromptPlaceholder": "Du er en hjælpsom AI-assistent...",
+      "temperature": "Temperatur",
+      "temperatureHint": "Lavere værdier = mere fokuseret, Højere værdier = mere kreativ"
+    },
+    "loadError": "Kunne ikke indlæse AI-modeller",
+    "loading": "Indlæser AI-udbydere...",
+    "retry": "Prøv igen",
+    "validation": {
+      "modelRequired": "Modelvalg er påkrævet",
+      "nameRequired": "Agentnavn er påkrævet",
+      "promptRequired": "System prompt er påkrævet"
+    }
+  },
+  "models": {
+    "chip": {
+      "removeFromFavorites": "Fjern fra favoritter"
+    },
+    "comparison": {
+      "backToList": "← Tilbage til listen",
+      "browseModels": "Gennemse modeller",
+      "category": "Kategori",
+      "comparing_one": "Sammenligner {{count}} model",
+      "comparing_other": "Sammenligner {{count}} modeller",
+      "contextWindow": "Kontekstvindue",
+      "costTier": "Omkostningsniveau",
+      "description": "Beskrivelse",
+      "empty": {
+        "description": "Vælg op til 3 modeller fra listen for at sammenligne dem side om side",
+        "title": "Ingen modeller at sammenligne"
+      },
+      "legend": "🏆 = Bedst i kategori • Klik på en hvilken som helst modelkort for at vælge den",
+      "modelId": "Model ID",
+      "removeFromComparison": "Fjern fra sammenligning",
+      "selectThisModel": "Vælg denne model",
+      "tokens": "tokens",
+      "unknown": "Ukendt"
+    },
+    "detail": {
+      "addToCompare": "📊 Tilføj til sammenligning",
+      "addToFavorites": "Tilføj til favoritter",
+      "by": "af {{provider}}",
+      "capabilities": "Funktioner",
+      "chat": "💬 Chat",
+      "comparisonFull": "Fjern en model fra sammenligning for at tilføje denne (maks 3)",
+      "contextWindow": "Kontekstvindue",
+      "cost": "{{cost}} Omkostninger",
+      "costTier": "Omkostningsniveau",
+      "description": "Beskrivelse",
+      "favorite": "🤍 Favorit",
+      "favorited": "❤️ Favoritmarkeret",
+      "inComparison": "✓ I sammenligning",
+      "modelId": "Model ID",
+      "noSelection": {
+        "description": "Klik på en model fra listen for at se detaljerede oplysninger",
+        "title": "Ingen model valgt"
+      },
+      "popularModel": "Populær model",
+      "provider": "Udbyder",
+      "removeFromFavorites": "Fjern fra favoritter",
+      "selectThisModel": "Vælg denne model",
+      "specifications": "Specifikationer",
+      "streaming": "🔄 Streaming",
+      "tokens": "tokens"
+    },
+    "picker": {
+      "available_one": "model tilgængelig",
+      "available_other": "{{count}} modeller tilgængelige",
+      "cancel": "Annuller",
+      "close": "Luk (Esc)",
+      "compare": "Sammenlign",
+      "favorites": "Favoritter",
+      "hideFavorites": "Skjul favoritter/seneste",
+      "inComparison_one": "model i sammenligning",
+      "inComparison_other": "modeller i sammenligning",
+      "loading": "Indlæser OpenRouter-modeller...",
+      "recentlyUsed": "Senest brugt",
+      "search": "Søg modeller (f.eks. 'gpt', 'claude', 'llama')...",
+      "selectModel": "Vælg model",
+      "shortcuts": "Ctrl+K: Søg • Ctrl+F: Favoritter • Ctrl+C: Sammenlign",
+      "title": "Vælg OpenRouter-model"
+    }
+  },
+  "panel": {
+    "browseAll": "Gennemse alle agenter",
+    "dismiss": "Afvis",
+    "empty": {
+      "description": "Kontakt administrator for at oprette agenter",
+      "title": "Ingen agenter tilgængelige"
+    },
+    "maxTokens": "Maks:",
+    "noSelection": "Ingen agent valgt",
+    "temp": "Temp:",
+    "title": "AI-agenter",
+    "tokens": "tokens"
+  },
+  "picker": {
+    "empty": {
+      "hint": "Prøv et andet søgeord",
+      "title": "Ingen agenter fundet"
+    },
+    "searchAdmin": "Søg agenter efter navn, beskrivelse eller model...",
+    "searchUser": "Søg agenter efter navn eller beskrivelse...",
+    "select": "Vælg agent",
+    "selected": "Valgt",
+    "title": "Vælg AI-agent"
+  },
+  "providers": {
+    "anthropic": "Anthropic",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter"
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "cta": {
+    "installPwa": "Installeer PWA",
+    "start": "Vandaag beginnen met bouwen",
+    "subtitle": "Sluit je aan bij duizenden ontwikkelaars die de toekomst vormgeven met AI-gestuurde ontwikkeling, mobiel-eerst ontwerp en beveiliging van ondernemingsniveau.",
+    "title": "Klaar om je ontwikkelervaring te revolutioneren?"
+  },
+  "features": {
+    "items": {
+      "ai": {
+        "category": "AI",
+        "description": "Dynamisch modelbeheer met OpenAI GPT en Anthropic Claude-modellen. Gespecialiseerde AI-agenten met unieke persoonlijkheden en mogelijkheden.",
+        "title": "Geavanceerde AI-integratie"
+      },
+      "analytics": {
+        "category": "Analytics",
+        "description": "Uitgebreide monitoring van AI API-gebruik, kosten per project, door de beheerder configureerbare limieten en gebruiksanalyses.",
+        "title": "Tokengebruik Tracking"
+      },
+      "collaboration": {
+        "category": "Samenwerking",
+        "description": "WebSocket-gestuurde gesprekken met typindicatoren, streamingreacties en persistente chatgeschiedenis.",
+        "title": "Realtime Chat & Samenwerking"
+      },
+      "management": {
+        "category": "Beheer",
+        "description": "Ondersteuning voor meerdere projecten, bestandsbeheer (20+ types), project-specifieke agenten en realtime bestands-samenwerking.",
+        "title": "Geavanceerd Projectbeheer"
+      },
+      "mobile": {
+        "category": "Mobiel",
+        "description": "Progressieve webapp met offline ondersteuning, installatie van native apps, touch-geoptimaliseerde interface en mobiele navigatie.",
+        "title": "Mobiel-Eerst PWA"
+      },
+      "performance": {
+        "category": "Prestaties",
+        "description": "PostgreSQL met Redis-caching, verbinding pooling, code splitting, service workers en mobiele optimalisatie.",
+        "title": "Hoge Prestatie Architectuur"
+      },
+      "pwa": {
+        "category": "PWA",
+        "description": "Service worker met intelligente caching, achtergrond synchronisatie, offline bestands toegang en queue management.",
+        "title": "Offline Mogelijkheden"
+      },
+      "security": {
+        "category": "Beveiliging",
+        "description": "Rolgebaseerde toegangscontrole, beheerderspaneel, gebruikersbeheer, tokenlimieten, activiteitslogging en uitgebreide beveiliging.",
+        "title": "Enterprise Beveiliging & Beheer"
+      },
+      "ux": {
+        "category": "Gebruikerservaring",
+        "description": "Uitgebreide instellingen voor profiel, beveiliging, voorkeuren, donker/licht modus en persoonlijke gebruiksstatistieken.",
+        "title": "Gebruikersinstellingen & Voorkeuren"
+      }
+    },
+    "subtitle": "Platform van ondernemingsniveau met geavanceerde AI-integratie, mobiel-eerst ontwerp en uitgebreide ontwikkeltools gebouwd voor moderne teams.",
+    "techStack": {
+      "subtitle": "Productieklaar stack met TypeScript, React 18, Node.js, PostgreSQL en AI-integratie",
+      "title": "Gebouwd met Moderne Technologieën"
+    },
+    "title": "Productieklare Kenmerken"
+  },
+  "footer": {
+    "company": {
+      "about": "Over",
+      "blog": "Blog",
+      "careers": "Carrières",
+      "contact": "Contact",
+      "title": "Bedrijf"
+    },
+    "copyright": "© 2024 AI Projects. Alle rechten voorbehouden.",
+    "product": {
+      "api": "API",
+      "documentation": "Documentatie",
+      "features": "Kenmerken",
+      "pricing": "Prijzen",
+      "title": "Product"
+    },
+    "support": {
+      "community": "Gemeenschap",
+      "helpCenter": "Helpcentrum",
+      "privacy": "Privacy",
+      "status": "Status",
+      "title": "Ondersteuning"
+    },
+    "tagline": "De toekomst van ontwikkeling is hier. Bouw geweldige projecten met AI-assistentie."
+  },
+  "hero": {
+    "badge": "Productieklaar AI Ontwikkelingsplatform",
+    "cta": {
+      "demo": "Bekijk Demo",
+      "start": "Begin Gratis met Bouwen"
+    },
+    "subtitle": "Volledige stack platform met geavanceerde AI-agenten, realtime samenwerking, mobile-first PWA-ontwerp, enterprise-beveiliging en uitgebreide projectbeheer. Werk overal, altijd.",
+    "title": "De Toekomst van",
+    "titleHighlight": "AI-Aangedreven Ontwikkeling"
+  },
+  "nav": {
+    "features": "Kenmerken",
+    "getStarted": "Aan de Slag",
+    "installApp": "Installeer App",
+    "pricing": "Prijzen",
+    "signIn": "Inloggen",
+    "testimonials": "Getuigenissen"
+  },
+  "pricing": {
+    "contactUs": "neem contact met ons op",
+    "perMonth": "per maand",
+    "plans": {
+      "enterprise": {
+        "cta": "Neem Contact Op met Verkoop",
+        "features": [
+          "Alles in Pro",
+          "Beheerderspaneel & RBAC",
+          "Aangepaste tokenlimieten",
+          "Activiteitenlogboek",
+          "SSO & naleving",
+          "Toegewijde ondersteuning"
+        ],
+        "name": "Enterprise",
+        "price": "Aangepast"
+      },
+      "pro": {
+        "cta": "Start Pro Proefperiode",
+        "features": [
+          "Onbeperkte projecten",
+          "GPT-4 + Claude-modellen",
+          "Realtime samenwerking",
+          "Geavanceerd bestandbeheer",
+          "Gebruik analytics",
+          "Prioriteitsondersteuning"
+        ],
+        "name": "Professioneel",
+        "popular": "Meest Populair",
+        "price": "$29"
+      },
+      "starter": {
+        "cta": "Begin Gratis",
+        "features": [
+          "5 AI-projecten",
+          "OpenAI GPT-modellen",
+          "Toegang tot Mobile PWA",
+          "Offline mogelijkheden",
+          "Gemeenschapssteun"
+        ],
+        "name": "Starter",
+        "price": "$0"
+      }
+    },
+    "subtitle": "Volledig platform met AI-integratie, mobile PWA, beheerderscontroles en enterprise-beveiliging. Begin gratis, schaal op naarmate je groeit.",
+    "title": "Enterprise-prijzen voor teams van elke grootte"
+  },
+  "stats": {
+    "activeDevelopers": "Actieve Ontwikkelaars",
+    "projectsBuilt": "Gebouwde AI-projecten",
+    "rating": "PWA Store Beoordeling",
+    "uptime": "Uptime SLA"
+  },
+  "testimonials": {
+    "items": {
+      "elena": {
+        "content": "Realtime samenwerking met WebSocket-integratie is naadloos. De service worker en cachingstrategieën maken dit het snelste ontwikkelingsplatform dat ik heb gebruikt.",
+        "name": "Elena Rodriguez",
+        "role": "DevOps Ingenieur"
+      },
+      "marcus": {
+        "content": "Het beheerderspaneel geeft ons volledige controle over het AI-gebruik van ons team. Tokentracking en gebruikersbeheerfuncties hebben ons duizenden aan API-kosten bespaard.",
+        "name": "Marcus Johnson",
+        "role": "Engineering Manager"
+      },
+      "sarah": {
+        "content": "Het mobile-first PWA-ontwerp is ongelooflijk. Ik kan coderen op mijn telefoon tijdens het reizen en naadloos verdergaan op desktop. De offline mogelijkheden zijn een game-changer.",
+        "name": "Sarah Chen",
+        "role": "Senior Full-stack Ontwikkelaar"
+      }
+    },
+    "subtitle": "Bekijk wat onze gemeenschap van ontwikkelaars te zeggen heeft over AI-projecten.",
+    "title": "Geliefd bij ontwikkelaars wereldwijd"
+  }
+}

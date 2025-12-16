@@ -1,0 +1,139 @@
+{
+  "dialog": {
+    "buttons": {
+      "cancel": "Cancel",
+      "create": "Create Agent",
+      "creating": "Creating...",
+      "update": "Update Agent",
+      "updating": "Updating..."
+    },
+    "fields": {
+      "changeModel": "dialog.fields.changeModel",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe what this agent does...",
+      "maxTokens": "Max Tokens",
+      "maxTokensHint": "Maximum response length",
+      "model": "Model",
+      "modelSelect": "Select model...",
+      "name": "Agent Name *",
+      "namePlaceholder": "My AI Assistant",
+      "noModelSelected": "dialog.fields.noModelSelected",
+      "notConfigured": "dialog.fields.notConfigured",
+      "provider": "Provider",
+      "providerNotConfigured": "dialog.fields.providerNotConfigured",
+      "providerSettings": "dialog.fields.providerSettings",
+      "selectModel": "dialog.fields.selectModel",
+      "systemPrompt": "System Prompt *",
+      "systemPromptHint": "dialog.fields.systemPromptHint",
+      "systemPromptPlaceholder": "You are a helpful AI assistant...",
+      "temperature": "Temperature",
+      "temperatureHint": "Lower values = more focused, Higher values = more creative"
+    },
+    "loadError": "Failed to load AI models",
+    "loading": "Loading AI providers...",
+    "retry": "Retry",
+    "validation": {
+      "modelRequired": "Model selection is required",
+      "nameRequired": "Agent name is required",
+      "promptRequired": "System prompt is required"
+    }
+  },
+  "models": {
+    "chip": {
+      "removeFromFavorites": "Remove from favorites"
+    },
+    "comparison": {
+      "backToList": "← Back to List",
+      "browseModels": "Browse Models",
+      "category": "Category",
+      "comparing_one": "models.comparison.comparing",
+      "comparing_other": "Comparing {{count}} Models",
+      "contextWindow": "Context Window",
+      "costTier": "Cost Tier",
+      "description": "Description",
+      "empty": {
+        "description": "Select up to 3 models from the list to compare them side by side",
+        "title": "No Models to Compare"
+      },
+      "legend": "🏆 = Best in category • Click on any model card to select it",
+      "modelId": "Model ID",
+      "removeFromComparison": "Remove from comparison",
+      "selectThisModel": "Select This Model",
+      "tokens": "tokens",
+      "unknown": "Unknown"
+    },
+    "detail": {
+      "addToCompare": "📊 Add to Compare",
+      "addToFavorites": "Add to favorites",
+      "by": "by {{provider}}",
+      "capabilities": "Capabilities",
+      "chat": "💬 Chat",
+      "comparisonFull": "Remove a model from comparison to add this one (max 3)",
+      "contextWindow": "Context Window",
+      "cost": "{{cost}} Cost",
+      "costTier": "Cost Tier",
+      "description": "Description",
+      "favorite": "🤍 Favorite",
+      "favorited": "❤️ Favorited",
+      "inComparison": "✓ In Comparison",
+      "modelId": "Model ID",
+      "noSelection": {
+        "description": "Click on a model from the list to view detailed information",
+        "title": "No Model Selected"
+      },
+      "popularModel": "Popular Model",
+      "provider": "Provider",
+      "removeFromFavorites": "Remove from favorites",
+      "selectThisModel": "Select This Model",
+      "specifications": "Specifications",
+      "streaming": "🔄 Streaming",
+      "tokens": "tokens"
+    },
+    "picker": {
+      "available_one": "models.picker.available",
+      "available_other": "{{count}} models available",
+      "cancel": "Cancel",
+      "close": "Close (Esc)",
+      "compare": "Compare",
+      "favorites": "Favorites",
+      "hideFavorites": "Hide favorites/recents",
+      "inComparison_one": "models.picker.inComparison",
+      "inComparison_other": "models.picker.inComparison",
+      "loading": "Loading OpenRouter models...",
+      "recentlyUsed": "Recently Used",
+      "search": "Search models (e.g., 'gpt', 'claude', 'llama')...",
+      "selectModel": "Select Model",
+      "shortcuts": "Ctrl+K: Search • Ctrl+F: Favorites • Ctrl+C: Compare",
+      "title": "Select OpenRouter Model"
+    }
+  },
+  "panel": {
+    "browseAll": "Browse All Agents",
+    "dismiss": "Dismiss",
+    "empty": {
+      "description": "Contact administrator to create agents",
+      "title": "No agents available"
+    },
+    "maxTokens": "Max:",
+    "noSelection": "No agent selected",
+    "temp": "Temp:",
+    "title": "AI Agents",
+    "tokens": "tokens"
+  },
+  "picker": {
+    "empty": {
+      "hint": "Try a different search term",
+      "title": "No agents found"
+    },
+    "searchAdmin": "Search agents by name, description, or model...",
+    "searchUser": "Search agents by name or description...",
+    "select": "Select Agent",
+    "selected": "Selected",
+    "title": "Select AI Agent"
+  },
+  "providers": {
+    "anthropic": "Anthropic",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter"
+  }
+}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Agent, AgentCreate, AgentUpdate } from '@/types'
 import { modelsApi } from '@/lib/api'
 import { Dialog } from '@/components/ui/Dialog'
@@ -54,6 +55,7 @@ interface AIStatus {
 }
 
 export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDialogProps) {
+  const { t } = useTranslation('agents')
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -217,17 +219,17 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
     
     // Validation
     if (!formData.name.trim()) {
-      setError('Agent name is required')
+      setError(t('dialog.validation.nameRequired'))
       return
     }
-    
+
     if (!formData.system_prompt.trim()) {
-      setError('System prompt is required')
+      setError(t('dialog.validation.promptRequired'))
       return
     }
-    
+
     if (!formData.model) {
-      setError('Model selection is required')
+      setError(t('dialog.validation.modelRequired'))
       return
     }
     
@@ -273,7 +275,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
               <LoadingSpinner />
-              <span className="ml-2 text-muted-foreground">Loading AI providers...</span>
+              <span className="ml-2 text-muted-foreground">{t('dialog.loading')}</span>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -281,7 +283,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
                 <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-md">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-destructive mb-1">Failed to load AI models</p>
+                      <p className="text-sm font-medium text-destructive mb-1">{t('dialog.loadError')}</p>
                       <p className="text-xs text-destructive/80">{loadError}</p>
                     </div>
                     <button
@@ -289,7 +291,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
                       onClick={loadAIStatus}
                       className="px-2 py-1 text-xs bg-destructive text-destructive-foreground rounded hover:bg-destructive/90 transition-colors"
                     >
-                      Retry
+                      {t('dialog.retry')}
                     </button>
                   </div>
                 </div>
@@ -303,52 +305,52 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
               {/* Basic Info */}
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="name">Agent Name *</Label>
+                  <Label htmlFor="name">{t('dialog.fields.name')}</Label>
                   <Input
                     id="name"
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="e.g., Code Expert, Creative Writer"
+                    placeholder={t('dialog.fields.namePlaceholder')}
                     className="mt-1"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">{t('dialog.fields.description')}</Label>
                   <Input
                     id="description"
                     type="text"
                     value={formData.description}
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                    placeholder="Brief description of the agent's purpose"
+                    placeholder={t('dialog.fields.descriptionPlaceholder')}
                     className="mt-1"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="system_prompt">System Prompt *</Label>
+                  <Label htmlFor="system_prompt">{t('dialog.fields.systemPrompt')}</Label>
                   <Textarea
                     id="system_prompt"
                     value={formData.system_prompt}
                     onChange={(e) => setFormData(prev => ({ ...prev, system_prompt: e.target.value }))}
-                    placeholder="Define the agent's role, personality, and capabilities..."
+                    placeholder={t('dialog.fields.systemPromptPlaceholder')}
                     rows={6}
                     className="mt-1"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
-                    This prompt defines how the AI agent will behave and respond.
+                    {t('dialog.fields.systemPromptHint')}
                   </p>
                 </div>
               </div>
 
               {/* AI Provider Configuration */}
               <div className="space-y-4">
-                <h3 className="text-lg font-medium text-foreground">AI Provider Settings</h3>
-                
+                <h3 className="text-lg font-medium text-foreground">{t('dialog.fields.providerSettings')}</h3>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="provider">Provider *</Label>
+                    <Label htmlFor="provider">{t('dialog.fields.provider')} *</Label>
                     <Select
                       value={formData.provider}
                       onValueChange={handleProviderChange}
@@ -360,27 +362,27 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
                         <SelectItem value="openai">
                           <div className="flex items-center gap-2">
                             <span>🤖</span>
-                            <span>OpenAI</span>
+                            <span>{t('providers.openai')}</span>
                             {!aiStatus?.providers.openai && (
-                              <span className="text-xs text-destructive">(Not configured)</span>
+                              <span className="text-xs text-destructive">({t('dialog.fields.notConfigured')})</span>
                             )}
                           </div>
                         </SelectItem>
                         <SelectItem value="anthropic">
                           <div className="flex items-center gap-2">
                             <span>🧠</span>
-                            <span>Anthropic</span>
+                            <span>{t('providers.anthropic')}</span>
                             {!aiStatus?.providers.anthropic && (
-                              <span className="text-xs text-destructive">(Not configured)</span>
+                              <span className="text-xs text-destructive">({t('dialog.fields.notConfigured')})</span>
                             )}
                           </div>
                         </SelectItem>
                         <SelectItem value="openrouter">
                           <div className="flex items-center gap-2">
                             <span>🌐</span>
-                            <span>OpenRouter</span>
+                            <span>{t('providers.openrouter')}</span>
                             {!aiStatus?.providers.openrouter && (
-                              <span className="text-xs text-destructive">(Not configured)</span>
+                              <span className="text-xs text-destructive">({t('dialog.fields.notConfigured')})</span>
                             )}
                           </div>
                         </SelectItem>
@@ -388,7 +390,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
                     </Select>
                     {!isProviderAvailable && (
                       <p className="text-xs text-destructive mt-1">
-                        This provider is not configured. Please add API keys to use it.
+                        {t('dialog.fields.providerNotConfigured')}
                       </p>
                     )}
                   </div>
@@ -396,7 +398,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
                   <div>
                     {formData.provider === 'openrouter' ? (
                       <>
-                        <Label htmlFor="model">Model *</Label>
+                        <Label htmlFor="model">{t('dialog.fields.model')} *</Label>
                         <div className="flex gap-2 mt-1">
                           <div className="flex-1 px-3 py-2 border border-border rounded-md bg-muted/20">
                             {formData.model && availableModels.length > 0 ? (
@@ -420,7 +422,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
                               </div>
                             ) : (
                               <span className="text-sm text-muted-foreground">
-                                No model selected
+                                {t('dialog.fields.noModelSelected')}
                               </span>
                             )}
                           </div>
@@ -430,27 +432,27 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
                             variant="outline"
                             disabled={isLoading}
                           >
-                            {formData.model ? 'Change Model' : 'Select Model'}
+                            {formData.model ? t('dialog.fields.changeModel') : t('dialog.fields.selectModel')}
                           </Button>
                         </div>
                         {!isProviderAvailable && (
                           <p className="text-xs text-destructive mt-1">
-                            This provider is not configured. Please add API keys to use it.
+                            {t('dialog.fields.providerNotConfigured')}
                           </p>
                         )}
                       </>
                     ) : (
                       <>
-                        <Label htmlFor="model">Model *</Label>
+                        <Label htmlFor="model">{t('dialog.fields.model')} *</Label>
                         <Select
                           value={formData.model}
                           onValueChange={(value) => setFormData(prev => ({ ...prev, model: value }))}
                         >
                           <SelectTrigger className="mt-1">
-                            <SelectValue placeholder="Select model...">
+                            <SelectValue placeholder={t('dialog.fields.modelSelect')}>
                               {(() => {
                                 const selectedModel = availableModels.find(m => m.id === formData.model)
-                                return selectedModel ? selectedModel.name : 'Select model...'
+                                return selectedModel ? selectedModel.name : t('dialog.fields.modelSelect')
                               })()}
                             </SelectValue>
                           </SelectTrigger>
@@ -469,7 +471,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="temperature">Temperature</Label>
+                    <Label htmlFor="temperature">{t('dialog.fields.temperature')}</Label>
                     <Input
                       id="temperature"
                       type="number"
@@ -477,19 +479,19 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
                       max="2"
                       step="0.1"
                       value={formData.temperature}
-                      onChange={(e) => setFormData(prev => ({ 
-                        ...prev, 
-                        temperature: parseFloat(e.target.value) || 0 
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        temperature: parseFloat(e.target.value) || 0
                       }))}
                       className="mt-1"
                     />
                     <p className="text-xs text-muted-foreground mt-1">
-                      Controls randomness (0.0 = deterministic, 2.0 = very creative)
+                      {t('dialog.fields.temperatureHint')}
                     </p>
                   </div>
 
                   <div>
-                    <Label htmlFor="max_tokens">Max Tokens</Label>
+                    <Label htmlFor="max_tokens">{t('dialog.fields.maxTokens')}</Label>
                     <Input
                       id="max_tokens"
                       type="number"
@@ -497,14 +499,14 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
                       max="8000"
                       step="100"
                       value={formData.max_tokens}
-                      onChange={(e) => setFormData(prev => ({ 
-                        ...prev, 
-                        max_tokens: parseInt(e.target.value) || 2000 
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        max_tokens: parseInt(e.target.value) || 2000
                       }))}
                       className="mt-1"
                     />
                     <p className="text-xs text-muted-foreground mt-1">
-                      Maximum response length (higher = longer responses)
+                      {t('dialog.fields.maxTokensHint')}
                     </p>
                   </div>
                 </div>
@@ -570,7 +572,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
             onClick={onClose}
             disabled={isSubmitting}
           >
-            Cancel
+            {t('dialog.buttons.cancel')}
           </Button>
           <Button
             type="submit"
@@ -580,10 +582,10 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
             {isSubmitting ? (
               <>
                 <LoadingSpinner className="w-4 h-4 mr-2" />
-                {agent ? 'Updating...' : 'Creating...'}
+                {agent ? t('dialog.buttons.updating') : t('dialog.buttons.creating')}
               </>
             ) : (
-              agent ? 'Update Agent' : 'Create Agent'
+              agent ? t('dialog.buttons.update') : t('dialog.buttons.create')
             )}
           </Button>
         </div>

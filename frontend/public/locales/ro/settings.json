@@ -1,0 +1,84 @@
+{
+  "preferences": {
+    "appearance": {
+      "dark": "Întunecat",
+      "description": "Personalizează modul în care arată AI Projects pe dispozitivul tău",
+      "light": "Luminat",
+      "system": "Sistem",
+      "theme": "Temă",
+      "title": "Aspect"
+    },
+    "notifications": {
+      "description": "Alege ce notificări dorești să primești",
+      "email": {
+        "description": "Primește actualizări prin email despre contul tău și utilizare",
+        "title": "Notificări prin Email"
+      },
+      "push": {
+        "description": "Primește notificări despre actualizările proiectului și alertele sistemului",
+        "title": "Notificări Push"
+      },
+      "title": "Notificări"
+    },
+    "updateError": "Actualizarea preferințelor a eșuat",
+    "updateSuccess": "Preferințele au fost actualizate cu succes"
+  },
+  "profile": {
+    "description": "Actualizează detaliile tale personale și adresa de email",
+    "email": "Email",
+    "reset": "Resetare",
+    "role": {
+      "admin": "Administrator",
+      "user": "Utilizator"
+    },
+    "saveChanges": "Salvează Modificările",
+    "title": "Informații Profil",
+    "updateError": "Actualizarea profilului a eșuat",
+    "updateSuccess": "Profilul a fost actualizat cu succes",
+    "username": "Nume Utilizator"
+  },
+  "security": {
+    "clear": "Șterge",
+    "confirmPassword": "Confirmă Noua Parolă",
+    "currentPassword": "Parola Curentă",
+    "description": "Actualizează-ți parola pentru a-ți menține contul în siguranță",
+    "newPassword": "Noua Parolă",
+    "passwordMismatch": "Noile parole nu se potrivesc",
+    "passwordsDoNotMatch": "Parolele nu se potrivesc",
+    "passwordTooShort": "Noua parolă trebuie să aibă cel puțin 6 caractere",
+    "title": "Schimbă Parola",
+    "updateError": "Actualizarea parolei a eșuat",
+    "updatePassword": "Actualizează Parola",
+    "updateSuccess": "Parola a fost actualizată cu succes"
+  },
+  "subtitle": "Gestionează preferințele contului tău și setările aplicației",
+  "tabs": {
+    "preferences": "Preferințe",
+    "profile": "Profil",
+    "security": "Securitate",
+    "usage": "Utilizare"
+  },
+  "title": "Setări",
+  "usage": {
+    "account": {
+      "description": "Detaliile contului tău și limitele",
+      "globalLimit": "Limită Globală",
+      "monthlyLimit": "Limită Lunară",
+      "projects": "Proiecte",
+      "role": "Rol",
+      "title": "Informații Cont"
+    },
+    "stats": {
+      "description": "Monitorizează utilizarea și costurile token-urilor tale",
+      "loading": "Se încarcă statisticile de utilizare...",
+      "monthlyCost": "Cost lunar",
+      "monthlyUsage": "Utilizare lunară",
+      "percentUsed": "{{percent}}% utilizat",
+      "thisMonth": "Luna aceasta",
+      "title": "Statistici de utilizare",
+      "totalCost": "Cost total",
+      "totalTokens": "Tokeni total",
+      "totalUsage": "Utilizare totală"
+    }
+  }
+}

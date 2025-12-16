@@ -1,0 +1,139 @@
+{
+  "dialog": {
+    "buttons": {
+      "cancel": "Peruuta",
+      "create": "Luo agentti",
+      "creating": "Luodaan...",
+      "update": "Päivitä agentti",
+      "updating": "Päivitetään..."
+    },
+    "fields": {
+      "changeModel": "dialog.fields.changeModel",
+      "description": "Kuvaus",
+      "descriptionPlaceholder": "Kuvaile, mitä tämä agentti tekee...",
+      "maxTokens": "Maksimi tokenit",
+      "maxTokensHint": "Maksimi vastauspituus",
+      "model": "Malli",
+      "modelSelect": "Valitse malli...",
+      "name": "Agentin nimi *",
+      "namePlaceholder": "Oma AI-avustajani",
+      "noModelSelected": "dialog.fields.noModelSelected",
+      "notConfigured": "dialog.fields.notConfigured",
+      "provider": "Palveluntarjoaja",
+      "providerNotConfigured": "dialog.fields.providerNotConfigured",
+      "providerSettings": "dialog.fields.providerSettings",
+      "selectModel": "dialog.fields.selectModel",
+      "systemPrompt": "Järjestelmäkehotus *",
+      "systemPromptHint": "dialog.fields.systemPromptHint",
+      "systemPromptPlaceholder": "Olet avulias AI-avustaja...",
+      "temperature": "Lämpötila",
+      "temperatureHint": "Alhaiset arvot = keskittyneempi, Korkeat arvot = luovempi"
+    },
+    "loadError": "AI-mallien lataaminen epäonnistui",
+    "loading": "Ladataan AI-palveluntarjoajia...",
+    "retry": "Yritä uudelleen",
+    "validation": {
+      "modelRequired": "Mallin valinta on pakollinen",
+      "nameRequired": "Agentin nimi on pakollinen",
+      "promptRequired": "Järjestelmäkehotus on pakollinen"
+    }
+  },
+  "models": {
+    "chip": {
+      "removeFromFavorites": "Poista suosikeista"
+    },
+    "comparison": {
+      "backToList": "← Takaisin listaan",
+      "browseModels": "Selaa malleja",
+      "category": "Kategoria",
+      "comparing_one": "Vertaa {{count}} mallia",
+      "comparing_other": "Vertaa {{count}} mallia",
+      "contextWindow": "Kontekstin ikkuna",
+      "costTier": "Kustannustaso",
+      "description": "Kuvaus",
+      "empty": {
+        "description": "Valitse enintään 3 mallia listalta vertaillaksesi niitä rinnakkain",
+        "title": "Ei malleja vertailtavaksi"
+      },
+      "legend": "🏆 = Paras kategoriassa • Napsauta mitä tahansa mallikorttia valitaksesi sen",
+      "modelId": "Mallin ID",
+      "removeFromComparison": "Poista vertailusta",
+      "selectThisModel": "Valitse tämä malli",
+      "tokens": "tokenia",
+      "unknown": "Tuntematon"
+    },
+    "detail": {
+      "addToCompare": "📊 Lisää vertailuun",
+      "addToFavorites": "Lisää suosikkeihin",
+      "by": "toimittajalta {{provider}}",
+      "capabilities": "Ominaisuudet",
+      "chat": "💬 Keskustelu",
+      "comparisonFull": "Poista malli vertailusta lisätäksesi tämän (max 3)",
+      "contextWindow": "Kontekstiruudun",
+      "cost": "{{cost}} Kustannus",
+      "costTier": "Kustannustaso",
+      "description": "Kuvaus",
+      "favorite": "🤍 Suosikki",
+      "favorited": "❤️ Lisätty suosikkeihin",
+      "inComparison": "✓ Vertailussa",
+      "modelId": "Mallin ID",
+      "noSelection": {
+        "description": "Klikkaa mallia listalta nähdäksesi yksityiskohtaiset tiedot",
+        "title": "Malli ei valittu"
+      },
+      "popularModel": "Suosittu malli",
+      "provider": "Toimittaja",
+      "removeFromFavorites": "Poista suosikeista",
+      "selectThisModel": "Valitse tämä malli",
+      "specifications": "Tekniset tiedot",
+      "streaming": "🔄 Suoratoisto",
+      "tokens": "tokenia"
+    },
+    "picker": {
+      "available_one": "mallia saatavilla",
+      "available_other": "{{count}} mallia saatavilla",
+      "cancel": "Peruuta",
+      "close": "Sulje (Esc)",
+      "compare": "Vertaile",
+      "favorites": "Suosikit",
+      "hideFavorites": "Piilota suosikit/äskettäin käytetyt",
+      "inComparison_one": "malli vertailussa",
+      "inComparison_other": "mallia vertailussa",
+      "loading": "Ladataan OpenRouter-malleja...",
+      "recentlyUsed": "Äskettäin käytetyt",
+      "search": "Hae malleja (esim. 'gpt', 'claude', 'llama')...",
+      "selectModel": "Valitse malli",
+      "shortcuts": "Ctrl+K: Haku • Ctrl+F: Suosikit • Ctrl+C: Vertaile",
+      "title": "Valitse OpenRouter-malli"
+    }
+  },
+  "panel": {
+    "browseAll": "Selaa kaikkia agenteja",
+    "dismiss": "Hylkää",
+    "empty": {
+      "description": "Ota yhteyttä ylläpitäjään luodaksesi agenteja",
+      "title": "Ei saatavilla olevia agenteja"
+    },
+    "maxTokens": "Maks:",
+    "noSelection": "Ei agenttia valittu",
+    "temp": "Temp:",
+    "title": "AI-agentit",
+    "tokens": "tokenia"
+  },
+  "picker": {
+    "empty": {
+      "hint": "Kokeile eri hakusanaa",
+      "title": "Ei agenteja löytynyt"
+    },
+    "searchAdmin": "Hae agenteja nimen, kuvauksen tai mallin mukaan...",
+    "searchUser": "Hae agenteja nimen tai kuvauksen mukaan...",
+    "select": "Valitse agentti",
+    "selected": "Valittu",
+    "title": "Valitse AI-agentti"
+  },
+  "providers": {
+    "anthropic": "Anthropic",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter"
+  }
+}

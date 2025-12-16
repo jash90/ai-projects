@@ -1,0 +1,84 @@
+{
+  "preferences": {
+    "appearance": {
+      "dark": "Tmavý",
+      "description": "Prispôsobte si vzhľad AI projektov na vašom zariadení",
+      "light": "Svetlý",
+      "system": "Systém",
+      "theme": "Téma",
+      "title": "Vzhľad"
+    },
+    "notifications": {
+      "description": "Vyberte, aké oznámenia chcete dostávať",
+      "email": {
+        "description": "Dostávajte e-mailové aktualizácie o vašom účte a používaní",
+        "title": "E-mailové Oznámenia"
+      },
+      "push": {
+        "description": "Dostávajte oznámenia o aktualizáciách projektov a systémových upozorneniach",
+        "title": "Push Oznámenia"
+      },
+      "title": "Oznámenia"
+    },
+    "updateError": "Nepodarilo sa aktualizovať nastavenia",
+    "updateSuccess": "Nastavenia boli úspešne aktualizované"
+  },
+  "profile": {
+    "description": "Aktualizujte svoje osobné údaje a e-mailovú adresu",
+    "email": "E-mail",
+    "reset": "Obnoviť",
+    "role": {
+      "admin": "Administrátor",
+      "user": "Používateľ"
+    },
+    "saveChanges": "Uložiť Zmeny",
+    "title": "Informácie o Profile",
+    "updateError": "Nepodarilo sa aktualizovať profil",
+    "updateSuccess": "Profil bol úspešne aktualizovaný",
+    "username": "Používateľské Meno"
+  },
+  "security": {
+    "clear": "Vymazať",
+    "confirmPassword": "Potvrdiť Nové Heslo",
+    "currentPassword": "Aktuálne Heslo",
+    "description": "Aktualizujte svoje heslo, aby ste udržali svoj účet v bezpečí",
+    "newPassword": "Nové Heslo",
+    "passwordMismatch": "Nové heslá sa nezhodujú",
+    "passwordsDoNotMatch": "Heslá sa nezhodujú",
+    "passwordTooShort": "Nové heslo musí mať aspoň 6 znakov",
+    "title": "Zmeniť Heslo",
+    "updateError": "Nepodarilo sa aktualizovať heslo",
+    "updatePassword": "Aktualizovať Heslo",
+    "updateSuccess": "Heslo bolo úspešne aktualizované"
+  },
+  "subtitle": "Spravujte svoje preferencie účtu a nastavenia aplikácie",
+  "tabs": {
+    "preferences": "Preferencie",
+    "profile": "Profil",
+    "security": "Bezpečnosť",
+    "usage": "Používanie"
+  },
+  "title": "Nastavenia",
+  "usage": {
+    "account": {
+      "description": "Vaše údaje o účte a limity",
+      "globalLimit": "Globálny Limit",
+      "monthlyLimit": "Mesačný Limit",
+      "projects": "Projekty",
+      "role": "Úloha",
+      "title": "Informácie o Účte"
+    },
+    "stats": {
+      "description": "Sledujte svoje používanie tokenov a náklady",
+      "loading": "Načítavam štatistiky používania...",
+      "monthlyCost": "Mesačné náklady",
+      "monthlyUsage": "Mesačné používanie",
+      "percentUsed": "{{percent}}% použité",
+      "thisMonth": "Tento mesiac",
+      "title": "Štatistiky používania",
+      "totalCost": "Celkové náklady",
+      "totalTokens": "Celkové tokeny",
+      "totalUsage": "Celkové používanie"
+    }
+  }
+}

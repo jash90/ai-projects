@@ -1,0 +1,84 @@
+{
+  "preferences": {
+    "appearance": {
+      "dark": "Dunkel",
+      "description": "Passen Sie an, wie AI-Projekte auf Ihrem Gerät aussehen",
+      "light": "Hell",
+      "system": "System",
+      "theme": "Thema",
+      "title": "Erscheinungsbild"
+    },
+    "notifications": {
+      "description": "Wählen Sie aus, welche Benachrichtigungen Sie erhalten möchten",
+      "email": {
+        "description": "Erhalten Sie E-Mail-Updates zu Ihrem Konto und Ihrer Nutzung",
+        "title": "E-Mail-Benachrichtigungen"
+      },
+      "push": {
+        "description": "Erhalten Sie Benachrichtigungen über Projektaktualisierungen und Systemwarnungen",
+        "title": "Push-Benachrichtigungen"
+      },
+      "title": "Benachrichtigungen"
+    },
+    "updateError": "Fehler beim Aktualisieren der Einstellungen",
+    "updateSuccess": "Einstellungen erfolgreich aktualisiert"
+  },
+  "profile": {
+    "description": "Aktualisieren Sie Ihre persönlichen Daten und E-Mail-Adresse",
+    "email": "E-Mail",
+    "reset": "Zurücksetzen",
+    "role": {
+      "admin": "Administrator",
+      "user": "Benutzer"
+    },
+    "saveChanges": "Änderungen speichern",
+    "title": "Profilinformationen",
+    "updateError": "Fehler beim Aktualisieren des Profils",
+    "updateSuccess": "Profil erfolgreich aktualisiert",
+    "username": "Benutzername"
+  },
+  "security": {
+    "clear": "Löschen",
+    "confirmPassword": "Neues Passwort bestätigen",
+    "currentPassword": "Aktuelles Passwort",
+    "description": "Aktualisieren Sie Ihr Passwort, um Ihr Konto sicher zu halten",
+    "newPassword": "Neues Passwort",
+    "passwordMismatch": "Neue Passwörter stimmen nicht überein",
+    "passwordsDoNotMatch": "Passwörter stimmen nicht überein",
+    "passwordTooShort": "Das neue Passwort muss mindestens 6 Zeichen lang sein",
+    "title": "Passwort ändern",
+    "updateError": "Fehler beim Aktualisieren des Passworts",
+    "updatePassword": "Passwort aktualisieren",
+    "updateSuccess": "Passwort erfolgreich aktualisiert"
+  },
+  "subtitle": "Verwalten Sie Ihre Kontoeinstellungen und Anwendungsoptionen",
+  "tabs": {
+    "preferences": "Einstellungen",
+    "profile": "Profil",
+    "security": "Sicherheit",
+    "usage": "Nutzung"
+  },
+  "title": "Einstellungen",
+  "usage": {
+    "account": {
+      "description": "Ihre Kontodaten und -limits",
+      "globalLimit": "Globales Limit",
+      "monthlyLimit": "Monatliches Limit",
+      "projects": "Projekte",
+      "role": "Rolle",
+      "title": "Kontoinformationen"
+    },
+    "stats": {
+      "description": "Überwachen Sie Ihre Token-Nutzung und -Kosten",
+      "loading": "Lade Nutzungsstatistiken...",
+      "monthlyCost": "Monatliche Kosten",
+      "monthlyUsage": "Monatliche Nutzung",
+      "percentUsed": "{{percent}}% verwendet",
+      "thisMonth": "Diesen Monat",
+      "title": "Nutzungsstatistiken",
+      "totalCost": "Gesamtkosten",
+      "totalTokens": "Gesamt-Tokens",
+      "totalUsage": "Gesamtnutzung"
+    }
+  }
+}

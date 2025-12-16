@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Torna al Dashboard",
+  "dashboard": "Dashboard",
+  "desktop": {
+    "actions": {
+      "enterFullscreen": "Entra a schermo intero",
+      "exitFullscreen": "Esci da schermo intero",
+      "hideEditor": "Nascondi Editor",
+      "hideSidebar": "Nascondi Sidebar",
+      "showEditor": "Mostra Editor",
+      "showSidebar": "Mostra Sidebar"
+    },
+    "panels": {
+      "aiAgents": "Agenti AI",
+      "projectFiles": "File del Progetto"
+    }
+  },
+  "editor": {
+    "noFileSelected": "Nessun file selezionato"
+  },
+  "loading": "Caricamento progetto...",
+  "mobile": {
+    "actions": {
+      "install": "Installa",
+      "installApp": "Installa App",
+      "share": "Condividi"
+    },
+    "menu": {
+      "currentSelection": "Selezione Corrente",
+      "filesAvailableOffline_one": "File disponibili offline",
+      "filesAvailableOffline_other": "File disponibili offline",
+      "filesPendingUpload_one": "File in attesa di caricamento",
+      "filesPendingUpload_other": "File in attesa di caricamento",
+      "noAgentSelected": "Nessun agente selezionato",
+      "noFileSelected": "Nessun file selezionato",
+      "offlineMode": "Modalità Offline",
+      "online": "Online",
+      "status": "Stato"
+    },
+    "views": {
+      "agents": "Agenti",
+      "chat": "Chat",
+      "editor": "Editor",
+      "files": "File"
+    }
+  },
+  "noAgents": {
+    "description": "Hai bisogno di almeno un agente AI per utilizzare questo progetto.",
+    "title": "Nessun agente AI disponibile"
+  },
+  "notFound": {
+    "description": "Il progetto che stai cercando non esiste o non hai accesso ad esso.",
+    "title": "Progetto non trovato"
+  }
+}

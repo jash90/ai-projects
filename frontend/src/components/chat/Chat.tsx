@@ -1,5 +1,6 @@
 import { useEffect, useCallback, useState } from 'react'
-import { Project, Agent, ChatFileAttachment } from '@/types'
+import { useTranslation } from 'react-i18next'
+import type { Project, Agent, ChatFileAttachment } from '@/types'
 import { ChatHeader } from './ChatHeader'
 import { ChatMessages } from './ChatMessages'
 import { ChatInput } from './ChatInput'
@@ -19,15 +20,17 @@ interface ChatProps {
 }
 
 function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
+  const { t } = useTranslation('chat')
+
   // Return early if agent is not available
   if (!agent) {
     return (
       <div className={cn('flex flex-col h-full bg-background items-center justify-center', className)}>
         <div className="text-center space-y-4">
           <div className="text-4xl">🤖</div>
-          <h3 className="font-semibold text-foreground">Select an Agent</h3>
+          <h3 className="font-semibold text-foreground">{t('selectAgent.title')}</h3>
           <p className="text-muted-foreground text-sm max-w-md">
-            Choose an AI agent from the sidebar to start a conversation. Each agent has different capabilities and models.
+            {t('selectAgent.description')}
           </p>
         </div>
       </div>
@@ -63,9 +66,9 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
       if (limitMessage) {
         toast.error(limitMessage)
       } else if (isGlobalLimitExceeded || isMonthlyLimitExceeded) {
-        toast.error('Token limit exceeded. Cannot send message.')
+        toast.error(t('errors.tokenLimitExceeded'))
       } else {
-        toast.error('Cannot send message. Please check your account status.')
+        toast.error(t('errors.cannotSend'))
       }
       return
     }
@@ -113,20 +116,20 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
         toast.error(conversationError)
       } else {
         // Fallback to generic error if no specific error available
-        toast.error('Failed to send message. Please try again.')
+        toast.error(t('errors.sendFailed'))
       }
     }
   }, [project.id, agent.id, includeFiles, streaming, isSending, socketConnected, sendSocketMessage, canSendMessage, getLimitStatusMessage, refreshUsage, isGlobalLimitExceeded, isMonthlyLimitExceeded])
 
   const handleClearConversation = useCallback(async () => {
-    if (confirm('Are you sure you want to clear this conversation? This action cannot be undone.')) {
+    if (confirm(t('clearConfirm'))) {
       try {
         await conversationStore.getState().clearConversation(project.id, agent.id)
       } catch (error) {
         console.error('Failed to clear conversation:', error)
       }
     }
-  }, [project.id, agent.id])
+  }, [project.id, agent.id, t])
 
   return (
     <div className={cn('flex flex-col h-full bg-background', className)}>
@@ -155,9 +158,9 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
         onSendMessage={handleSendMessage}
         disabled={isSending || !canSendMessage}
         placeholder={
-          !canSendMessage 
-            ? (getLimitStatusMessage() || "Token limit exceeded")
-            : `Message ${agent.name}...`
+          !canSendMessage
+            ? (getLimitStatusMessage() || t('errors.tokenLimitExceeded'))
+            : t('placeholder', { agentName: agent.name })
         }
       />
     </div>

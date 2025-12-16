@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "createProject": "Projekt létrehozása",
+    "newProject": "Új projekt"
+  },
+  "admin": {
+    "description": "Felhasználók, token korlátok és rendszerbeállítások kezelése",
+    "title": "Adminisztrációs panel"
+  },
+  "allProjects": {
+    "empty": {
+      "description": "Kezdj az új projekt létrehozásával",
+      "title": "Még nincsenek projektek"
+    },
+    "title": "Összes projekt",
+    "viewAll_one": "Összes projekt megtekintése",
+    "viewAll_other": "Összes projekt megtekintése"
+  },
+  "header": {
+    "subtitle": "Kezeld projektjeidet és működj együtt az AI ügynökökkel",
+    "welcome": "Üdv újra, {{username}}"
+  },
+  "quickTip": {
+    "content": "Adj fájlokat a projektedhez, hogy az AI ügynököknek kontextust adj a jobb segítségnyújtáshoz.",
+    "title": "Gyors tipp"
+  },
+  "recentProjects": {
+    "empty": {
+      "description": "Hozd létre az első projektedet, hogy elkezdhesd az AI együttműködést",
+      "title": "Nincsenek legutóbbi projektek"
+    },
+    "mostRecent": "Legutóbbi",
+    "title": "Legutóbbi projektek"
+  },
+  "stats": {
+    "activeThisWeek": "Aktív ezen a héten",
+    "totalMessages": "Összes üzenet",
+    "totalProjects": "Összes projekt",
+    "trackUsage": "Kövesd az AI használatodat",
+    "usageStats": "Használati statisztikák",
+    "viewTokenUsage": "Token használat megtekintése"
+  },
+  "usagePage": {
+    "subtitle": "Kövesd a token használatodat és költségeidet különböző AI szolgáltatóknál",
+    "title": "API használat és statisztikák"
+  }
+}

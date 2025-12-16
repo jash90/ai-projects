@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Назад към таблото",
+  "dashboard": "Табло",
+  "desktop": {
+    "actions": {
+      "enterFullscreen": "Влез в цял екран",
+      "exitFullscreen": "Излез от целия екран",
+      "hideEditor": "Скрий редактора",
+      "hideSidebar": "Скрий страничната лента",
+      "showEditor": "Покажи редактора",
+      "showSidebar": "Покажи страничната лента"
+    },
+    "panels": {
+      "aiAgents": "AI агенти",
+      "projectFiles": "Файлове на проекта"
+    }
+  },
+  "editor": {
+    "noFileSelected": "Не е избран файл"
+  },
+  "loading": "Зареждане на проекта...",
+  "mobile": {
+    "actions": {
+      "install": "Инсталирай",
+      "installApp": "Инсталирай приложението",
+      "share": "Сподели"
+    },
+    "menu": {
+      "currentSelection": "Текуща селекция",
+      "filesAvailableOffline_one": "Файлът е наличен офлайн",
+      "filesAvailableOffline_other": "Файловете са налични офлайн",
+      "filesPendingUpload_one": "Файлът чака качване",
+      "filesPendingUpload_other": "Файловете чакат качване",
+      "noAgentSelected": "Не е избран агент",
+      "noFileSelected": "Не е избран файл",
+      "offlineMode": "Офлайн режим",
+      "online": "Онлайн",
+      "status": "Статус"
+    },
+    "views": {
+      "agents": "Агенти",
+      "chat": "Чат",
+      "editor": "Редактор",
+      "files": "Файлове"
+    }
+  },
+  "noAgents": {
+    "description": "Нужен ви е поне един AI агент, за да използвате този проект.",
+    "title": "Няма налични AI агенти"
+  },
+  "notFound": {
+    "description": "Проектът, който търсите, не съществува или нямате достъп до него.",
+    "title": "Проектът не е намерен"
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "cta": {
+    "installPwa": "Instalar PWA",
+    "start": "Comece a Construir Hoje",
+    "subtitle": "Junte-se a milhares de desenvolvedores construindo o futuro com desenvolvimento impulsionado por IA, design mobile-first e segurança de nível empresarial.",
+    "title": "Pronto para revolucionar sua experiência de desenvolvimento?"
+  },
+  "features": {
+    "items": {
+      "ai": {
+        "category": "IA",
+        "description": "Gerenciamento dinâmico de modelos com OpenAI GPT e modelos Anthropic Claude. Agentes de IA especializados com personalidades e capacidades únicas.",
+        "title": "Integração Avançada de IA"
+      },
+      "analytics": {
+        "category": "Análise",
+        "description": "Monitoramento abrangente do uso da API de IA, custos por projeto, limites configuráveis pelo administrador e análises de uso.",
+        "title": "Rastreamento de Uso de Tokens"
+      },
+      "collaboration": {
+        "category": "Colaboração",
+        "description": "Conversas com suporte a WebSocket, indicadores de digitação, respostas em streaming e histórico de chat persistente.",
+        "title": "Chat & Colaboração em Tempo Real"
+      },
+      "management": {
+        "category": "Gerenciamento",
+        "description": "Suporte a múltiplos projetos, gerenciamento de arquivos (mais de 20 tipos), agentes específicos do projeto e colaboração em arquivos em tempo real.",
+        "title": "Gerenciamento Avançado de Projetos"
+      },
+      "mobile": {
+        "category": "Mobile",
+        "description": "Aplicativo Web Progressivo com suporte offline, instalação de aplicativo nativo, interface otimizada para toque e navegação móvel.",
+        "title": "PWA Mobile-First"
+      },
+      "performance": {
+        "category": "Desempenho",
+        "description": "PostgreSQL com cache Redis, pooling de conexões, divisão de código, service workers e otimização móvel.",
+        "title": "Arquitetura de Alto Desempenho"
+      },
+      "pwa": {
+        "category": "PWA",
+        "description": "Service worker com cache inteligente, sincronização em segundo plano, acesso a arquivos offline e gerenciamento de filas.",
+        "title": "Capacidades Offline"
+      },
+      "security": {
+        "category": "Segurança",
+        "description": "Controle de acesso baseado em função, painel de administração, gerenciamento de usuários, limites de tokens, registro de atividades e segurança abrangente.",
+        "title": "Segurança Empresarial & Administração"
+      },
+      "ux": {
+        "category": "Experiência do Usuário",
+        "description": "Configurações abrangentes para perfil, segurança, preferências, modo escuro/claro e estatísticas de uso pessoal.",
+        "title": "Configurações & Preferências do Usuário"
+      }
+    },
+    "subtitle": "Plataforma de nível empresarial com integração avançada de IA, design mobile-first e ferramentas de desenvolvimento abrangentes construídas para equipes modernas.",
+    "techStack": {
+      "subtitle": "Stack pronto para produção com TypeScript, React 18, Node.js, PostgreSQL e integração de IA",
+      "title": "Construído com Tecnologias Modernas"
+    },
+    "title": "Recursos Prontos para Produção"
+  },
+  "footer": {
+    "company": {
+      "about": "Sobre",
+      "blog": "Blog",
+      "careers": "Carreiras",
+      "contact": "Contato",
+      "title": "Empresa"
+    },
+    "copyright": "© 2024 AI Projects. Todos os direitos reservados.",
+    "product": {
+      "api": "API",
+      "documentation": "Documentação",
+      "features": "Recursos",
+      "pricing": "Preços",
+      "title": "Produto"
+    },
+    "support": {
+      "community": "Comunidade",
+      "helpCenter": "Central de Ajuda",
+      "privacy": "Privacidade",
+      "status": "Status",
+      "title": "Suporte"
+    },
+    "tagline": "O futuro do desenvolvimento está aqui. Construa projetos incríveis com assistência de IA."
+  },
+  "hero": {
+    "badge": "Plataforma de Desenvolvimento de IA Pronta para Produção",
+    "cta": {
+      "demo": "Assistir Demonstração",
+      "start": "Comece a Construir Grátis"
+    },
+    "subtitle": "Plataforma full-stack com agentes de IA avançados, colaboração em tempo real, design PWA mobile-first, segurança empresarial e gerenciamento de projetos abrangente. Trabalhe em qualquer lugar, a qualquer hora.",
+    "title": "O Futuro de",
+    "titleHighlight": "Desenvolvimento Potenciado por IA"
+  },
+  "nav": {
+    "features": "Recursos",
+    "getStarted": "Começar",
+    "installApp": "Instalar App",
+    "pricing": "Preços",
+    "signIn": "Entrar",
+    "testimonials": "Depoimentos"
+  },
+  "pricing": {
+    "contactUs": "entre em contato conosco",
+    "perMonth": "por mês",
+    "plans": {
+      "enterprise": {
+        "cta": "Contatar Vendas",
+        "features": [
+          "Tudo no Pro",
+          "Painel de administração & RBAC",
+          "Limites de token personalizados",
+          "Registro de atividades",
+          "SSO & conformidade",
+          "Suporte dedicado"
+        ],
+        "name": "Enterprise",
+        "price": "Personalizado"
+      },
+      "pro": {
+        "cta": "Iniciar Teste Pro",
+        "features": [
+          "Projetos ilimitados",
+          "Modelos GPT-4 + Claude",
+          "Colaboração em tempo real",
+          "Gerenciamento avançado de arquivos",
+          "Análise de uso",
+          "Suporte prioritário"
+        ],
+        "name": "Profissional",
+        "popular": "Mais Popular",
+        "price": "$29"
+      },
+      "starter": {
+        "cta": "Comece Grátis",
+        "features": [
+          "5 projetos de IA",
+          "Modelos OpenAI GPT",
+          "Acesso PWA mobile",
+          "Capacidades offline",
+          "Suporte da comunidade"
+        ],
+        "name": "Iniciante",
+        "price": "$0"
+      }
+    },
+    "subtitle": "Plataforma completa com integração de IA, PWA mobile, controles administrativos e segurança empresarial. Comece grátis, escale conforme cresce.",
+    "title": "Preços de nível empresarial para equipes de todos os tamanhos"
+  },
+  "stats": {
+    "activeDevelopers": "Desenvolvedores Ativos",
+    "projectsBuilt": "Projetos de IA Construídos",
+    "rating": "Classificação da Loja PWA",
+    "uptime": "SLA de Uptime"
+  },
+  "testimonials": {
+    "items": {
+      "elena": {
+        "content": "A colaboração em tempo real com integração WebSocket é perfeita. O service worker e as estratégias de cache fazem desta a plataforma de desenvolvimento mais rápida que já usei.",
+        "name": "Elena Rodriguez",
+        "role": "Engenheira DevOps"
+      },
+      "marcus": {
+        "content": "O painel de administração nos dá controle total sobre o uso de IA da nossa equipe. O rastreamento de tokens e os recursos de gerenciamento de usuários nos economizaram milhares em custos de API.",
+        "name": "Marcus Johnson",
+        "role": "Gerente de Engenharia"
+      },
+      "sarah": {
+        "content": "O design PWA mobile-first é incrível. Posso programar no meu celular durante os deslocamentos e continuar perfeitamente no desktop. As capacidades offline são um divisor de águas.",
+        "name": "Sarah Chen",
+        "role": "Desenvolvedora Full-stack Sênior"
+      }
+    },
+    "subtitle": "Veja o que nossa comunidade de desenvolvedores tem a dizer sobre Projetos de IA.",
+    "title": "Amado por desenvolvedores em todo o mundo"
+  }
+}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from 'react-i18next'
 import { Dialog } from '@/components/ui/Dialog'
 import { Button } from '@/components/ui/Button'
 import { ProjectFileUpload } from './ProjectFileUpload'
@@ -11,12 +12,13 @@ interface UploadFileDialogProps {
   onUploadComplete?: (files: any[]) => void
 }
 
-export function UploadFileDialog({ 
-  open, 
-  onClose, 
-  projectId, 
-  onUploadComplete 
+export function UploadFileDialog({
+  open,
+  onClose,
+  projectId,
+  onUploadComplete
 }: UploadFileDialogProps) {
+  const { t } = useTranslation('files')
   const [uploadedFiles, setUploadedFiles] = useState<any[]>([])
   const [error, setError] = useState<string | null>(null)
 
@@ -46,9 +48,9 @@ export function UploadFileDialog({
       <div className="bg-background border border-border rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="px-6 py-4 border-b border-border">
-          <h2 className="text-xl font-semibold text-foreground">Upload Files to Project</h2>
+          <h2 className="text-xl font-semibold text-foreground">{t('upload.title')}</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Upload files from your computer. Files will be read and saved as editable text files in the project.
+            {t('upload.description')}
           </p>
         </div>
 
@@ -84,7 +86,7 @@ export function UploadFileDialog({
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5 text-green-600" />
                 <h3 className="font-medium text-green-800">
-                  {uploadedFiles.length} file{uploadedFiles.length > 1 ? 's' : ''} uploaded successfully!
+                  {t('upload.success', { count: uploadedFiles.length })}
                 </h3>
               </div>
               <div className="mt-2 space-y-1">
@@ -112,7 +114,7 @@ export function UploadFileDialog({
             variant="outline"
             onClick={handleClose}
           >
-            {uploadedFiles.length > 0 ? 'Done' : 'Cancel'}
+            {uploadedFiles.length > 0 ? t('upload.done') : t('upload.cancel')}
           </Button>
         </div>
       </div>

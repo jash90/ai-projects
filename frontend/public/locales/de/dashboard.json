@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "createProject": "Projekt erstellen",
+    "newProject": "Neues Projekt"
+  },
+  "admin": {
+    "description": "Benutzer, Tokenlimits und Systemeinstellungen verwalten",
+    "title": "Admin-Panel"
+  },
+  "allProjects": {
+    "empty": {
+      "description": "Beginnen Sie mit der Erstellung eines neuen Projekts",
+      "title": "Noch keine Projekte"
+    },
+    "title": "Alle Projekte",
+    "viewAll_one": "alleProjekte.alleAnzeigen",
+    "viewAll_other": "alleProjekte.alleAnzeigen"
+  },
+  "header": {
+    "subtitle": "Verwalten Sie Ihre Projekte und arbeiten Sie mit KI-Agenten zusammen",
+    "welcome": "Willkommen zurück, {{username}}"
+  },
+  "quickTip": {
+    "content": "Fügen Sie Dateien zu Ihrem Projekt hinzu, um den KI-Agenten Kontext für bessere Unterstützung zu geben.",
+    "title": "Schnell-Tipp"
+  },
+  "recentProjects": {
+    "empty": {
+      "description": "Erstellen Sie Ihr erstes Projekt, um mit der KI-Zusammenarbeit zu beginnen",
+      "title": "Keine aktuellen Projekte"
+    },
+    "mostRecent": "Neueste",
+    "title": "Aktuelle Projekte"
+  },
+  "stats": {
+    "activeThisWeek": "Diese Woche aktiv",
+    "totalMessages": "Gesamtanzahl der Nachrichten",
+    "totalProjects": "Gesamtanzahl der Projekte",
+    "trackUsage": "Verfolgen Sie Ihre KI-Nutzung",
+    "usageStats": "Nutzungsstatistiken",
+    "viewTokenUsage": "Token-Nutzung anzeigen"
+  },
+  "usagePage": {
+    "subtitle": "Überwachen Sie Ihre Token-Nutzung und Kosten bei verschiedenen KI-Anbietern",
+    "title": "API-Nutzung & Statistiken"
+  }
+}

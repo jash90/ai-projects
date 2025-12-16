@@ -1,0 +1,84 @@
+{
+  "preferences": {
+    "appearance": {
+      "dark": "Mörk",
+      "description": "Anpassa hur AI-projekt ser ut på din enhet",
+      "light": "Ljus",
+      "system": "System",
+      "theme": "Tema",
+      "title": "Utseende"
+    },
+    "notifications": {
+      "description": "Välj vilka meddelanden du vill ta emot",
+      "email": {
+        "description": "Ta emot e-postuppdateringar om ditt konto och användning",
+        "title": "E-postmeddelanden"
+      },
+      "push": {
+        "description": "Ta emot meddelanden om projektuppdateringar och systemvarningar",
+        "title": "Push-meddelanden"
+      },
+      "title": "Meddelanden"
+    },
+    "updateError": "Misslyckades med att uppdatera inställningar",
+    "updateSuccess": "Inställningar uppdaterades framgångsrikt"
+  },
+  "profile": {
+    "description": "Uppdatera dina personliga uppgifter och e-postadress",
+    "email": "E-post",
+    "reset": "Återställ",
+    "role": {
+      "admin": "Administratör",
+      "user": "Användare"
+    },
+    "saveChanges": "Spara ändringar",
+    "title": "Profilinformation",
+    "updateError": "Misslyckades med att uppdatera profilen",
+    "updateSuccess": "Profilen uppdaterades framgångsrikt",
+    "username": "Användarnamn"
+  },
+  "security": {
+    "clear": "Rensa",
+    "confirmPassword": "Bekräfta nytt lösenord",
+    "currentPassword": "Nuvarande lösenord",
+    "description": "Uppdatera ditt lösenord för att hålla ditt konto säkert",
+    "newPassword": "Nytt lösenord",
+    "passwordMismatch": "Nya lösenord matchar inte",
+    "passwordsDoNotMatch": "Lösenord matchar inte",
+    "passwordTooShort": "Nytt lösenord måste vara minst 6 tecken",
+    "title": "Ändra lösenord",
+    "updateError": "Misslyckades med att uppdatera lösenord",
+    "updatePassword": "Uppdatera lösenord",
+    "updateSuccess": "Lösenordet uppdaterades framgångsrikt"
+  },
+  "subtitle": "Hantera dina kontoinställningar och applikationsinställningar",
+  "tabs": {
+    "preferences": "Inställningar",
+    "profile": "Profil",
+    "security": "Säkerhet",
+    "usage": "Användning"
+  },
+  "title": "Inställningar",
+  "usage": {
+    "account": {
+      "description": "Dina kontouppgifter och begränsningar",
+      "globalLimit": "Global begränsning",
+      "monthlyLimit": "Månatlig begränsning",
+      "projects": "Projekt",
+      "role": "Roll",
+      "title": "Kontoinformation"
+    },
+    "stats": {
+      "description": "Övervaka din tokenanvändning och kostnader",
+      "loading": "Laddar användningsstatistik...",
+      "monthlyCost": "Månadskostnad",
+      "monthlyUsage": "Månatlig användning",
+      "percentUsed": "{{percent}}% använt",
+      "thisMonth": "Denna månad",
+      "title": "Användningsstatistik",
+      "totalCost": "Totalkostnad",
+      "totalTokens": "Totalt antal tokens",
+      "totalUsage": "Total användning"
+    }
+  }
+}

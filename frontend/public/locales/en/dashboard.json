@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "createProject": "Create Project",
+    "newProject": "New Project"
+  },
+  "admin": {
+    "description": "Manage users, token limits, and system settings",
+    "title": "Admin Panel"
+  },
+  "allProjects": {
+    "empty": {
+      "description": "Start by creating a new project",
+      "title": "No projects yet"
+    },
+    "title": "All Projects",
+    "viewAll_one": "allProjects.viewAll",
+    "viewAll_other": "allProjects.viewAll"
+  },
+  "header": {
+    "subtitle": "Manage your projects and collaborate with AI agents",
+    "welcome": "Welcome back, {{username}}"
+  },
+  "quickTip": {
+    "content": "Add files to your project to give AI agents context for better assistance.",
+    "title": "Quick Tip"
+  },
+  "recentProjects": {
+    "empty": {
+      "description": "Create your first project to get started with AI collaboration",
+      "title": "No recent projects"
+    },
+    "mostRecent": "Most Recent",
+    "title": "Recent Projects"
+  },
+  "stats": {
+    "activeThisWeek": "Active This Week",
+    "totalMessages": "Total Messages",
+    "totalProjects": "Total Projects",
+    "trackUsage": "Track your AI usage",
+    "usageStats": "Usage Stats",
+    "viewTokenUsage": "View token usage"
+  },
+  "usagePage": {
+    "subtitle": "Monitor your token usage and costs across different AI providers",
+    "title": "API Usage & Statistics"
+  }
+}

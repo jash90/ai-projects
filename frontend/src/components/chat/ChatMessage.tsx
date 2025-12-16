@@ -1,5 +1,5 @@
-
-import { ConversationMessage, Agent } from '@/types'
+import { useTranslation } from 'react-i18next'
+import type { ConversationMessage, Agent } from '@/types'
 import { cn, formatRelativeTime, getInitials, generateColorFromString } from '@/lib/utils'
 import { ChatMessageContent } from './ChatMessageContent'
 import './chat-markdown.css'
@@ -10,6 +10,7 @@ interface ChatMessageProps {
 }
 
 function ChatMessage({ message, agent }: ChatMessageProps) {
+  const { t } = useTranslation('chat')
   const isUser = message.role === 'user'
 
   return (
@@ -33,7 +34,7 @@ function ChatMessage({ message, agent }: ChatMessageProps) {
       <div className={cn('flex flex-col gap-1 max-w-[80%]', isUser ? 'items-end' : 'items-start')}>
         {/* Message Header */}
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span>{isUser ? 'You' : agent.name}</span>
+          <span>{isUser ? t('message.you') : agent.name}</span>
           <span>•</span>
           <span>{formatRelativeTime(message.created_at || message.timestamp)}</span>
         </div>
@@ -56,7 +57,7 @@ function ChatMessage({ message, agent }: ChatMessageProps) {
         {/* Error Display */}
         {message.error && (
           <div className="text-xs text-destructive bg-destructive/10 px-2 py-1 rounded">
-            Error: {message.error}
+            {t('message.error')}: {message.error}
           </div>
         )}
       </div>

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { useIsMobile } from '@/components/ui/MobileNavigation'
 import { cn } from '@/lib/utils'
@@ -25,9 +26,10 @@ interface ChatInputProps {
 function ChatInput({
   onSendMessage,
   disabled = false,
-  placeholder = "Type your message...",
+  placeholder,
   className
 }: ChatInputProps) {
+  const { t } = useTranslation('chat')
   const [message, setMessage] = useState('')
   const [attachments, setAttachments] = useState<ChatFileAttachment[]>([])
   const [isFocused, setIsFocused] = useState(false)
@@ -85,7 +87,7 @@ function ChatInput({
     const filesToProcess = Array.from(files).slice(0, availableSlots)
 
     if (files.length > availableSlots) {
-      setFileError(`Maximum ${MAX_CHAT_FILES_COUNT} files allowed`)
+      setFileError(t('input.maxFilesError', { count: MAX_CHAT_FILES_COUNT }))
     }
 
     // Validate and create attachments with IDs (no preview yet)
@@ -93,13 +95,13 @@ function ChatInput({
     for (const file of filesToProcess) {
       // Check file type
       if (!SUPPORTED_CHAT_FILE_TYPES.includes(file.type as SupportedChatFileType)) {
-        setFileError(`Unsupported file type: ${file.type}. Supported: images, PDF`)
+        setFileError(t('input.unsupportedFileType', { type: file.type }))
         continue
       }
 
       // Check file size
       if (file.size > MAX_CHAT_FILE_SIZE) {
-        setFileError(`File too large: ${file.name}. Max size: ${MAX_CHAT_FILE_SIZE / 1024 / 1024}MB`)
+        setFileError(t('input.fileTooLarge', { name: file.name, maxSize: MAX_CHAT_FILE_SIZE / 1024 / 1024 }))
         continue
       }
 
@@ -273,7 +275,7 @@ function ChatInput({
             'flex-shrink-0 self-end',
             isMobile ? 'h-12 w-12' : 'h-10 w-10'
           )}
-          title="Attach files (images, PDF)"
+          title={t('input.attachFiles')}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -288,7 +290,7 @@ function ChatInput({
           >
             <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48" />
           </svg>
-          <span className="sr-only">Attach file</span>
+          <span className="sr-only">{t('input.attachFile')}</span>
         </Button>
 
         <div className="flex-1 relative">
@@ -299,7 +301,7 @@ function ChatInput({
             onKeyDown={handleKeyDown}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            placeholder={placeholder}
+            placeholder={placeholder || t('input.placeholder')}
             disabled={disabled}
             className={cn(
               'w-full resize-none rounded-lg border border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
@@ -321,7 +323,7 @@ function ChatInput({
           {isMobile && isFocused && (
             <div className="absolute -top-8 left-0 right-0 text-center">
               <span className="text-xs text-muted-foreground bg-background px-2 py-1 rounded-md border border-border shadow-sm">
-                {message.length > 0 ? `${message.length} characters` : 'Start typing...'}
+                {message.length > 0 ? t('input.characters', { count: message.length }) : t('input.startTyping')}
               </span>
             </div>
           )}
@@ -355,8 +357,8 @@ function ChatInput({
             <path d="m22 2-7 20-4-9-9-4Z" />
             <path d="M22 2 11 13" />
           </svg>
-          {isMobile && <span className="ml-2 text-sm font-medium">Send</span>}
-          <span className="sr-only">Send message</span>
+          {isMobile && <span className="ml-2 text-sm font-medium">{t('input.send')}</span>}
+          <span className="sr-only">{t('input.sendMessage')}</span>
         </Button>
       </form>
 

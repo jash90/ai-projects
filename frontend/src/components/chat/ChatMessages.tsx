@@ -1,4 +1,5 @@
-import { ConversationMessage, Agent } from '@/types'
+import { useTranslation } from 'react-i18next'
+import type { ConversationMessage, Agent } from '@/types'
 import { ChatMessage } from './ChatMessage'
 import { ScrollArea } from '@/components/ui/ScrollArea'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
@@ -11,18 +12,19 @@ interface ChatMessagesProps {
 }
 
 function ChatMessages({ messages, agent, isLoading = false, className }: ChatMessagesProps) {
+  const { t } = useTranslation('chat')
   // Ensure messages is always an array and agent exists
   const safeMessages = messages || []
-  
+
   // Return early if agent is not available
   if (!agent) {
     return (
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center space-y-2">
           <div className="text-2xl">⚠️</div>
-          <h3 className="font-semibold text-foreground">Agent not found</h3>
+          <h3 className="font-semibold text-foreground">{t('agentNotFound.title')}</h3>
           <p className="text-muted-foreground text-sm">
-            Please select an agent to start chatting
+            {t('agentNotFound.description')}
           </p>
         </div>
       </div>
@@ -34,12 +36,12 @@ function ChatMessages({ messages, agent, isLoading = false, className }: ChatMes
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center space-y-2">
           <div className="text-2xl">👋</div>
-          <h3 className="font-semibold text-foreground">Start a conversation</h3>
+          <h3 className="font-semibold text-foreground">{t('emptyState.title')}</h3>
           <p className="text-muted-foreground text-sm">
-            Send a message to begin chatting with {agent.name}
+            {t('emptyState.description', { agentName: agent.name })}
           </p>
           <p className="text-xs text-muted-foreground mt-2">
-            This agent can access your project files for context
+            {t('emptyState.filesHint')}
           </p>
         </div>
       </div>
@@ -61,7 +63,7 @@ function ChatMessages({ messages, agent, isLoading = false, className }: ChatMes
           <div className="flex justify-start p-4">
             <div className="flex items-center gap-2 text-muted-foreground bg-muted/50 rounded-lg px-3 py-2">
               <LoadingSpinner className="h-4 w-4" />
-              <span className="text-sm">{agent.name} is thinking...</span>
+              <span className="text-sm">{t('thinking', { agentName: agent.name })}</span>
             </div>
           </div>
         )}

@@ -1,0 +1,89 @@
+{
+  "dialog": {
+    "cancel": "Annuler",
+    "content": "Contenu",
+    "contentHint": "Vous pouvez modifier le contenu après avoir créé le fichier.",
+    "contentPlaceholder": "Contenu du fichier...",
+    "create": "Créer un fichier",
+    "createTitle": "Créer un nouveau fichier",
+    "creating": "Création en cours...",
+    "fileName": "Nom du fichier",
+    "fileNamePlaceholder": "ex. : main.js, README.md",
+    "fileNameRequired": "Le nom du fichier est requis",
+    "fileType": "Type de fichier",
+    "fileTypeRequired": "Le type de fichier est requis"
+  },
+  "editor": {
+    "autoSave": {
+      "pending": "Sauvegarde automatique : En attente",
+      "upToDate": "Sauvegarde automatique : À jour"
+    },
+    "characters_one": "caractère",
+    "characters_other": "caractères",
+    "language": "Langue : {{language}}",
+    "lines_one": "ligne",
+    "lines_other": "lignes",
+    "loading": "Chargement de l'éditeur...",
+    "noFile": {
+      "description": "Sélectionnez un fichier dans l'explorateur pour commencer à éditer",
+      "title": "Aucun fichier sélectionné"
+    },
+    "placeholder": "Commencez à taper...",
+    "revert": "Revenir en arrière",
+    "revertConfirm": "Êtes-vous sûr de vouloir annuler tous les changements non enregistrés ?",
+    "save": "Sauvegarder",
+    "saving": "Sauvegarde en cours...",
+    "shortcuts": {
+      "exitFullscreen": "Appuyez sur Échap pour quitter le mode plein écran",
+      "save": "Ctrl+S pour sauvegarder"
+    },
+    "type": "Type : {{type}}",
+    "unsavedChanges": "Changements non enregistrés",
+    "unsavedChangesText": "Changements non enregistrés"
+  },
+  "explorer": {
+    "contextMenu": {
+      "copyContent": "Copier le contenu",
+      "delete": "Supprimer",
+      "open": "Ouvrir"
+    },
+    "createTitle": "Créer un nouveau fichier",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer \"{{name}}\" ? Cette action ne peut pas être annulée.",
+    "dismiss": "Ignorer",
+    "empty": {
+      "description": "Créez votre premier fichier pour commencer",
+      "title": "Aucun fichier dans ce projet"
+    },
+    "fileCount_one": "explorer.fileCount",
+    "fileCount_other": "{{count}} fichiers",
+    "noResults": "Aucun fichier ne correspond à votre recherche",
+    "searchPlaceholder": "Rechercher des fichiers...",
+    "shown_one": "explorer.shown",
+    "shown_other": "explorer.shown",
+    "title": "Fichiers",
+    "uploadTitle": "Télécharger des fichiers depuis l'ordinateur"
+  },
+  "upload": {
+    "cancel": "Annuler",
+    "complete": "Téléchargement terminé",
+    "description": "Téléchargez des fichiers depuis votre ordinateur. Les fichiers seront lus et enregistrés en tant que fichiers texte modifiables dans le projet.",
+    "done": "Terminé",
+    "dropzone": {
+      "active": "Déposez des fichiers ici",
+      "andMore_one": "télécharger.d'autres",
+      "andMore_other": "télécharger.d'autres",
+      "description": "Faites glisser et déposez des fichiers ici, ou cliquez pour sélectionner des fichiers",
+      "maxSize": "Taille maximale du fichier : {{size}}Mo",
+      "supportedTypes": "Types pris en charge : {{types}}",
+      "title": "Téléchargez des fichiers depuis votre ordinateur"
+    },
+    "errors": {
+      "tooLarge": "Le fichier \"{{name}}\" est trop volumineux. La taille maximale est de {{maxSize}}Mo.",
+      "unsupportedType": "Type de fichier non pris en charge. Types autorisés : {{types}}"
+    },
+    "success_one": "télécharger.succès",
+    "success_other": "{{count}} fichiers téléchargés avec succès !",
+    "title": "Télécharger des fichiers dans le projet",
+    "uploading": "Téléchargement des fichiers"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Tillbaka till instrumentpanelen",
+  "dashboard": "Instrumentpanel",
+  "desktop": {
+    "actions": {
+      "enterFullscreen": "Gå till helskärm",
+      "exitFullscreen": "Avsluta helskärm",
+      "hideEditor": "Dölj redigeraren",
+      "hideSidebar": "Dölj sidofält",
+      "showEditor": "Visa redigeraren",
+      "showSidebar": "Visa sidofält"
+    },
+    "panels": {
+      "aiAgents": "AI-agenter",
+      "projectFiles": "Projektfiler"
+    }
+  },
+  "editor": {
+    "noFileSelected": "Ingen fil vald"
+  },
+  "loading": "Laddar projekt...",
+  "mobile": {
+    "actions": {
+      "install": "Installera",
+      "installApp": "Installera app",
+      "share": "Dela"
+    },
+    "menu": {
+      "currentSelection": "Aktuellt val",
+      "filesAvailableOffline_one": "Filer tillgängliga offline",
+      "filesAvailableOffline_other": "Filer tillgängliga offline",
+      "filesPendingUpload_one": "Filer som väntar på uppladdning",
+      "filesPendingUpload_other": "Filer som väntar på uppladdning",
+      "noAgentSelected": "Ingen agent vald",
+      "noFileSelected": "Ingen fil vald",
+      "offlineMode": "Offline-läge",
+      "online": "Online",
+      "status": "Status"
+    },
+    "views": {
+      "agents": "Agenter",
+      "chat": "Chatt",
+      "editor": "Redigerare",
+      "files": "Filer"
+    }
+  },
+  "noAgents": {
+    "description": "Du behöver minst en AI-agent för att använda detta projekt.",
+    "title": "Inga AI-agenter tillgängliga"
+  },
+  "notFound": {
+    "description": "Projektet du letar efter finns inte eller så har du inte tillgång till det.",
+    "title": "Projektet hittades inte"
+  }
+}

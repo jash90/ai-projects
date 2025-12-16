@@ -1,0 +1,89 @@
+{
+  "dialog": {
+    "cancel": "Annuller",
+    "content": "Indhold",
+    "contentHint": "Du kan redigere indholdet efter oprettelse af filen.",
+    "contentPlaceholder": "Filindhold...",
+    "create": "Opret fil",
+    "createTitle": "Opret ny fil",
+    "creating": "Opretter...",
+    "fileName": "Filnavn",
+    "fileNamePlaceholder": "f.eks. main.js, README.md",
+    "fileNameRequired": "Filnavn er påkrævet",
+    "fileType": "Filtype",
+    "fileTypeRequired": "Filtype er påkrævet"
+  },
+  "editor": {
+    "autoSave": {
+      "pending": "Auto-gem: Afventer",
+      "upToDate": "Auto-gem: Opdateret"
+    },
+    "characters_one": "tegn",
+    "characters_other": "tegn",
+    "language": "Sprog: {{language}}",
+    "lines_one": "linje",
+    "lines_other": "linjer",
+    "loading": "Indlæser editor...",
+    "noFile": {
+      "description": "Vælg en fil fra udforskeren for at begynde at redigere",
+      "title": "Ingen fil valgt"
+    },
+    "placeholder": "Begynd at skrive...",
+    "revert": "Fortryd",
+    "revertConfirm": "Er du sikker på, at du vil fortryde alle ikke-gemte ændringer?",
+    "save": "Gem",
+    "saving": "Gemmer...",
+    "shortcuts": {
+      "exitFullscreen": "Tryk Esc for at forlade fuld skærm",
+      "save": "Ctrl+S for at gemme"
+    },
+    "type": "Type: {{type}}",
+    "unsavedChanges": "Ikke-gemte ændringer",
+    "unsavedChangesText": "Ikke-gemte ændringer"
+  },
+  "explorer": {
+    "contextMenu": {
+      "copyContent": "Kopier indhold",
+      "delete": "Slet",
+      "open": "Åbn"
+    },
+    "createTitle": "Opret ny fil",
+    "deleteConfirm": "Er du sikker på, at du vil slette \"{{name}}\"? Denne handling kan ikke fortrydes.",
+    "dismiss": "Afvis",
+    "empty": {
+      "description": "Opret din første fil for at komme i gang",
+      "title": "Ingen filer i dette projekt"
+    },
+    "fileCount_one": "1 fil",
+    "fileCount_other": "{{count}} filer",
+    "noResults": "Ingen filer matcher din søgning",
+    "searchPlaceholder": "Søg filer...",
+    "shown_one": "1 vist",
+    "shown_other": "{{count}} viste",
+    "title": "Filer",
+    "uploadTitle": "Upload filer fra computer"
+  },
+  "upload": {
+    "cancel": "Annuller",
+    "complete": "Upload fuldført",
+    "description": "Upload filer fra din computer. Filerne vil blive læst og gemt som redigerbare tekstfiler i projektet.",
+    "done": "Færdig",
+    "dropzone": {
+      "active": "Slip filer her",
+      "andMore_one": "upload.dropzone.andMore",
+      "andMore_other": "upload.dropzone.andMore",
+      "description": "Træk og slip filer her, eller klik for at vælge filer",
+      "maxSize": "Maksimal filstørrelse: {{size}}MB",
+      "supportedTypes": "Understøttede typer: {{types}}",
+      "title": "Upload filer fra din computer"
+    },
+    "errors": {
+      "tooLarge": "Fil \"{{name}}\" er for stor. Maksimal størrelse er {{maxSize}}MB.",
+      "unsupportedType": "Filtypen understøttes ikke. Tilladte typer: {{types}}"
+    },
+    "success_one": "upload.success",
+    "success_other": "{{count}} filer blev uploadet med succes!",
+    "title": "Upload filer til projektet",
+    "uploading": "Uploader filer"
+  }
+}

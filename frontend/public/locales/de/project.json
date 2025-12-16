@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Zurück zum Dashboard",
+  "dashboard": "Dashboard",
+  "desktop": {
+    "actions": {
+      "enterFullscreen": "Vollbildmodus aktivieren",
+      "exitFullscreen": "Vollbildmodus beenden",
+      "hideEditor": "Editor ausblenden",
+      "hideSidebar": "Seitenleiste ausblenden",
+      "showEditor": "Editor anzeigen",
+      "showSidebar": "Seitenleiste anzeigen"
+    },
+    "panels": {
+      "aiAgents": "KI-Agenten",
+      "projectFiles": "Projektdateien"
+    }
+  },
+  "editor": {
+    "noFileSelected": "Keine Datei ausgewählt"
+  },
+  "loading": "Projekt wird geladen...",
+  "mobile": {
+    "actions": {
+      "install": "Installieren",
+      "installApp": "App installieren",
+      "share": "Teilen"
+    },
+    "menu": {
+      "currentSelection": "Aktuelle Auswahl",
+      "filesAvailableOffline_one": "Datei ist offline verfügbar",
+      "filesAvailableOffline_other": "Dateien sind offline verfügbar",
+      "filesPendingUpload_one": "Datei wartet auf Upload",
+      "filesPendingUpload_other": "Dateien warten auf Upload",
+      "noAgentSelected": "Kein Agent ausgewählt",
+      "noFileSelected": "Keine Datei ausgewählt",
+      "offlineMode": "Offline-Modus",
+      "online": "Online",
+      "status": "Status"
+    },
+    "views": {
+      "agents": "Agenten",
+      "chat": "Chat",
+      "editor": "Editor",
+      "files": "Dateien"
+    }
+  },
+  "noAgents": {
+    "description": "Sie benötigen mindestens einen KI-Agenten, um dieses Projekt zu nutzen.",
+    "title": "Keine KI-Agenten verfügbar"
+  },
+  "notFound": {
+    "description": "Das gesuchte Projekt existiert nicht oder Sie haben keinen Zugriff darauf.",
+    "title": "Projekt nicht gefunden"
+  }
+}

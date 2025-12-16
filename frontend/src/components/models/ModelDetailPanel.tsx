@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { AutocompleteOption } from '@/components/ui/Autocomplete'
 
@@ -20,14 +21,16 @@ export function ModelDetailPanel({
   isInComparison,
   comparisonFull
 }: ModelDetailPanelProps) {
+  const { t } = useTranslation('agents')
+
   if (!model) {
     return (
       <div className="flex-1 flex items-center justify-center text-center w-2/5">
         <div>
           <div className="text-4xl mb-4">🔍</div>
-          <h3 className="text-lg font-medium text-foreground mb-2">No Model Selected</h3>
+          <h3 className="text-lg font-medium text-foreground mb-2">{t('models.detail.noSelection.title')}</h3>
           <p className="text-sm text-muted-foreground">
-            Click on a model from the list to view detailed information
+            {t('models.detail.noSelection.description')}
           </p>
         </div>
       </div>
@@ -61,7 +64,7 @@ export function ModelDetailPanel({
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               {model.isPopular && (
-                <span className="text-yellow-500" title="Popular Model">⭐</span>
+                <span className="text-yellow-500" title={t('models.detail.popularModel')}>⭐</span>
               )}
               <h2 className="text-xl font-semibold text-foreground truncate">
                 {model.name}
@@ -69,7 +72,7 @@ export function ModelDetailPanel({
             </div>
             {model.metadata?.provider && (
               <p className="text-sm text-muted-foreground">
-                by {model.metadata.provider}
+                {t('models.detail.by', { provider: model.metadata.provider })}
               </p>
             )}
           </div>
@@ -80,7 +83,7 @@ export function ModelDetailPanel({
                 ? 'text-red-500 hover:bg-red-500/10'
                 : 'text-muted-foreground hover:bg-muted'
             }`}
-            title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+            title={isFavorite ? t('models.detail.removeFromFavorites') : t('models.detail.addToFavorites')}
           >
             {isFavorite ? '❤️' : '🤍'}
           </button>
@@ -90,12 +93,12 @@ export function ModelDetailPanel({
         <div className="flex flex-wrap gap-2">
           {model.metadata?.cost && (
             <span className={`px-2 py-1 text-xs rounded border ${getCostBadgeColor(model.metadata.cost)}`}>
-              {model.metadata.cost} Cost
+              {t('models.detail.cost', { cost: model.metadata.cost })}
             </span>
           )}
           {model.metadata?.contextWindow && (
             <span className="px-2 py-1 text-xs rounded border bg-muted text-foreground border-border">
-              {formatContextWindow(model.metadata.contextWindow)} tokens
+              {formatContextWindow(model.metadata.contextWindow)} {t('models.detail.tokens')}
             </span>
           )}
           {model.category && (
@@ -111,7 +114,7 @@ export function ModelDetailPanel({
         {/* Description */}
         {model.description && (
           <div>
-            <h3 className="text-sm font-semibold text-foreground mb-2">Description</h3>
+            <h3 className="text-sm font-semibold text-foreground mb-2">{t('models.detail.description')}</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {model.description}
             </p>
@@ -120,7 +123,7 @@ export function ModelDetailPanel({
 
         {/* Model ID */}
         <div>
-          <h3 className="text-sm font-semibold text-foreground mb-2">Model ID</h3>
+          <h3 className="text-sm font-semibold text-foreground mb-2">{t('models.detail.modelId')}</h3>
           <code className="text-xs bg-muted px-2 py-1 rounded border border-border">
             {model.id}
           </code>
@@ -128,25 +131,25 @@ export function ModelDetailPanel({
 
         {/* Specifications */}
         <div>
-          <h3 className="text-sm font-semibold text-foreground mb-3">Specifications</h3>
+          <h3 className="text-sm font-semibold text-foreground mb-3">{t('models.detail.specifications')}</h3>
           <div className="space-y-2">
             {model.metadata?.provider && (
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Provider</span>
+                <span className="text-muted-foreground">{t('models.detail.provider')}</span>
                 <span className="font-medium text-foreground">{model.metadata.provider}</span>
               </div>
             )}
             {model.metadata?.contextWindow && (
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Context Window</span>
+                <span className="text-muted-foreground">{t('models.detail.contextWindow')}</span>
                 <span className="font-medium text-foreground">
-                  {model.metadata.contextWindow.toLocaleString()} tokens
+                  {model.metadata.contextWindow.toLocaleString()} {t('models.detail.tokens')}
                 </span>
               </div>
             )}
             {model.metadata?.cost && (
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Cost Tier</span>
+                <span className="text-muted-foreground">{t('models.detail.costTier')}</span>
                 <span className={`font-medium px-2 py-0.5 rounded text-xs ${getCostBadgeColor(model.metadata.cost)}`}>
                   {model.metadata.cost}
                 </span>
@@ -157,13 +160,13 @@ export function ModelDetailPanel({
 
         {/* Capabilities (placeholder for future enhancement) */}
         <div>
-          <h3 className="text-sm font-semibold text-foreground mb-2">Capabilities</h3>
+          <h3 className="text-sm font-semibold text-foreground mb-2">{t('models.detail.capabilities')}</h3>
           <div className="flex flex-wrap gap-2">
             <span className="px-2 py-1 text-xs rounded bg-muted text-foreground border border-border">
-              💬 Chat
+              {t('models.detail.chat')}
             </span>
             <span className="px-2 py-1 text-xs rounded bg-muted text-foreground border border-border">
-              🔄 Streaming
+              {t('models.detail.streaming')}
             </span>
           </div>
         </div>
@@ -175,7 +178,7 @@ export function ModelDetailPanel({
           onClick={onSelect}
           className="w-full"
         >
-          Select This Model
+          {t('models.detail.selectThisModel')}
         </Button>
         <div className="grid grid-cols-2 gap-2">
           <Button
@@ -184,19 +187,19 @@ export function ModelDetailPanel({
             disabled={comparisonFull && !isInComparison}
             className="text-xs"
           >
-            {isInComparison ? '✓ In Comparison' : '📊 Add to Compare'}
+            {isInComparison ? t('models.detail.inComparison') : t('models.detail.addToCompare')}
           </Button>
           <Button
             onClick={onToggleFavorite}
             variant="outline"
             className="text-xs"
           >
-            {isFavorite ? '❤️ Favorited' : '🤍 Favorite'}
+            {isFavorite ? t('models.detail.favorited') : t('models.detail.favorite')}
           </Button>
         </div>
         {comparisonFull && !isInComparison && (
           <p className="text-xs text-center text-muted-foreground">
-            Remove a model from comparison to add this one (max 3)
+            {t('models.detail.comparisonFull')}
           </p>
         )}
       </div>

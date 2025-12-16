@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Retour au tableau de bord",
+  "dashboard": "Tableau de bord",
+  "desktop": {
+    "actions": {
+      "enterFullscreen": "Entrer en mode plein écran",
+      "exitFullscreen": "Quitter le mode plein écran",
+      "hideEditor": "Masquer l'éditeur",
+      "hideSidebar": "Masquer la barre latérale",
+      "showEditor": "Afficher l'éditeur",
+      "showSidebar": "Afficher la barre latérale"
+    },
+    "panels": {
+      "aiAgents": "Agents IA",
+      "projectFiles": "Fichiers du projet"
+    }
+  },
+  "editor": {
+    "noFileSelected": "Aucun fichier sélectionné"
+  },
+  "loading": "Chargement du projet...",
+  "mobile": {
+    "actions": {
+      "install": "Installer",
+      "installApp": "Installer l'application",
+      "share": "Partager"
+    },
+    "menu": {
+      "currentSelection": "Sélection actuelle",
+      "filesAvailableOffline_one": "Fichiers disponibles hors ligne",
+      "filesAvailableOffline_other": "Fichiers disponibles hors ligne",
+      "filesPendingUpload_one": "Fichiers en attente de téléchargement",
+      "filesPendingUpload_other": "Fichiers en attente de téléchargement",
+      "noAgentSelected": "Aucun agent sélectionné",
+      "noFileSelected": "Aucun fichier sélectionné",
+      "offlineMode": "Mode hors ligne",
+      "online": "En ligne",
+      "status": "Statut"
+    },
+    "views": {
+      "agents": "Agents",
+      "chat": "Chat",
+      "editor": "Éditeur",
+      "files": "Fichiers"
+    }
+  },
+  "noAgents": {
+    "description": "Vous avez besoin d'au moins un agent IA pour utiliser ce projet.",
+    "title": "Aucun agent IA disponible"
+  },
+  "notFound": {
+    "description": "Le projet que vous recherchez n'existe pas ou vous n'y avez pas accès.",
+    "title": "Projet non trouvé"
+  }
+}

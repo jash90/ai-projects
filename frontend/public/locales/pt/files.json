@@ -1,0 +1,89 @@
+{
+  "dialog": {
+    "cancel": "Cancelar",
+    "content": "Conteúdo",
+    "contentHint": "Você pode editar o conteúdo após criar o arquivo.",
+    "contentPlaceholder": "Conteúdo do arquivo...",
+    "create": "Criar Arquivo",
+    "createTitle": "Criar Novo Arquivo",
+    "creating": "Criando...",
+    "fileName": "Nome do Arquivo",
+    "fileNamePlaceholder": "ex.: main.js, README.md",
+    "fileNameRequired": "O nome do arquivo é obrigatório",
+    "fileType": "Tipo de Arquivo",
+    "fileTypeRequired": "O tipo de arquivo é obrigatório"
+  },
+  "editor": {
+    "autoSave": {
+      "pending": "Auto-salvar: Pendente",
+      "upToDate": "Auto-salvar: Atualizado"
+    },
+    "characters_one": "editor.caractere",
+    "characters_other": "editor.caracteres",
+    "language": "Idioma: {{language}}",
+    "lines_one": "editor.linha",
+    "lines_other": "editor.linhas",
+    "loading": "Carregando editor...",
+    "noFile": {
+      "description": "Selecione um arquivo no explorador para começar a editar",
+      "title": "Nenhum arquivo selecionado"
+    },
+    "placeholder": "Comece a digitar...",
+    "revert": "Reverter",
+    "revertConfirm": "Você tem certeza de que deseja reverter todas as alterações não salvas?",
+    "save": "Salvar",
+    "saving": "Salvando...",
+    "shortcuts": {
+      "exitFullscreen": "Pressione Esc para sair do modo de tela cheia",
+      "save": "Ctrl+S para salvar"
+    },
+    "type": "Tipo: {{type}}",
+    "unsavedChanges": "Alterações não salvas",
+    "unsavedChangesText": "Alterações não salvas"
+  },
+  "explorer": {
+    "contextMenu": {
+      "copyContent": "Copiar Conteúdo",
+      "delete": "Excluir",
+      "open": "Abrir"
+    },
+    "createTitle": "Criar novo arquivo",
+    "deleteConfirm": "Você tem certeza de que deseja excluir \"{{name}}\"? Esta ação não pode ser desfeita.",
+    "dismiss": "Dispensar",
+    "empty": {
+      "description": "Crie seu primeiro arquivo para começar",
+      "title": "Nenhum arquivo neste projeto"
+    },
+    "fileCount_one": "explorer.1 arquivo",
+    "fileCount_other": "{{count}} arquivos",
+    "noResults": "Nenhum arquivo corresponde à sua pesquisa",
+    "searchPlaceholder": "Pesquisar arquivos...",
+    "shown_one": "explorer.mostrado",
+    "shown_other": "explorer.mostrados",
+    "title": "Arquivos",
+    "uploadTitle": "Carregar arquivos do computador"
+  },
+  "upload": {
+    "cancel": "Cancelar",
+    "complete": "Upload completo",
+    "description": "Carregue arquivos do seu computador. Os arquivos serão lidos e salvos como arquivos de texto editáveis no projeto.",
+    "done": "Concluído",
+    "dropzone": {
+      "active": "Solte os arquivos aqui",
+      "andMore_one": "carregue.dropzone.eMais",
+      "andMore_other": "carregue.dropzone.eMais",
+      "description": "Arraste e solte arquivos aqui, ou clique para selecionar arquivos",
+      "maxSize": "Tamanho máximo do arquivo: {{size}}MB",
+      "supportedTypes": "Tipos suportados: {{types}}",
+      "title": "Carregar arquivos do seu computador"
+    },
+    "errors": {
+      "tooLarge": "O arquivo \"{{name}}\" é muito grande. O tamanho máximo é {{maxSize}}MB.",
+      "unsupportedType": "Tipo de arquivo não suportado. Tipos permitidos: {{types}}"
+    },
+    "success_one": "carregue.sucesso",
+    "success_other": "{{count}} arquivos carregados com sucesso!",
+    "title": "Carregar Arquivos para o Projeto",
+    "uploading": "Carregando Arquivos"
+  }
+}

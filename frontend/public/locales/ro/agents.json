@@ -1,0 +1,139 @@
+{
+  "dialog": {
+    "buttons": {
+      "cancel": "Anulează",
+      "create": "Creează Agent",
+      "creating": "Creare...",
+      "update": "Actualizează Agent",
+      "updating": "Actualizare..."
+    },
+    "fields": {
+      "changeModel": "dialog.fields.changeModel",
+      "description": "Descriere",
+      "descriptionPlaceholder": "Descrie ce face acest agent...",
+      "maxTokens": "Maxim Tokeni",
+      "maxTokensHint": "Lungimea maximă a răspunsului",
+      "model": "Model",
+      "modelSelect": "Selectează model...",
+      "name": "Numele Agentului *",
+      "namePlaceholder": "Asistentul meu AI",
+      "noModelSelected": "dialog.fields.noModelSelected",
+      "notConfigured": "dialog.fields.notConfigured",
+      "provider": "Furnizor",
+      "providerNotConfigured": "dialog.fields.providerNotConfigured",
+      "providerSettings": "dialog.fields.providerSettings",
+      "selectModel": "dialog.fields.selectModel",
+      "systemPrompt": "Indicație Sistem *",
+      "systemPromptHint": "dialog.fields.systemPromptHint",
+      "systemPromptPlaceholder": "Ești un asistent AI util...",
+      "temperature": "Temperatură",
+      "temperatureHint": "Valori mai mici = mai concentrat, Valori mai mari = mai creativ"
+    },
+    "loadError": "Încărcarea modelelor AI a eșuat",
+    "loading": "Încărcare furnizori AI...",
+    "retry": "Reîncercare",
+    "validation": {
+      "modelRequired": "Selectarea modelului este obligatorie",
+      "nameRequired": "Numele agentului este obligatoriu",
+      "promptRequired": "Indicația sistemului este obligatorie"
+    }
+  },
+  "models": {
+    "chip": {
+      "removeFromFavorites": "Elimină din favorite"
+    },
+    "comparison": {
+      "backToList": "← Înapoi la Listă",
+      "browseModels": "Răsfoiește Modele",
+      "category": "Categorie",
+      "comparing_one": "Comparând {{count}} model",
+      "comparing_other": "Comparând {{count}} modele",
+      "contextWindow": "Fereastră de Context",
+      "costTier": "Nivel de Cost",
+      "description": "Descriere",
+      "empty": {
+        "description": "Selectează până la 3 modele din listă pentru a le compara față în față",
+        "title": "Nu sunt modele de comparat"
+      },
+      "legend": "🏆 = Cel mai bun din categorie • Fă clic pe orice card de model pentru a-l selecta",
+      "modelId": "ID Model",
+      "removeFromComparison": "Elimină din comparație",
+      "selectThisModel": "Selectează Acest Model",
+      "tokens": "tokeni",
+      "unknown": "Necunoscut"
+    },
+    "detail": {
+      "addToCompare": "📊 Adaugă la Comparare",
+      "addToFavorites": "Adaugă la favorite",
+      "by": "de {{provider}}",
+      "capabilities": "Capabilități",
+      "chat": "💬 Chat",
+      "comparisonFull": "Eliminați un model din comparație pentru a adăuga acesta (max 3)",
+      "contextWindow": "Fereastră de Context",
+      "cost": "Cost {{cost}}",
+      "costTier": "Nivel de Cost",
+      "description": "Descriere",
+      "favorite": "🤍 Favorit",
+      "favorited": "❤️ Favorit",
+      "inComparison": "✓ În Comparație",
+      "modelId": "ID Model",
+      "noSelection": {
+        "description": "Faceți clic pe un model din listă pentru a vizualiza informații detaliate",
+        "title": "Niciun Model Selectat"
+      },
+      "popularModel": "Model Popular",
+      "provider": "Furnizor",
+      "removeFromFavorites": "Eliminați din favorite",
+      "selectThisModel": "Selectați Acest Model",
+      "specifications": "Specificații",
+      "streaming": "🔄 Streaming",
+      "tokens": "tokeni"
+    },
+    "picker": {
+      "available_one": "model disponibil",
+      "available_other": "{{count}} modele disponibile",
+      "cancel": "Anulare",
+      "close": "Închide (Esc)",
+      "compare": "Compară",
+      "favorites": "Favorite",
+      "hideFavorites": "Ascunde favorite/recente",
+      "inComparison_one": "model în comparație",
+      "inComparison_other": "modele în comparație",
+      "loading": "Se încarcă modelele OpenRouter...",
+      "recentlyUsed": "Folosite Recent",
+      "search": "Căutați modele (de exemplu, 'gpt', 'claude', 'llama')...",
+      "selectModel": "Selectați Model",
+      "shortcuts": "Ctrl+K: Căutare • Ctrl+F: Favorite • Ctrl+C: Comparare",
+      "title": "Selectați Model OpenRouter"
+    }
+  },
+  "panel": {
+    "browseAll": "Răsfoiți Toți Agenții",
+    "dismiss": "Respinge",
+    "empty": {
+      "description": "Contactați administratorul pentru a crea agenți",
+      "title": "Niciun agent disponibil"
+    },
+    "maxTokens": "Max:",
+    "noSelection": "Niciun agent selectat",
+    "temp": "Temp:",
+    "title": "Agenți AI",
+    "tokens": "tokeni"
+  },
+  "picker": {
+    "empty": {
+      "hint": "Încercați un termen de căutare diferit",
+      "title": "Niciun agent găsit"
+    },
+    "searchAdmin": "Căutați agenți după nume, descriere sau model...",
+    "searchUser": "Căutați agenți după nume sau descriere...",
+    "select": "Selectați Agent",
+    "selected": "Selectat",
+    "title": "Selectați Agentul AI"
+  },
+  "providers": {
+    "anthropic": "Anthropic",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter"
+  }
+}

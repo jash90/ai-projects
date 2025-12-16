@@ -1,0 +1,89 @@
+{
+  "dialog": {
+    "cancel": "Mégse",
+    "content": "Tartalom",
+    "contentHint": "A fájl létrehozása után szerkesztheti a tartalmat.",
+    "contentPlaceholder": "Fájl tartalma...",
+    "create": "Fájl létrehozása",
+    "createTitle": "Új fájl létrehozása",
+    "creating": "Létrehozás...",
+    "fileName": "Fájl neve",
+    "fileNamePlaceholder": "pl., main.js, README.md",
+    "fileNameRequired": "A fájl neve kötelező",
+    "fileType": "Fájl típusa",
+    "fileTypeRequired": "A fájl típusa kötelező"
+  },
+  "editor": {
+    "autoSave": {
+      "pending": "Automatikus mentés: Függőben",
+      "upToDate": "Automatikus mentés: Naprakész"
+    },
+    "characters_one": "karakter",
+    "characters_other": "karakter",
+    "language": "Nyelv: {{language}}",
+    "lines_one": "sor",
+    "lines_other": "sor",
+    "loading": "Szerkesztő betöltése...",
+    "noFile": {
+      "description": "Válasszon ki egy fájlt a böngészőből a szerkesztés megkezdéséhez",
+      "title": "Nincs fájl kiválasztva"
+    },
+    "placeholder": "Kezdj el gépelni...",
+    "revert": "Visszavonás",
+    "revertConfirm": "Biztos benne, hogy vissza akarja vonni az összes mentetlen változtatást?",
+    "save": "Mentés",
+    "saving": "Mentés...",
+    "shortcuts": {
+      "exitFullscreen": "Nyomja meg az Esc billentyűt a teljes képernyős módból való kilépéshez",
+      "save": "Ctrl+S a mentéshez"
+    },
+    "type": "Típus: {{type}}",
+    "unsavedChanges": "Mentetlen változtatások",
+    "unsavedChangesText": "Mentetlen változtatások"
+  },
+  "explorer": {
+    "contextMenu": {
+      "copyContent": "Tartalom másolása",
+      "delete": "Törlés",
+      "open": "Megnyitás"
+    },
+    "createTitle": "Új fájl létrehozása",
+    "deleteConfirm": "Biztos benne, hogy törölni akarja a \"{{name}}\" fájlt? Ez a művelet nem vonható vissza.",
+    "dismiss": "Elvetés",
+    "empty": {
+      "description": "Hozza létre az első fájlját a kezdéshez",
+      "title": "Nincsenek fájlok ebben a projektben"
+    },
+    "fileCount_one": "1 fájl",
+    "fileCount_other": "{{count}} fájl",
+    "noResults": "Nincsenek fájlok, amelyek megfelelnek a keresésének",
+    "searchPlaceholder": "Fájlok keresése...",
+    "shown_one": "1 fájl látható",
+    "shown_other": "{{count}} fájl látható",
+    "title": "Fájlok",
+    "uploadTitle": "Fájlok feltöltése a számítógépről"
+  },
+  "upload": {
+    "cancel": "Mégse",
+    "complete": "Feltöltés befejezve",
+    "description": "Fájlok feltöltése a számítógépről. A fájlokat olvasni fogjuk és szerkeszthető szövegfájlokként mentjük el a projektben.",
+    "done": "Kész",
+    "dropzone": {
+      "active": "Húzza ide a fájlokat",
+      "andMore_one": "további fájlok feltöltése",
+      "andMore_other": "további fájlok feltöltése",
+      "description": "Húzza és ejtse ide a fájlokat, vagy kattintson a fájlok kiválasztásához",
+      "maxSize": "Maximális fájlméret: {{size}}MB",
+      "supportedTypes": "Támogatott típusok: {{types}}",
+      "title": "Fájlok feltöltése a számítógépről"
+    },
+    "errors": {
+      "tooLarge": "A fájl \"{{name}}\" túl nagy. A maximális méret: {{maxSize}}MB.",
+      "unsupportedType": "A fájltípus nem támogatott. Engedélyezett típusok: {{types}}"
+    },
+    "success_one": "Fájl sikeresen feltöltve!",
+    "success_other": "{{count}} fájl sikeresen feltöltve!",
+    "title": "Fájlok feltöltése a projekthez",
+    "uploading": "Fájlok feltöltése"
+  }
+}
