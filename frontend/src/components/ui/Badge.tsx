@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { cn } from '@/lib/utils'
+import { XIcon } from '@/components/icons'
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: 'default' | 'secondary' | 'success' | 'warning' | 'destructive' | 'info' | 'outline'
@@ -182,19 +183,7 @@ const Tag = React.forwardRef<HTMLSpanElement, TagProps>(
               'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1'
             )}
           >
-            <svg
-              className="h-3 w-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <XIcon size={12} />
           </button>
         )}
       </span>

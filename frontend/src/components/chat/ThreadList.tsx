@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
 import { Thread } from '../../types'
 import { cn } from '../../lib/utils'
+import { PlusIcon, TrashIcon } from '@/components/icons'
 import { threadStore, useThreads, useActiveThread, useThreadsLoading } from '../../stores/threadStore'
 
 interface ThreadListProps {
@@ -79,19 +80,7 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
           className="p-1.5 hover:bg-accent rounded-md transition-colors"
           title={t('threads.newConversation')}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M12 5v14M5 12h14" />
-          </svg>
+          <PlusIcon size={16} />
         </button>
       </div>
 
@@ -148,19 +137,7 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
                     className="opacity-0 group-hover:opacity-100 p-1 hover:bg-destructive/10 hover:text-destructive rounded transition-all"
                     title={t('threads.deleteConversation')}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                    </svg>
+                    <TrashIcon size={14} />
                   </button>
                 </div>
                 {typeof thread.message_count === 'number' && thread.message_count > 0 && (
