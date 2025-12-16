@@ -59,7 +59,8 @@ function parseArgs() {
     add: [],
     sync: false,
     all: false,
-    dryRun: false
+    dryRun: false,
+    force: false
   };
 
   for (let i = 0; i < args.length; i++) {
@@ -75,6 +76,8 @@ function parseArgs() {
       options.all = true;
     } else if (arg === '--dry-run') {
       options.dryRun = true;
+    } else if (arg === '--force' || arg === '-f') {
+      options.force = true;
     } else if (arg === '--help' || arg === '-h') {
       printHelp();
       process.exit(0);
@@ -96,6 +99,7 @@ Options:
   --add, -a <langs>  Add new languages (comma-separated codes)
   --sync, -s         Sync missing translations for existing languages
   --all              Add all supported European languages
+  --force, -f        Force retranslation of ALL keys (not just missing)
   --dry-run          Preview changes without writing files
   --help, -h         Show this help message
 
@@ -217,8 +221,15 @@ function isKeyLikeValue(value) {
 // Find missing keys in target compared to source
 // Also detects keys with "__MISSING__" placeholder value
 // Also detects keys with key-like values (e.g., "login.github")
-function findMissingKeys(source, target) {
+// If force=true, returns ALL keys for retranslation
+function findMissingKeys(source, target, force = false) {
   const flatSource = flattenObject(source);
+
+  // Force mode: retranslate all keys
+  if (force) {
+    return flatSource;
+  }
+
   const flatTarget = target ? flattenObject(target) : {};
 
   const missing = {};
@@ -330,9 +341,10 @@ IMPORTANT - Plural forms:
 }
 
 // Translate missing keys for a language
-async function translateMissing(apiKey, targetLang, dryRun = false) {
+async function translateMissing(apiKey, targetLang, dryRun = false, force = false) {
   const targetLangName = EUROPEAN_LANGUAGES[targetLang] || targetLang;
-  console.log(`\n📝 Translating to ${targetLangName} (${targetLang})...`);
+  const modeLabel = force ? '🔄 Force retranslating' : '📝 Translating';
+  console.log(`\n${modeLabel} to ${targetLangName} (${targetLang})...`);
 
   const namespaces = getNamespaces();
   let totalMissing = 0;
@@ -345,7 +357,7 @@ async function translateMissing(apiKey, targetLang, dryRun = false) {
     }
 
     const target = readTranslations(targetLang, namespace);
-    const missing = findMissingKeys(source, target);
+    const missing = findMissingKeys(source, target, force);
     const missingCount = Object.keys(missing).length;
 
     if (missingCount === 0) {
@@ -354,7 +366,8 @@ async function translateMissing(apiKey, targetLang, dryRun = false) {
     }
 
     totalMissing += missingCount;
-    console.log(`  → ${namespace}.json - ${missingCount} missing keys`);
+    const keyLabel = force ? 'keys to retranslate' : 'missing keys';
+    console.log(`  → ${namespace}.json - ${missingCount} ${keyLabel}`);
 
     if (dryRun) {
       console.log(`    Would translate: ${Object.keys(missing).slice(0, 3).join(', ')}${missingCount > 3 ? '...' : ''}`);
@@ -441,11 +454,15 @@ async function main() {
     console.log('\n🔍 DRY RUN MODE - No files will be modified\n');
   }
 
+  if (options.force) {
+    console.log('\n⚡ FORCE MODE - Retranslating ALL keys\n');
+  }
+
   // Process each target language
   let totalStats = { missing: 0, translated: 0 };
 
   for (const lang of targetLangs) {
-    const stats = await translateMissing(options.key, lang, options.dryRun);
+    const stats = await translateMissing(options.key, lang, options.dryRun, options.force);
     totalStats.missing += stats.missing;
     totalStats.translated += stats.translated;
   }
@@ -454,7 +471,8 @@ async function main() {
   console.log('\n==========================');
   console.log('📊 Summary:');
   console.log(`   Languages processed: ${targetLangs.length}`);
-  console.log(`   Missing keys found: ${totalStats.missing}`);
+  const keysLabel = options.force ? 'Keys retranslated' : 'Missing keys found';
+  console.log(`   ${keysLabel}: ${totalStats.missing}`);
   if (!options.dryRun) {
     console.log(`   Keys translated: ${totalStats.translated}`);
   }

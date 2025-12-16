@@ -1,64 +1,72 @@
 {
   "cta": {
-    "installPwa": "Installera PWA",
-    "start": "Börja bygga idag",
-    "subtitle": "Gå med tusentals utvecklare som bygger framtiden med AI-driven utveckling, mobil-först design och företagsklassad säkerhet.",
-    "title": "Redo att revolutionera din utvecklingsupplevelse?"
+    "installPwa": "Installera App",
+    "start": "Börja Bygga Gratis",
+    "subtitle": "Gå med i team som redan bygger smartare med AI. Gratis att börja, inget kreditkort krävs.",
+    "title": "Redo att bygga med AI?"
   },
   "features": {
     "items": {
       "ai": {
         "category": "AI",
-        "description": "Dynamisk modellhantering med OpenAI GPT och Anthropic Claude-modeller. Specialiserade AI-agenter med unika personligheter och kapabiliteter.",
-        "title": "Avancerad AI-integration"
+        "description": "Välj mellan GPT-4, Claude och andra AI-modeller. Skapa anpassade agenter skräddarsydda för dina projekt.",
+        "title": "Smart AI Assistent"
       },
       "analytics": {
         "category": "Analys",
-        "description": "Omfattande övervakning av AI API-användning, kostnader per projekt, admin-konfigurerbara gränser och användningsanalys.",
-        "title": "Tokenanvändning Spårning"
+        "description": "Spåra AI-användning och kostnader per projekt. Sätt budgetar och bli aldrig överraskad av fakturor.",
+        "title": "Användning & Kostnadsspårning"
       },
       "collaboration": {
         "category": "Samarbete",
-        "description": "WebSocket-drivna konversationer med skrivindikatorer, strömmande svar och beständig chatt-historik.",
-        "title": "Real-tids Chatt & Samarbete"
+        "description": "Chatta med AI i realtid. Se svaren när de genereras. Din konversationshistorik sparas alltid.",
+        "title": "AI Chat i Realtid"
       },
       "management": {
-        "category": "Hantera",
-        "description": "Stöd för flera projekt, filhantering (20+ typer), projektspecifika agenter och realtids fil-samarbete.",
-        "title": "Avancerad Projektledning"
+        "category": "Projekt",
+        "description": "Organisera arbetet i projekt. Ladda upp dokument, bilder och kod. Din AI kommer ihåg kontexten.",
+        "title": "Projektorganisation"
       },
       "mobile": {
         "category": "Mobil",
-        "description": "Progressiv Web App med offline-stöd, installation av inhemska appar, touch-optimerat gränssnitt och mobil navigering.",
-        "title": "Mobil-Först PWA"
+        "description": "Installera som en app på vilken enhet som helst. Arbeta på din telefon, surfplatta eller dator med samma fantastiska upplevelse.",
+        "title": "Fungerar Överallt"
       },
       "performance": {
-        "category": "Prestanda",
-        "description": "PostgreSQL med Redis-caching, anslutningspoolning, kodsplittring, service-arbetare och mobiloptimering.",
-        "title": "Hög Prestanda Arkitektur"
+        "category": "Plattform",
+        "description": "Installera på vilken enhet som helst, arbeta offline, synkronisera automatiskt. Snabb och pålitlig oavsett var du är.",
+        "title": "Arbeta Var Som Helst"
       },
       "pwa": {
-        "category": "PWA",
-        "description": "Service-arbetare med intelligent caching, bakgrundssynkronisering, offline filåtkomst och köhantering.",
-        "title": "Offline-funktioner"
+        "category": "Offline",
+        "description": "Fortsätt arbeta utan internet. Dina ändringar synkroniseras automatiskt när du är tillbaka online.",
+        "title": "Offline Läge"
       },
       "security": {
         "category": "Säkerhet",
-        "description": "Rollbaserad åtkomstkontroll, adminpanel, användarhantering, tokenbegränsningar, aktivitetsloggning och omfattande säkerhet.",
-        "title": "Företags Säkerhet & Admin"
+        "description": "Säkerhet av företagsklass med teambehörigheter, användningsgränser och fullständiga revisionsspår.",
+        "title": "Team Säkerhet"
       },
       "ux": {
-        "category": "Användarupplevelse",
-        "description": "Omfattande inställningar för profil, säkerhet, preferenser, mörkt/ljust läge och personliga användningsstatistik.",
-        "title": "Användarinställningar & Preferenser"
+        "category": "Anpassning",
+        "description": "Personalisera din arbetsyta med mörkt/ljust läge, notifikationspreferenser och anpassade inställningar.",
+        "title": "Din Arbetsyta, Ditt Sätt"
       }
     },
-    "subtitle": "Företagsklassad plattform med avancerad AI-integration, mobil-först design och omfattande utvecklingsverktyg byggda för moderna team.",
+    "subtitle": "Allt du behöver för att bygga med AI. Enkelt att börja, tillräckligt kraftfullt för team.",
     "techStack": {
       "subtitle": "Produktionsklar stack med TypeScript, React 18, Node.js, PostgreSQL och AI-integration",
-      "title": "Byggd med Moderna Tekniker"
+      "title": "Byggd med Moderna Tekniker",
+      "categories": {
+        "ai": "AI",
+        "backend": "Backend",
+        "database": "Databas",
+        "frontend": "Frontend",
+        "mobile": "Mobil",
+        "realtime": "Realtid"
+      }
     },
-    "title": "Produktionsklara Funktioner"
+    "title": "Allt Du Behöver"
   },
   "footer": {
     "company": {
@@ -68,7 +76,7 @@
       "contact": "Kontakt",
       "title": "Företag"
     },
-    "copyright": "© 2024 AI Projects. Alla rättigheter förbehållna.",
+    "copyright": "© 2025 AI Projects. Alla rättigheter förbehållna.",
     "product": {
       "api": "API",
       "documentation": "Dokumentation",
@@ -86,14 +94,14 @@
     "tagline": "Framtiden för utveckling är här. Bygg fantastiska projekt med AI-assistans."
   },
   "hero": {
-    "badge": "Produktionredo AI Utvecklingsplattform",
+    "badge": "AI Arbetsyta för Moderna Team",
     "cta": {
       "demo": "Titta på Demo",
       "start": "Börja Bygga Gratis"
     },
-    "subtitle": "Fullstack-plattform med avancerade AI-agenter, realtids-samarbete, mobil-först PWA-design, företagsäkerhet och omfattande projektledning. Arbeta var som helst, när som helst.",
-    "title": "Framtiden för",
-    "titleHighlight": "AI-Driven Utveckling"
+    "subtitle": "Skapa projekt med AI-assistenter som förstår din kontext. Samarbeta i realtid, arbeta offline och hantera allt från din telefon eller dator.",
+    "title": "Bygg Smartare",
+    "titleHighlight": "med AI"
   },
   "nav": {
     "features": "Funktioner",
@@ -111,10 +119,10 @@
         "cta": "Kontakta Försäljning",
         "features": [
           "Allt i Pro",
-          "Adminpanel & RBAC",
-          "Anpassade tokenbegränsningar",
-          "Aktivitetsloggning",
-          "SSO & efterlevnad",
+          "Adminpanel & teamroller",
+          "Anpassade användningsgränser",
+          "Aktivitetsrevisionsloggar",
+          "SSO-integration",
           "Dedikerad support"
         ],
         "name": "Företag",
@@ -124,9 +132,9 @@
         "cta": "Börja Pro Test",
         "features": [
           "Obegränsade projekt",
-          "GPT-4 + Claude-modeller",
-          "Realtids-samarbete",
-          "Avancerad filhantering",
+          "GPT-4 & Claude",
+          "Team-samarbete",
+          "Obegränsade filer",
           "Användningsanalys",
           "Prioriterad support"
         ],
@@ -137,44 +145,44 @@
       "starter": {
         "cta": "Kom igång Gratis",
         "features": [
-          "5 AI-projekt",
-          "OpenAI GPT-modeller",
-          "Mobil PWA-åtkomst",
-          "Offline-funktioner",
+          "5 projekt",
+          "GPT-4 åtkomst",
+          "Mobilapp",
+          "Arbeta offline",
           "Community-support"
         ],
         "name": "Start",
         "price": "$0"
       }
     },
-    "subtitle": "Fullfjädrad plattform med AI-integration, mobil PWA, adminkontroller och företagsäkerhet. Börja gratis, skala när du växer.",
-    "title": "Företagsklassade priser för team av alla storlekar"
+    "subtitle": "Börja gratis, uppgradera när du behöver mer. Inga överraskningar, avbryt när som helst.",
+    "title": "Enkel, Transparent Prissättning"
   },
   "stats": {
-    "activeDevelopers": "Aktiva Utvecklare",
-    "projectsBuilt": "AI-Projekt Byggda",
-    "rating": "PWA Butiksbetyg",
-    "uptime": "Uptime SLA"
+    "activeDevelopers": "Skapade Projekt",
+    "projectsBuilt": "AI Konversationer",
+    "rating": "Användarnöjdhet",
+    "uptime": "Uppetid"
   },
   "testimonials": {
     "items": {
       "elena": {
-        "content": "Realtids-samarbete med WebSocket-integration är sömlöst. Servicearbetaren och cache-strategierna gör detta till den snabbaste utvecklingsplattformen jag har använt.",
+        "content": "Den realtidschatten med AI är otroligt responsiv. Jag får omedelbara svar medan min kod fortfarande är färsk i mitt sinne.",
         "name": "Elena Rodriguez",
-        "role": "DevOps Ingenjör"
+        "role": "Programvaruutvecklare"
       },
       "marcus": {
-        "content": "Adminpanelen ger oss fullständig kontroll över vårt teams AI-användning. Token-spårning och användarhanteringsfunktioner har sparat oss tusentals i API-kostnader.",
+        "content": "Vi har minskat våra AI-kostnader med 40% tack vare användningsspårningen. Nu vet jag exakt vilka projekt som använder vad, och kan sätta gränser för teamet.",
         "name": "Marcus Johnson",
         "role": "Ingenjörschef"
       },
       "sarah": {
-        "content": "Den mobil-först PWA-designen är otrolig. Jag kan koda på min telefon under pendlingen och sömlöst fortsätta på skrivbordet. Offline-funktionerna är en spelväxlare.",
+        "content": "Jag älskar att jag kan starta en konversation med AI på min telefon under lunchen och plocka upp den på min laptop på kontoret. Allt synkroniseras bara.",
         "name": "Sarah Chen",
-        "role": "Senior Fullstack Utvecklare"
+        "role": "Produktdesigner"
       }
     },
-    "subtitle": "Se vad vår community av utvecklare har att säga om AI-projekt.",
-    "title": "Älskad av utvecklare världen över"
+    "subtitle": "Gå med i tusentals team som redan bygger med AI-projekt.",
+    "title": "Betrodd av team världen över"
   }
 }

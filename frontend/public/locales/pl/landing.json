@@ -1,64 +1,72 @@
 {
   "cta": {
-    "installPwa": "Zainstaluj PWA",
-    "start": "Zacznij budować już dziś",
-    "subtitle": "Dołącz do tysięcy programistów budujących przyszłość z programowaniem wspieranym przez AI, mobilnym designem i bezpieczeństwem klasy enterprise.",
-    "title": "Gotowy zrewolucjonizować swoje doświadczenie programistyczne?"
+    "installPwa": "Zainstaluj aplikację",
+    "start": "Rozpocznij budowanie za darmo",
+    "subtitle": "Dołącz do zespołów, które już budują mądrzej z AI. Darmowe rozpoczęcie, brak wymogu karty kredytowej.",
+    "title": "Gotowy do budowania z AI?"
   },
   "features": {
     "items": {
       "ai": {
         "category": "AI",
-        "description": "Dynamiczne zarządzanie modelami OpenAI GPT i Anthropic Claude. Wyspecjalizowani agenci AI z unikalnymi osobowościami i możliwościami.",
-        "title": "Zaawansowana integracja AI"
+        "description": "Wybierz spośród modeli AI, takich jak GPT-4, Claude i inne. Twórz niestandardowe agenty dostosowane do swoich projektów.",
+        "title": "Inteligentni Asystenci AI"
       },
       "analytics": {
         "category": "Analityka",
-        "description": "Kompleksowe monitorowanie użycia API AI, kosztów na projekt, konfigurowalne limity przez administratora i analityka użycia.",
-        "title": "Śledzenie użycia tokenów"
+        "description": "Śledź użycie AI i koszty dla każdego projektu. Ustal budżety i nigdy nie daj się zaskoczyć rachunkom.",
+        "title": "Śledzenie Użycia i Kosztów"
       },
       "collaboration": {
         "category": "Współpraca",
-        "description": "Konwersacje oparte na WebSocket ze wskaźnikami pisania, streamingiem odpowiedzi i trwałą historią czatu.",
-        "title": "Czat i współpraca w czasie rzeczywistym"
+        "description": "Rozmawiaj z AI w czasie rzeczywistym. Zobacz odpowiedzi w miarę ich generowania. Historia twojej rozmowy jest zawsze zapisywana.",
+        "title": "Czat AI w Czasie Rzeczywistym"
       },
       "management": {
-        "category": "Zarządzanie",
-        "description": "Wsparcie wielu projektów, zarządzanie plikami (20+ typów), agenci specyficzni dla projektu i współpraca nad plikami w czasie rzeczywistym.",
-        "title": "Zaawansowane zarządzanie projektami"
+        "category": "Projekty",
+        "description": "Organizuj pracę w projektach. Prześlij dokumenty, obrazy i kod. Twoje AI pamięta kontekst.",
+        "title": "Organizacja Projektów"
       },
       "mobile": {
         "category": "Mobilność",
-        "description": "Progressive Web App ze wsparciem offline, instalacją jako natywna aplikacja, interfejsem zoptymalizowanym pod dotyk i nawigacją mobilną.",
-        "title": "PWA Mobile-First"
+        "description": "Zainstaluj jako aplikację na każdym urządzeniu. Pracuj na swoim telefonie, tablecie lub komputerze stacjonarnym z tym samym świetnym doświadczeniem.",
+        "title": "Działa wszędzie"
       },
       "performance": {
-        "category": "Wydajność",
-        "description": "PostgreSQL z cache'owaniem Redis, pooling połączeń, code splitting, service workers i optymalizacja mobilna.",
-        "title": "Architektura wysokiej wydajności"
+        "category": "Platforma",
+        "description": "Zainstaluj na każdym urządzeniu, pracuj offline, synchronizuj automatycznie. Szybko i niezawodnie, gdziekolwiek jesteś.",
+        "title": "Pracuj Gdziekolwiek"
       },
       "pwa": {
-        "category": "PWA",
-        "description": "Service worker z inteligentnym cache'owaniem, synchronizacją w tle, dostępem do plików offline i zarządzaniem kolejką.",
-        "title": "Możliwości offline"
+        "category": "Offline",
+        "description": "Kontynuuj pracę bez internetu. Twoje zmiany synchronizują się automatycznie, gdy wrócisz online.",
+        "title": "Tryb Offline"
       },
       "security": {
         "category": "Bezpieczeństwo",
-        "description": "Kontrola dostępu oparta na rolach, panel administracyjny, zarządzanie użytkownikami, limity tokenów, logowanie aktywności i kompleksowe bezpieczeństwo.",
-        "title": "Bezpieczeństwo i administracja Enterprise"
+        "description": "Bezpieczeństwo na poziomie przedsiębiorstwa z uprawnieniami zespołu, limitami użycia i pełnymi śladami audytowymi.",
+        "title": "Bezpieczeństwo Zespołu"
       },
       "ux": {
-        "category": "Doświadczenie użytkownika",
-        "description": "Kompleksowe ustawienia profilu, bezpieczeństwa, preferencji, trybu ciemnego/jasnego i osobistych statystyk użycia.",
-        "title": "Ustawienia i preferencje użytkownika"
+        "category": "Dostosowanie",
+        "description": "Personalizuj swoje miejsce pracy z trybem ciemnym/jasnym, preferencjami powiadomień i niestandardowymi ustawieniami.",
+        "title": "Twoje Miejsce Pracy, Twoim Sposobem"
       }
     },
-    "subtitle": "Platforma klasy enterprise z zaawansowaną integracją AI, mobilnym designem i kompleksowymi narzędziami programistycznymi dla nowoczesnych zespołów.",
+    "subtitle": "Wszystko, czego potrzebujesz, aby budować z AI. Proste do rozpoczęcia, wystarczająco potężne dla zespołów.",
     "techStack": {
       "subtitle": "Stack gotowy do produkcji z TypeScript, React 18, Node.js, PostgreSQL i integracją AI",
-      "title": "Zbudowane z nowoczesnymi technologiami"
+      "title": "Zbudowane z nowoczesnymi technologiami",
+      "categories": {
+        "ai": "AI",
+        "backend": "Backend",
+        "database": "Baza Danych",
+        "frontend": "Frontend",
+        "mobile": "Mobilne",
+        "realtime": "Czas Rzeczywisty"
+      }
     },
-    "title": "Funkcje gotowe do produkcji"
+    "title": "Wszystko, Czego Potrzebujesz"
   },
   "footer": {
     "company": {
@@ -68,7 +76,7 @@
       "contact": "Kontakt",
       "title": "Firma"
     },
-    "copyright": "© 2024 AI Projects. Wszelkie prawa zastrzeżone.",
+    "copyright": "© 2025 AI Projects. Wszelkie prawa zastrzeżone.",
     "product": {
       "api": "API",
       "documentation": "Dokumentacja",
@@ -86,14 +94,14 @@
     "tagline": "Przyszłość programowania jest tutaj. Buduj niesamowite projekty z pomocą AI."
   },
   "hero": {
-    "badge": "Gotowa produkcyjnie platforma programistyczna AI",
+    "badge": "Miejsce Pracy AI dla Nowoczesnych Zespołów",
     "cta": {
       "demo": "Obejrzyj demo",
       "start": "Zacznij budować za darmo"
     },
-    "subtitle": "Pełnostackowa platforma z zaawansowanymi agentami AI, współpracą w czasie rzeczywistym, mobilnym designem PWA, bezpieczeństwem na poziomie enterprise i kompleksowym zarządzaniem projektami. Pracuj gdziekolwiek, kiedykolwiek.",
-    "title": "Przyszłość",
-    "titleHighlight": "programowania wspieranego przez AI"
+    "subtitle": "Twórz projekty z asystentami AI, którzy rozumieją twój kontekst. Współpracuj w czasie rzeczywistym, pracuj offline i zarządzaj wszystkim z telefonu lub komputera stacjonarnego.",
+    "title": "Buduj Mądrzej",
+    "titleHighlight": "z AI"
   },
   "nav": {
     "features": "Funkcje",
@@ -110,11 +118,11 @@
       "enterprise": {
         "cta": "Skontaktuj się ze sprzedażą",
         "features": [
-          "Wszystko z Pro",
-          "Panel admina i RBAC",
-          "Niestandardowe limity tokenów",
-          "Logowanie aktywności",
-          "SSO i zgodność",
+          "Wszystko w Pro",
+          "Panel administracyjny i role zespołu",
+          "Niestandardowe limity użycia",
+          "Dzienniki audytu aktywności",
+          "Integracja SSO",
           "Dedykowane wsparcie"
         ],
         "name": "Enterprise",
@@ -124,10 +132,10 @@
         "cta": "Rozpocznij okres próbny Pro",
         "features": [
           "Nieograniczone projekty",
-          "Modele GPT-4 + Claude",
-          "Współpraca w czasie rzeczywistym",
-          "Zaawansowane zarządzanie plikami",
-          "Analityka użycia",
+          "GPT-4 i Claude",
+          "Współpraca zespołowa",
+          "Nieograniczone pliki",
+          "Analiza użycia",
           "Priorytetowe wsparcie"
         ],
         "name": "Profesjonalny",
@@ -137,44 +145,44 @@
       "starter": {
         "cta": "Zacznij za darmo",
         "features": [
-          "5 projektów AI",
-          "Modele OpenAI GPT",
-          "Dostęp do mobilnego PWA",
-          "Możliwości offline",
+          "5 projektów",
+          "Dostęp do GPT-4",
+          "Aplikacja mobilna",
+          "Pracuj offline",
           "Wsparcie społeczności"
         ],
         "name": "Starter",
         "price": "0 zł"
       }
     },
-    "subtitle": "Pełnofunkcyjna platforma z integracją AI, mobilnym PWA, kontrolkami admina i bezpieczeństwem enterprise. Zacznij za darmo, skaluj w miarę rozwoju.",
-    "title": "Cennik klasy enterprise dla zespołów każdej wielkości"
+    "subtitle": "Rozpocznij za darmo, uaktualnij, gdy potrzebujesz więcej. Bez niespodzianek, anuluj w dowolnym momencie.",
+    "title": "Prosta, Przejrzysta Cennik"
   },
   "stats": {
-    "activeDevelopers": "Aktywnych programistów",
-    "projectsBuilt": "Zbudowanych projektów AI",
-    "rating": "Ocena w sklepie PWA",
-    "uptime": "SLA czasu działania"
+    "activeDevelopers": "Utworzone Projekty",
+    "projectsBuilt": "Rozmowy AI",
+    "rating": "Satysfakcja Użytkowników",
+    "uptime": "Czas Działania"
   },
   "testimonials": {
     "items": {
       "elena": {
-        "content": "Współpraca w czasie rzeczywistym z integracją WebSocket jest płynna. Service worker i strategie cache'owania sprawiają, że to najszybsza platforma programistyczna, jakiej używałam.",
+        "content": "Czat w czasie rzeczywistym z AI jest niesamowicie responsywny. Otrzymuję natychmiastowe odpowiedzi, gdy mój kod wciąż jest świeży w mojej pamięci.",
         "name": "Elena Rodriguez",
-        "role": "Inżynier DevOps"
+        "role": "Programista"
       },
       "marcus": {
-        "content": "Panel administracyjny daje nam pełną kontrolę nad użyciem AI przez nasz zespół. Funkcje śledzenia tokenów i zarządzania użytkownikami zaoszczędziły nam tysiące na kosztach API.",
+        "content": "Zmniejszyliśmy nasze koszty AI o 40% dzięki śledzeniu użycia. Teraz dokładnie wiem, które projekty korzystają z czego i mogę ustalać limity dla zespołu.",
         "name": "Marcus Johnson",
         "role": "Menedżer ds. inżynierii"
       },
       "sarah": {
-        "content": "Mobilny design PWA jest niesamowity. Mogę kodować na telefonie podczas dojazdów i płynnie kontynuować na desktopie. Możliwości offline to game-changer.",
+        "content": "Uwielbiam, że mogę rozpocząć rozmowę z AI na moim telefonie podczas lunchu i kontynuować ją na moim laptopie w biurze. Wszystko się synchronizuje.",
         "name": "Sarah Chen",
-        "role": "Starszy programista Full-stack"
+        "role": "Projektant Produktu"
       }
     },
-    "subtitle": "Zobacz, co nasza społeczność programistów mówi o AI Projects.",
-    "title": "Kochane przez programistów na całym świecie"
+    "subtitle": "Dołącz do tysięcy zespołów, które już budują z AI Projects.",
+    "title": "Zaufane przez zespoły na całym świecie"
   }
 }

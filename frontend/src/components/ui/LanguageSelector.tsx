@@ -92,7 +92,7 @@ export function LanguageSelector({ variant = 'grid', className }: LanguageSelect
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 right-0 bottom-full mb-1 bg-card border border-border rounded-lg shadow-lg max-h-64 overflow-y-auto z-50">
+        <div className="absolute left-0 right-0 top-full mt-1 bg-card border border-border rounded-lg shadow-lg max-h-64 overflow-y-auto z-50">
           {LANGUAGES.map((lang) => (
             <button
               key={lang.code}

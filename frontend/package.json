@@ -20,7 +20,8 @@
     "i18n:status": "i18next-cli status",
     "i18n:translate": "node scripts/translate.js",
     "i18n:translate:sync": "node scripts/translate.js --sync",
-    "i18n:translate:all": "node scripts/translate.js --all"
+    "i18n:translate:all": "node scripts/translate.js --all",
+    "i18n:sync-changed": "node scripts/sync-changed.js"
   },
   "dependencies": {
     "@claude-projects/shared": "workspace:*",

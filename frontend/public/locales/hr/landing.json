@@ -1,64 +1,72 @@
 {
   "cta": {
-    "installPwa": "Instaliraj PWA",
-    "start": "Započni izgradnju danas",
-    "subtitle": "Pridružite se tisućama programera koji grade budućnost s razvojem potpomognutim AI-jem, dizajnom usmjerenim na mobilne uređaje i sigurnošću na razini poduzeća.",
-    "title": "Spremni za revoluciju u vašem razvoju?"
+    "installPwa": "Instaliraj aplikaciju",
+    "start": "Započni izgradnju besplatno",
+    "subtitle": "Pridruži se timovima koji već koriste AI za pametnije projekte. Besplatno za početak, bez potrebe za kreditnom karticom.",
+    "title": "Spreman za izgradnju s AI?"
   },
   "features": {
     "items": {
       "ai": {
         "category": "AI",
-        "description": "Dinamičko upravljanje modelima s OpenAI GPT i Anthropic Claude modelima. Specijalizirani AI agenti s jedinstvenim osobnostima i sposobnostima.",
-        "title": "Napredna AI Integracija"
+        "description": "Biraj između GPT-4, Claude i drugih AI modela. Kreiraj prilagođene agente prilagođene tvojim projektima.",
+        "title": "Pametni AI Asistenti"
       },
       "analytics": {
         "category": "Analitika",
-        "description": "Sveobuhvatno praćenje korištenja AI API-ja, troškova po projektu, administrativno konfigurabilnih ograničenja i analitike korištenja.",
-        "title": "Praćenje Korištenja Tokena"
+        "description": "Prati korištenje AI i troškove po projektu. Postavi budžete i nikada ne budi iznenađen računima.",
+        "title": "Praćenje Korištenja i Troškova"
       },
       "collaboration": {
         "category": "Suradnja",
-        "description": "Razgovori potpomognuti WebSocket tehnologijom s indikatorima tipkanja, strimovanjem odgovora i trajnom povijesti chata.",
-        "title": "Chat i Suradnja u Stvarnom Vremenu"
+        "description": "Razgovaraj s AI u stvarnom vremenu. Vidite odgovore dok se generiraju. Tvoja povijest razgovora uvijek se sprema.",
+        "title": "AI Čat u Stvarnom Vremenu"
       },
       "management": {
-        "category": "Upravljanje",
-        "description": "Podrška za više projekata, upravljanje datotekama (20+ tipova), agenti specifični za projekte i suradnja na datotekama u stvarnom vremenu.",
-        "title": "Napredno Upravljanje Projektima"
+        "category": "Projekti",
+        "description": "Organiziraj rad u projektima. Učitaj dokumente, slike i kod. Tvoj AI pamti kontekst.",
+        "title": "Organizacija Projekata"
       },
       "mobile": {
         "category": "Mobilno",
-        "description": "Progresivna web aplikacija s podrškom za rad bez interneta, instalacijom nativne aplikacije, sučeljem optimiziranim za dodir i mobilnom navigacijom.",
-        "title": "Mobilno-Usmjeren PWA"
+        "description": "Instaliraj kao aplikaciju na bilo kojem uređaju. Radi na svom telefonu, tabletu ili radnoj površini s istim odličnim iskustvom.",
+        "title": "Radi Svugdje"
       },
       "performance": {
-        "category": "Performanse",
-        "description": "PostgreSQL s Redis keširanjem, povezivanjem, dijeljenjem koda, servisnim radnicima i optimizacijom za mobilne uređaje.",
-        "title": "Arhitektura Visokih Performansi"
+        "category": "Platforma",
+        "description": "Instaliraj na bilo kojem uređaju, radi offline, automatski se sinkroniziraj. Brzo i pouzdano gdje god se nalazio.",
+        "title": "Radi Bilo Gdje"
       },
       "pwa": {
-        "category": "PWA",
-        "description": "Servisni radnik s inteligentnim keširanjem, pozadinskom sinkronizacijom, pristupom datotekama bez interneta i upravljanjem redovima.",
-        "title": "Mogućnosti Bez Interneta"
+        "category": "Offline",
+        "description": "Nastavi raditi bez interneta. Tvoje promjene se automatski sinkroniziraju kada se vratiš online.",
+        "title": "Offline Mod"
       },
       "security": {
         "category": "Sigurnost",
-        "description": "Kontrola pristupa temeljem uloga, administratorska ploča, upravljanje korisnicima, ograničenja tokena, evidentiranje aktivnosti i sveobuhvatna sigurnost.",
-        "title": "Sigurnost na Razini Poduzeća & Administracija"
+        "description": "Sigurnost na razini poduzeća s timskim dozvolama, ograničenjima korištenja i potpunim revizijskim tragovima.",
+        "title": "Sigurnost Tima"
       },
       "ux": {
-        "category": "Korisničko Iskustvo",
-        "description": "Sveobuhvatne postavke za profil, sigurnost, preferencije, tamni/svijetli način rada i osobnu statistiku korištenja.",
-        "title": "Postavke i Preferencije Korisnika"
+        "category": "Prilagodba",
+        "description": "Personaliziraj svoje radno okruženje s tamnim/svijetlim načinom, postavkama obavijesti i prilagođenim postavkama.",
+        "title": "Tvoje Radno Okruženje, Tvoj Način"
       }
     },
-    "subtitle": "Platforma na razini poduzeća s naprednom AI integracijom, dizajnom usmjerenim na mobilne uređaje i sveobuhvatnim razvojnim alatima prilagođenim modernim timovima.",
+    "subtitle": "Sve što ti treba za izgradnju s AI. Jednostavno za početak, dovoljno moćno za timove.",
     "techStack": {
       "subtitle": "Stack spreman za proizvodnju s TypeScript, React 18, Node.js, PostgreSQL i AI integracijom",
-      "title": "Izgrađeno s Modernim Tehnologijama"
+      "title": "Izgrađeno s Modernim Tehnologijama",
+      "categories": {
+        "ai": "AI",
+        "backend": "Backend",
+        "database": "Baza Podataka",
+        "frontend": "Frontend",
+        "mobile": "Mobilno",
+        "realtime": "U Stvarnom Vremenu"
+      }
     },
-    "title": "Značajke Spremne za Proizvodnju"
+    "title": "Sve što ti Treba"
   },
   "footer": {
     "company": {
@@ -68,7 +76,7 @@
       "contact": "Kontakt",
       "title": "Tvrtka"
     },
-    "copyright": "© 2024 AI Projekti. Sva prava pridržana.",
+    "copyright": "© 2025 AI Projekti. Sva prava pridržana.",
     "product": {
       "api": "API",
       "documentation": "Dokumentacija",
@@ -86,14 +94,14 @@
     "tagline": "Budućnost razvoja je ovdje. Izradite nevjerojatne projekte uz pomoć AI-a."
   },
   "hero": {
-    "badge": "Platforma za razvoj AI-a spremna za proizvodnju",
+    "badge": "AI Radno Okruženje za Moderne Timove",
     "cta": {
       "demo": "Pogledajte Demo",
       "start": "Započnite besplatno"
     },
-    "subtitle": "Full-stack platforma s naprednim AI agentima, suradnjom u stvarnom vremenu, dizajnom mobilne PWA, sigurnošću na razini poduzeća i sveobuhvatnim upravljanjem projektima. Radite bilo gdje, u bilo kojem trenutku.",
-    "title": "Budućnost",
-    "titleHighlight": "Razvoja potpomognutog AI-em"
+    "subtitle": "Kreiraj projekte s AI asistentima koji razumiju tvoj kontekst. Suradnja u stvarnom vremenu, rad offline i upravljanje svime s tvog telefona ili radne površine.",
+    "title": "Izgradi Pametnije",
+    "titleHighlight": "s AI"
   },
   "nav": {
     "features": "Značajke",
@@ -111,10 +119,10 @@
         "cta": "Kontaktirajte prodaju",
         "features": [
           "Sve u Pro",
-          "Administratorska ploča i RBAC",
-          "Prilagođeni limit tokena",
-          "Evidencija aktivnosti",
-          "SSO i usklađenost",
+          "Administratorska ploča i uloge tima",
+          "Prilagođena ograničenja korištenja",
+          "Revizijski dnevnici aktivnosti",
+          "SSO integracija",
           "Posvećena podrška"
         ],
         "name": "Poduzeće",
@@ -124,9 +132,9 @@
         "cta": "Započnite Pro probu",
         "features": [
           "Neograničeni projekti",
-          "GPT-4 + Claude modeli",
-          "Suradnja u stvarnom vremenu",
-          "Napredno upravljanje datotekama",
+          "GPT-4 & Claude",
+          "Suradnja tima",
+          "Neograničene datoteke",
           "Analitika korištenja",
           "Prioritetna podrška"
         ],
@@ -137,44 +145,44 @@
       "starter": {
         "cta": "Započnite besplatno",
         "features": [
-          "5 AI projekata",
-          "OpenAI GPT modeli",
-          "Pristup mobilnoj PWA",
-          "Offline mogućnosti",
+          "5 projekata",
+          "Pristup GPT-4",
+          "Mobilna aplikacija",
+          "Rad offline",
           "Podrška zajednice"
         ],
         "name": "Početnik",
         "price": "$0"
       }
     },
-    "subtitle": "Platforma sa svim značajkama s integracijom AI-a, mobilnom PWA, administratorskim kontrolama i sigurnošću na razini poduzeća. Započnite besplatno, skalirajte kako rastete.",
-    "title": "Cijene na razini poduzeća za timove svih veličina"
+    "subtitle": "Započni besplatno, nadogradi kada ti zatreba više. Bez iznenađenja, otkaži u bilo kojem trenutku.",
+    "title": "Jednostavna, Transparentna Cijena"
   },
   "stats": {
-    "activeDevelopers": "Aktivni programeri",
-    "projectsBuilt": "Izgrađeni AI projekti",
-    "rating": "Ocjena PWA trgovine",
-    "uptime": "Uptime SLA"
+    "activeDevelopers": "Kreirani Projekti",
+    "projectsBuilt": "AI Razgovori",
+    "rating": "Zadovoljstvo Korisnika",
+    "uptime": "Dostupnost"
   },
   "testimonials": {
     "items": {
       "elena": {
-        "content": "Suradnja u stvarnom vremenu s integracijom WebSocket-a je besprijekorna. Radni servis i strategije keširanja čine ovu platformu za razvoj najbržom koju sam koristila.",
+        "content": "Čat u stvarnom vremenu s AI je nevjerojatno responzivan. Dobivam trenutne odgovore dok je moj kod još svjež u mislima.",
         "name": "Elena Rodriguez",
-        "role": "DevOps inženjer"
+        "role": "Razvijač Softvera"
       },
       "marcus": {
-        "content": "Administratorska ploča nam daje potpunu kontrolu nad korištenjem AI-a u našem timu. Praćenje tokena i značajke upravljanja korisnicima uštedjele su nam tisuće u troškovima API-a.",
+        "content": "Smanjili smo troškove AI-a za 40% zahvaljujući praćenju korištenja. Sada točno znam koji projekti koriste što i mogu postaviti ograničenja za tim.",
         "name": "Marcus Johnson",
         "role": "Menadžer inženjeringa"
       },
       "sarah": {
-        "content": "Dizajn mobilne PWA je nevjerojatan. Mogu kodirati na svom telefonu tijekom putovanja i besprijekorno nastaviti na radnoj površini. Offline mogućnosti su promjena igre.",
+        "content": "Sviđa mi se što mogu započeti razgovor s AI-jem na svom telefonu tijekom ručka i nastaviti ga na svom prijenosnom računalu u uredu. Sve se jednostavno sinkronizira.",
         "name": "Sarah Chen",
-        "role": "Senior full-stack programer"
+        "role": "Dizajner proizvoda"
       }
     },
-    "subtitle": "Pogledajte što naša zajednica programera ima za reći o AI projektima.",
-    "title": "Omiljeno među programerima širom svijeta"
+    "subtitle": "Pridružite se tisućama timova koji već rade s AI projektima.",
+    "title": "Povjerenje timova širom svijeta"
   }
 }

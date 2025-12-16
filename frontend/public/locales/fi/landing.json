@@ -1,64 +1,72 @@
 {
   "cta": {
-    "installPwa": "Asenna PWA",
-    "start": "Aloita rakentaminen tänään",
-    "subtitle": "Liity tuhansien kehittäjien joukkoon, jotka rakentavat tulevaisuutta tekoälyllä tuetun kehityksen, mobiiliensimmäisen suunnittelun ja yritystason turvallisuuden avulla.",
-    "title": "Valmis mullistamaan kehityskokemuksesi?"
+    "installPwa": "Asenna sovellus",
+    "start": "Aloita rakentaminen ilmaiseksi",
+    "subtitle": "Liity tiimeihin, jotka jo rakentavat älykkäämmin AI:n avulla. Ilmainen aloitus, ei luottokorttia vaadita.",
+    "title": "Valmis rakentamaan AI:n kanssa?"
   },
   "features": {
     "items": {
       "ai": {
         "category": "Tekoäly",
-        "description": "Dynaaminen mallinhallinta OpenAI GPT- ja Anthropic Claude -malleilla. Erikoistuneet tekoälyagentit, joilla on ainutlaatuiset persoonallisuudet ja kyvyt.",
-        "title": "Edistynyt tekoälyintegraatio"
+        "description": "Valitse GPT-4, Claude ja muita AI-malleja. Luo mukautettuja agenteja projekteihisi.",
+        "title": "Älykkäät AI-avustajat"
       },
       "analytics": {
         "category": "Analytiikka",
-        "description": "Kattava seuranta tekoäly-API:n käytöstä, projektikohtaisista kustannuksista, ylläpitäjän määritettävistä rajoista ja käyttöanalytiikasta.",
-        "title": "Tokenin käytön seuranta"
+        "description": "Seuraa AI:n käyttöä ja kustannuksia projektikohtaisesti. Aseta budjetit ja vältä yllättäviä laskuja.",
+        "title": "Käytön ja kustannusten seuranta"
       },
       "collaboration": {
         "category": "Yhteistyö",
-        "description": "WebSocket-pohjaiset keskustelut kirjoitusindikaattoreilla, suoratoistovastauksilla ja pysyvällä keskusteluhistorialla.",
-        "title": "Reaaliaikainen keskustelu ja yhteistyö"
+        "description": "Keskustele AI:n kanssa reaaliajassa. Näe vastaukset niiden syntyessä. Keskusteluhistoriasi tallennetaan aina.",
+        "title": "Reaaliaikainen AI-keskustelu"
       },
       "management": {
-        "category": "Hallinta",
-        "description": "Moniprojektituki, tiedostojen hallinta (yli 20 tyyppiä), projektikohtaiset agentit ja reaaliaikainen tiedostoyhteistyö.",
-        "title": "Edistynyt projektinhallinta"
+        "category": "Projektit",
+        "description": "Järjestä työ projektien mukaan. Lataa asiakirjoja, kuvia ja koodia. AI:si muistaa kontekstin.",
+        "title": "Projektin järjestäminen"
       },
       "mobile": {
         "category": "Mobiili",
-        "description": "Progressiivinen verkkosovellus offline-tuesta, natiivisovelluksen asennuksesta, kosketusoptimoidusta käyttöliittymästä ja mobiilinavigaatiosta.",
-        "title": "Mobiiliensimmäinen PWA"
+        "description": "Asenna sovelluksena mille tahansa laitteelle. Työskentele puhelimellasi, tabletillasi tai tietokoneellasi samalla hienolla kokemuksella.",
+        "title": "Toimii kaikkialla"
       },
       "performance": {
-        "category": "Suorituskyky",
-        "description": "PostgreSQL Redis-välimuistilla, yhteyksien poolauksella, koodin jakamisella, palvelintyöntekijöillä ja mobiilioptimoinnilla.",
-        "title": "Korkean suorituskyvyn arkkitehtuuri"
+        "category": "Alusta",
+        "description": "Asenna mille tahansa laitteelle, työskentele offline-tilassa, synkronoi automaattisesti. Nopea ja luotettava missä tahansa oletkin.",
+        "title": "Työskentele missä tahansa"
       },
       "pwa": {
-        "category": "PWA",
-        "description": "Palvelintyöntekijä älykkäällä välimuistilla, taustasyntkronoinnilla, offline-tiedostojen käytöllä ja jonohallinnalla.",
-        "title": "Offline-ominaisuudet"
+        "category": "Offline",
+        "description": "Jatka työskentelyä ilman internetiä. Muutoksesi synkronoidaan automaattisesti, kun olet jälleen online.",
+        "title": "Offline-tila"
       },
       "security": {
         "category": "Turvallisuus",
-        "description": "Roolipohjainen pääsynhallinta, ylläpitäjän paneeli, käyttäjähallinta, token-rajoitukset, aktiviteettikirjaus ja kattava turvallisuus.",
-        "title": "Yritysturvallisuus ja hallinta"
+        "description": "Yritystason turvallisuus tiimiluvilla, käyttörajoituksilla ja täydellisillä auditointijäljillä.",
+        "title": "Tiimin turvallisuus"
       },
       "ux": {
-        "category": "Käyttäjäkokemus",
-        "description": "Kattavat asetukset profiilille, turvallisuudelle, mieltymyksille, tumma/vaalea tila ja henkilökohtaiset käyttötilastot.",
-        "title": "Käyttäjäasetukset ja mieltymykset"
+        "category": "Mukauttaminen",
+        "description": "Personoi työtilasi tummalla/vaalealla tilalla, ilmoitusasetuksilla ja mukautetuilla asetuksilla.",
+        "title": "Työtilasi, omalla tavallasi"
       }
     },
-    "subtitle": "Yritystason alusta edistyneellä tekoälyintegraatiolla, mobiiliensimmäisellä suunnittelulla ja kattavilla kehitystyökaluilla, jotka on rakennettu moderneille tiimeille.",
+    "subtitle": "Kaikki, mitä tarvitset rakentaaksesi AI:n kanssa. Helppo aloittaa, tarpeeksi tehokas tiimeille.",
     "techStack": {
       "subtitle": "Tuotantovalmiit teknologiat, kuten TypeScript, React 18, Node.js, PostgreSQL ja tekoälyintegraatio",
-      "title": "Rakennettu moderneilla teknologioilla"
+      "title": "Rakennettu moderneilla teknologioilla",
+      "categories": {
+        "ai": "AI",
+        "backend": "Backend",
+        "database": "Tietokanta",
+        "frontend": "Frontend",
+        "mobile": "Mobiili",
+        "realtime": "Reaaliaikainen"
+      }
     },
-    "title": "Tuotantovalmiit ominaisuudet"
+    "title": "Kaikki, mitä tarvitset"
   },
   "footer": {
     "company": {
@@ -68,7 +76,7 @@
       "contact": "Yhteystiedot",
       "title": "Yritys"
     },
-    "copyright": "© 2024 AI Projects. Kaikki oikeudet pidätetään.",
+    "copyright": "© 2025 AI Projects. Kaikki oikeudet pidätetään.",
     "product": {
       "api": "API",
       "documentation": "Dokumentaatio",
@@ -86,14 +94,14 @@
     "tagline": "Kehityksen tulevaisuus on täällä. Rakenna upeita projekteja AI-avustuksella."
   },
   "hero": {
-    "badge": "Tuotantovalmiin AI-kehitysalustan",
+    "badge": "AI-työtila moderneille tiimeille",
     "cta": {
       "demo": "Katso esittely",
       "start": "Aloita rakentaminen ilmaiseksi"
     },
-    "subtitle": "Kattava alusta edistyneillä AI-agentteilla, reaaliaikaisella yhteistyöllä, mobiiliensimmäisellä PWA-suunnittelulla, yritysturvallisuudella ja kattavalla projektinhallinnalla. Työskentele missä ja milloin tahansa.",
-    "title": "Tulevaisuus",
-    "titleHighlight": "AI-vetoisessa kehityksessä"
+    "subtitle": "Luo projekteja AI-avustajien kanssa, jotka ymmärtävät kontekstisi. Tee yhteistyötä reaaliajassa, työskentele offline-tilassa ja hallitse kaikkea puhelimestasi tai tietokoneeltasi.",
+    "title": "Rakenna älykkäämmin",
+    "titleHighlight": "AI:n kanssa"
   },
   "nav": {
     "features": "Ominaisuudet",
@@ -111,10 +119,10 @@
         "cta": "Ota yhteyttä myyntiin",
         "features": [
           "Kaikki Pro:ssa",
-          "Hallintapaneeli & RBAC",
-          "Mukautetut token-rajoitukset",
+          "Ylläpitäjän paneeli & tirolot",
+          "Mukautetut käyttörajoitukset",
           "Toimintalokit",
-          "SSO & vaatimustenmukaisuus",
+          "SSO-integraatio",
           "Omistettu tuki"
         ],
         "name": "Yritys",
@@ -123,10 +131,10 @@
       "pro": {
         "cta": "Aloita Pro-kokeilu",
         "features": [
-          "Rajattomat projektit",
-          "GPT-4 + Claude-mallit",
-          "Reaaliaikainen yhteistyö",
-          "Edistynyt tiedostohallinta",
+          "Rajoittamattomat projektit",
+          "GPT-4 & Claude",
+          "Tiimiyhteistyö",
+          "Rajoittamattomat tiedostot",
           "Käytön analytiikka",
           "Priorisoitu tuki"
         ],
@@ -137,44 +145,44 @@
       "starter": {
         "cta": "Aloita ilmaiseksi",
         "features": [
-          "5 AI-projektia",
-          "OpenAI GPT-mallit",
-          "Mobiili PWA -pääsy",
-          "Offline-ominaisuudet",
+          "5 projektia",
+          "GPT-4 pääsy",
+          "Mobiilisovellus",
+          "Työskentele offline-tilassa",
           "Yhteisön tuki"
         ],
         "name": "Aloittelija",
         "price": "$0"
       }
     },
-    "subtitle": "Kattava alusta AI-integraatiolla, mobiili PWA:lla, hallintakontrolleilla ja yritysturvallisuudella. Aloita ilmaiseksi, skaalaa kasvaessasi.",
-    "title": "Yrityslaatuinen hinnoittelu kaikenkokoisille tiimeille"
+    "subtitle": "Aloita ilmaiseksi, päivitä kun tarvitset enemmän. Ei yllätyksiä, voit peruuttaa milloin tahansa.",
+    "title": "Yksinkertainen, läpinäkyvä hinnoittelu"
   },
   "stats": {
-    "activeDevelopers": "Aktiiviset kehittäjät",
-    "projectsBuilt": "Rakennetut AI-projektit",
-    "rating": "PWA-kaupan arvio",
-    "uptime": "Uptime SLA"
+    "activeDevelopers": "Luodut projektit",
+    "projectsBuilt": "AI-keskustelut",
+    "rating": "Käyttäjätyytyväisyys",
+    "uptime": "Käytettävyysaika"
   },
   "testimonials": {
     "items": {
       "elena": {
-        "content": "Reaaliaikainen yhteistyö WebSocket-integraatiolla on saumaton. Palvelintyöntekijä ja välimuististrategiat tekevät tästä nopeimman kehitysalustan, jota olen käyttänyt.",
+        "content": "Reaaliaikainen keskustelu AI:n kanssa on uskomattoman nopeaa. Saan välittömiä vastauksia, kun koodini on vielä tuore mielessäni.",
         "name": "Elena Rodriguez",
-        "role": "DevOps-insinööri"
+        "role": "Ohjelmistokehittäjä"
       },
       "marcus": {
-        "content": "Hallintapaneeli antaa meille täydellisen hallinnan tiimimme AI-käytöstä. Token-seuranta ja käyttäjähallintatoiminnot ovat säästäneet meille tuhansia API-kustannuksissa.",
+        "content": "Vähensimme tekoälykustannuksiamme 40 % käyttöseurannan ansiosta. Nyt tiedän tarkalleen, mitkä projektit käyttävät mitä, ja voin asettaa rajoja tiimille.",
         "name": "Marcus Johnson",
         "role": "Insinööripäällikkö"
       },
       "sarah": {
-        "content": "Mobiiliensimmäinen PWA-suunnittelu on uskomaton. Voin koodata puhelimellani työmatkoilla ja jatkaa saumattomasti työpöydällä. Offline-ominaisuudet ovat pelin muuttaja.",
+        "content": "Rakastan, että voin aloittaa keskustelun tekoälyn kanssa puhelimellani lounaan aikana ja jatkaa sitä kannettavallani toimistossa. Kaikki synkronoituu vain.",
         "name": "Sarah Chen",
-        "role": "Senior Full-stack -kehittäjä"
+        "role": "Tuotesuunnittelija"
       }
     },
-    "subtitle": "Katso, mitä kehittäjäyhteisömme sanoo AI-projekteista.",
-    "title": "Kehittäjien rakastama ympäri maailmaa"
+    "subtitle": "Liity tuhansiin tiimeihin, jotka jo rakentavat tekoälyprojekteilla.",
+    "title": "Luotettu tiimien toimesta ympäri maailmaa"
   }
 }

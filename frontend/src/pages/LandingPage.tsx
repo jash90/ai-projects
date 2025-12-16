@@ -23,6 +23,7 @@ import {
   Settings
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { LanguageSelector } from '@/components/ui/LanguageSelector';
 import { usePWAFeatures } from '@/hooks/usePWAFeatures';
 import { useAuth } from '@/stores/authStore';
 import { cn } from '@/lib/utils';
@@ -131,19 +132,19 @@ export default function LandingPage() {
   ];
 
   const stats = [
-    { value: '15K+', label: t('stats.activeDevelopers') },
-    { value: '75K+', label: t('stats.projectsBuilt') },
+    { value: '1,000+', label: t('stats.activeDevelopers') },
+    { value: '50K+', label: t('stats.projectsBuilt') },
     { value: '99.9%', label: t('stats.uptime') },
-    { value: '4.8/5', label: t('stats.rating') }
+    { value: '95%', label: t('stats.rating') }
   ];
 
   const techStack = [
-    { name: 'React 18 + TypeScript', category: 'Frontend' },
-    { name: 'Node.js + Express', category: 'Backend' },
-    { name: 'PostgreSQL + Redis', category: 'Database' },
-    { name: 'OpenAI + Anthropic', category: 'AI' },
-    { name: 'Socket.IO + WebRTC', category: 'Real-time' },
-    { name: 'PWA + Service Workers', category: 'Mobile' }
+    { name: 'React 18 + TypeScript', category: t('features.techStack.categories.frontend') },
+    { name: 'Node.js + Express', category: t('features.techStack.categories.backend') },
+    { name: 'PostgreSQL + Redis', category: t('features.techStack.categories.database') },
+    { name: 'OpenAI + Anthropic', category: t('features.techStack.categories.ai') },
+    { name: 'Socket.IO + WebRTC', category: t('features.techStack.categories.realtime') },
+    { name: 'PWA + Service Workers', category: t('features.techStack.categories.mobile') }
   ];
 
   const handleGetStarted = () => {
@@ -189,6 +190,7 @@ export default function LandingPage() {
 
             {/* Desktop CTA */}
             <div className="hidden md:flex items-center gap-3">
+              <LanguageSelector variant="dropdown" />
               {canInstall && !isInstalled && (
                 <Button variant="outline" onClick={handleInstallApp} className="flex items-center gap-2">
                   <Download className="w-4 h-4" />
@@ -247,6 +249,9 @@ export default function LandingPage() {
                   {t('nav.signIn')}
                 </Link>
                 <div className="flex flex-col gap-2 pt-4 border-t border-border">
+                  <div className="py-2">
+                    <LanguageSelector variant="dropdown" />
+                  </div>
                   {canInstall && !isInstalled && (
                     <Button variant="outline" onClick={handleInstallApp} className="flex items-center gap-2 justify-center">
                       <Download className="w-4 h-4" />

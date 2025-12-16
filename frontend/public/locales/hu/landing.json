@@ -1,64 +1,72 @@
 {
   "cta": {
-    "installPwa": "PWA telepítése",
-    "start": "Kezdje el a fejlesztést ma",
-    "subtitle": "Csatlakozzon ezer fejlesztőhöz, akik AI-alapú fejlesztéssel, mobilra optimalizált dizájnnal és vállalati szintű biztonsággal építik a jövőt.",
-    "title": "Készen áll a fejlesztési élményének forradalmasítására?"
+    "installPwa": "Alkalmazás telepítése",
+    "start": "Kezdj el ingyenesen építeni",
+    "subtitle": "Csatlakozz olyan csapatokhoz, akik már okosabban építenek az AI-val. Ingyenes kezdés, nincs szükség hitelkártyára.",
+    "title": "Készen állsz az AI-val való építésre?"
   },
   "features": {
     "items": {
       "ai": {
         "category": "AI",
-        "description": "Dinamikus modellkezelés az OpenAI GPT és Anthropic Claude modellekkel. Speciális AI ügynökök egyedi személyiségekkel és képességekkel.",
-        "title": "Fejlett AI Integráció"
+        "description": "Válassz a GPT-4, Claude és más AI modellek közül. Hozz létre egyedi ügynököket, amelyek a projektjeidhez vannak igazítva.",
+        "title": "Okos AI Asszisztensek"
       },
       "analytics": {
         "category": "Elemzés",
-        "description": "Átfogó nyomon követés az AI API használatáról, projektenkénti költségek, adminisztrátor által konfigurálható korlátok és használati elemzések.",
-        "title": "Token Használat Nyomon Követése"
+        "description": "Kövesd nyomon az AI használatát és a költségeket projektenként. Állíts be költségkereteket, és soha ne érjen meglepetés a számlákkal.",
+        "title": "Használat és Költség Nyomon Követés"
       },
       "collaboration": {
         "category": "Együttműködés",
-        "description": "WebSocket-alapú beszélgetések gépelési jelzőkkel, folyamatos válaszokkal és tartós csevegési előzményekkel.",
-        "title": "Valós idejű Csevegés és Együttműködés"
+        "description": "Csevegj az AI-val valós időben. Lásd a válaszokat, ahogy generálódnak. A beszélgetési előzményeid mindig elmentésre kerülnek.",
+        "title": "Valós Idejű AI Csevegés"
       },
       "management": {
-        "category": "Menedszment",
-        "description": "Több projekt támogatása, fájlkezelés (20+ típus), projekt-specifikus ügynökök és valós idejű fájl együttműködés.",
-        "title": "Fejlett Projektmenedzsment"
+        "category": "Projektek",
+        "description": "Szervezd a munkát projektekbe. Tölts fel dokumentumokat, képeket és kódot. Az AI-d emlékszik a kontextusra.",
+        "title": "Projekt Szervezés"
       },
       "mobile": {
         "category": "Mobil",
-        "description": "Progresszív Webalkalmazás offline támogatással, natív alkalmazás telepítéssel, érintésoptimalizált felülettel és mobil navigációval.",
-        "title": "Mobilra Optimalizált PWA"
+        "description": "Telepítsd alkalmazásként bármely eszközre. Dolgozz a telefonodon, táblagépen vagy asztali gépen ugyanazzal a nagyszerű élménnyel.",
+        "title": "Mindenhol Működik"
       },
       "performance": {
-        "category": "Teljesítmény",
-        "description": "PostgreSQL Redis gyorsítótárazással, kapcsolat medencével, kódmegosztással, szolgáltatásmunkásokkal és mobil optimalizálással.",
-        "title": "Magas Teljesítményű Architektúra"
+        "category": "Platform",
+        "description": "Telepítsd bármely eszközre, dolgozz offline, szinkronizálj automatikusan. Gyors és megbízható, bárhol is vagy.",
+        "title": "Dolgozz Bárhol"
       },
       "pwa": {
-        "category": "PWA",
-        "description": "Szolgáltatásmunkás intelligens gyorsítótárazással, háttérszinkronizálással, offline fájl hozzáféréssel és sorkezeléssel.",
-        "title": "Offline Képességek"
+        "category": "Offline",
+        "description": "Folytasd a munkát internet nélkül. A változtatásaid automatikusan szinkronizálódnak, amikor újra online vagy.",
+        "title": "Offline Mód"
       },
       "security": {
         "category": "Biztonság",
-        "description": "Szerepkör alapú hozzáférés-vezérlés, admin panel, felhasználókezelés, token korlátok, tevékenységnaplózás és átfogó biztonság.",
-        "title": "Vállalati Biztonság és Adminisztráció"
+        "description": "Vállalati szintű biztonság csapatengedélyekkel, használati korlátokkal és teljes audit nyomvonalakkal.",
+        "title": "Csapat Biztonság"
       },
       "ux": {
-        "category": "Felhasználói Élmény",
-        "description": "Átfogó beállítások a profilhoz, biztonsághoz, preferenciákhoz, sötét/világos módhoz és személyes használati statisztikákhoz.",
-        "title": "Felhasználói Beállítások és Preferenciák"
+        "category": "Testreszabás",
+        "description": "Személyre szabhatod a munkahelyedet sötét/világos móddal, értesítési preferenciákkal és egyedi beállításokkal.",
+        "title": "A Te Munkahelyed, A Te Módod"
       }
     },
-    "subtitle": "Vállalati szintű platform fejlett AI integrációval, mobilra optimalizált dizájnnal és átfogó fejlesztői eszközökkel, amelyek a modern csapatok számára készültek.",
+    "subtitle": "Minden, amire szükséged van az AI-val való építéshez. Egyszerű a kezdés, elég erős a csapatok számára.",
     "techStack": {
       "subtitle": "Termelésre kész stack TypeScript, React 18, Node.js, PostgreSQL és AI integrációval",
-      "title": "Modern Technológiákkal Készült"
+      "title": "Modern Technológiákkal Készült",
+      "categories": {
+        "ai": "AI",
+        "backend": "Backend",
+        "database": "Adatbázis",
+        "frontend": "Frontend",
+        "mobile": "Mobil",
+        "realtime": "Valós idő"
+      }
     },
-    "title": "Termelésre Kész Funkciók"
+    "title": "Minden, Amire Szükséged Van"
   },
   "footer": {
     "company": {
@@ -68,7 +76,7 @@
       "contact": "Kapcsolat",
       "title": "Cég"
     },
-    "copyright": "© 2024 AI Projects. Minden jog fenntartva.",
+    "copyright": "© 2025 AI Projects. Minden jog fenntartva.",
     "product": {
       "api": "API",
       "documentation": "Dokumentáció",
@@ -86,14 +94,14 @@
     "tagline": "A fejlesztés jövője itt van. Építs lenyűgöző projekteket AI segítséggel."
   },
   "hero": {
-    "badge": "Termelésre kész AI fejlesztési platform",
+    "badge": "AI Munkahely Modern Csapatoknak",
     "cta": {
       "demo": "Demó megtekintése",
       "start": "Kezdj el ingyen építeni"
     },
-    "subtitle": "Teljes stack platform fejlett AI ügynökökkel, valós idejű együttműködéssel, mobilra optimalizált PWA dizájnnal, vállalati biztonsággal és átfogó projektmenedzsmenttel. Dolgozz bárhol, bármikor.",
-    "title": "A jövő",
-    "titleHighlight": "AI által vezérelt fejlesztés"
+    "subtitle": "Hozz létre projekteket olyan AI asszisztensekkel, akik értik a kontextusodat. Együttműködj valós időben, dolgozz offline, és kezeld mindent a telefonodról vagy asztali gépedről.",
+    "title": "Okosabban Építs",
+    "titleHighlight": "AI-val"
   },
   "nav": {
     "features": "Funkciók",
@@ -111,10 +119,10 @@
         "cta": "Kapcsolatfelvétel az értékesítéssel",
         "features": [
           "Minden a Pro-ban",
-          "Admin panel & RBAC",
-          "Egyedi token korlátok",
-          "Tevékenységek naplózása",
-          "SSO & megfelelőség",
+          "Adminisztrátori panel és csapat szerepek",
+          "Egyedi használati korlátok",
+          "Tevékenységi audit naplók",
+          "SSO integráció",
           "Dedikált támogatás"
         ],
         "name": "Vállalati",
@@ -124,10 +132,10 @@
         "cta": "Pro próbaverzió indítása",
         "features": [
           "Korlátlan projektek",
-          "GPT-4 + Claude modellek",
-          "Valós idejű együttműködés",
-          "Fejlett fájlkezelés",
-          "Használati elemzés",
+          "GPT-4 és Claude",
+          "Csapat együttműködés",
+          "Korlátlan fájlok",
+          "Használati elemzések",
           "Prioritásos támogatás"
         ],
         "name": "Professzionális",
@@ -137,44 +145,44 @@
       "starter": {
         "cta": "Kezdj el ingyen",
         "features": [
-          "5 AI projekt",
-          "OpenAI GPT modellek",
-          "Mobil PWA hozzáférés",
-          "Offline képességek",
+          "5 projekt",
+          "GPT-4 hozzáférés",
+          "Mobil alkalmazás",
+          "Dolgozz offline",
           "Közösségi támogatás"
         ],
         "name": "Kezdő",
         "price": "$0"
       }
     },
-    "subtitle": "Teljes funkcionalitású platform AI integrációval, mobil PWA-val, adminisztrációs vezérlőkkel és vállalati biztonsággal. Kezdj ingyen, bővíts, ahogy növekszel.",
-    "title": "Vállalati szintű árazás minden méretű csapat számára"
+    "subtitle": "Kezdj ingyen, frissíts, amikor többre van szükséged. Nincs meglepetés, bármikor lemondhatod.",
+    "title": "Egyszerű, Átlátható Árazás"
   },
   "stats": {
-    "activeDevelopers": "Aktív fejlesztők",
-    "projectsBuilt": "Létrehozott AI projektek",
-    "rating": "PWA Bolt értékelés",
-    "uptime": "Üzemidő SLA"
+    "activeDevelopers": "Létrehozott Projektek",
+    "projectsBuilt": "AI Beszélgetések",
+    "rating": "Felhasználói Elégedettség",
+    "uptime": "Elérhetőség"
   },
   "testimonials": {
     "items": {
       "elena": {
-        "content": "A WebSocket integrációval történő valós idejű együttműködés zökkenőmentes. A szolgáltatás munkás és a gyorsítótárazási stratégiák teszik ezt a leggyorsabb fejlesztési platformmá, amit használtam.",
+        "content": "A valós idejű csevegés az AI-val hihetetlenül reagáló. Azonnali válaszokat kapok, miközben a kód még friss az elmémben.",
         "name": "Elena Rodriguez",
-        "role": "DevOps mérnök"
+        "role": "Szoftverfejlesztő"
       },
       "marcus": {
-        "content": "Az admin panel teljes kontrollt biztosít a csapatunk AI használata felett. A token nyomkövetés és a felhasználókezelési funkciók ezreket spóroltak meg nekünk API költségekben.",
+        "content": "A használat követésének köszönhetően 40%-kal csökkentettük az AI költségeinket. Most pontosan tudom, hogy mely projektek használják mit, és korlátokat tudok beállítani a csapat számára.",
         "name": "Marcus Johnson",
         "role": "Mérnöki vezető"
       },
       "sarah": {
-        "content": "A mobilra optimalizált PWA dizájn hihetetlen. Kódolhatok a telefonomon az utazások alatt, és zökkenőmentesen folytathatom asztali gépen. Az offline képességek igazi áttörést jelentenek.",
+        "content": "Imádom, hogy a telefonon elindíthatok egy beszélgetést az AI-jal ebéd közben, és folytathatom a laptopomon az irodában. Minden egyszerűen szinkronizálódik.",
         "name": "Sarah Chen",
-        "role": "Senior full-stack fejlesztő"
+        "role": "Terméktervező"
       }
     },
-    "subtitle": "Nézd meg, mit mond a fejlesztőink közössége az AI projektekről.",
-    "title": "A világ minden tájáról kedvelt fejlesztők által"
+    "subtitle": "Csatlakozzon azokhoz a csapatokhoz, akik már AI projektekkel dolgoznak.",
+    "title": "Világszerte megbíznak a csapatok"
   }
 }

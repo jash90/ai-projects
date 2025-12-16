@@ -1,64 +1,72 @@
 {
   "cta": {
-    "installPwa": "Instalează PWA",
-    "start": "Începe să construiești astăzi",
-    "subtitle": "Alătură-te miilor de dezvoltatori care construiesc viitorul cu dezvoltare bazată pe AI, design mobil-first și securitate de nivel enterprise.",
-    "title": "Ești gata să revoluționezi experiența ta de dezvoltare?"
+    "installPwa": "Instalează aplicația",
+    "start": "Începe să construiești gratuit",
+    "subtitle": "Alătură-te echipelor care construiesc deja mai inteligent cu AI. Gratuit la început, fără card de credit necesar.",
+    "title": "Ești pregătit să construiești cu AI?"
   },
   "features": {
     "items": {
       "ai": {
         "category": "AI",
-        "description": "Gestionare dinamică a modelului cu OpenAI GPT și modelele Anthropic Claude. Agenți AI specializați cu personalități și capabilități unice.",
-        "title": "Integrare Avansată AI"
+        "description": "Alege din GPT-4, Claude și alte modele AI. Creează agenți personalizați adaptați proiectelor tale.",
+        "title": "Asistenți AI Inteligenti"
       },
       "analytics": {
         "category": "Analitică",
-        "description": "Monitorizare cuprinzătoare a utilizării API-ului AI, costuri pe proiect, limite configurabile de admin și analize de utilizare.",
-        "title": "Urmărirea Utilizării Token-urilor"
+        "description": "Urmărește utilizarea AI și costurile pe proiect. Stabilește bugete și nu te surprinde cu facturi.",
+        "title": "Urmărirea Utilizării și Costurilor"
       },
       "collaboration": {
         "category": "Colaborare",
-        "description": "Conversații alimentate de WebSocket cu indicatori de tastare, răspunsuri în flux și istoric de chat persistent.",
-        "title": "Chat & Colaborare în Timp Real"
+        "description": "Discută cu AI în timp real. Vezi răspunsurile pe măsură ce sunt generate. Istoricul conversației tale este întotdeauna salvat.",
+        "title": "Chat AI în Timp Real"
       },
       "management": {
-        "category": "Management",
-        "description": "Suport pentru mai multe proiecte, gestionarea fișierelor (peste 20 de tipuri), agenți specifici proiectului și colaborare în timp real pe fișiere.",
-        "title": "Management Avansat al Proiectelor"
+        "category": "Proiecte",
+        "description": "Organizează munca în proiecte. Încarcă documente, imagini și cod. AI-ul tău își amintește contextul.",
+        "title": "Organizarea Proiectelor"
       },
       "mobile": {
         "category": "Mobil",
-        "description": "Aplicație Web Progresivă cu suport offline, instalare de aplicații native, interfață optimizată pentru touch și navigare mobilă.",
-        "title": "PWA Mobil-First"
+        "description": "Instalează ca o aplicație pe orice dispozitiv. Lucrează pe telefon, tabletă sau desktop cu aceeași experiență excelentă.",
+        "title": "Funcționează Oriunde"
       },
       "performance": {
-        "category": "Performanță",
-        "description": "PostgreSQL cu caching Redis, pooling de conexiuni, împărțirea codului, service workers și optimizare mobilă.",
-        "title": "Arhitectură de Înaltă Performanță"
+        "category": "Platformă",
+        "description": "Instalează pe orice dispozitiv, lucrează offline, sincronizează automat. Rapid și fiabil oriunde te-ai afla.",
+        "title": "Lucrează de Oriunde"
       },
       "pwa": {
-        "category": "PWA",
-        "description": "Service worker cu caching inteligent, sincronizare în fundal, acces offline la fișiere și gestionarea cozii.",
-        "title": "Capabilități Offline"
+        "category": "Offline",
+        "description": "Continuă să lucrezi fără internet. Modificările tale se sincronizează automat când te întorci online.",
+        "title": "Mod Offline"
       },
       "security": {
         "category": "Securitate",
-        "description": "Control al accesului bazat pe roluri, panou de administrare, gestionarea utilizatorilor, limite de token-uri, înregistrarea activității și securitate cuprinzătoare.",
-        "title": "Securitate Enterprise & Admin"
+        "description": "Securitate de nivel enterprise cu permisiuni pentru echipă, limite de utilizare și trail-uri complete de audit.",
+        "title": "Securitatea Echipei"
       },
       "ux": {
-        "category": "Experiența Utilizatorului",
-        "description": "Setări cuprinzătoare pentru profil, securitate, preferințe, mod întunecat/clar și statistici personale de utilizare.",
-        "title": "Setări & Preferințe Utilizator"
+        "category": "Personalizare",
+        "description": "Personalizează-ți spațiul de lucru cu mod întunecat/clar, preferințe de notificare și setări personalizate.",
+        "title": "Spațiul Tău de Lucru, În Stilul Tău"
       }
     },
-    "subtitle": "Platformă de nivel enterprise cu integrare avansată AI, design mobil-first și instrumente de dezvoltare cuprinzătoare construite pentru echipe moderne.",
+    "subtitle": "Tot ce ai nevoie pentru a construi cu AI. Simplu de început, suficient de puternic pentru echipe.",
     "techStack": {
       "subtitle": "Stack pregătit pentru producție cu TypeScript, React 18, Node.js, PostgreSQL și integrare AI",
-      "title": "Construit cu Tehnologii Moderne"
+      "title": "Construit cu Tehnologii Moderne",
+      "categories": {
+        "ai": "AI",
+        "backend": "Backend",
+        "database": "Bază de Date",
+        "frontend": "Frontend",
+        "mobile": "Mobil",
+        "realtime": "În Timp Real"
+      }
     },
-    "title": "Funcționalități Pregătite pentru Producție"
+    "title": "Tot Ce Ai Nevoie"
   },
   "footer": {
     "company": {
@@ -68,7 +76,7 @@
       "contact": "Contact",
       "title": "Companie"
     },
-    "copyright": "© 2024 AI Projects. Toate drepturile rezervate.",
+    "copyright": "© 2025 AI Projects. Toate drepturile rezervate.",
     "product": {
       "api": "API",
       "documentation": "Documentație",
@@ -86,14 +94,14 @@
     "tagline": "Viitorul dezvoltării este aici. Construiește proiecte uimitoare cu asistență AI."
   },
   "hero": {
-    "badge": "Platformă de dezvoltare AI gata pentru producție",
+    "badge": "Spațiu de Lucru AI pentru Echipe Moderne",
     "cta": {
       "demo": "Vizionați demonstrația",
       "start": "Începeți să construiți gratuit"
     },
-    "subtitle": "Platformă full-stack cu agenți AI avansați, colaborare în timp real, design PWA orientat pe mobil, securitate de nivel enterprise și management complet al proiectelor. Lucrează de oriunde, oricând.",
-    "title": "Viitorul",
-    "titleHighlight": "Dezvoltării alimentate de AI"
+    "subtitle": "Creează proiecte cu asistenți AI care înțeleg contextul tău. Colaborează în timp real, lucrează offline și gestionează totul de pe telefonul sau desktopul tău.",
+    "title": "Construiește Mai Inteligent",
+    "titleHighlight": "cu AI"
   },
   "nav": {
     "features": "Funcționalități",
@@ -111,10 +119,10 @@
         "cta": "Contactați vânzările",
         "features": [
           "Tot ce este în Pro",
-          "Panou de administrare & RBAC",
-          "Limite personalizate pentru token-uri",
-          "Jurnalizare a activității",
-          "SSO & conformitate",
+          "Panou de administrare & roluri pentru echipă",
+          "Limite de utilizare personalizate",
+          "Jurnale de audit al activității",
+          "Integrare SSO",
           "Asistență dedicată"
         ],
         "name": "Enterprise",
@@ -124,9 +132,9 @@
         "cta": "Începeți proba Pro",
         "features": [
           "Proiecte nelimitate",
-          "Modele GPT-4 + Claude",
-          "Colaborare în timp real",
-          "Management avansat al fișierelor",
+          "GPT-4 & Claude",
+          "Colaborare în echipă",
+          "Fișiere nelimitate",
           "Analiza utilizării",
           "Asistență prioritară"
         ],
@@ -137,44 +145,44 @@
       "starter": {
         "cta": "Începeți gratuit",
         "features": [
-          "5 proiecte AI",
-          "Modele OpenAI GPT",
-          "Acces PWA mobil",
-          "Capabilități offline",
+          "5 proiecte",
+          "Acces la GPT-4",
+          "Aplicație mobilă",
+          "Lucrează offline",
           "Asistență din comunitate"
         ],
         "name": "Starter",
         "price": "$0"
       }
     },
-    "subtitle": "Platformă completă cu integrare AI, PWA mobil, controale de administrare și securitate de nivel enterprise. Începeți gratuit, scalați pe măsură ce creșteți.",
-    "title": "Prețuri de nivel enterprise pentru echipe de toate dimensiunile"
+    "subtitle": "Începe gratuit, îmbunătățește când ai nevoie de mai mult. Fără surprize, anulează oricând.",
+    "title": "Prețuri Simple și Transparent"
   },
   "stats": {
-    "activeDevelopers": "Dezvoltatori activi",
-    "projectsBuilt": "Proiecte AI construite",
-    "rating": "Evaluare PWA Store",
-    "uptime": "SLA de disponibilitate"
+    "activeDevelopers": "Proiecte Crează",
+    "projectsBuilt": "Conversații AI",
+    "rating": "Satisfacția Utilizatorilor",
+    "uptime": "Timp de Funcționare"
   },
   "testimonials": {
     "items": {
       "elena": {
-        "content": "Colaborarea în timp real cu integrarea WebSocket este fără cusur. Worker-ul de serviciu și strategiile de caching fac din aceasta cea mai rapidă platformă de dezvoltare pe care am folosit-o.",
+        "content": "Chatul în timp real cu AI este incredibil de receptiv. Obțin răspunsuri instantanee în timp ce codul meu este încă proaspăt în minte.",
         "name": "Elena Rodriguez",
-        "role": "Inginer DevOps"
+        "role": "Dezvoltator Software"
       },
       "marcus": {
-        "content": "Panoul de administrare ne oferă control complet asupra utilizării AI de către echipa noastră. Funcțiile de urmărire a token-urilor și managementul utilizatorilor ne-au economisit mii în costuri API.",
+        "content": "Am redus costurile noastre cu AI cu 40% datorită monitorizării utilizării. Acum știu exact ce proiecte folosesc ce și pot stabili limite pentru echipă.",
         "name": "Marcus Johnson",
         "role": "Manager de inginerie"
       },
       "sarah": {
-        "content": "Designul PWA orientat pe mobil este incredibil. Pot codifica pe telefon în timpul navetei și continui fără probleme pe desktop. Capabilitățile offline sunt un schimbător de joc.",
+        "content": "Îmi place că pot începe o conversație cu AI pe telefonul meu în timpul prânzului și să o continui pe laptopul meu la birou. Totul se sincronizează.",
         "name": "Sarah Chen",
-        "role": "Dezvoltator Full-stack Senior"
+        "role": "Designer de Produs"
       }
     },
-    "subtitle": "Vezi ce are de spus comunitatea noastră de dezvoltatori despre proiectele AI.",
-    "title": "Îndrăgit de dezvoltatori din întreaga lume"
+    "subtitle": "Alăturați-vă miilor de echipe care deja construiesc cu AI Projects.",
+    "title": "Apreciat de echipe din întreaga lume"
   }
 }

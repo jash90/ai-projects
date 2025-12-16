@@ -1,64 +1,72 @@
 {
   "cta": {
-    "installPwa": "Installer PWA",
-    "start": "Beg at bygge i dag",
-    "subtitle": "Deltag i tusindvis af udviklere, der bygger fremtiden med AI-drevet udvikling, mobil-første design og virksomhedsklasse sikkerhed.",
-    "title": "Klar til at revolutionere din udviklingsoplevelse?"
+    "installPwa": "Installer App",
+    "start": "Beg at bygge gratis",
+    "subtitle": "Deltag i teams, der allerede bygger smartere med AI. Gratis at starte, ingen kreditkort kræves.",
+    "title": "Klar til at bygge med AI?"
   },
   "features": {
     "items": {
       "ai": {
         "category": "AI",
-        "description": "Dynamisk modelstyring med OpenAI GPT og Anthropic Claude modeller. Specialiserede AI-agenter med unikke personligheder og evner.",
-        "title": "Avanceret AI-integration"
+        "description": "Vælg mellem GPT-4, Claude og andre AI-modeller. Opret brugerdefinerede agenter skræddersyet til dine projekter.",
+        "title": "Smarte AI-assistenter"
       },
       "analytics": {
         "category": "Analyse",
-        "description": "Omfattende overvågning af AI API-brug, omkostninger pr. projekt, admin-konfigurerbare grænser og brugsanalyser.",
-        "title": "Token-brugsopfølgning"
+        "description": "Spor AI-brug og omkostninger pr. projekt. Sæt budgetter og bliv aldrig overrasket over regninger.",
+        "title": "Brug & Omkostningssporing"
       },
       "collaboration": {
         "category": "Samarbejde",
-        "description": "WebSocket-drevne samtaler med skriveindikatorer, streaming svar og vedholdende chat-historik.",
-        "title": "Real-time Chat & Samarbejde"
+        "description": "Chat med AI i realtid. Se svarene, mens de genereres. Din samtalehistorik gemmes altid.",
+        "title": "AI-chat i realtid"
       },
       "management": {
-        "category": "Ledelse",
-        "description": "Multi-projekt support, filhåndtering (20+ typer), projekt-specifikke agenter og real-time fil samarbejde.",
-        "title": "Avanceret Projektledelse"
+        "category": "Projekter",
+        "description": "Organiser arbejdet i projekter. Upload dokumenter, billeder og kode. Din AI husker konteksten.",
+        "title": "Projektorganisation"
       },
       "mobile": {
         "category": "Mobil",
-        "description": "Progressiv Web App med offline support, installation af native apps, berøringsoptimeret grænseflade og mobil navigation.",
-        "title": "Mobil-Første PWA"
+        "description": "Installer som en app på enhver enhed. Arbejd på din telefon, tablet eller desktop med den samme fantastiske oplevelse.",
+        "title": "Fungerer Overalt"
       },
       "performance": {
-        "category": "Ydelse",
-        "description": "PostgreSQL med Redis caching, forbindelsespulje, kodeopdeling, servicearbejdere og mobiloptimering.",
-        "title": "Høj Ydelsesarkitektur"
+        "category": "Platform",
+        "description": "Installer på enhver enhed, arbejd offline, synkroniser automatisk. Hurtig og pålidelig, uanset hvor du er.",
+        "title": "Arbejd Hvor Som Helst"
       },
       "pwa": {
-        "category": "PWA",
-        "description": "Servicearbejder med intelligent caching, baggrundssynkronisering, offline filadgang og køstyring.",
-        "title": "Offline Funktioner"
+        "category": "Offline",
+        "description": "Fortsæt med at arbejde uden internet. Dine ændringer synkroniseres automatisk, når du er online igen.",
+        "title": "Offline Tilstand"
       },
       "security": {
         "category": "Sikkerhed",
-        "description": "Rollebaseret adgangskontrol, adminpanel, brugerstyring, token-grænser, aktivitetslogning og omfattende sikkerhed.",
-        "title": "Virksomhedssikkerhed & Admin"
+        "description": "Sikkerhed i virksomhedsklasse med teamrettigheder, brugsgrænser og komplette revisionsspor.",
+        "title": "Team Sikkerhed"
       },
       "ux": {
-        "category": "Brugeroplevelse",
-        "description": "Omfattende indstillinger for profil, sikkerhed, præferencer, mørk/lys tilstand og personlige brugsstatistikker.",
-        "title": "Brugerindstillinger & Præferencer"
+        "category": "Tilpasning",
+        "description": "Personliggør dit arbejdsområde med mørk/lys tilstand, notifikationspræferencer og brugerdefinerede indstillinger.",
+        "title": "Dit Arbejdsområde, Din Måde"
       }
     },
-    "subtitle": "Virksomhedsklasse platform med avanceret AI-integration, mobil-første design og omfattende udviklingsværktøjer bygget til moderne teams.",
+    "subtitle": "Alt hvad du behøver for at bygge med AI. Simpelt at starte, kraftfuldt nok til teams.",
     "techStack": {
       "subtitle": "Produktionsklar stack med TypeScript, React 18, Node.js, PostgreSQL og AI-integration",
-      "title": "Bygget med Moderne Teknologier"
+      "title": "Bygget med Moderne Teknologier",
+      "categories": {
+        "ai": "AI",
+        "backend": "Backend",
+        "database": "Database",
+        "frontend": "Frontend",
+        "mobile": "Mobil",
+        "realtime": "Realtid"
+      }
     },
-    "title": "Produktionsklare Funktioner"
+    "title": "Alt hvad du Beholder"
   },
   "footer": {
     "company": {
@@ -68,7 +76,7 @@
       "contact": "Kontakt",
       "title": "Virksomhed"
     },
-    "copyright": "© 2024 AI Projects. Alle rettigheder forbeholdes.",
+    "copyright": "© 2025 AI Projects. Alle rettigheder forbeholdes.",
     "product": {
       "api": "API",
       "documentation": "Dokumentation",
@@ -86,14 +94,14 @@
     "tagline": "Fremtiden for udvikling er her. Byg fantastiske projekter med AI-assistance."
   },
   "hero": {
-    "badge": "Produktionsklar AI udviklingsplatform",
+    "badge": "AI Arbejdsområde for Moderne Teams",
     "cta": {
       "demo": "Se demo",
       "start": "Begynd at bygge gratis"
     },
-    "subtitle": "Full-stack platform med avancerede AI-agenter, realtids samarbejde, mobil-første PWA design, virksomhedssikkerhed og omfattende projektledelse. Arbejd hvor som helst, når som helst.",
-    "title": "Fremtiden for",
-    "titleHighlight": "AI-drevet udvikling"
+    "subtitle": "Opret projekter med AI-assistenter, der forstår din kontekst. Samarbejd i realtid, arbejd offline, og administrer alt fra din telefon eller desktop.",
+    "title": "Byg Smartere",
+    "titleHighlight": "med AI"
   },
   "nav": {
     "features": "Funktioner",
@@ -111,10 +119,10 @@
         "cta": "Kontakt salg",
         "features": [
           "Alt i Pro",
-          "Adminpanel & RBAC",
-          "Tilpassede token grænser",
-          "Aktivitetslogning",
-          "SSO & overholdelse",
+          "Adminpanel & teamroller",
+          "Brugerdefinerede brugsgrænser",
+          "Aktivitetsrevisionslogs",
+          "SSO-integration",
           "Dedikeret support"
         ],
         "name": "Enterprise",
@@ -124,9 +132,9 @@
         "cta": "Start Pro prøveperiode",
         "features": [
           "Ubegrænsede projekter",
-          "GPT-4 + Claude modeller",
-          "Realtids samarbejde",
-          "Avanceret filhåndtering",
+          "GPT-4 & Claude",
+          "Team samarbejde",
+          "Ubegrænsede filer",
           "Brugsanalyse",
           "Prioriteret support"
         ],
@@ -137,44 +145,44 @@
       "starter": {
         "cta": "Kom i gang gratis",
         "features": [
-          "5 AI projekter",
-          "OpenAI GPT modeller",
-          "Mobil PWA adgang",
-          "Offline funktioner",
-          "Fællesskabs support"
+          "5 projekter",
+          "GPT-4 adgang",
+          "Mobilapp",
+          "Arbejd offline",
+          "Fællesskabsstøtte"
         ],
         "name": "Starter",
         "price": "$0"
       }
     },
-    "subtitle": "Fuld-funktionel platform med AI integration, mobil PWA, adminkontroller og virksomhedssikkerhed. Start gratis, skaler efterhånden som du vokser.",
-    "title": "Virksomhedsniveau priser for teams af alle størrelser"
+    "subtitle": "Start gratis, opgrader når du har brug for mere. Ingen overraskelser, afbestil når som helst.",
+    "title": "Simpel, Gennemsigtig Prissætning"
   },
   "stats": {
-    "activeDevelopers": "Aktive udviklere",
-    "projectsBuilt": "AI projekter bygget",
-    "rating": "PWA Store vurdering",
-    "uptime": "Uptime SLA"
+    "activeDevelopers": "Oprettede Projekter",
+    "projectsBuilt": "AI-samtaler",
+    "rating": "Bruger tilfredshed",
+    "uptime": "Oppetid"
   },
   "testimonials": {
     "items": {
       "elena": {
-        "content": "Realtids samarbejde med WebSocket integration er problemfrit. Servicearbejderen og caching strategierne gør dette til den hurtigste udviklingsplatform, jeg har brugt.",
+        "content": "Den realtidschat med AI er utrolig responsiv. Jeg får øjeblikkelige svar, mens min kode stadig er frisk i mit sind.",
         "name": "Elena Rodriguez",
-        "role": "DevOps ingeniør"
+        "role": "Softwareudvikler"
       },
       "marcus": {
-        "content": "Adminpanelet giver os fuld kontrol over vores teams AI brug. Token sporing og brugerstyringsfunktioner har sparet os for tusindvis i API omkostninger.",
+        "content": "Vi har reduceret vores AI-omkostninger med 40% takket være brugssporingen. Nu ved jeg præcist, hvilke projekter der bruger hvad, og kan sætte grænser for teamet.",
         "name": "Marcus Johnson",
         "role": "Ingeniørleder"
       },
       "sarah": {
-        "content": "Det mobil-første PWA design er fantastisk. Jeg kan kode på min telefon under pendling og fortsætte problemfrit på desktop. De offline funktioner er en game-changer.",
+        "content": "Jeg elsker, at jeg kan starte en samtale med AI på min telefon under frokosten og fortsætte den på min bærbare computer på kontoret. Alt synkroniseres bare.",
         "name": "Sarah Chen",
-        "role": "Senior full-stack udvikler"
+        "role": "Produktdesigner"
       }
     },
-    "subtitle": "Se hvad vores fællesskab af udviklere har at sige om AI projekter.",
-    "title": "Elsket af udviklere verden over"
+    "subtitle": "Deltag i tusindvis af teams, der allerede bygger med AI Projects.",
+    "title": "Betroet af teams verden over"
   }
 }
