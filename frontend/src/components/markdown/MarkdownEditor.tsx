@@ -4,6 +4,7 @@ import type { ICommand } from '@uiw/react-md-editor'
 import { MarkdownPreview } from './MarkdownPreview'
 import { MarkdownToolbar } from './MarkdownToolbar'
 import { useMarkdownEditor } from './hooks/useMarkdownEditor'
+import { MermaidIcon } from '@/components/icons'
 import { cn } from '@/lib/utils'
 import './markdown.css'
 
@@ -12,11 +13,7 @@ const mermaidCommand: ICommand = {
   name: 'mermaid',
   keyCommand: 'mermaid',
   buttonProps: { 'aria-label': 'Insert Mermaid diagram', title: 'Insert Mermaid diagram' },
-  icon: (
-    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-      <path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z" />
-    </svg>
-  ),
+  icon: <MermaidIcon size={14} />,
   execute: (_state, api) => {
     const template = `\n\`\`\`mermaid\ngraph TD\n    A[Start] --> B{Decision}\n    B -->|Yes| C[Action 1]\n    B -->|No| D[Action 2]\n    C --> E[End]\n    D --> E\n\`\`\`\n`
     api.replaceSelection(template)

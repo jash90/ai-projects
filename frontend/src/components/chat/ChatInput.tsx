@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { useIsMobile } from '@/components/ui/MobileNavigation'
+import { FileIcon, XIcon, PaperclipIcon, SendIcon } from '@/components/icons'
 import { cn } from '@/lib/utils'
 import {
   ChatFileAttachment,
@@ -193,21 +194,7 @@ function ChatInput({
                 />
               ) : (
                 <div className="w-10 h-10 flex items-center justify-center bg-muted-foreground/20 rounded">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-muted-foreground"
-                  >
-                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-                    <polyline points="14 2 14 8 20 8" />
-                  </svg>
+                  <FileIcon size={20} className="text-muted-foreground" />
                 </div>
               )}
               <div className="flex flex-col min-w-0">
@@ -223,20 +210,7 @@ function ChatInput({
                 onClick={() => handleRemoveAttachment(index)}
                 className="absolute top-1 right-1 p-1 rounded-full bg-background/80 hover:bg-destructive hover:text-destructive-foreground transition-colors"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
+                <XIcon size={14} />
               </button>
             </div>
           ))}
@@ -277,19 +251,7 @@ function ChatInput({
           )}
           title={t('input.attachFiles')}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width={isMobile ? "20" : "18"}
-            height={isMobile ? "20" : "18"}
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48" />
-          </svg>
+          <PaperclipIcon size={isMobile ? 20 : 18} />
           <span className="sr-only">{t('input.attachFile')}</span>
         </Button>
 
@@ -343,20 +305,7 @@ function ChatInput({
             (disabled || (!message.trim() && attachments.length === 0)) ? 'opacity-50' : 'opacity-100'
           )}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width={isMobile ? "20" : "16"}
-            height={isMobile ? "20" : "16"}
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="m22 2-7 20-4-9-9-4Z" />
-            <path d="M22 2 11 13" />
-          </svg>
+          <SendIcon size={isMobile ? 20 : 16} />
           {isMobile && <span className="ml-2 text-sm font-medium">{t('input.send')}</span>}
           <span className="sr-only">{t('input.sendMessage')}</span>
         </Button>
