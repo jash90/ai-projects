@@ -107,6 +107,11 @@
       "title": "Select OpenRouter Model"
     }
   },
+  "dropdown": {
+    "title": "Select AI Agent",
+    "selectAgent": "Select agent",
+    "noAgents": "No agents available"
+  },
   "panel": {
     "browseAll": "Browse All Agents",
     "dismiss": "Dismiss",

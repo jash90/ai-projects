@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams, useNavigate } from 'react-router-dom'
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 import {
   ArrowLeft,
   PanelLeftOpen,
@@ -20,6 +21,8 @@ import {
   Code,
   Sparkles,
   FolderOpen,
+  LayoutPanelLeft,
+  PanelRight,
 } from 'lucide-react'
 import { Agent, TextFile as FileType } from '@/types'
 import { useProjects } from '@/stores/projectStore'
@@ -27,10 +30,11 @@ import { useAgents } from '@/stores/agentStore'
 import { Button } from '@/components/ui/Button'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { AgentPanel } from '@/components/agents/AgentPanel'
+import { AgentDropdown } from '@/components/agents/AgentDropdown'
 import { FileExplorer } from '@/components/files/FileExplorer'
 import { FileEditor } from '@/components/files/FileEditor'
 import { ThreadChat } from '@/components/chat/ThreadChat'
-import { MobileNavigation, useIsMobile } from '@/components/ui/MobileNavigation'
+import { SidePanel } from '@/components/ui/SidePanel'
 import { usePWAFeatures, useOfflineFiles } from '@/hooks/usePWAFeatures'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
@@ -38,11 +42,35 @@ import { cn } from '@/lib/utils'
 
 type MobileView = 'chat' | 'agents' | 'files' | 'editor'
 
+// Custom hook for responsive breakpoints
+function useBreakpoint() {
+  const [breakpoint, setBreakpoint] = useState<'mobile' | 'tablet' | 'desktop'>('desktop')
+
+  useEffect(() => {
+    const checkBreakpoint = () => {
+      const width = window.innerWidth
+      if (width < 640) {
+        setBreakpoint('mobile')
+      } else if (width < 1024) {
+        setBreakpoint('tablet')
+      } else {
+        setBreakpoint('desktop')
+      }
+    }
+
+    checkBreakpoint()
+    window.addEventListener('resize', checkBreakpoint)
+    return () => window.removeEventListener('resize', checkBreakpoint)
+  }, [])
+
+  return breakpoint
+}
+
 function ProjectPage() {
   const { t } = useTranslation('project')
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
-  const isMobile = useIsMobile()
+  const breakpoint = useBreakpoint()
 
   const { currentProject, fetchProject, isLoading: isLoadingProject } = useProjects()
   const { agents, fetchAgents } = useAgents()
@@ -58,16 +86,17 @@ function ProjectPage() {
   } = usePWAFeatures()
 
   const {
-    offlineFiles,
     pendingUploads,
-    hasOfflineFiles,
     hasPendingUploads
   } = useOfflineFiles()
 
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null)
   const [selectedFile, setSelectedFile] = useState<FileType | null>(null)
-  const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(isMobile)
-  const [rightPanelCollapsed, setRightPanelCollapsed] = useState(isMobile)
+
+  // Panel states
+  const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false)
+  const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false)
+  const [showSidePanel, setShowSidePanel] = useState(true)
 
   // Mobile-specific states
   const [mobileView, setMobileView] = useState<MobileView>('chat')
@@ -89,17 +118,6 @@ function ProjectPage() {
     }
   }, [selectedAgent, agents])
 
-  // Update panel states when screen size changes
-  useEffect(() => {
-    if (isMobile) {
-      setLeftPanelCollapsed(true)
-      setRightPanelCollapsed(true)
-    } else {
-      setLeftPanelCollapsed(false)
-      setRightPanelCollapsed(false)
-    }
-  }, [isMobile])
-
   // Close mobile menu when view changes
   useEffect(() => {
     setMobileMenuOpen(false)
@@ -107,14 +125,14 @@ function ProjectPage() {
 
   const handleAgentSelect = (agent: Agent) => {
     setSelectedAgent(agent)
-    if (isMobile) {
+    if (breakpoint === 'mobile') {
       setMobileView('chat')
     }
   }
 
   const handleFileSelect = (file: FileType) => {
     setSelectedFile(file)
-    if (isMobile) {
+    if (breakpoint === 'mobile') {
       setMobileView('editor')
     }
   }
@@ -131,9 +149,7 @@ function ProjectPage() {
   const handleMobileViewChange = (view: MobileView) => {
     setMobileView(view)
     setMobileMenuOpen(false)
-
-    // Haptic feedback on mobile
-    if (isMobile) {
+    if (breakpoint === 'mobile') {
       vibrate(50)
     }
   }
@@ -148,20 +164,19 @@ function ProjectPage() {
     }
 
     const success = await share(shareData)
-    if (success && isMobile) {
+    if (success && breakpoint === 'mobile') {
       vibrate([100, 50, 100])
     }
   }
 
   const handleInstallApp = async () => {
     const success = await install()
-    if (success && isMobile) {
+    if (success && breakpoint === 'mobile') {
       vibrate([200, 100, 200])
     }
   }
 
-
-
+  // Loading state
   if (isLoadingProject) {
     return (
       <div className="h-screen flex items-center justify-center bg-background">
@@ -175,6 +190,7 @@ function ProjectPage() {
     )
   }
 
+  // Project not found
   if (!currentProject) {
     return (
       <div className="h-screen flex items-center justify-center bg-background p-4">
@@ -196,6 +212,7 @@ function ProjectPage() {
     )
   }
 
+  // No agents
   if (!selectedAgent) {
     return (
       <div className="h-screen flex items-center justify-center bg-background p-4">
@@ -217,8 +234,10 @@ function ProjectPage() {
     )
   }
 
-  // Mobile layout
-  if (isMobile) {
+  // ============================================
+  // MOBILE LAYOUT (< 640px)
+  // ============================================
+  if (breakpoint === 'mobile') {
     return (
       <div className="h-screen flex flex-col bg-background">
         {/* Mobile Header */}
@@ -246,11 +265,9 @@ function ProjectPage() {
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
-            {/* PWA Status Indicators */}
             {isOffline && (
               <Badge variant="warning" size="sm" className="gap-1">
                 <WifiOff className="w-3 h-3" />
-                <span className="hidden xs:inline">{t('mobile.menu.offlineMode')}</span>
               </Badge>
             )}
 
@@ -261,58 +278,33 @@ function ProjectPage() {
               </Badge>
             )}
 
-            {/* Install App Button */}
             {canInstall && !isInstalled && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleInstallApp}
                 className="h-8 w-8 p-0"
-                title={t('mobile.actions.installApp')}
               >
                 <Download className="w-4 h-4" />
               </Button>
             )}
 
-            {/* Share Project */}
             <Button
               variant="ghost"
               size="sm"
               onClick={handleShareProject}
               className="h-8 w-8 p-0"
-              title="Share Project"
             >
               <Share className="w-4 h-4" />
             </Button>
 
-            {/* Fullscreen toggle */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleFullscreen}
-              className="h-8 w-8 p-0"
-              title={isFullscreen ? t('desktop.actions.exitFullscreen') : t('desktop.actions.enterFullscreen')}
-            >
-              {isFullscreen ? (
-                <Minimize2 className="w-4 h-4" />
-              ) : (
-                <Maximize2 className="w-4 h-4" />
-              )}
-            </Button>
-
-            {/* Mobile menu toggle */}
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="h-8 w-8 p-0"
-              title="Menu"
             >
-              {mobileMenuOpen ? (
-                <X className="w-5 h-5" />
-              ) : (
-                <Menu className="w-5 h-5" />
-              )}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </Button>
           </div>
         </div>
@@ -328,126 +320,33 @@ function ProjectPage() {
           mobileMenuOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"
         )}>
           <div className="p-4 space-y-4">
-            {/* View Buttons */}
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                variant={mobileView === 'chat' ? 'gradient' : 'outline'}
-                size="sm"
-                onClick={() => handleMobileViewChange('chat')}
-                className="flex items-center gap-2"
-              >
-                <MessageSquare className="w-4 h-4" />
-                {t('mobile.views.chat')}
-              </Button>
-
-              <Button
-                variant={mobileView === 'agents' ? 'gradient' : 'outline'}
-                size="sm"
-                onClick={() => handleMobileViewChange('agents')}
-                className="flex items-center gap-2"
-              >
-                <Bot className="w-4 h-4" />
-                {t('mobile.views.agents')}
-              </Button>
-
-              <Button
-                variant={mobileView === 'files' ? 'gradient' : 'outline'}
-                size="sm"
-                onClick={() => handleMobileViewChange('files')}
-                className="flex items-center gap-2"
-              >
-                <FileText className="w-4 h-4" />
-                {t('mobile.views.files')}
-              </Button>
-
-              <Button
-                variant={mobileView === 'editor' ? 'gradient' : 'outline'}
-                size="sm"
-                onClick={() => handleMobileViewChange('editor')}
-                className="flex items-center gap-2"
-                disabled={!selectedFile}
-              >
-                <Code className="w-4 h-4" />
-                {t('mobile.views.editor')}
-              </Button>
+            {/* Current Agent */}
+            <div className="p-3 rounded-xl bg-muted/30">
+              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
+                {t('mobile.menu.currentSelection')}
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Bot className="w-3 h-3 text-primary" />
+                </div>
+                <span className="text-foreground truncate">
+                  {selectedAgent?.name || t('mobile.menu.noAgentSelected')}
+                </span>
+              </div>
             </div>
 
             {/* Connection Status */}
-            <div className="p-3 rounded-xl bg-muted/30 space-y-2">
-              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('mobile.menu.status')}</div>
-              <div className="flex items-center gap-2">
-                {isOffline ? (
-                  <Badge variant="warning" size="sm" dot>
-                    <WifiOff className="w-3 h-3 mr-1" />
-                    {t('mobile.menu.offlineMode')}
-                  </Badge>
-                ) : (
-                  <Badge variant="success" size="sm" dot>
-                    <Wifi className="w-3 h-3 mr-1" />
-                    {t('mobile.menu.online')}
-                  </Badge>
-                )}
-              </div>
-
-              {hasOfflineFiles && (
-                <p className="text-xs text-muted-foreground">
-                  {t('mobile.menu.filesAvailableOffline', { count: offlineFiles.size })}
-                </p>
-              )}
-
-              {hasPendingUploads && (
-                <div className="flex items-center gap-2 text-xs text-info">
-                  <Upload className="w-3 h-3" />
-                  <span>{t('mobile.menu.filesPendingUpload', { count: pendingUploads.length })}</span>
-                </div>
-              )}
-            </div>
-
-            {/* Current Selections */}
-            <div className="p-3 rounded-xl bg-muted/30 space-y-2">
-              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('mobile.menu.currentSelection')}</div>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm">
-                  <div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Bot className="w-3 h-3 text-primary" />
-                  </div>
-                  <span className="text-foreground truncate">
-                    {selectedAgent?.name || t('mobile.menu.noAgentSelected')}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <div className="w-6 h-6 rounded-lg bg-accent/10 flex items-center justify-center">
-                    <FileText className="w-3 h-3 text-accent-foreground" />
-                  </div>
-                  <span className="text-foreground truncate">
-                    {selectedFile?.name || t('mobile.menu.noFileSelected')}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleShareProject}
-                className="flex-1"
-                leftIcon={<Share className="w-3 h-3" />}
-              >
-                {t('mobile.actions.share')}
-              </Button>
-
-              {canInstall && !isInstalled && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleInstallApp}
-                  className="flex-1"
-                  leftIcon={<Download className="w-3 h-3" />}
-                >
-                  {t('mobile.actions.install')}
-                </Button>
+            <div className="flex items-center gap-2">
+              {isOffline ? (
+                <Badge variant="warning" size="sm" dot>
+                  <WifiOff className="w-3 h-3 mr-1" />
+                  {t('mobile.menu.offlineMode')}
+                </Badge>
+              ) : (
+                <Badge variant="success" size="sm" dot>
+                  <Wifi className="w-3 h-3 mr-1" />
+                  {t('mobile.menu.online')}
+                </Badge>
               )}
             </div>
           </div>
@@ -494,11 +393,14 @@ function ProjectPage() {
           )}
         </div>
 
-        {/* Mobile Bottom Navigation */}
+        {/* Mobile Bottom Navigation - Hide Editor tab when no file */}
         <div className="border-t border-border bg-card/95 backdrop-blur-sm safe-area-bottom">
-          <div className="grid grid-cols-4 gap-1 p-2">
+          <div className={cn(
+            "grid gap-1 p-2",
+            selectedFile ? "grid-cols-4" : "grid-cols-3"
+          )}>
             <button
-              onClick={() => setMobileView('chat')}
+              onClick={() => handleMobileViewChange('chat')}
               className={cn(
                 'flex flex-col items-center gap-1 py-2.5 rounded-xl transition-all duration-200',
                 mobileView === 'chat'
@@ -511,7 +413,7 @@ function ProjectPage() {
             </button>
 
             <button
-              onClick={() => setMobileView('agents')}
+              onClick={() => handleMobileViewChange('agents')}
               className={cn(
                 'flex flex-col items-center gap-1 py-2.5 rounded-xl transition-all duration-200',
                 mobileView === 'agents'
@@ -524,7 +426,7 @@ function ProjectPage() {
             </button>
 
             <button
-              onClick={() => setMobileView('files')}
+              onClick={() => handleMobileViewChange('files')}
               className={cn(
                 'flex flex-col items-center gap-1 py-2.5 rounded-xl transition-all duration-200',
                 mobileView === 'files'
@@ -536,36 +438,128 @@ function ProjectPage() {
               <span className="text-[10px] font-medium">{t('mobile.views.files')}</span>
             </button>
 
-            <button
-              onClick={() => setMobileView('editor')}
-              disabled={!selectedFile}
-              className={cn(
-                'flex flex-col items-center gap-1 py-2.5 rounded-xl transition-all duration-200',
-                mobileView === 'editor'
-                  ? 'bg-primary text-primary-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
-                !selectedFile && 'opacity-50 cursor-not-allowed'
-              )}
-            >
-              <Code className="w-5 h-5" />
-              <span className="text-[10px] font-medium">{t('mobile.views.editor')}</span>
-            </button>
+            {selectedFile && (
+              <button
+                onClick={() => handleMobileViewChange('editor')}
+                className={cn(
+                  'flex flex-col items-center gap-1 py-2.5 rounded-xl transition-all duration-200',
+                  mobileView === 'editor'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                )}
+              >
+                <Code className="w-5 h-5" />
+                <span className="text-[10px] font-medium">{t('mobile.views.editor')}</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
     )
   }
 
-  // Desktop layout
+  // ============================================
+  // TABLET LAYOUT (640px - 1024px)
+  // ============================================
+  if (breakpoint === 'tablet') {
+    return (
+      <div className="h-screen flex flex-col bg-background">
+        {/* Tablet Header */}
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-card/95 backdrop-blur-sm">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/dashboard')}
+            leftIcon={<ArrowLeft className="w-4 h-4" />}
+          >
+            {t('dashboard')}
+          </Button>
+
+          <div className="h-6 w-px bg-border" />
+
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
+              <Sparkles className="w-4 h-4 text-primary" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-sm font-semibold text-foreground truncate">{currentProject.name}</h1>
+            </div>
+          </div>
+
+          {/* Compact Agent Selector */}
+          <AgentDropdown
+            agents={agents}
+            selectedAgent={selectedAgent}
+            onAgentSelect={handleAgentSelect}
+            compact
+          />
+
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowSidePanel(!showSidePanel)}
+              className="h-8 w-8 p-0"
+              title={showSidePanel ? "Hide panel" : "Show panel"}
+            >
+              {showSidePanel ? <PanelRight className="w-4 h-4" /> : <LayoutPanelLeft className="w-4 h-4" />}
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleFullscreen}
+              className="h-8 w-8 p-0"
+            >
+              {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+            </Button>
+          </div>
+        </div>
+
+        {/* Tablet Content - 2 Panel Layout */}
+        <div className="flex-1 flex overflow-hidden">
+          {/* Main Chat Area - 60% */}
+          <div className={cn(
+            "flex flex-col min-w-0 transition-all duration-300",
+            showSidePanel ? "flex-1" : "w-full"
+          )}>
+            <ThreadChat
+              project={currentProject}
+              agent={selectedAgent}
+              className="h-full"
+            />
+          </div>
+
+          {/* Side Panel - 40% */}
+          {showSidePanel && (
+            <div className="w-[40%] min-w-[280px] max-w-[400px] border-l border-border">
+              <SidePanel
+                project={currentProject}
+                selectedAgent={selectedAgent}
+                selectedFile={selectedFile}
+                onAgentSelect={handleAgentSelect}
+                onFileSelect={handleFileSelect}
+                showEditorTab={true}
+                onClose={() => setShowSidePanel(false)}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  // ============================================
+  // DESKTOP LAYOUT (>= 1024px)
+  // ============================================
   return (
     <div className="h-screen flex flex-col bg-background">
-      {/* Top Navigation */}
+      {/* Desktop Header */}
       <div className="flex items-center gap-4 px-4 py-3 border-b border-border bg-card/95 backdrop-blur-sm">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => navigate('/dashboard')}
-          className="flex items-center gap-2"
           leftIcon={<ArrowLeft className="w-4 h-4" />}
         >
           {t('dashboard')}
@@ -588,142 +582,126 @@ function ProjectPage() {
         </div>
 
         <div className="flex items-center gap-1.5">
-          {/* Selected Agent Indicator */}
-          {selectedAgent && (
-            <Badge variant="secondary" size="sm" className="hidden sm:flex gap-1.5">
-              <Bot className="w-3 h-3" />
-              {selectedAgent.name}
-            </Badge>
-          )}
+          {/* Agent Dropdown for quick switching */}
+          <AgentDropdown
+            agents={agents}
+            selectedAgent={selectedAgent}
+            onAgentSelect={handleAgentSelect}
+          />
 
-          <div className="h-6 w-px bg-border mx-1.5 hidden md:block" />
+          <div className="h-6 w-px bg-border mx-1.5" />
 
           <Button
             variant="ghost"
             size="sm"
             onClick={toggleFullscreen}
-            className="hidden md:flex h-8 w-8 p-0"
+            className="h-8 w-8 p-0"
             title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
           >
-            {isFullscreen ? (
-              <Minimize2 className="w-4 h-4" />
-            ) : (
-              <Maximize2 className="w-4 h-4" />
-            )}
+            {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           </Button>
 
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setLeftPanelCollapsed(!leftPanelCollapsed)}
-            className="hidden md:flex h-8 w-8 p-0"
+            className="h-8 w-8 p-0"
             title={leftPanelCollapsed ? t('desktop.actions.showSidebar') : t('desktop.actions.hideSidebar')}
           >
-            {leftPanelCollapsed ? (
-              <PanelLeftOpen className="w-4 h-4" />
-            ) : (
-              <PanelLeftClose className="w-4 h-4" />
-            )}
+            {leftPanelCollapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
           </Button>
 
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setRightPanelCollapsed(!rightPanelCollapsed)}
-            className="hidden lg:flex h-8 w-8 p-0"
+            className="h-8 w-8 p-0"
             title={rightPanelCollapsed ? t('desktop.actions.showEditor') : t('desktop.actions.hideEditor')}
           >
-            {rightPanelCollapsed ? (
-              <Code className="w-4 h-4" />
-            ) : (
-              <X className="w-4 h-4" />
-            )}
+            {rightPanelCollapsed ? <Code className="w-4 h-4" /> : <X className="w-4 h-4" />}
           </Button>
-
-          <MobileNavigation />
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Panel - Agents & Files */}
-        <div className={cn(
-          'flex flex-col border-r border-border bg-card/50 transition-all duration-300 ease-in-out',
-          leftPanelCollapsed ? 'w-0 overflow-hidden' : 'w-72 xl:w-80'
-        )}>
-          {/* Agent Panel */}
-          <div className="h-1/2 border-b border-border overflow-hidden">
-            <div className="h-full flex flex-col">
-              <div className="px-4 py-3 border-b border-border/50 bg-muted/30">
-                <div className="flex items-center gap-2">
-                  <Bot className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-medium text-foreground">{t('desktop.panels.aiAgents')}</span>
+      {/* Desktop Content - Resizable 3 Panel Layout */}
+      <div className="flex-1 overflow-hidden">
+        <PanelGroup direction="horizontal" className="h-full">
+          {/* Left Panel - Agents & Files */}
+          {!leftPanelCollapsed && (
+            <>
+              <Panel
+                defaultSize={20}
+                minSize={15}
+                maxSize={30}
+                className="bg-card/50"
+              >
+                <div className="h-full flex flex-col">
+                  {/* Tabs for Agents/Files */}
+                  <SidePanel
+                    project={currentProject}
+                    selectedAgent={selectedAgent}
+                    selectedFile={selectedFile}
+                    onAgentSelect={handleAgentSelect}
+                    onFileSelect={(file) => {
+                      handleFileSelect(file)
+                      if (rightPanelCollapsed) {
+                        setRightPanelCollapsed(false)
+                      }
+                    }}
+                    defaultTab="files"
+                    showEditorTab={false}
+                  />
                 </div>
-              </div>
-              <AgentPanel
-                selectedAgentId={selectedAgent?.id}
-                onAgentSelect={handleAgentSelect}
-                className="flex-1 overflow-y-auto"
-              />
-            </div>
-          </div>
+              </Panel>
 
-          {/* File Explorer */}
-          <div className="h-1/2 overflow-hidden">
-            <div className="h-full flex flex-col">
-              <div className="px-4 py-3 border-b border-border/50 bg-muted/30">
-                <div className="flex items-center gap-2">
-                  <FolderOpen className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-medium text-foreground">{t('desktop.panels.projectFiles')}</span>
-                </div>
-              </div>
-              <FileExplorer
-                projectId={currentProject.id}
-                selectedFileId={selectedFile?.id}
-                onFileSelect={handleFileSelect}
-                className="flex-1 overflow-y-auto"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Center Panel - Chat */}
-        <div className="flex-1 flex flex-col min-w-0">
-          <ThreadChat
-            project={currentProject}
-            agent={selectedAgent}
-            onToggleSidebar={() => setLeftPanelCollapsed(!leftPanelCollapsed)}
-            className="h-full"
-          />
-        </div>
-
-        {/* Right Panel - File Editor */}
-        <div className={cn(
-          'border-l border-border bg-background transition-all duration-300 ease-in-out overflow-hidden',
-          rightPanelCollapsed ? 'w-0' : 'w-[45%] lg:w-2/5'
-        )}>
-          {!rightPanelCollapsed && (
-            <div className="h-full flex flex-col">
-              <div className="px-4 py-3 border-b border-border bg-muted/30 flex items-center justify-between">
-                <div className="flex items-center gap-2 min-w-0">
-                  <Code className="w-4 h-4 text-primary shrink-0" />
-                  <span className="text-sm font-medium text-foreground truncate">
-                    {selectedFile?.name || t('editor.noFileSelected')}
-                  </span>
-                </div>
-                {selectedFile && (
-                  <Badge variant="secondary" size="sm">
-                    {selectedFile.name.split('.').pop() || 'txt'}
-                  </Badge>
-                )}
-              </div>
-              <FileEditor
-                file={selectedFile}
-                className="flex-1 overflow-hidden"
-              />
-            </div>
+              <PanelResizeHandle className="w-1 bg-border hover:bg-primary/50 transition-colors cursor-col-resize" />
+            </>
           )}
-        </div>
+
+          {/* Center Panel - Chat */}
+          <Panel defaultSize={leftPanelCollapsed && rightPanelCollapsed ? 100 : 50} minSize={30}>
+            <ThreadChat
+              project={currentProject}
+              agent={selectedAgent}
+              onToggleSidebar={() => setLeftPanelCollapsed(!leftPanelCollapsed)}
+              className="h-full"
+            />
+          </Panel>
+
+          {/* Right Panel - File Editor */}
+          {!rightPanelCollapsed && (
+            <>
+              <PanelResizeHandle className="w-1 bg-border hover:bg-primary/50 transition-colors cursor-col-resize" />
+
+              <Panel
+                defaultSize={30}
+                minSize={20}
+                maxSize={50}
+                className="bg-background"
+              >
+                <div className="h-full flex flex-col">
+                  <div className="px-4 py-3 border-b border-border bg-muted/30 flex items-center justify-between">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Code className="w-4 h-4 text-primary shrink-0" />
+                      <span className="text-sm font-medium text-foreground truncate">
+                        {selectedFile?.name || t('editor.noFileSelected')}
+                      </span>
+                    </div>
+                    {selectedFile && (
+                      <Badge variant="secondary" size="sm">
+                        {selectedFile.name.split('.').pop() || 'txt'}
+                      </Badge>
+                    )}
+                  </div>
+                  <FileEditor
+                    file={selectedFile}
+                    className="flex-1 overflow-hidden"
+                  />
+                </div>
+              </Panel>
+            </>
+          )}
+        </PanelGroup>
       </div>
     </div>
   )
