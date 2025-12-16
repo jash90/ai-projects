@@ -1,0 +1,75 @@
+{
+  "agentNotFound": {
+    "description": "Selecteer een agent om te beginnen met chatten",
+    "title": "Agent niet gevonden"
+  },
+  "clearConfirm": "Weet je zeker dat je dit gesprek wilt wissen? Deze actie kan niet ongedaan worden gemaakt.",
+  "emptyState": {
+    "description": "Stuur een bericht om te beginnen met chatten met {{agentName}}",
+    "filesHint": "Deze agent kan toegang krijgen tot je projectbestanden voor context",
+    "title": "Begin een gesprek"
+  },
+  "errors": {
+    "cannotSend": "Bericht kan niet worden verzonden. Controleer je accountstatus.",
+    "createFailed": "Mislukt om gesprek te creëren",
+    "deleteFailed": "Mislukt om gesprek te verwijderen",
+    "loadFailed": "Mislukt om gesprekken te laden",
+    "sendFailed": "Mislukt om bericht te verzenden. Probeer het opnieuw.",
+    "tokenLimitExceeded": "Tokenlimiet overschreden. Bericht kan niet worden verzonden."
+  },
+  "header": {
+    "clearConversation": "Gesprek wissen",
+    "connected": "Verbonden",
+    "disconnected": "Verbroken",
+    "files": "Bestanden",
+    "moreOptions": "Meer opties",
+    "toggleSidebar": "Zijbalk in- of uitschakelen"
+  },
+  "input": {
+    "attachFile": "Bestand bijvoegen",
+    "attachFiles": "Bestanden bijvoegen (afbeeldingen, PDF)",
+    "characters_one": "input.characters",
+    "characters_other": "input.characters",
+    "fileTooLarge": "Bestand te groot: {{name}}. Max grootte: {{maxSize}}MB",
+    "maxFilesError_one": "input.maxFilesError",
+    "maxFilesError_other": "input.maxFilesError",
+    "placeholder": "Typ je bericht...",
+    "send": "Verzenden",
+    "sendMessage": "Bericht verzenden",
+    "startTyping": "Begin met typen...",
+    "unsupportedFileType": "Niet-ondersteund bestandstype: {{type}}. Ondersteund: afbeeldingen, PDF"
+  },
+  "limits": {
+    "global": "Globale limiet",
+    "monthly": "Maandelijkse limiet",
+    "remaining_one": "limits.remaining",
+    "remaining_other": "limits.remaining"
+  },
+  "message": {
+    "error": "Fout",
+    "you": "Jij"
+  },
+  "placeholder": "Bericht {{agentName}}...",
+  "selectAgent": {
+    "description": "Kies een AI-agent uit de zijbalk om een gesprek te beginnen. Elke agent heeft verschillende mogelijkheden en modellen.",
+    "title": "Selecteer een agent"
+  },
+  "streaming": {
+    "disable": "Streaming reacties uitschakelen",
+    "enable": "Streaming reacties inschakelen",
+    "regular": "Regulier",
+    "streaming": "Streaming"
+  },
+  "thinking": "{{agentName}} is aan het denken...",
+  "threads": {
+    "deleteConfirm": "Weet je zeker dat je dit gesprek wilt verwijderen?",
+    "deleteConversation": "Gesprek verwijderen",
+    "messageCount_one": "{{count}} bericht",
+    "messageCount_other": "{{count}} berichten",
+    "newConversation": "Nieuw gesprek",
+    "newThread": "Nieuw gesprek",
+    "noConversations": "Nog geen gesprekken",
+    "startNew": "Begin een nieuw gesprek",
+    "title": "Gesprekken"
+  }
+}

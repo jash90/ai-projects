@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "createProject": "Kreiraj projekt",
+    "newProject": "Novi projekt"
+  },
+  "admin": {
+    "description": "Upravljajte korisnicima, ograničenjima tokena i postavkama sustava",
+    "title": "Administratorska ploča"
+  },
+  "allProjects": {
+    "empty": {
+      "description": "Započnite stvaranjem novog projekta",
+      "title": "Još nema projekata"
+    },
+    "title": "Svi projekti",
+    "viewAll_one": "Pogledaj sve projekte",
+    "viewAll_other": "Pogledaj sve projekte"
+  },
+  "header": {
+    "subtitle": "Upravljajte svojim projektima i surađujte s AI agentima",
+    "welcome": "Dobrodošli natrag, {{username}}"
+  },
+  "quickTip": {
+    "content": "Dodajte datoteke u svoj projekt kako biste agentima AI-a pružili kontekst za bolju pomoć.",
+    "title": "Brzi savjet"
+  },
+  "recentProjects": {
+    "empty": {
+      "description": "Kreirajte svoj prvi projekt kako biste započeli suradnju s AI-om",
+      "title": "Nema nedavnih projekata"
+    },
+    "mostRecent": "Najnoviji",
+    "title": "Nedavni projekti"
+  },
+  "stats": {
+    "activeThisWeek": "Aktivno ovog tjedna",
+    "totalMessages": "Ukupno poruka",
+    "totalProjects": "Ukupno projekata",
+    "trackUsage": "Pratite svoju upotrebu AI-a",
+    "usageStats": "Statistika upotrebe",
+    "viewTokenUsage": "Pogledajte upotrebu tokena"
+  },
+  "usagePage": {
+    "subtitle": "Pratite svoju upotrebu tokena i troškove kod različitih AI pružatelja",
+    "title": "Upotreba API-ja i statistika"
+  }
+}

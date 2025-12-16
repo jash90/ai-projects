@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Upload, X, File, FileText, Image, Video, Music, Archive } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/Button'
@@ -32,6 +33,7 @@ export function ProjectFileUpload({
   maxFileSize = 50, // 50MB default
   acceptedTypes = [] // Accept all types by default
 }: ProjectFileUploadProps) {
+  const { t } = useTranslation('files')
   const [dragActive, setDragActive] = useState(false)
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -61,23 +63,23 @@ export function ProjectFileUpload({
   const validateFile = (file: File): string | null => {
     // Check file size
     if (file.size > maxFileSize * 1024 * 1024) {
-      return `File "${file.name}" is too large. Maximum size is ${maxFileSize}MB.`
+      return t('upload.errors.tooLarge', { name: file.name, maxSize: maxFileSize })
     }
 
     // Check file type if restrictions are set
     if (acceptedTypes.length > 0) {
       const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase()
       const mimeType = file.type.toLowerCase()
-      
+
       const isAccepted = acceptedTypes.some(type => {
         if (type.startsWith('.')) {
           return fileExtension === type.toLowerCase()
         }
         return mimeType.includes(type.toLowerCase())
       })
-      
+
       if (!isAccepted) {
-        return `File type not supported. Allowed types: ${acceptedTypes.join(', ')}`
+        return t('upload.errors.unsupportedType', { types: acceptedTypes.join(', ') })
       }
     }
 
@@ -279,17 +281,17 @@ export function ProjectFileUpload({
       >
         <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
         <h3 className="text-lg font-medium mb-2">
-          {dragActive ? 'Drop files here' : 'Upload files from your computer'}
+          {dragActive ? t('upload.dropzone.active') : t('upload.dropzone.title')}
         </h3>
         <p className="text-sm text-muted-foreground mb-2">
-          Drag and drop files here, or click to select files
+          {t('upload.dropzone.description')}
         </p>
         <p className="text-xs text-muted-foreground">
-          Maximum file size: {maxFileSize}MB
+          {t('upload.dropzone.maxSize', { size: maxFileSize })}
           {acceptedTypes.length > 0 && (
             <span className="block mt-1">
-              Supported types: {acceptedTypes.slice(0, 5).join(', ')}
-              {acceptedTypes.length > 5 && ` and ${acceptedTypes.length - 5} more`}
+              {t('upload.dropzone.supportedTypes', { types: acceptedTypes.slice(0, 5).join(', ') })}
+              {acceptedTypes.length > 5 && ` ${t('upload.dropzone.andMore', { count: acceptedTypes.length - 5 })}`}
             </span>
           )}
         </p>
@@ -305,7 +307,7 @@ export function ProjectFileUpload({
       {/* Uploading Files List */}
       {uploadingFiles.length > 0 && (
         <div className="space-y-2">
-          <h4 className="text-sm font-medium">Uploading Files</h4>
+          <h4 className="text-sm font-medium">{t('upload.uploading')}</h4>
           <div className="space-y-2">
             {uploadingFiles.map((uploadingFile) => (
               <div
@@ -327,7 +329,7 @@ export function ProjectFileUpload({
                       </p>
                     ) : uploadingFile.completed ? (
                       <p className="text-xs text-green-600 mt-1">
-                        ✅ Upload complete
+                        ✅ {t('upload.complete')}
                       </p>
                     ) : (
                       <div className="mt-2">

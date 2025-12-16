@@ -1,0 +1,88 @@
+{
+  "preferences": {
+    "appearance": {
+      "dark": "Ciemny",
+      "description": "Dostosuj wygląd AI Projects na swoim urządzeniu",
+      "light": "Jasny",
+      "system": "Systemowy",
+      "theme": "Motyw",
+      "title": "Wygląd"
+    },
+    "language": {
+      "title": "Język",
+      "description": "Wybierz preferowany język"
+    },
+    "notifications": {
+      "description": "Wybierz, jakie powiadomienia chcesz otrzymywać",
+      "email": {
+        "description": "Otrzymuj aktualizacje e-mail o swoim koncie i użyciu",
+        "title": "Powiadomienia e-mail"
+      },
+      "push": {
+        "description": "Otrzymuj powiadomienia o aktualizacjach projektów i alertach systemowych",
+        "title": "Powiadomienia push"
+      },
+      "title": "Powiadomienia"
+    },
+    "updateError": "Nie udało się zaktualizować preferencji",
+    "updateSuccess": "Preferencje zostały zaktualizowane"
+  },
+  "profile": {
+    "description": "Zaktualizuj swoje dane osobowe i adres e-mail",
+    "email": "E-mail",
+    "reset": "Resetuj",
+    "role": {
+      "admin": "Administrator",
+      "user": "Użytkownik"
+    },
+    "saveChanges": "Zapisz zmiany",
+    "title": "Informacje o profilu",
+    "updateError": "Nie udało się zaktualizować profilu",
+    "updateSuccess": "Profil został zaktualizowany",
+    "username": "Nazwa użytkownika"
+  },
+  "security": {
+    "clear": "Wyczyść",
+    "confirmPassword": "Potwierdź nowe hasło",
+    "currentPassword": "Obecne hasło",
+    "description": "Zaktualizuj hasło, aby chronić swoje konto",
+    "newPassword": "Nowe hasło",
+    "passwordMismatch": "Nowe hasła nie są zgodne",
+    "passwordsDoNotMatch": "Hasła nie są zgodne",
+    "passwordTooShort": "Nowe hasło musi mieć co najmniej 6 znaków",
+    "title": "Zmień hasło",
+    "updateError": "Nie udało się zaktualizować hasła",
+    "updatePassword": "Zaktualizuj hasło",
+    "updateSuccess": "Hasło zostało zaktualizowane"
+  },
+  "subtitle": "Zarządzaj preferencjami konta i ustawieniami aplikacji",
+  "tabs": {
+    "preferences": "Preferencje",
+    "profile": "Profil",
+    "security": "Bezpieczeństwo",
+    "usage": "Użycie"
+  },
+  "title": "Ustawienia",
+  "usage": {
+    "account": {
+      "description": "Szczegóły konta i limity",
+      "globalLimit": "Limit globalny",
+      "monthlyLimit": "Limit miesięczny",
+      "projects": "Projekty",
+      "role": "Rola",
+      "title": "Informacje o koncie"
+    },
+    "stats": {
+      "description": "Monitoruj użycie tokenów i koszty",
+      "loading": "Ładowanie statystyk użycia...",
+      "monthlyCost": "Koszt miesięczny",
+      "monthlyUsage": "Użycie miesięczne",
+      "percentUsed": "{{percent}}% wykorzystane",
+      "thisMonth": "Ten miesiąc",
+      "title": "Statystyki użycia",
+      "totalCost": "Całkowity koszt",
+      "totalTokens": "Wszystkie tokeny",
+      "totalUsage": "Całkowite użycie"
+    }
+  }
+}

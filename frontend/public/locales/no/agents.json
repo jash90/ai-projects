@@ -1,0 +1,139 @@
+{
+  "dialog": {
+    "buttons": {
+      "cancel": "Avbryt",
+      "create": "Opprett Agent",
+      "creating": "Oppretter...",
+      "update": "Oppdater Agent",
+      "updating": "Oppdaterer..."
+    },
+    "fields": {
+      "changeModel": "Bytt modell",
+      "description": "Beskrivelse",
+      "descriptionPlaceholder": "Beskriv hva denne agenten gjør...",
+      "maxTokens": "Maks Tokens",
+      "maxTokensHint": "Maksimal lengde på svar",
+      "model": "Modell",
+      "modelSelect": "Velg modell...",
+      "name": "Agentnavn *",
+      "namePlaceholder": "Min AI-assistent",
+      "noModelSelected": "Ingen modell valgt",
+      "notConfigured": "Ikke konfigurert",
+      "provider": "Leverandør",
+      "providerNotConfigured": "Leverandør ikke konfigurert",
+      "providerSettings": "Konfigurer i Innstillinger",
+      "selectModel": "Velg en modell",
+      "systemPrompt": "Systemprompt *",
+      "systemPromptHint": "Instruksjoner som definerer hvordan agenten oppfører seg",
+      "systemPromptPlaceholder": "Du er en hjelpsom AI-assistent...",
+      "temperature": "Temperatur",
+      "temperatureHint": "Lavere verdier = mer fokusert, Høyere verdier = mer kreativ"
+    },
+    "loadError": "Kunne ikke laste AI-modeller",
+    "loading": "Laster AI-leverandører...",
+    "retry": "Prøv igjen",
+    "validation": {
+      "modelRequired": "Modellvalg er påkrevd",
+      "nameRequired": "Agentnavn er påkrevd",
+      "promptRequired": "Systemprompt er påkrevd"
+    }
+  },
+  "models": {
+    "chip": {
+      "removeFromFavorites": "Fjern fra favoritter"
+    },
+    "comparison": {
+      "backToList": "← Tilbake til listen",
+      "browseModels": "Bla gjennom modeller",
+      "category": "Kategori",
+      "comparing_one": "Sammenligner {{count}} modell",
+      "comparing_other": "Sammenligner {{count}} modeller",
+      "contextWindow": "Kontekstvindu",
+      "costTier": "Kostnadsnivå",
+      "description": "Beskrivelse",
+      "empty": {
+        "description": "Velg opptil 3 modeller fra listen for å sammenligne dem side om side",
+        "title": "Ingen modeller å sammenligne"
+      },
+      "legend": "🏆 = Best i kategori • Klikk på hvilken som helst modellkort for å velge den",
+      "modelId": "Modell-ID",
+      "removeFromComparison": "Fjern fra sammenligning",
+      "selectThisModel": "Velg denne modellen",
+      "tokens": "tokens",
+      "unknown": "Ukjent"
+    },
+    "detail": {
+      "addToCompare": "📊 Legg til sammenligning",
+      "addToFavorites": "Legg til favoritter",
+      "by": "av {{provider}}",
+      "capabilities": "Egenskaper",
+      "chat": "💬 Chat",
+      "comparisonFull": "Fjern en modell fra sammenligning for å legge til denne (maks 3)",
+      "contextWindow": "Kontekstvindu",
+      "cost": "{{cost}} Kostnad",
+      "costTier": "Kostnadsnivå",
+      "description": "Beskrivelse",
+      "favorite": "🤍 Favoritt",
+      "favorited": "❤️ Favorisert",
+      "inComparison": "✓ I sammenligning",
+      "modelId": "Modell-ID",
+      "noSelection": {
+        "description": "Klikk på en modell fra listen for å se detaljert informasjon",
+        "title": "Ingen modell valgt"
+      },
+      "popularModel": "Populær modell",
+      "provider": "Leverandør",
+      "removeFromFavorites": "Fjern fra favoritter",
+      "selectThisModel": "Velg denne modellen",
+      "specifications": "Spesifikasjoner",
+      "streaming": "🔄 Strømming",
+      "tokens": "tokens"
+    },
+    "picker": {
+      "available_one": "{{count}} modell tilgjengelig",
+      "available_other": "{{count}} modeller tilgjengelig",
+      "cancel": "Avbryt",
+      "close": "Lukk (Esc)",
+      "compare": "Sammenlign",
+      "favorites": "Favoritter",
+      "hideFavorites": "Skjul favoritter/nylig brukte",
+      "inComparison_one": "{{count}} modell i sammenligning",
+      "inComparison_other": "{{count}} modeller i sammenligning",
+      "loading": "Laster OpenRouter-modeller...",
+      "recentlyUsed": "Nylig brukt",
+      "search": "Søk modeller (f.eks. 'gpt', 'claude', 'llama')...",
+      "selectModel": "Velg modell",
+      "shortcuts": "Ctrl+K: Søk • Ctrl+F: Favoritter • Ctrl+C: Sammenlign",
+      "title": "Velg OpenRouter-modell"
+    }
+  },
+  "panel": {
+    "browseAll": "Bla gjennom alle agenter",
+    "dismiss": "Avvis",
+    "empty": {
+      "description": "Kontakt administrator for å opprette agenter",
+      "title": "Ingen agenter tilgjengelig"
+    },
+    "maxTokens": "Maks:",
+    "noSelection": "Ingen agent valgt",
+    "temp": "Temp:",
+    "title": "AI-agenter",
+    "tokens": "tokens"
+  },
+  "picker": {
+    "empty": {
+      "hint": "Prøv et annet søkeord",
+      "title": "Ingen agenter funnet"
+    },
+    "searchAdmin": "Søk agenter etter navn, beskrivelse eller modell...",
+    "searchUser": "Søk agenter etter navn eller beskrivelse...",
+    "select": "Velg agent",
+    "selected": "Valgt",
+    "title": "Velg AI-agent"
+  },
+  "providers": {
+    "anthropic": "Anthropic",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter"
+  }
+}

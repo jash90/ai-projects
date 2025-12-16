@@ -1,0 +1,139 @@
+{
+  "dialog": {
+    "buttons": {
+      "cancel": "Ακύρωση",
+      "create": "Δημιουργία Πράκτορα",
+      "creating": "Δημιουργία...",
+      "update": "Ενημέρωση Πράκτορα",
+      "updating": "Ενημέρωση..."
+    },
+    "fields": {
+      "changeModel": "Αλλαγή μοντέλου",
+      "description": "Περιγραφή",
+      "descriptionPlaceholder": "Περιγράψτε τι κάνει αυτός ο πράκτορας...",
+      "maxTokens": "Μέγιστοι Tokens",
+      "maxTokensHint": "Μέγιστο μήκος απάντησης",
+      "model": "Μοντέλο",
+      "modelSelect": "Επιλέξτε μοντέλο...",
+      "name": "Όνομα Πράκτορα *",
+      "namePlaceholder": "Ο Βοηθός μου AI",
+      "noModelSelected": "Δεν έχει επιλεγεί μοντέλο",
+      "notConfigured": "Δεν έχει ρυθμιστεί",
+      "provider": "Πάροχος",
+      "providerNotConfigured": "Ο πάροχος δεν έχει ρυθμιστεί",
+      "providerSettings": "Ρυθμίστε στις Ρυθμίσεις",
+      "selectModel": "Επιλέξτε ένα μοντέλο",
+      "systemPrompt": "Σύστημα Προτροπή *",
+      "systemPromptHint": "Οδηγίες που καθορίζουν πώς συμπεριφέρεται ο πράκτορας",
+      "systemPromptPlaceholder": "Είστε ένας χρήσιμος βοηθός AI...",
+      "temperature": "Θερμοκρασία",
+      "temperatureHint": "Χαμηλότερες τιμές = πιο εστιασμένο, Υψηλότερες τιμές = πιο δημιουργικό"
+    },
+    "loadError": "Αποτυχία φόρτωσης μοντέλων AI",
+    "loading": "Φόρτωση παρόχων AI...",
+    "retry": "Δοκιμάστε ξανά",
+    "validation": {
+      "modelRequired": "Η επιλογή μοντέλου είναι υποχρεωτική",
+      "nameRequired": "Το όνομα του πράκτορα είναι υποχρεωτικό",
+      "promptRequired": "Η προτροπή του συστήματος είναι υποχρεωτική"
+    }
+  },
+  "models": {
+    "chip": {
+      "removeFromFavorites": "Αφαίρεση από τα αγαπημένα"
+    },
+    "comparison": {
+      "backToList": "← Πίσω στη Λίστα",
+      "browseModels": "Περιήγηση σε Μοντέλα",
+      "category": "Κατηγορία",
+      "comparing_one": "Σύγκριση {{count}} μοντέλου",
+      "comparing_other": "Σύγκριση {{count}} Μοντέλων",
+      "contextWindow": "Παράθυρο Πλαισίου",
+      "costTier": "Κατηγορία Κόστους",
+      "description": "Περιγραφή",
+      "empty": {
+        "description": "Επιλέξτε έως 3 μοντέλα από τη λίστα για να τα συγκρίνετε παράλληλα",
+        "title": "Δεν υπάρχουν Μοντέλα προς Σύγκριση"
+      },
+      "legend": "🏆 = Καλύτερο στην κατηγορία • Κάντε κλικ σε οποιαδήποτε κάρτα μοντέλου για να την επιλέξετε",
+      "modelId": "ID Μοντέλου",
+      "removeFromComparison": "Αφαίρεση από τη σύγκριση",
+      "selectThisModel": "Επιλέξτε Αυτό το Μοντέλο",
+      "tokens": "tokens",
+      "unknown": "Άγνωστο"
+    },
+    "detail": {
+      "addToCompare": "📊 Προσθήκη στη Σύγκριση",
+      "addToFavorites": "Προσθήκη στα αγαπημένα",
+      "by": "από {{provider}}",
+      "capabilities": "Δυνατότητες",
+      "chat": "💬 Συνομιλία",
+      "comparisonFull": "Αφαιρέστε ένα μοντέλο από τη σύγκριση για να προσθέσετε αυτό (μέγιστο 3)",
+      "contextWindow": "Παράθυρο Πλαισίου",
+      "cost": "{{cost}} Κόστος",
+      "costTier": "Επίπεδο Κόστους",
+      "description": "Περιγραφή",
+      "favorite": "🤍 Αγαπημένο",
+      "favorited": "❤️ Αγαπημένο",
+      "inComparison": "✓ Σε Σύγκριση",
+      "modelId": "Ταυτότητα Μοντέλου",
+      "noSelection": {
+        "description": "Κάντε κλικ σε ένα μοντέλο από τη λίστα για να δείτε λεπτομερείς πληροφορίες",
+        "title": "Δεν έχει επιλεγεί μοντέλο"
+      },
+      "popularModel": "Δημοφιλές Μοντέλο",
+      "provider": "Πάροχος",
+      "removeFromFavorites": "Αφαίρεση από τα αγαπημένα",
+      "selectThisModel": "Επιλέξτε Αυτό το Μοντέλο",
+      "specifications": "Προδιαγραφές",
+      "streaming": "🔄 Ροή",
+      "tokens": "tokens"
+    },
+    "picker": {
+      "available_one": "{{count}} μοντέλο διαθέσιμο",
+      "available_other": "{{count}} μοντέλα διαθέσιμα",
+      "cancel": "Ακύρωση",
+      "close": "Κλείσιμο (Esc)",
+      "compare": "Σύγκριση",
+      "favorites": "Αγαπημένα",
+      "hideFavorites": "Απόκρυψη αγαπημένων/πρόσφατων",
+      "inComparison_one": "{{count}} μοντέλο σε σύγκριση",
+      "inComparison_other": "{{count}} μοντέλα σε σύγκριση",
+      "loading": "Φόρτωση μοντέλων OpenRouter...",
+      "recentlyUsed": "Πρόσφατα Χρησιμοποιημένα",
+      "search": "Αναζήτηση μοντέλων (π.χ., 'gpt', 'claude', 'llama')...",
+      "selectModel": "Επιλέξτε Μοντέλο",
+      "shortcuts": "Ctrl+K: Αναζήτηση • Ctrl+F: Αγαπημένα • Ctrl+C: Σύγκριση",
+      "title": "Επιλέξτε Μοντέλο OpenRouter"
+    }
+  },
+  "panel": {
+    "browseAll": "Περιήγηση σε Όλους τους Πράκτορες",
+    "dismiss": "Απόρριψη",
+    "empty": {
+      "description": "Επικοινωνήστε με τον διαχειριστή για να δημιουργήσει πράκτορες",
+      "title": "Δεν υπάρχουν διαθέσιμοι πράκτορες"
+    },
+    "maxTokens": "Μέγιστο:",
+    "noSelection": "Δεν έχει επιλεγεί πράκτορας",
+    "temp": "Θερμοκρασία:",
+    "title": "AI Πράκτορες",
+    "tokens": "tokens"
+  },
+  "picker": {
+    "empty": {
+      "hint": "Δοκιμάστε μια διαφορετική αναζήτηση",
+      "title": "Δεν βρέθηκαν πράκτορες"
+    },
+    "searchAdmin": "Αναζήτηση πρακτόρων κατά όνομα, περιγραφή ή μοντέλο...",
+    "searchUser": "Αναζήτηση πρακτόρων κατά όνομα ή περιγραφή...",
+    "select": "Επιλέξτε Πράκτορα",
+    "selected": "Επιλεγμένο",
+    "title": "Επιλέξτε AI Agent"
+  },
+  "providers": {
+    "anthropic": "Anthropic",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter"
+  }
+}

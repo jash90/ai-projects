@@ -1,0 +1,89 @@
+{
+  "dialog": {
+    "cancel": "Annuleren",
+    "content": "Inhoud",
+    "contentHint": "Je kunt de inhoud bewerken nadat je het bestand hebt aangemaakt.",
+    "contentPlaceholder": "Bestandsinhoud...",
+    "create": "Bestand aanmaken",
+    "createTitle": "Nieuw bestand aanmaken",
+    "creating": "Aanmaken...",
+    "fileName": "Bestandsnaam",
+    "fileNamePlaceholder": "bijv. main.js, README.md",
+    "fileNameRequired": "Bestandsnaam is vereist",
+    "fileType": "Bestandstype",
+    "fileTypeRequired": "Bestandstype is vereist"
+  },
+  "editor": {
+    "autoSave": {
+      "pending": "Automatisch opslaan: In afwachting",
+      "upToDate": "Automatisch opslaan: Actueel"
+    },
+    "characters_one": "editor.kenmerk",
+    "characters_other": "editor.kenmerken",
+    "language": "Taal: {{language}}",
+    "lines_one": "editor.regel",
+    "lines_other": "editor.regels",
+    "loading": "Editor laden...",
+    "noFile": {
+      "description": "Selecteer een bestand uit de verkenner om te beginnen met bewerken",
+      "title": "Geen bestand geselecteerd"
+    },
+    "placeholder": "Begin met typen...",
+    "revert": "Terugzetten",
+    "revertConfirm": "Weet je zeker dat je alle niet-opgeslagen wijzigingen wilt terugzetten?",
+    "save": "Opslaan",
+    "saving": "Opslaan...",
+    "shortcuts": {
+      "exitFullscreen": "Druk op Esc om de fullscreen-modus te verlaten",
+      "save": "Ctrl+S om op te slaan"
+    },
+    "type": "Type: {{type}}",
+    "unsavedChanges": "Niet-opgeslagen wijzigingen",
+    "unsavedChangesText": "Niet-opgeslagen wijzigingen"
+  },
+  "explorer": {
+    "contextMenu": {
+      "copyContent": "Inhoud kopiëren",
+      "delete": "Verwijderen",
+      "open": "Openen"
+    },
+    "createTitle": "Nieuw bestand aanmaken",
+    "deleteConfirm": "Weet je zeker dat je \"{{name}}\" wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+    "dismiss": "Afwijzen",
+    "empty": {
+      "description": "Maak je eerste bestand om te beginnen",
+      "title": "Geen bestanden in dit project"
+    },
+    "fileCount_one": "explorer.bestandsaantal",
+    "fileCount_other": "{{count}} bestanden",
+    "noResults": "Geen bestanden die overeenkomen met je zoekopdracht",
+    "searchPlaceholder": "Bestanden zoeken...",
+    "shown_one": "explorer.weergegeven",
+    "shown_other": "explorer.weergegeven",
+    "title": "Bestanden",
+    "uploadTitle": "Bestanden uploaden vanaf computer"
+  },
+  "upload": {
+    "cancel": "Annuleren",
+    "complete": "Upload voltooid",
+    "description": "Upload bestanden vanaf uw computer. Bestanden worden gelezen en opgeslagen als bewerkbare tekstbestanden in het project.",
+    "done": "Klaar",
+    "dropzone": {
+      "active": "Bestanden hierheen slepen",
+      "andMore_one": "upload.dropzone.andMore",
+      "andMore_other": "upload.dropzone.andMore",
+      "description": "Sleep bestanden hierheen, of klik om bestanden te selecteren",
+      "maxSize": "Maximale bestandsgrootte: {{size}}MB",
+      "supportedTypes": "Ondersteunde types: {{types}}",
+      "title": "Upload bestanden vanaf uw computer"
+    },
+    "errors": {
+      "tooLarge": "Bestand \"{{name}}\" is te groot. Maximale grootte is {{maxSize}}MB.",
+      "unsupportedType": "Bestandstype niet ondersteund. Toegestane types: {{types}}"
+    },
+    "success_one": "upload.success",
+    "success_other": "{{count}} bestanden succesvol geüpload!",
+    "title": "Bestanden uploaden naar project",
+    "uploading": "Bestanden aan het uploaden"
+  }
+}

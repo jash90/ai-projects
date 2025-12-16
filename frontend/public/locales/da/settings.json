@@ -1,0 +1,88 @@
+{
+  "preferences": {
+    "appearance": {
+      "dark": "Mørk",
+      "description": "Tilpas hvordan AI Projekter ser ud på din enhed",
+      "light": "Lys",
+      "system": "System",
+      "theme": "Tema",
+      "title": "Udseende"
+    },
+    "language": {
+      "title": "Sprog",
+      "description": "Vælg dit foretrukne sprog"
+    },
+    "notifications": {
+      "description": "Vælg hvilke meddelelser du ønsker at modtage",
+      "email": {
+        "description": "Modtag e-mailopdateringer om din konto og brug",
+        "title": "E-mailmeddelelser"
+      },
+      "push": {
+        "description": "Modtag meddelelser om projektopdateringer og systemalarmer",
+        "title": "Pushmeddelelser"
+      },
+      "title": "Meddelelser"
+    },
+    "updateError": "Fejl ved opdatering af præferencer",
+    "updateSuccess": "Præferencer opdateret med succes"
+  },
+  "profile": {
+    "description": "Opdater dine personlige oplysninger og e-mailadresse",
+    "email": "E-mail",
+    "reset": "Nulstil",
+    "role": {
+      "admin": "Administrator",
+      "user": "Bruger"
+    },
+    "saveChanges": "Gem ændringer",
+    "title": "Profiloplysninger",
+    "updateError": "Fejl ved opdatering af profil",
+    "updateSuccess": "Profil opdateret med succes",
+    "username": "Brugernavn"
+  },
+  "security": {
+    "clear": "Ryd",
+    "confirmPassword": "Bekræft ny adgangskode",
+    "currentPassword": "Nuværende adgangskode",
+    "description": "Opdater din adgangskode for at holde din konto sikker",
+    "newPassword": "Ny adgangskode",
+    "passwordMismatch": "Nye adgangskoder stemmer ikke overens",
+    "passwordsDoNotMatch": "Adgangskoderne stemmer ikke overens",
+    "passwordTooShort": "Ny adgangskode skal være mindst 6 tegn",
+    "title": "Ændre adgangskode",
+    "updateError": "Fejl ved opdatering af adgangskode",
+    "updatePassword": "Opdater adgangskode",
+    "updateSuccess": "Adgangskode opdateret med succes"
+  },
+  "subtitle": "Administrer dine kontoindstillinger og applikationsindstillinger",
+  "tabs": {
+    "preferences": "Præferencer",
+    "profile": "Profil",
+    "security": "Sikkerhed",
+    "usage": "Brug"
+  },
+  "title": "Indstillinger",
+  "usage": {
+    "account": {
+      "description": "Dine kontooplysninger og grænser",
+      "globalLimit": "Global grænse",
+      "monthlyLimit": "Månedlig grænse",
+      "projects": "Projekter",
+      "role": "Rolle",
+      "title": "Kontooplysninger"
+    },
+    "stats": {
+      "description": "Overvåg din tokenbrug og omkostninger",
+      "loading": "Indlæser brugsstatistik...",
+      "monthlyCost": "Månedlige omkostninger",
+      "monthlyUsage": "Månedligt forbrug",
+      "percentUsed": "{{percent}}% brugt",
+      "thisMonth": "Denne måned",
+      "title": "Brugsstatistik",
+      "totalCost": "Samlede omkostninger",
+      "totalTokens": "Samlede tokens",
+      "totalUsage": "Samlet forbrug"
+    }
+  }
+}

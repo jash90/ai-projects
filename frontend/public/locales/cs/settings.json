@@ -1,0 +1,88 @@
+{
+  "preferences": {
+    "appearance": {
+      "dark": "Tmavý",
+      "description": "Přizpůsobte vzhled AI projektů na vašem zařízení",
+      "light": "Světlý",
+      "system": "Systém",
+      "theme": "Téma",
+      "title": "Vzhled"
+    },
+    "language": {
+      "title": "Jazyk",
+      "description": "Vyberte svůj preferovaný jazyk"
+    },
+    "notifications": {
+      "description": "Vyberte, jaké oznámení chcete přijímat",
+      "email": {
+        "description": "Získejte e-mailové aktualizace o vašem účtu a používání",
+        "title": "E-mailová oznámení"
+      },
+      "push": {
+        "description": "Získejte oznámení o aktualizacích projektu a systémových upozorněních",
+        "title": "Push oznámení"
+      },
+      "title": "Oznámení"
+    },
+    "updateError": "Aktualizace předvoleb se nezdařila",
+    "updateSuccess": "Předvolby byly úspěšně aktualizovány"
+  },
+  "profile": {
+    "description": "Aktualizujte své osobní údaje a e-mailovou adresu",
+    "email": "E-mail",
+    "reset": "Obnovit",
+    "role": {
+      "admin": "Administrátor",
+      "user": "Uživatel"
+    },
+    "saveChanges": "Uložit změny",
+    "title": "Informace o profilu",
+    "updateError": "Aktualizace profilu se nezdařila",
+    "updateSuccess": "Profil byl úspěšně aktualizován",
+    "username": "Uživatelské jméno"
+  },
+  "security": {
+    "clear": "Vymazat",
+    "confirmPassword": "Potvrďte nové heslo",
+    "currentPassword": "Aktuální heslo",
+    "description": "Aktualizujte své heslo, abyste udrželi svůj účet v bezpečí",
+    "newPassword": "Nové heslo",
+    "passwordMismatch": "Nová hesla se neshodují",
+    "passwordsDoNotMatch": "Hesla se neshodují",
+    "passwordTooShort": "Nové heslo musí mít alespoň 6 znaků",
+    "title": "Změnit heslo",
+    "updateError": "Aktualizace hesla se nezdařila",
+    "updatePassword": "Aktualizovat heslo",
+    "updateSuccess": "Heslo bylo úspěšně aktualizováno"
+  },
+  "subtitle": "Spravujte předvolby svého účtu a nastavení aplikace",
+  "tabs": {
+    "preferences": "Předvolby",
+    "profile": "Profil",
+    "security": "Bezpečnost",
+    "usage": "Použití"
+  },
+  "title": "Nastavení",
+  "usage": {
+    "account": {
+      "description": "Podrobnosti o vašem účtu a limitech",
+      "globalLimit": "Celkový limit",
+      "monthlyLimit": "Měsíční limit",
+      "projects": "Projekty",
+      "role": "Role",
+      "title": "Informace o účtu"
+    },
+    "stats": {
+      "description": "Sledujte používání tokenů a náklady",
+      "loading": "Načítání statistik používání...",
+      "monthlyCost": "Měsíční náklady",
+      "monthlyUsage": "Měsíční využití",
+      "percentUsed": "{{percent}}% využito",
+      "thisMonth": "Tento měsíc",
+      "title": "Statistiky využití",
+      "totalCost": "Celkové náklady",
+      "totalTokens": "Celkové tokeny",
+      "totalUsage": "Celkové využití"
+    }
+  }
+}

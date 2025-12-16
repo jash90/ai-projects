@@ -1,0 +1,139 @@
+{
+  "dialog": {
+    "buttons": {
+      "cancel": "Odustani",
+      "create": "Stvori agenta",
+      "creating": "Stvaranje...",
+      "update": "Ažuriraj agenta",
+      "updating": "Ažuriranje..."
+    },
+    "fields": {
+      "changeModel": "Promijeni model",
+      "description": "Opis",
+      "descriptionPlaceholder": "Opišite što ovaj agent radi...",
+      "maxTokens": "Maksimalni tokeni",
+      "maxTokensHint": "Maksimalna duljina odgovora",
+      "model": "Model",
+      "modelSelect": "Odaberite model...",
+      "name": "Ime agenta *",
+      "namePlaceholder": "Moj AI asistent",
+      "noModelSelected": "Nema odabranog modela",
+      "notConfigured": "Nije konfigurirano",
+      "provider": "Davatelj",
+      "providerNotConfigured": "Davatelj nije konfiguriran",
+      "providerSettings": "Konfiguriraj u Postavkama",
+      "selectModel": "Odaberite model",
+      "systemPrompt": "Sistemsku poruku *",
+      "systemPromptHint": "Upute koje definiraju kako se agent ponaša",
+      "systemPromptPlaceholder": "Vi ste koristan AI asistent...",
+      "temperature": "Temperatura",
+      "temperatureHint": "Niže vrijednosti = fokusiranije, više vrijednosti = kreativnije"
+    },
+    "loadError": "Nije moguće učitati AI modele",
+    "loading": "Učitavanje AI davatelja...",
+    "retry": "Pokušaj ponovo",
+    "validation": {
+      "modelRequired": "Odabir modela je obavezan",
+      "nameRequired": "Ime agenta je obavezno",
+      "promptRequired": "Sistemsku poruku je obavezno unijeti"
+    }
+  },
+  "models": {
+    "chip": {
+      "removeFromFavorites": "Ukloni iz favorita"
+    },
+    "comparison": {
+      "backToList": "← Natrag na popis",
+      "browseModels": "Pretraži modele",
+      "category": "Kategorija",
+      "comparing_one": "Uspoređivanje {{count}} modela",
+      "comparing_other": "Uspoređivanje {{count}} modela",
+      "contextWindow": "Kontekstni prozor",
+      "costTier": "Razina troškova",
+      "description": "Opis",
+      "empty": {
+        "description": "Odaberite do 3 modela s popisa za usporedbu jedan pored drugog",
+        "title": "Nema modela za usporedbu"
+      },
+      "legend": "🏆 = Najbolji u kategoriji • Kliknite na bilo koju karticu modela da biste je odabrali",
+      "modelId": "ID modela",
+      "removeFromComparison": "Ukloni iz usporedbe",
+      "selectThisModel": "Odaberite ovaj model",
+      "tokens": "tokeni",
+      "unknown": "Nepoznato"
+    },
+    "detail": {
+      "addToCompare": "📊 Dodaj za usporedbu",
+      "addToFavorites": "Dodaj u favorite",
+      "by": "od {{provider}}",
+      "capabilities": "Mogućnosti",
+      "chat": "💬 Razgovor",
+      "comparisonFull": "Uklonite model iz usporedbe da biste dodali ovaj (maks 3)",
+      "contextWindow": "Prozor konteksta",
+      "cost": "{{cost}} Trošak",
+      "costTier": "Razina troška",
+      "description": "Opis",
+      "favorite": "🤍 Omiljeno",
+      "favorited": "❤️ Dodano među omiljene",
+      "inComparison": "✓ U usporedbi",
+      "modelId": "ID modela",
+      "noSelection": {
+        "description": "Kliknite na model s popisa za prikaz detaljnih informacija",
+        "title": "Nema odabranog modela"
+      },
+      "popularModel": "Popularni model",
+      "provider": "Davatelj",
+      "removeFromFavorites": "Ukloni iz omiljenih",
+      "selectThisModel": "Odaberite ovaj model",
+      "specifications": "Specifikacije",
+      "streaming": "🔄 Streaming",
+      "tokens": "tokeni"
+    },
+    "picker": {
+      "available_one": "{{count}} model dostupan",
+      "available_other": "{{count}} modela dostupno",
+      "cancel": "Otkaži",
+      "close": "Zatvori (Esc)",
+      "compare": "Usporedi",
+      "favorites": "Omiljeni",
+      "hideFavorites": "Sakrij omiljene/novije",
+      "inComparison_one": "{{count}} model u usporedbi",
+      "inComparison_other": "{{count}} modela u usporedbi",
+      "loading": "Učitavanje OpenRouter modela...",
+      "recentlyUsed": "Nedavno korišteno",
+      "search": "Pretraži modele (npr., 'gpt', 'claude', 'llama')...",
+      "selectModel": "Odaberite model",
+      "shortcuts": "Ctrl+K: Pretraži • Ctrl+F: Omiljeni • Ctrl+C: Usporedi",
+      "title": "Odaberite OpenRouter model"
+    }
+  },
+  "panel": {
+    "browseAll": "Pretraži sve agente",
+    "dismiss": "Odbaci",
+    "empty": {
+      "description": "Kontaktirajte administratora za izradu agenata",
+      "title": "Nema dostupnih agenata"
+    },
+    "maxTokens": "Maks:",
+    "noSelection": "Nema odabranog agenta",
+    "temp": "Temp:",
+    "title": "AI Agenti",
+    "tokens": "tokeni"
+  },
+  "picker": {
+    "empty": {
+      "hint": "Pokušajte s drugim pojmom pretraživanja",
+      "title": "Nema pronađenih agenata"
+    },
+    "searchAdmin": "Pretraži agente po imenu, opisu ili modelu...",
+    "searchUser": "Pretraži agente po imenu ili opisu...",
+    "select": "Odaberite agenta",
+    "selected": "Odabrano",
+    "title": "Odaberite AI Agenta"
+  },
+  "providers": {
+    "anthropic": "Anthropic",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter"
+  }
+}

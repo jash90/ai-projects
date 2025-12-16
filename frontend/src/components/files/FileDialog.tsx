@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FileCreate } from '@/types'
 import { Dialog } from '@/components/ui/Dialog'
 import { Button } from '@/components/ui/Button'
@@ -180,12 +181,13 @@ CMD ["pnpm", "start"]
 }
 
 export function FileDialog({ open, onClose, onSubmit, title }: FileDialogProps) {
+  const { t } = useTranslation('files')
   const [formData, setFormData] = useState({
     name: '',
     type: 'text',
     content: '',
   })
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -216,12 +218,12 @@ export function FileDialog({ open, onClose, onSubmit, title }: FileDialogProps) 
     
     // Validation
     if (!formData.name.trim()) {
-      setError('File name is required')
+      setError(t('dialog.fileNameRequired'))
       return
     }
-    
+
     if (!formData.type) {
-      setError('File type is required')
+      setError(t('dialog.fileTypeRequired'))
       return
     }
 
@@ -275,19 +277,19 @@ export function FileDialog({ open, onClose, onSubmit, title }: FileDialogProps) 
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="name">File Name *</Label>
+                <Label htmlFor="name">{t('dialog.fileName')} *</Label>
                 <Input
                   id="name"
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  placeholder="e.g., main.js, README.md"
+                  placeholder={t('dialog.fileNamePlaceholder')}
                   className="mt-1"
                 />
               </div>
 
               <div>
-                <Label htmlFor="type">File Type *</Label>
+                <Label htmlFor="type">{t('dialog.fileType')} *</Label>
                 <Select
                   value={formData.type}
                   onValueChange={handleTypeChange}
@@ -314,17 +316,17 @@ export function FileDialog({ open, onClose, onSubmit, title }: FileDialogProps) 
             </div>
 
             <div>
-              <Label htmlFor="content">Content</Label>
+              <Label htmlFor="content">{t('dialog.content')}</Label>
               <Textarea
                 id="content"
                 value={formData.content}
                 onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-                placeholder="File content..."
+                placeholder={t('dialog.contentPlaceholder')}
                 rows={12}
                 className="mt-1 font-mono text-sm"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                You can edit the content after creating the file.
+                {t('dialog.contentHint')}
               </p>
             </div>
           </form>
@@ -338,7 +340,7 @@ export function FileDialog({ open, onClose, onSubmit, title }: FileDialogProps) 
             onClick={handleClose}
             disabled={isSubmitting}
           >
-            Cancel
+            {t('dialog.cancel')}
           </Button>
           <Button
             type="submit"
@@ -348,10 +350,10 @@ export function FileDialog({ open, onClose, onSubmit, title }: FileDialogProps) 
             {isSubmitting ? (
               <>
                 <LoadingSpinner className="w-4 h-4 mr-2" />
-                Creating...
+                {t('dialog.creating')}
               </>
             ) : (
-              'Create File'
+              t('dialog.create')
             )}
           </Button>
         </div>

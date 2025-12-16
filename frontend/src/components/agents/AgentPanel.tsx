@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Bot, Grid } from 'lucide-react'
 import { Agent } from '@/types'
 import { useAgents } from '@/stores/agentStore'
@@ -15,6 +16,7 @@ interface AgentPanelProps {
 }
 
 export function AgentPanel({ selectedAgentId, onAgentSelect, className }: AgentPanelProps) {
+  const { t } = useTranslation('agents')
   const [showPickerDialog, setShowPickerDialog] = useState(false)
   const { user } = useAuth()
   const isAdmin = user?.role === 'admin'
@@ -57,7 +59,7 @@ export function AgentPanel({ selectedAgentId, onAgentSelect, className }: AgentP
     return (
       <div className={cn('flex flex-col h-full', className)}>
         <div className="p-4 border-b border-border">
-          <h2 className="text-lg font-semibold text-foreground">AI Agents</h2>
+          <h2 className="text-lg font-semibold text-foreground">{t('panel.title')}</h2>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <LoadingSpinner />
@@ -73,7 +75,7 @@ export function AgentPanel({ selectedAgentId, onAgentSelect, className }: AgentP
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
             <Bot className="w-5 h-5" />
-            AI Agents
+            {t('panel.title')}
           </h2>
         </div>
         {error && (
@@ -85,7 +87,7 @@ export function AgentPanel({ selectedAgentId, onAgentSelect, className }: AgentP
               onClick={clearError}
               className="mt-1 h-6 text-xs"
             >
-              Dismiss
+              {t('panel.dismiss')}
             </Button>
           </div>
         )}
@@ -100,8 +102,8 @@ export function AgentPanel({ selectedAgentId, onAgentSelect, className }: AgentP
             return (
               <div className="text-center py-8 text-muted-foreground">
                 <Bot className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p className="text-sm">No agents available</p>
-                <p className="text-xs mt-1">Contact administrator to create agents</p>
+                <p className="text-sm">{t('panel.empty.title')}</p>
+                <p className="text-xs mt-1">{t('panel.empty.description')}</p>
               </div>
             )
           }
@@ -110,8 +112,8 @@ export function AgentPanel({ selectedAgentId, onAgentSelect, className }: AgentP
             return (
               <div className="text-center py-8 text-muted-foreground">
                 <Bot className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p className="text-sm">No agent selected</p>
-                <p className="text-xs mt-1">Click "Browse Agents" to select one</p>
+                <p className="text-sm">{t('panel.noSelection')}</p>
+                <p className="text-xs mt-1">{t('panel.browseAll')}</p>
               </div>
             )
           }
@@ -158,10 +160,10 @@ export function AgentPanel({ selectedAgentId, onAgentSelect, className }: AgentP
               {isAdmin && (
                 <div className="flex flex-wrap gap-2 text-xs">
                   <span className="px-2 py-1 rounded bg-muted text-muted-foreground">
-                    Temp: {selectedAgent.temperature}
+                    {t('panel.temp')} {selectedAgent.temperature}
                   </span>
                   <span className="px-2 py-1 rounded bg-muted text-muted-foreground">
-                    Max: {selectedAgent.max_tokens} tokens
+                    {t('panel.maxTokens')} {selectedAgent.max_tokens} {t('panel.tokens')}
                   </span>
                 </div>
               )}
@@ -179,7 +181,7 @@ export function AgentPanel({ selectedAgentId, onAgentSelect, className }: AgentP
             onClick={() => setShowPickerDialog(true)}
           >
             <Grid className="w-4 h-4 mr-2" />
-            Browse All Agents
+            {t('panel.browseAll')}
           </Button>
         </div>
       )}

@@ -1,0 +1,188 @@
+{
+  "cta": {
+    "installPwa": "Installer App",
+    "start": "Beg at bygge gratis",
+    "subtitle": "Deltag i teams, der allerede bygger smartere med AI. Gratis at starte, ingen kreditkort kræves.",
+    "title": "Klar til at bygge med AI?"
+  },
+  "features": {
+    "items": {
+      "ai": {
+        "category": "AI",
+        "description": "Vælg mellem GPT-4, Claude og andre AI-modeller. Opret brugerdefinerede agenter skræddersyet til dine projekter.",
+        "title": "Smarte AI-assistenter"
+      },
+      "analytics": {
+        "category": "Analyse",
+        "description": "Spor AI-brug og omkostninger pr. projekt. Sæt budgetter og bliv aldrig overrasket over regninger.",
+        "title": "Brug & Omkostningssporing"
+      },
+      "collaboration": {
+        "category": "Samarbejde",
+        "description": "Chat med AI i realtid. Se svarene, mens de genereres. Din samtalehistorik gemmes altid.",
+        "title": "AI-chat i realtid"
+      },
+      "management": {
+        "category": "Projekter",
+        "description": "Organiser arbejdet i projekter. Upload dokumenter, billeder og kode. Din AI husker konteksten.",
+        "title": "Projektorganisation"
+      },
+      "mobile": {
+        "category": "Mobil",
+        "description": "Installer som en app på enhver enhed. Arbejd på din telefon, tablet eller desktop med den samme fantastiske oplevelse.",
+        "title": "Fungerer Overalt"
+      },
+      "performance": {
+        "category": "Platform",
+        "description": "Installer på enhver enhed, arbejd offline, synkroniser automatisk. Hurtig og pålidelig, uanset hvor du er.",
+        "title": "Arbejd Hvor Som Helst"
+      },
+      "pwa": {
+        "category": "Offline",
+        "description": "Fortsæt med at arbejde uden internet. Dine ændringer synkroniseres automatisk, når du er online igen.",
+        "title": "Offline Tilstand"
+      },
+      "security": {
+        "category": "Sikkerhed",
+        "description": "Sikkerhed i virksomhedsklasse med teamrettigheder, brugsgrænser og komplette revisionsspor.",
+        "title": "Team Sikkerhed"
+      },
+      "ux": {
+        "category": "Tilpasning",
+        "description": "Personliggør dit arbejdsområde med mørk/lys tilstand, notifikationspræferencer og brugerdefinerede indstillinger.",
+        "title": "Dit Arbejdsområde, Din Måde"
+      }
+    },
+    "subtitle": "Alt hvad du behøver for at bygge med AI. Simpelt at starte, kraftfuldt nok til teams.",
+    "techStack": {
+      "subtitle": "Produktionsklar stack med TypeScript, React 18, Node.js, PostgreSQL og AI-integration",
+      "title": "Bygget med Moderne Teknologier",
+      "categories": {
+        "ai": "AI",
+        "backend": "Backend",
+        "database": "Database",
+        "frontend": "Frontend",
+        "mobile": "Mobil",
+        "realtime": "Realtid"
+      }
+    },
+    "title": "Alt hvad du Beholder"
+  },
+  "footer": {
+    "company": {
+      "about": "Om",
+      "blog": "Blog",
+      "careers": "Karrierer",
+      "contact": "Kontakt",
+      "title": "Virksomhed"
+    },
+    "copyright": "© 2025 AI Projects. Alle rettigheder forbeholdes.",
+    "product": {
+      "api": "API",
+      "documentation": "Dokumentation",
+      "features": "Funktioner",
+      "pricing": "Priser",
+      "title": "Produkt"
+    },
+    "support": {
+      "community": "Fællesskab",
+      "helpCenter": "Hjælp Center",
+      "privacy": "Privatliv",
+      "status": "Status",
+      "title": "Support"
+    },
+    "tagline": "Fremtiden for udvikling er her. Byg fantastiske projekter med AI-assistance."
+  },
+  "hero": {
+    "badge": "AI Arbejdsområde for Moderne Teams",
+    "cta": {
+      "demo": "Se demo",
+      "start": "Begynd at bygge gratis"
+    },
+    "subtitle": "Opret projekter med AI-assistenter, der forstår din kontekst. Samarbejd i realtid, arbejd offline, og administrer alt fra din telefon eller desktop.",
+    "title": "Byg Smartere",
+    "titleHighlight": "med AI"
+  },
+  "nav": {
+    "features": "Funktioner",
+    "getStarted": "Kom i gang",
+    "installApp": "Installer app",
+    "pricing": "Priser",
+    "signIn": "Log ind",
+    "testimonials": "Udtalelser"
+  },
+  "pricing": {
+    "contactUs": "kontakt os",
+    "perMonth": "pr. måned",
+    "plans": {
+      "enterprise": {
+        "cta": "Kontakt salg",
+        "features": [
+          "Alt i Pro",
+          "Adminpanel & teamroller",
+          "Brugerdefinerede brugsgrænser",
+          "Aktivitetsrevisionslogs",
+          "SSO-integration",
+          "Dedikeret support"
+        ],
+        "name": "Enterprise",
+        "price": "Tilpasset"
+      },
+      "pro": {
+        "cta": "Start Pro prøveperiode",
+        "features": [
+          "Ubegrænsede projekter",
+          "GPT-4 & Claude",
+          "Team samarbejde",
+          "Ubegrænsede filer",
+          "Brugsanalyse",
+          "Prioriteret support"
+        ],
+        "name": "Professionel",
+        "popular": "Mest populær",
+        "price": "$29"
+      },
+      "starter": {
+        "cta": "Kom i gang gratis",
+        "features": [
+          "5 projekter",
+          "GPT-4 adgang",
+          "Mobilapp",
+          "Arbejd offline",
+          "Fællesskabsstøtte"
+        ],
+        "name": "Starter",
+        "price": "$0"
+      }
+    },
+    "subtitle": "Start gratis, opgrader når du har brug for mere. Ingen overraskelser, afbestil når som helst.",
+    "title": "Simpel, Gennemsigtig Prissætning"
+  },
+  "stats": {
+    "activeDevelopers": "Oprettede Projekter",
+    "projectsBuilt": "AI-samtaler",
+    "rating": "Bruger tilfredshed",
+    "uptime": "Oppetid"
+  },
+  "testimonials": {
+    "items": {
+      "elena": {
+        "content": "Den realtidschat med AI er utrolig responsiv. Jeg får øjeblikkelige svar, mens min kode stadig er frisk i mit sind.",
+        "name": "Elena Rodriguez",
+        "role": "Softwareudvikler"
+      },
+      "marcus": {
+        "content": "Vi har reduceret vores AI-omkostninger med 40% takket være brugssporingen. Nu ved jeg præcist, hvilke projekter der bruger hvad, og kan sætte grænser for teamet.",
+        "name": "Marcus Johnson",
+        "role": "Ingeniørleder"
+      },
+      "sarah": {
+        "content": "Jeg elsker, at jeg kan starte en samtale med AI på min telefon under frokosten og fortsætte den på min bærbare computer på kontoret. Alt synkroniseres bare.",
+        "name": "Sarah Chen",
+        "role": "Produktdesigner"
+      }
+    },
+    "subtitle": "Deltag i tusindvis af teams, der allerede bygger med AI Projects.",
+    "title": "Betroet af teams verden over"
+  }
+}

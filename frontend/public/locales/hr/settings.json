@@ -1,0 +1,88 @@
+{
+  "preferences": {
+    "appearance": {
+      "dark": "Tamna",
+      "description": "Prilagodite izgled AI projekata na svom uređaju",
+      "light": "Svijetla",
+      "system": "Sustav",
+      "theme": "Tema",
+      "title": "Izgled"
+    },
+    "language": {
+      "title": "Jezik",
+      "description": "Odaberite željeni jezik"
+    },
+    "notifications": {
+      "description": "Odaberite koje obavijesti želite primati",
+      "email": {
+        "description": "Primajte ažuriranja putem e-pošte o svom računu i korištenju",
+        "title": "Obavijesti putem e-pošte"
+      },
+      "push": {
+        "description": "Primajte obavijesti o ažuriranjima projekata i sustavnim upozorenjima",
+        "title": "Push obavijesti"
+      },
+      "title": "Obavijesti"
+    },
+    "updateError": "Neuspješno ažuriranje postavki",
+    "updateSuccess": "Postavke su uspješno ažurirane"
+  },
+  "profile": {
+    "description": "Ažurirajte svoje osobne podatke i adresu e-pošte",
+    "email": "E-pošta",
+    "reset": "Poništi",
+    "role": {
+      "admin": "Administrator",
+      "user": "Korisnik"
+    },
+    "saveChanges": "Spremi promjene",
+    "title": "Informacije o profilu",
+    "updateError": "Neuspješno ažuriranje profila",
+    "updateSuccess": "Profil je uspješno ažuriran",
+    "username": "Korisničko ime"
+  },
+  "security": {
+    "clear": "Očisti",
+    "confirmPassword": "Potvrdi novu lozinku",
+    "currentPassword": "Trenutna lozinka",
+    "description": "Ažurirajte svoju lozinku kako biste zaštitili svoj račun",
+    "newPassword": "Nova lozinka",
+    "passwordMismatch": "Nove lozinke se ne podudaraju",
+    "passwordsDoNotMatch": "Lozinke se ne podudaraju",
+    "passwordTooShort": "Nova lozinka mora imati najmanje 6 znakova",
+    "title": "Promijeni lozinku",
+    "updateError": "Neuspješno ažuriranje lozinke",
+    "updatePassword": "Ažuriraj lozinku",
+    "updateSuccess": "Lozinka je uspješno ažurirana"
+  },
+  "subtitle": "Upravljajte postavkama svog računa i aplikacije",
+  "tabs": {
+    "preferences": "Postavke",
+    "profile": "Profil",
+    "security": "Sigurnost",
+    "usage": "Korištenje"
+  },
+  "title": "Postavke",
+  "usage": {
+    "account": {
+      "description": "Detalji o vašem računu i ograničenjima",
+      "globalLimit": "Globalno ograničenje",
+      "monthlyLimit": "Mjesečno ograničenje",
+      "projects": "Projekti",
+      "role": "Uloga",
+      "title": "Informacije o računu"
+    },
+    "stats": {
+      "description": "Pratite korištenje tokena i troškove",
+      "loading": "Učitavanje statistike korištenja...",
+      "monthlyCost": "Mjesečni trošak",
+      "monthlyUsage": "Mjesečna upotreba",
+      "percentUsed": "{{percent}}% iskorišteno",
+      "thisMonth": "Ovaj mjesec",
+      "title": "Statistika korištenja",
+      "totalCost": "Ukupni trošak",
+      "totalTokens": "Ukupno tokena",
+      "totalUsage": "Ukupna upotreba"
+    }
+  }
+}

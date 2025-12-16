@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "createProject": "Crear Proyecto",
+    "newProject": "Nuevo Proyecto"
+  },
+  "admin": {
+    "description": "Gestionar usuarios, límites de tokens y configuraciones del sistema",
+    "title": "Panel de Administración"
+  },
+  "allProjects": {
+    "empty": {
+      "description": "Comienza creando un nuevo proyecto",
+      "title": "No hay proyectos aún"
+    },
+    "title": "Todos los Proyectos",
+    "viewAll_one": "ver todos los proyectos",
+    "viewAll_other": "ver todos los proyectos"
+  },
+  "header": {
+    "subtitle": "Gestiona tus proyectos y colabora con agentes de IA",
+    "welcome": "Bienvenido de nuevo, {{username}}"
+  },
+  "quickTip": {
+    "content": "Agrega archivos a tu proyecto para dar contexto a los agentes de IA para una mejor asistencia.",
+    "title": "Consejo Rápido"
+  },
+  "recentProjects": {
+    "empty": {
+      "description": "Crea tu primer proyecto para comenzar con la colaboración de IA",
+      "title": "No hay proyectos recientes"
+    },
+    "mostRecent": "Más Reciente",
+    "title": "Proyectos Recientes"
+  },
+  "stats": {
+    "activeThisWeek": "Activo Esta Semana",
+    "totalMessages": "Total de Mensajes",
+    "totalProjects": "Total de Proyectos",
+    "trackUsage": "Rastrear tu uso de IA",
+    "usageStats": "Estadísticas de Uso",
+    "viewTokenUsage": "Ver uso de tokens"
+  },
+  "usagePage": {
+    "subtitle": "Monitorea tu uso de tokens y costos a través de diferentes proveedores de IA",
+    "title": "Uso de API y Estadísticas"
+  }
+}

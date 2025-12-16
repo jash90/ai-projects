@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Back to Dashboard",
+  "dashboard": "Dashboard",
+  "desktop": {
+    "actions": {
+      "enterFullscreen": "Enter Fullscreen",
+      "exitFullscreen": "Exit Fullscreen",
+      "hideEditor": "Hide Editor",
+      "hideSidebar": "Hide Sidebar",
+      "showEditor": "Show Editor",
+      "showSidebar": "Show Sidebar"
+    },
+    "panels": {
+      "aiAgents": "AI Agents",
+      "projectFiles": "Project Files"
+    }
+  },
+  "editor": {
+    "noFileSelected": "No file selected"
+  },
+  "loading": "Loading project...",
+  "mobile": {
+    "actions": {
+      "install": "Install",
+      "installApp": "Install App",
+      "share": "Share"
+    },
+    "menu": {
+      "currentSelection": "Current Selection",
+      "filesAvailableOffline_one": "mobile.menu.filesAvailableOffline",
+      "filesAvailableOffline_other": "mobile.menu.filesAvailableOffline",
+      "filesPendingUpload_one": "mobile.menu.filesPendingUpload",
+      "filesPendingUpload_other": "mobile.menu.filesPendingUpload",
+      "noAgentSelected": "No agent selected",
+      "noFileSelected": "No file selected",
+      "offlineMode": "Offline Mode",
+      "online": "Online",
+      "status": "Status"
+    },
+    "views": {
+      "agents": "Agents",
+      "chat": "Chat",
+      "editor": "Editor",
+      "files": "Files"
+    }
+  },
+  "noAgents": {
+    "description": "You need at least one AI agent to use this project.",
+    "title": "No AI agents available"
+  },
+  "notFound": {
+    "description": "The project you're looking for doesn't exist or you don't have access to it.",
+    "title": "Project not found"
+  }
+}

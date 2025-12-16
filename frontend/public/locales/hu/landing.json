@@ -1,0 +1,188 @@
+{
+  "cta": {
+    "installPwa": "Alkalmazás telepítése",
+    "start": "Kezdj el ingyenesen építeni",
+    "subtitle": "Csatlakozz olyan csapatokhoz, akik már okosabban építenek az AI-val. Ingyenes kezdés, nincs szükség hitelkártyára.",
+    "title": "Készen állsz az AI-val való építésre?"
+  },
+  "features": {
+    "items": {
+      "ai": {
+        "category": "AI",
+        "description": "Válassz a GPT-4, Claude és más AI modellek közül. Hozz létre egyedi ügynököket, amelyek a projektjeidhez vannak igazítva.",
+        "title": "Okos AI Asszisztensek"
+      },
+      "analytics": {
+        "category": "Elemzés",
+        "description": "Kövesd nyomon az AI használatát és a költségeket projektenként. Állíts be költségkereteket, és soha ne érjen meglepetés a számlákkal.",
+        "title": "Használat és Költség Nyomon Követés"
+      },
+      "collaboration": {
+        "category": "Együttműködés",
+        "description": "Csevegj az AI-val valós időben. Lásd a válaszokat, ahogy generálódnak. A beszélgetési előzményeid mindig elmentésre kerülnek.",
+        "title": "Valós Idejű AI Csevegés"
+      },
+      "management": {
+        "category": "Projektek",
+        "description": "Szervezd a munkát projektekbe. Tölts fel dokumentumokat, képeket és kódot. Az AI-d emlékszik a kontextusra.",
+        "title": "Projekt Szervezés"
+      },
+      "mobile": {
+        "category": "Mobil",
+        "description": "Telepítsd alkalmazásként bármely eszközre. Dolgozz a telefonodon, táblagépen vagy asztali gépen ugyanazzal a nagyszerű élménnyel.",
+        "title": "Mindenhol Működik"
+      },
+      "performance": {
+        "category": "Platform",
+        "description": "Telepítsd bármely eszközre, dolgozz offline, szinkronizálj automatikusan. Gyors és megbízható, bárhol is vagy.",
+        "title": "Dolgozz Bárhol"
+      },
+      "pwa": {
+        "category": "Offline",
+        "description": "Folytasd a munkát internet nélkül. A változtatásaid automatikusan szinkronizálódnak, amikor újra online vagy.",
+        "title": "Offline Mód"
+      },
+      "security": {
+        "category": "Biztonság",
+        "description": "Vállalati szintű biztonság csapatengedélyekkel, használati korlátokkal és teljes audit nyomvonalakkal.",
+        "title": "Csapat Biztonság"
+      },
+      "ux": {
+        "category": "Testreszabás",
+        "description": "Személyre szabhatod a munkahelyedet sötét/világos móddal, értesítési preferenciákkal és egyedi beállításokkal.",
+        "title": "A Te Munkahelyed, A Te Módod"
+      }
+    },
+    "subtitle": "Minden, amire szükséged van az AI-val való építéshez. Egyszerű a kezdés, elég erős a csapatok számára.",
+    "techStack": {
+      "subtitle": "Termelésre kész stack TypeScript, React 18, Node.js, PostgreSQL és AI integrációval",
+      "title": "Modern Technológiákkal Készült",
+      "categories": {
+        "ai": "AI",
+        "backend": "Backend",
+        "database": "Adatbázis",
+        "frontend": "Frontend",
+        "mobile": "Mobil",
+        "realtime": "Valós idő"
+      }
+    },
+    "title": "Minden, Amire Szükséged Van"
+  },
+  "footer": {
+    "company": {
+      "about": "Rólunk",
+      "blog": "Blog",
+      "careers": "Karrier",
+      "contact": "Kapcsolat",
+      "title": "Cég"
+    },
+    "copyright": "© 2025 AI Projects. Minden jog fenntartva.",
+    "product": {
+      "api": "API",
+      "documentation": "Dokumentáció",
+      "features": "Funkciók",
+      "pricing": "Árazás",
+      "title": "Termék"
+    },
+    "support": {
+      "community": "Közösség",
+      "helpCenter": "Súgó Központ",
+      "privacy": "Adatvédelem",
+      "status": "Állapot",
+      "title": "Támogatás"
+    },
+    "tagline": "A fejlesztés jövője itt van. Építs lenyűgöző projekteket AI segítséggel."
+  },
+  "hero": {
+    "badge": "AI Munkahely Modern Csapatoknak",
+    "cta": {
+      "demo": "Demó megtekintése",
+      "start": "Kezdj el ingyen építeni"
+    },
+    "subtitle": "Hozz létre projekteket olyan AI asszisztensekkel, akik értik a kontextusodat. Együttműködj valós időben, dolgozz offline, és kezeld mindent a telefonodról vagy asztali gépedről.",
+    "title": "Okosabban Építs",
+    "titleHighlight": "AI-val"
+  },
+  "nav": {
+    "features": "Funkciók",
+    "getStarted": "Kezdj el",
+    "installApp": "Alkalmazás telepítése",
+    "pricing": "Árazás",
+    "signIn": "Bejelentkezés",
+    "testimonials": "Vélemények"
+  },
+  "pricing": {
+    "contactUs": "lépj velünk kapcsolatba",
+    "perMonth": "havonta",
+    "plans": {
+      "enterprise": {
+        "cta": "Kapcsolatfelvétel az értékesítéssel",
+        "features": [
+          "Minden a Pro-ban",
+          "Adminisztrátori panel és csapat szerepek",
+          "Egyedi használati korlátok",
+          "Tevékenységi audit naplók",
+          "SSO integráció",
+          "Dedikált támogatás"
+        ],
+        "name": "Vállalati",
+        "price": "Egyedi"
+      },
+      "pro": {
+        "cta": "Pro próbaverzió indítása",
+        "features": [
+          "Korlátlan projektek",
+          "GPT-4 és Claude",
+          "Csapat együttműködés",
+          "Korlátlan fájlok",
+          "Használati elemzések",
+          "Prioritásos támogatás"
+        ],
+        "name": "Professzionális",
+        "popular": "Legnépszerűbb",
+        "price": "$29"
+      },
+      "starter": {
+        "cta": "Kezdj el ingyen",
+        "features": [
+          "5 projekt",
+          "GPT-4 hozzáférés",
+          "Mobil alkalmazás",
+          "Dolgozz offline",
+          "Közösségi támogatás"
+        ],
+        "name": "Kezdő",
+        "price": "$0"
+      }
+    },
+    "subtitle": "Kezdj ingyen, frissíts, amikor többre van szükséged. Nincs meglepetés, bármikor lemondhatod.",
+    "title": "Egyszerű, Átlátható Árazás"
+  },
+  "stats": {
+    "activeDevelopers": "Létrehozott Projektek",
+    "projectsBuilt": "AI Beszélgetések",
+    "rating": "Felhasználói Elégedettség",
+    "uptime": "Elérhetőség"
+  },
+  "testimonials": {
+    "items": {
+      "elena": {
+        "content": "A valós idejű csevegés az AI-val hihetetlenül reagáló. Azonnali válaszokat kapok, miközben a kód még friss az elmémben.",
+        "name": "Elena Rodriguez",
+        "role": "Szoftverfejlesztő"
+      },
+      "marcus": {
+        "content": "A használat követésének köszönhetően 40%-kal csökkentettük az AI költségeinket. Most pontosan tudom, hogy mely projektek használják mit, és korlátokat tudok beállítani a csapat számára.",
+        "name": "Marcus Johnson",
+        "role": "Mérnöki vezető"
+      },
+      "sarah": {
+        "content": "Imádom, hogy a telefonon elindíthatok egy beszélgetést az AI-jal ebéd közben, és folytathatom a laptopomon az irodában. Minden egyszerűen szinkronizálódik.",
+        "name": "Sarah Chen",
+        "role": "Terméktervező"
+      }
+    },
+    "subtitle": "Csatlakozzon azokhoz a csapatokhoz, akik már AI projektekkel dolgoznak.",
+    "title": "Világszerte megbíznak a csapatok"
+  }
+}

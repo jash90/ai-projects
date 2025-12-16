@@ -1,0 +1,88 @@
+{
+  "preferences": {
+    "appearance": {
+      "dark": "Mørk",
+      "description": "Tilpass hvordan AI-prosjekter ser ut på enheten din",
+      "light": "Lys",
+      "system": "System",
+      "theme": "Tema",
+      "title": "Utseende"
+    },
+    "language": {
+      "title": "Språk",
+      "description": "Velg ditt foretrukne språk"
+    },
+    "notifications": {
+      "description": "Velg hvilke varsler du ønsker å motta",
+      "email": {
+        "description": "Motta e-postoppdateringer om kontoen din og bruken",
+        "title": "E-postvarsler"
+      },
+      "push": {
+        "description": "Motta varsler om prosjektoppdateringer og systemvarsler",
+        "title": "Push-varsler"
+      },
+      "title": "Varsler"
+    },
+    "updateError": "Kunne ikke oppdatere innstillinger",
+    "updateSuccess": "Innstillinger oppdatert"
+  },
+  "profile": {
+    "description": "Oppdater dine personlige detaljer og e-postadresse",
+    "email": "E-post",
+    "reset": "Tilbakestill",
+    "role": {
+      "admin": "Administrator",
+      "user": "Bruker"
+    },
+    "saveChanges": "Lagre endringer",
+    "title": "Profilinformasjon",
+    "updateError": "Kunne ikke oppdatere profil",
+    "updateSuccess": "Profil oppdatert",
+    "username": "Brukernavn"
+  },
+  "security": {
+    "clear": "Tøm",
+    "confirmPassword": "Bekreft nytt passord",
+    "currentPassword": "Nåværende passord",
+    "description": "Oppdater passordet ditt for å holde kontoen din sikker",
+    "newPassword": "Nytt passord",
+    "passwordMismatch": "Nye passord samsvarer ikke",
+    "passwordsDoNotMatch": "Passordene samsvarer ikke",
+    "passwordTooShort": "Nytt passord må være minst 6 tegn",
+    "title": "Endre passord",
+    "updateError": "Kunne ikke oppdatere passord",
+    "updatePassword": "Oppdater passord",
+    "updateSuccess": "Passord oppdatert"
+  },
+  "subtitle": "Administrer kontoinnstillinger og applikasjonsinnstillinger",
+  "tabs": {
+    "preferences": "Innstillinger",
+    "profile": "Profil",
+    "security": "Sikkerhet",
+    "usage": "Bruk"
+  },
+  "title": "Innstillinger",
+  "usage": {
+    "account": {
+      "description": "Dine kontodetaljer og grenser",
+      "globalLimit": "Global grense",
+      "monthlyLimit": "Månedlig grense",
+      "projects": "Prosjekter",
+      "role": "Rolle",
+      "title": "Kontoopplysninger"
+    },
+    "stats": {
+      "description": "Overvåk bruken av token og kostnader",
+      "loading": "Laster inn bruksstatistikk...",
+      "monthlyCost": "Månedlig kostnad",
+      "monthlyUsage": "Månedlig bruk",
+      "percentUsed": "{{percent}}% brukt",
+      "thisMonth": "Denne måneden",
+      "title": "Bruksstatistikk",
+      "totalCost": "Total kostnad",
+      "totalTokens": "Totalt antall tokens",
+      "totalUsage": "Totalt bruk"
+    }
+  }
+}

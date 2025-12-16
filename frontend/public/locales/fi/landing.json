@@ -1,0 +1,188 @@
+{
+  "cta": {
+    "installPwa": "Asenna sovellus",
+    "start": "Aloita rakentaminen ilmaiseksi",
+    "subtitle": "Liity tiimeihin, jotka jo rakentavat älykkäämmin AI:n avulla. Ilmainen aloitus, ei luottokorttia vaadita.",
+    "title": "Valmis rakentamaan AI:n kanssa?"
+  },
+  "features": {
+    "items": {
+      "ai": {
+        "category": "Tekoäly",
+        "description": "Valitse GPT-4, Claude ja muita AI-malleja. Luo mukautettuja agenteja projekteihisi.",
+        "title": "Älykkäät AI-avustajat"
+      },
+      "analytics": {
+        "category": "Analytiikka",
+        "description": "Seuraa AI:n käyttöä ja kustannuksia projektikohtaisesti. Aseta budjetit ja vältä yllättäviä laskuja.",
+        "title": "Käytön ja kustannusten seuranta"
+      },
+      "collaboration": {
+        "category": "Yhteistyö",
+        "description": "Keskustele AI:n kanssa reaaliajassa. Näe vastaukset niiden syntyessä. Keskusteluhistoriasi tallennetaan aina.",
+        "title": "Reaaliaikainen AI-keskustelu"
+      },
+      "management": {
+        "category": "Projektit",
+        "description": "Järjestä työ projektien mukaan. Lataa asiakirjoja, kuvia ja koodia. AI:si muistaa kontekstin.",
+        "title": "Projektin järjestäminen"
+      },
+      "mobile": {
+        "category": "Mobiili",
+        "description": "Asenna sovelluksena mille tahansa laitteelle. Työskentele puhelimellasi, tabletillasi tai tietokoneellasi samalla hienolla kokemuksella.",
+        "title": "Toimii kaikkialla"
+      },
+      "performance": {
+        "category": "Alusta",
+        "description": "Asenna mille tahansa laitteelle, työskentele offline-tilassa, synkronoi automaattisesti. Nopea ja luotettava missä tahansa oletkin.",
+        "title": "Työskentele missä tahansa"
+      },
+      "pwa": {
+        "category": "Offline",
+        "description": "Jatka työskentelyä ilman internetiä. Muutoksesi synkronoidaan automaattisesti, kun olet jälleen online.",
+        "title": "Offline-tila"
+      },
+      "security": {
+        "category": "Turvallisuus",
+        "description": "Yritystason turvallisuus tiimiluvilla, käyttörajoituksilla ja täydellisillä auditointijäljillä.",
+        "title": "Tiimin turvallisuus"
+      },
+      "ux": {
+        "category": "Mukauttaminen",
+        "description": "Personoi työtilasi tummalla/vaalealla tilalla, ilmoitusasetuksilla ja mukautetuilla asetuksilla.",
+        "title": "Työtilasi, omalla tavallasi"
+      }
+    },
+    "subtitle": "Kaikki, mitä tarvitset rakentaaksesi AI:n kanssa. Helppo aloittaa, tarpeeksi tehokas tiimeille.",
+    "techStack": {
+      "subtitle": "Tuotantovalmiit teknologiat, kuten TypeScript, React 18, Node.js, PostgreSQL ja tekoälyintegraatio",
+      "title": "Rakennettu moderneilla teknologioilla",
+      "categories": {
+        "ai": "AI",
+        "backend": "Backend",
+        "database": "Tietokanta",
+        "frontend": "Frontend",
+        "mobile": "Mobiili",
+        "realtime": "Reaaliaikainen"
+      }
+    },
+    "title": "Kaikki, mitä tarvitset"
+  },
+  "footer": {
+    "company": {
+      "about": "Tietoa",
+      "blog": "Blogi",
+      "careers": "Ura",
+      "contact": "Yhteystiedot",
+      "title": "Yritys"
+    },
+    "copyright": "© 2025 AI Projects. Kaikki oikeudet pidätetään.",
+    "product": {
+      "api": "API",
+      "documentation": "Dokumentaatio",
+      "features": "Ominaisuudet",
+      "pricing": "Hinnoittelu",
+      "title": "Tuote"
+    },
+    "support": {
+      "community": "Yhteisö",
+      "helpCenter": "Ohjekeskus",
+      "privacy": "Tietosuoja",
+      "status": "Tila",
+      "title": "Tuki"
+    },
+    "tagline": "Kehityksen tulevaisuus on täällä. Rakenna upeita projekteja AI-avustuksella."
+  },
+  "hero": {
+    "badge": "AI-työtila moderneille tiimeille",
+    "cta": {
+      "demo": "Katso esittely",
+      "start": "Aloita rakentaminen ilmaiseksi"
+    },
+    "subtitle": "Luo projekteja AI-avustajien kanssa, jotka ymmärtävät kontekstisi. Tee yhteistyötä reaaliajassa, työskentele offline-tilassa ja hallitse kaikkea puhelimestasi tai tietokoneeltasi.",
+    "title": "Rakenna älykkäämmin",
+    "titleHighlight": "AI:n kanssa"
+  },
+  "nav": {
+    "features": "Ominaisuudet",
+    "getStarted": "Aloita",
+    "installApp": "Asenna sovellus",
+    "pricing": "Hinnoittelu",
+    "signIn": "Kirjaudu sisään",
+    "testimonials": "Arvostelut"
+  },
+  "pricing": {
+    "contactUs": "ota meihin yhteyttä",
+    "perMonth": "kuukaudessa",
+    "plans": {
+      "enterprise": {
+        "cta": "Ota yhteyttä myyntiin",
+        "features": [
+          "Kaikki Pro:ssa",
+          "Ylläpitäjän paneeli & tirolot",
+          "Mukautetut käyttörajoitukset",
+          "Toimintalokit",
+          "SSO-integraatio",
+          "Omistettu tuki"
+        ],
+        "name": "Yritys",
+        "price": "Mukautettu"
+      },
+      "pro": {
+        "cta": "Aloita Pro-kokeilu",
+        "features": [
+          "Rajoittamattomat projektit",
+          "GPT-4 & Claude",
+          "Tiimiyhteistyö",
+          "Rajoittamattomat tiedostot",
+          "Käytön analytiikka",
+          "Priorisoitu tuki"
+        ],
+        "name": "Ammattimainen",
+        "popular": "Suosituin",
+        "price": "$29"
+      },
+      "starter": {
+        "cta": "Aloita ilmaiseksi",
+        "features": [
+          "5 projektia",
+          "GPT-4 pääsy",
+          "Mobiilisovellus",
+          "Työskentele offline-tilassa",
+          "Yhteisön tuki"
+        ],
+        "name": "Aloittelija",
+        "price": "$0"
+      }
+    },
+    "subtitle": "Aloita ilmaiseksi, päivitä kun tarvitset enemmän. Ei yllätyksiä, voit peruuttaa milloin tahansa.",
+    "title": "Yksinkertainen, läpinäkyvä hinnoittelu"
+  },
+  "stats": {
+    "activeDevelopers": "Luodut projektit",
+    "projectsBuilt": "AI-keskustelut",
+    "rating": "Käyttäjätyytyväisyys",
+    "uptime": "Käytettävyysaika"
+  },
+  "testimonials": {
+    "items": {
+      "elena": {
+        "content": "Reaaliaikainen keskustelu AI:n kanssa on uskomattoman nopeaa. Saan välittömiä vastauksia, kun koodini on vielä tuore mielessäni.",
+        "name": "Elena Rodriguez",
+        "role": "Ohjelmistokehittäjä"
+      },
+      "marcus": {
+        "content": "Vähensimme tekoälykustannuksiamme 40 % käyttöseurannan ansiosta. Nyt tiedän tarkalleen, mitkä projektit käyttävät mitä, ja voin asettaa rajoja tiimille.",
+        "name": "Marcus Johnson",
+        "role": "Insinööripäällikkö"
+      },
+      "sarah": {
+        "content": "Rakastan, että voin aloittaa keskustelun tekoälyn kanssa puhelimellani lounaan aikana ja jatkaa sitä kannettavallani toimistossa. Kaikki synkronoituu vain.",
+        "name": "Sarah Chen",
+        "role": "Tuotesuunnittelija"
+      }
+    },
+    "subtitle": "Liity tuhansiin tiimeihin, jotka jo rakentavat tekoälyprojekteilla.",
+    "title": "Luotettu tiimien toimesta ympäri maailmaa"
+  }
+}

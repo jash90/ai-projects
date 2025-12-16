@@ -6,6 +6,9 @@ import { Toaster } from 'react-hot-toast'
 import App from './App.tsx'
 import './index.css'
 
+// Initialize i18n
+import './lib/i18n'
+
 // Initialize PWA
 import './utils/pwa'
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import {
   Plus,
   FolderOpen,
@@ -24,6 +25,8 @@ import { Card, CardContent, CardHeader, CardTitle, StatCard } from '@/components
 import { Badge } from '@/components/ui/Badge'
 
 const DashboardPage: React.FC = () => {
+  const { t } = useTranslation('dashboard')
+  const { t: tc } = useTranslation('common')
   const { user } = useAuth()
   const navigate = useNavigate()
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false)
@@ -50,8 +53,8 @@ const DashboardPage: React.FC = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <PageHeader
-        title={`Welcome back, ${user?.username}`}
-        subtitle="Manage your projects and collaborate with AI agents"
+        title={t('header.welcome', { username: user?.username })}
+        subtitle={t('header.subtitle')}
         variant="gradient"
         actions={
           <Button
@@ -59,7 +62,7 @@ const DashboardPage: React.FC = () => {
             variant="gradient"
             leftIcon={<Plus className="w-4 h-4" />}
           >
-            New Project
+            {t('actions.newProject')}
           </Button>
         }
       />
@@ -68,7 +71,7 @@ const DashboardPage: React.FC = () => {
         {/* Quick Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           <StatCard
-            title="Total Projects"
+            title={t('stats.totalProjects')}
             value={projectsData?.data?.total || 0}
             icon={<FolderOpen className="w-6 h-6" />}
             variant="primary"
@@ -76,14 +79,14 @@ const DashboardPage: React.FC = () => {
           />
 
           <StatCard
-            title="Total Messages"
+            title={t('stats.totalMessages')}
             value={totalMessages.toLocaleString()}
             icon={<MessageSquare className="w-6 h-6" />}
             variant="success"
           />
 
           <StatCard
-            title="Active This Week"
+            title={t('stats.activeThisWeek')}
             value={recentProjects.length}
             icon={<Clock className="w-6 h-6" />}
             variant="info"
@@ -97,11 +100,11 @@ const DashboardPage: React.FC = () => {
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-muted-foreground">Usage Stats</p>
-                  <p className="text-lg font-semibold text-foreground">View token usage</p>
+                  <p className="text-sm font-medium text-muted-foreground">{t('stats.usageStats')}</p>
+                  <p className="text-lg font-semibold text-foreground">{t('stats.viewTokenUsage')}</p>
                   <p className="text-xs text-muted-foreground flex items-center gap-1">
                     <TrendingUp className="w-3 h-3" />
-                    Track your AI usage
+                    {t('stats.trackUsage')}
                   </p>
                 </div>
                 <div className="rounded-xl p-3 bg-accent">
@@ -126,8 +129,8 @@ const DashboardPage: React.FC = () => {
                     <Shield className="w-6 h-6 text-destructive" />
                   </div>
                   <div>
-                    <p className="font-semibold text-foreground">Admin Panel</p>
-                    <p className="text-sm text-muted-foreground">Manage users, token limits, and system settings</p>
+                    <p className="font-semibold text-foreground">{t('admin.title')}</p>
+                    <p className="text-sm text-muted-foreground">{t('admin.description')}</p>
                   </div>
                 </div>
                 <ArrowRight className="w-5 h-5 text-muted-foreground" />
@@ -143,11 +146,11 @@ const DashboardPage: React.FC = () => {
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
                   <Clock className="w-5 h-5 text-primary" />
-                  Recent Projects
+                  {t('recentProjects.title')}
                 </CardTitle>
                 {recentProjects.length > 0 && (
                   <Badge variant="secondary" size="sm">
-                    {recentProjects.length} active
+                    {recentProjects.length} {tc('active')}
                   </Badge>
                 )}
               </CardHeader>
@@ -174,7 +177,7 @@ const DashboardPage: React.FC = () => {
                               </h3>
                               {index === 0 && (
                                 <Badge variant="success" size="sm" dot>
-                                  Most Recent
+                                  {t('recentProjects.mostRecent')}
                                 </Badge>
                               )}
                             </div>
@@ -186,11 +189,11 @@ const DashboardPage: React.FC = () => {
                             <div className="flex items-center gap-4 mt-3">
                               <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                                 <MessageSquare className="w-3.5 h-3.5" />
-                                {project.message_count || 0} messages
+                                {project.message_count || 0} {tc('messages')}
                               </span>
                               <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                                 <FileText className="w-3.5 h-3.5" />
-                                {project.file_count || 0} files
+                                {project.file_count || 0} {tc('files')}
                               </span>
                               <span className="text-xs text-muted-foreground">
                                 {formatRelativeTime(project.updated_at)}
@@ -205,15 +208,15 @@ const DashboardPage: React.FC = () => {
                 ) : (
                   <EmptyState
                     icon={<Sparkles className="w-12 h-12" />}
-                    title="No recent projects"
-                    description="Create your first project to get started with AI collaboration"
+                    title={t('recentProjects.empty.title')}
+                    description={t('recentProjects.empty.description')}
                     action={
                       <Button
                         onClick={() => setShowNewProjectDialog(true)}
                         variant="gradient"
                         leftIcon={<Plus className="w-4 h-4" />}
                       >
-                        Create Project
+                        {t('actions.createProject')}
                       </Button>
                     }
                   />
@@ -228,7 +231,7 @@ const DashboardPage: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <FolderOpen className="w-5 h-5 text-primary" />
-                  All Projects
+                  {t('allProjects.title')}
                 </CardTitle>
               </CardHeader>
 
@@ -265,7 +268,7 @@ const DashboardPage: React.FC = () => {
                         to="/projects"
                         className="flex items-center justify-center gap-2 p-3 text-primary hover:text-primary-hover text-sm font-medium transition-colors"
                       >
-                        View all {projects.length} projects
+                        {t('allProjects.viewAll', { count: projects.length })}
                         <ArrowRight className="w-4 h-4" />
                       </Link>
                     )}
@@ -273,8 +276,8 @@ const DashboardPage: React.FC = () => {
                 ) : (
                   <EmptyState
                     icon={<FolderOpen className="w-8 h-8" />}
-                    title="No projects yet"
-                    description="Start by creating a new project"
+                    title={t('allProjects.empty.title')}
+                    description={t('allProjects.empty.description')}
                     compact
                   />
                 )}
@@ -289,9 +292,9 @@ const DashboardPage: React.FC = () => {
                     <Sparkles className="w-4 h-4 text-info" />
                   </div>
                   <div>
-                    <p className="font-medium text-sm text-foreground">Quick Tip</p>
+                    <p className="font-medium text-sm text-foreground">{t('quickTip.title')}</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Add files to your project to give AI agents context for better assistance.
+                      {t('quickTip.content')}
                     </p>
                   </div>
                 </div>

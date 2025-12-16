@@ -1,0 +1,75 @@
+{
+  "agentNotFound": {
+    "description": "Por favor, selecciona un agente para comenzar a chatear",
+    "title": "Agente no encontrado"
+  },
+  "clearConfirm": "¿Estás seguro de que deseas borrar esta conversación? Esta acción no se puede deshacer.",
+  "emptyState": {
+    "description": "Envía un mensaje para comenzar a chatear con {{agentName}}",
+    "filesHint": "Este agente puede acceder a los archivos de tu proyecto para contexto",
+    "title": "Iniciar una conversación"
+  },
+  "errors": {
+    "cannotSend": "No se puede enviar el mensaje. Por favor, verifica el estado de tu cuenta.",
+    "createFailed": "Error al crear la conversación",
+    "deleteFailed": "Error al eliminar la conversación",
+    "loadFailed": "Error al cargar las conversaciones",
+    "sendFailed": "Error al enviar el mensaje. Por favor, intenta de nuevo.",
+    "tokenLimitExceeded": "Límite de tokens excedido. No se puede enviar el mensaje."
+  },
+  "header": {
+    "clearConversation": "Borrar conversación",
+    "connected": "Conectado",
+    "disconnected": "Desconectado",
+    "files": "Archivos",
+    "moreOptions": "Más opciones",
+    "toggleSidebar": "Alternar barra lateral"
+  },
+  "input": {
+    "attachFile": "Adjuntar archivo",
+    "attachFiles": "Adjuntar archivos (imágenes, PDF)",
+    "characters_one": "input.characters",
+    "characters_other": "input.characters",
+    "fileTooLarge": "Archivo demasiado grande: {{name}}. Tamaño máximo: {{maxSize}}MB",
+    "maxFilesError_one": "input.maxFilesError",
+    "maxFilesError_other": "input.maxFilesError",
+    "placeholder": "Escribe tu mensaje...",
+    "send": "Enviar",
+    "sendMessage": "Enviar mensaje",
+    "startTyping": "Comienza a escribir...",
+    "unsupportedFileType": "Tipo de archivo no soportado: {{type}}. Soportados: imágenes, PDF"
+  },
+  "limits": {
+    "global": "Límite Global",
+    "monthly": "Límite Mensual",
+    "remaining_one": "limits.remaining",
+    "remaining_other": "limits.remaining"
+  },
+  "message": {
+    "error": "Error",
+    "you": "Tú"
+  },
+  "placeholder": "Mensaje {{agentName}}...",
+  "selectAgent": {
+    "description": "Elige un agente de IA de la barra lateral para comenzar una conversación. Cada agente tiene diferentes capacidades y modelos.",
+    "title": "Seleccionar un Agente"
+  },
+  "streaming": {
+    "disable": "Desactivar respuestas en streaming",
+    "enable": "Activar respuestas en streaming",
+    "regular": "Regular",
+    "streaming": "Streaming"
+  },
+  "thinking": "{{agentName}} está pensando...",
+  "threads": {
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar esta conversación?",
+    "deleteConversation": "Eliminar conversación",
+    "messageCount_one": "{{count}} mensaje",
+    "messageCount_other": "{{count}} mensajes",
+    "newConversation": "Nueva conversación",
+    "newThread": "Nueva conversación",
+    "noConversations": "No hay conversaciones aún",
+    "startNew": "Iniciar una nueva conversación",
+    "title": "Conversaciones"
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "cta": {
+    "installPwa": "Instaliraj aplikaciju",
+    "start": "Započni izgradnju besplatno",
+    "subtitle": "Pridruži se timovima koji već koriste AI za pametnije projekte. Besplatno za početak, bez potrebe za kreditnom karticom.",
+    "title": "Spreman za izgradnju s AI?"
+  },
+  "features": {
+    "items": {
+      "ai": {
+        "category": "AI",
+        "description": "Biraj između GPT-4, Claude i drugih AI modela. Kreiraj prilagođene agente prilagođene tvojim projektima.",
+        "title": "Pametni AI Asistenti"
+      },
+      "analytics": {
+        "category": "Analitika",
+        "description": "Prati korištenje AI i troškove po projektu. Postavi budžete i nikada ne budi iznenađen računima.",
+        "title": "Praćenje Korištenja i Troškova"
+      },
+      "collaboration": {
+        "category": "Suradnja",
+        "description": "Razgovaraj s AI u stvarnom vremenu. Vidite odgovore dok se generiraju. Tvoja povijest razgovora uvijek se sprema.",
+        "title": "AI Čat u Stvarnom Vremenu"
+      },
+      "management": {
+        "category": "Projekti",
+        "description": "Organiziraj rad u projektima. Učitaj dokumente, slike i kod. Tvoj AI pamti kontekst.",
+        "title": "Organizacija Projekata"
+      },
+      "mobile": {
+        "category": "Mobilno",
+        "description": "Instaliraj kao aplikaciju na bilo kojem uređaju. Radi na svom telefonu, tabletu ili radnoj površini s istim odličnim iskustvom.",
+        "title": "Radi Svugdje"
+      },
+      "performance": {
+        "category": "Platforma",
+        "description": "Instaliraj na bilo kojem uređaju, radi offline, automatski se sinkroniziraj. Brzo i pouzdano gdje god se nalazio.",
+        "title": "Radi Bilo Gdje"
+      },
+      "pwa": {
+        "category": "Offline",
+        "description": "Nastavi raditi bez interneta. Tvoje promjene se automatski sinkroniziraju kada se vratiš online.",
+        "title": "Offline Mod"
+      },
+      "security": {
+        "category": "Sigurnost",
+        "description": "Sigurnost na razini poduzeća s timskim dozvolama, ograničenjima korištenja i potpunim revizijskim tragovima.",
+        "title": "Sigurnost Tima"
+      },
+      "ux": {
+        "category": "Prilagodba",
+        "description": "Personaliziraj svoje radno okruženje s tamnim/svijetlim načinom, postavkama obavijesti i prilagođenim postavkama.",
+        "title": "Tvoje Radno Okruženje, Tvoj Način"
+      }
+    },
+    "subtitle": "Sve što ti treba za izgradnju s AI. Jednostavno za početak, dovoljno moćno za timove.",
+    "techStack": {
+      "subtitle": "Stack spreman za proizvodnju s TypeScript, React 18, Node.js, PostgreSQL i AI integracijom",
+      "title": "Izgrađeno s Modernim Tehnologijama",
+      "categories": {
+        "ai": "AI",
+        "backend": "Backend",
+        "database": "Baza Podataka",
+        "frontend": "Frontend",
+        "mobile": "Mobilno",
+        "realtime": "U Stvarnom Vremenu"
+      }
+    },
+    "title": "Sve što ti Treba"
+  },
+  "footer": {
+    "company": {
+      "about": "O nama",
+      "blog": "Blog",
+      "careers": "Karijere",
+      "contact": "Kontakt",
+      "title": "Tvrtka"
+    },
+    "copyright": "© 2025 AI Projekti. Sva prava pridržana.",
+    "product": {
+      "api": "API",
+      "documentation": "Dokumentacija",
+      "features": "Značajke",
+      "pricing": "Cijene",
+      "title": "Proizvod"
+    },
+    "support": {
+      "community": "Zajednica",
+      "helpCenter": "Centar za Pomoć",
+      "privacy": "Privatnost",
+      "status": "Status",
+      "title": "Podrška"
+    },
+    "tagline": "Budućnost razvoja je ovdje. Izradite nevjerojatne projekte uz pomoć AI-a."
+  },
+  "hero": {
+    "badge": "AI Radno Okruženje za Moderne Timove",
+    "cta": {
+      "demo": "Pogledajte Demo",
+      "start": "Započnite besplatno"
+    },
+    "subtitle": "Kreiraj projekte s AI asistentima koji razumiju tvoj kontekst. Suradnja u stvarnom vremenu, rad offline i upravljanje svime s tvog telefona ili radne površine.",
+    "title": "Izgradi Pametnije",
+    "titleHighlight": "s AI"
+  },
+  "nav": {
+    "features": "Značajke",
+    "getStarted": "Započnite",
+    "installApp": "Instalirajte aplikaciju",
+    "pricing": "Cijene",
+    "signIn": "Prijavite se",
+    "testimonials": "Svjedočanstva"
+  },
+  "pricing": {
+    "contactUs": "kontaktirajte nas",
+    "perMonth": "mjesečno",
+    "plans": {
+      "enterprise": {
+        "cta": "Kontaktirajte prodaju",
+        "features": [
+          "Sve u Pro",
+          "Administratorska ploča i uloge tima",
+          "Prilagođena ograničenja korištenja",
+          "Revizijski dnevnici aktivnosti",
+          "SSO integracija",
+          "Posvećena podrška"
+        ],
+        "name": "Poduzeće",
+        "price": "Prilagođeno"
+      },
+      "pro": {
+        "cta": "Započnite Pro probu",
+        "features": [
+          "Neograničeni projekti",
+          "GPT-4 & Claude",
+          "Suradnja tima",
+          "Neograničene datoteke",
+          "Analitika korištenja",
+          "Prioritetna podrška"
+        ],
+        "name": "Profesionalno",
+        "popular": "Najpopularnije",
+        "price": "$29"
+      },
+      "starter": {
+        "cta": "Započnite besplatno",
+        "features": [
+          "5 projekata",
+          "Pristup GPT-4",
+          "Mobilna aplikacija",
+          "Rad offline",
+          "Podrška zajednice"
+        ],
+        "name": "Početnik",
+        "price": "$0"
+      }
+    },
+    "subtitle": "Započni besplatno, nadogradi kada ti zatreba više. Bez iznenađenja, otkaži u bilo kojem trenutku.",
+    "title": "Jednostavna, Transparentna Cijena"
+  },
+  "stats": {
+    "activeDevelopers": "Kreirani Projekti",
+    "projectsBuilt": "AI Razgovori",
+    "rating": "Zadovoljstvo Korisnika",
+    "uptime": "Dostupnost"
+  },
+  "testimonials": {
+    "items": {
+      "elena": {
+        "content": "Čat u stvarnom vremenu s AI je nevjerojatno responzivan. Dobivam trenutne odgovore dok je moj kod još svjež u mislima.",
+        "name": "Elena Rodriguez",
+        "role": "Razvijač Softvera"
+      },
+      "marcus": {
+        "content": "Smanjili smo troškove AI-a za 40% zahvaljujući praćenju korištenja. Sada točno znam koji projekti koriste što i mogu postaviti ograničenja za tim.",
+        "name": "Marcus Johnson",
+        "role": "Menadžer inženjeringa"
+      },
+      "sarah": {
+        "content": "Sviđa mi se što mogu započeti razgovor s AI-jem na svom telefonu tijekom ručka i nastaviti ga na svom prijenosnom računalu u uredu. Sve se jednostavno sinkronizira.",
+        "name": "Sarah Chen",
+        "role": "Dizajner proizvoda"
+      }
+    },
+    "subtitle": "Pridružite se tisućama timova koji već rade s AI projektima.",
+    "title": "Povjerenje timova širom svijeta"
+  }
+}

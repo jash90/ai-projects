@@ -1,0 +1,139 @@
+{
+  "dialog": {
+    "buttons": {
+      "cancel": "Zrušit",
+      "create": "Vytvořit agenta",
+      "creating": "Vytváření...",
+      "update": "Aktualizovat agenta",
+      "updating": "Aktualizace..."
+    },
+    "fields": {
+      "changeModel": "Změnit model",
+      "description": "Popis",
+      "descriptionPlaceholder": "Popište, co tento agent dělá...",
+      "maxTokens": "Maximální tokeny",
+      "maxTokensHint": "Maximální délka odpovědi",
+      "model": "Model",
+      "modelSelect": "Vybrat model...",
+      "name": "Jméno agenta *",
+      "namePlaceholder": "Můj AI asistent",
+      "noModelSelected": "Žádný model není vybrán",
+      "notConfigured": "Není nakonfigurováno",
+      "provider": "Poskytovatel",
+      "providerNotConfigured": "Poskytovatel není nakonfigurován",
+      "providerSettings": "Konfigurovat v Nastavení",
+      "selectModel": "Vyberte model",
+      "systemPrompt": "Systémový pokyn *",
+      "systemPromptHint": "Pokyny, které definují chování agenta",
+      "systemPromptPlaceholder": "Jste užitečný AI asistent...",
+      "temperature": "Teplota",
+      "temperatureHint": "Nižší hodnoty = více zaměřený, Vyšší hodnoty = více kreativní"
+    },
+    "loadError": "Nepodařilo se načíst AI modely",
+    "loading": "Načítání AI poskytovatelů...",
+    "retry": "Zkusit znovu",
+    "validation": {
+      "modelRequired": "Výběr modelu je povinný",
+      "nameRequired": "Jméno agenta je povinné",
+      "promptRequired": "Systémový pokyn je povinný"
+    }
+  },
+  "models": {
+    "chip": {
+      "removeFromFavorites": "Odebrat z oblíbených"
+    },
+    "comparison": {
+      "backToList": "← Zpět na seznam",
+      "browseModels": "Procházet modely",
+      "category": "Kategorie",
+      "comparing_one": "Porovnávání {{count}} modelu",
+      "comparing_other": "Porovnávání {{count}} modelů",
+      "contextWindow": "Kontextové okno",
+      "costTier": "Úroveň nákladů",
+      "description": "Popis",
+      "empty": {
+        "description": "Vyberte až 3 modely ze seznamu, abyste je porovnali vedle sebe",
+        "title": "Žádné modely k porovnání"
+      },
+      "legend": "🏆 = Nejlepší v kategorii • Klikněte na jakoukoli kartu modelu pro její výběr",
+      "modelId": "ID modelu",
+      "removeFromComparison": "Odebrat z porovnání",
+      "selectThisModel": "Vybrat tento model",
+      "tokens": "tokeny",
+      "unknown": "Neznámý"
+    },
+    "detail": {
+      "addToCompare": "📊 Přidat k porovnání",
+      "addToFavorites": "Přidat k oblíbeným",
+      "by": "od {{provider}}",
+      "capabilities": "Funkce",
+      "chat": "💬 Chat",
+      "comparisonFull": "Odstraňte model z porovnání, abyste přidali tento (max 3)",
+      "contextWindow": "Kontextové okno",
+      "cost": "{{cost}} Náklady",
+      "costTier": "Úroveň nákladů",
+      "description": "Popis",
+      "favorite": "🤍 Oblíbené",
+      "favorited": "❤️ Přidáno mezi oblíbené",
+      "inComparison": "✓ V porovnání",
+      "modelId": "ID modelu",
+      "noSelection": {
+        "description": "Klikněte na model ze seznamu pro zobrazení podrobných informací",
+        "title": "Žádný model není vybrán"
+      },
+      "popularModel": "Oblíbený model",
+      "provider": "Poskytovatel",
+      "removeFromFavorites": "Odebrat z oblíbených",
+      "selectThisModel": "Vybrat tento model",
+      "specifications": "Specifikace",
+      "streaming": "🔄 Streamování",
+      "tokens": "tokeny"
+    },
+    "picker": {
+      "available_one": "{{count}} model k dispozici",
+      "available_other": "{{count}} modely k dispozici",
+      "cancel": "Zrušit",
+      "close": "Zavřít (Esc)",
+      "compare": "Porovnat",
+      "favorites": "Oblíbené",
+      "hideFavorites": "Skrýt oblíbené/poslední",
+      "inComparison_one": "{{count}} model v porovnání",
+      "inComparison_other": "{{count}} modely v porovnání",
+      "loading": "Načítání modelů OpenRouter...",
+      "recentlyUsed": "Nedávno použité",
+      "search": "Hledat modely (např. 'gpt', 'claude', 'llama')...",
+      "selectModel": "Vybrat model",
+      "shortcuts": "Ctrl+K: Hledat • Ctrl+F: Oblíbené • Ctrl+C: Porovnat",
+      "title": "Vyberte model OpenRouter"
+    }
+  },
+  "panel": {
+    "browseAll": "Procházet všechny agenty",
+    "dismiss": "Zavřít",
+    "empty": {
+      "description": "Kontaktujte správce pro vytvoření agentů",
+      "title": "Žádní agenti nejsou k dispozici"
+    },
+    "maxTokens": "Max:",
+    "noSelection": "Žádný agent není vybrán",
+    "temp": "Temp:",
+    "title": "AI Agenti",
+    "tokens": "tokeny"
+  },
+  "picker": {
+    "empty": {
+      "hint": "Zkuste jiný vyhledávací termín",
+      "title": "Žádní agenti nenalezeni"
+    },
+    "searchAdmin": "Hledat agenty podle názvu, popisu nebo modelu...",
+    "searchUser": "Hledat agenty podle názvu nebo popisu...",
+    "select": "Vybrat agenta",
+    "selected": "Vybráno",
+    "title": "Vyberte AI agenta"
+  },
+  "providers": {
+    "anthropic": "Anthropic",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter"
+  }
+}

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { AutocompleteOption } from '@/components/ui/Autocomplete'
 
@@ -14,6 +15,7 @@ export function ModelComparisonView({
   onRemove,
   onBack
 }: ModelComparisonViewProps) {
+  const { t } = useTranslation('agents')
   const getCostBadgeColor = (cost?: string) => {
     switch (cost) {
       case 'Free': return 'bg-green-500/10 text-green-700 dark:text-green-400'
@@ -51,10 +53,10 @@ export function ModelComparisonView({
             onClick={onBack}
             size="sm"
           >
-            ← Back to List
+            {t('models.comparison.backToList')}
           </Button>
           <h2 className="text-lg font-semibold text-foreground">
-            Comparing {models.length} {models.length === 1 ? 'Model' : 'Models'}
+            {t('models.comparison.comparing', { count: models.length })}
           </h2>
         </div>
       </div>
@@ -65,12 +67,12 @@ export function ModelComparisonView({
           <div className="flex items-center justify-center h-full text-center">
             <div>
               <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-lg font-medium text-foreground mb-2">No Models to Compare</h3>
+              <h3 className="text-lg font-medium text-foreground mb-2">{t('models.comparison.empty.title')}</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Select up to 3 models from the list to compare them side by side
+                {t('models.comparison.empty.description')}
               </p>
               <Button onClick={onBack} variant="outline">
-                Browse Models
+                {t('models.comparison.browseModels')}
               </Button>
             </div>
           </div>
@@ -102,8 +104,8 @@ export function ModelComparisonView({
                         type="button"
                         onClick={() => onRemove(model.id)}
                         className="text-muted-foreground hover:text-destructive transition-colors p-1"
-                        title="Remove from comparison"
-                        aria-label={`Remove ${model.name} from comparison`}
+                        title={t('models.comparison.removeFromComparison')}
+                        aria-label={`${t('models.comparison.removeFromComparison')}: ${model.name}`}
                       >
                         ✕
                       </button>
@@ -114,25 +116,25 @@ export function ModelComparisonView({
                   <div className="p-4 space-y-3">
                     {/* Cost */}
                     <div>
-                      <div className="text-xs text-muted-foreground mb-1">Cost Tier</div>
+                      <div className="text-xs text-muted-foreground mb-1">{t('models.comparison.costTier')}</div>
                       <div className={`inline-flex px-2 py-1 text-xs rounded ${getCostBadgeColor(model.metadata?.cost)} ${isLowestCost ? 'ring-2 ring-green-500' : ''}`}>
                         {isLowestCost && '🏆 '}
-                        {model.metadata?.cost || 'Unknown'}
+                        {model.metadata?.cost || t('models.comparison.unknown')}
                       </div>
                     </div>
 
                     {/* Context Window */}
                     <div>
-                      <div className="text-xs text-muted-foreground mb-1">Context Window</div>
+                      <div className="text-xs text-muted-foreground mb-1">{t('models.comparison.contextWindow')}</div>
                       <div className={`text-sm font-medium ${isHighestContext ? 'text-green-600 dark:text-green-400' : 'text-foreground'}`}>
                         {isHighestContext && '🏆 '}
-                        {formatContextWindow(model.metadata?.contextWindow)} tokens
+                        {formatContextWindow(model.metadata?.contextWindow)} {t('models.comparison.tokens')}
                       </div>
                     </div>
 
                     {/* Model ID */}
                     <div>
-                      <div className="text-xs text-muted-foreground mb-1">Model ID</div>
+                      <div className="text-xs text-muted-foreground mb-1">{t('models.comparison.modelId')}</div>
                       <code className="text-xs bg-muted px-1.5 py-0.5 rounded break-all">
                         {model.id}
                       </code>
@@ -141,7 +143,7 @@ export function ModelComparisonView({
                     {/* Description */}
                     {model.description && (
                       <div>
-                        <div className="text-xs text-muted-foreground mb-1">Description</div>
+                        <div className="text-xs text-muted-foreground mb-1">{t('models.comparison.description')}</div>
                         <p className="text-xs text-foreground/80 line-clamp-3">
                           {model.description}
                         </p>
@@ -151,7 +153,7 @@ export function ModelComparisonView({
                     {/* Category */}
                     {model.category && (
                       <div>
-                        <div className="text-xs text-muted-foreground mb-1">Category</div>
+                        <div className="text-xs text-muted-foreground mb-1">{t('models.comparison.category')}</div>
                         <span className="text-xs px-2 py-1 rounded bg-muted">
                           {model.category}
                         </span>
@@ -166,7 +168,7 @@ export function ModelComparisonView({
                       className="w-full text-sm"
                       size="sm"
                     >
-                      Select This Model
+                      {t('models.comparison.selectThisModel')}
                     </Button>
                   </div>
                 </div>
@@ -180,7 +182,7 @@ export function ModelComparisonView({
       {models.length > 0 && (
         <div className="p-3 border-t border-border text-center">
           <p className="text-xs text-muted-foreground">
-            🏆 = Best in category • Click on any model card to select it
+            {t('models.comparison.legend')}
           </p>
         </div>
       )}

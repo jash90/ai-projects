@@ -1,0 +1,75 @@
+{
+  "agentNotFound": {
+    "description": "Valitse agentti aloittaaksesi keskustelun",
+    "title": "Agenttia ei löytynyt"
+  },
+  "clearConfirm": "Oletko varma, että haluat tyhjentää tämän keskustelun? Tätä toimintoa ei voi peruuttaa.",
+  "emptyState": {
+    "description": "Lähetä viesti aloittaaksesi keskustelun {{agentName}} kanssa",
+    "filesHint": "Tällä agentilla on pääsy projektitiedostoihisi kontekstia varten",
+    "title": "Aloita keskustelu"
+  },
+  "errors": {
+    "cannotSend": "Viestiä ei voi lähettää. Tarkista tilisi tila.",
+    "createFailed": "Keskustelun luominen epäonnistui",
+    "deleteFailed": "Keskustelun poistaminen epäonnistui",
+    "loadFailed": "Keskustelujen lataaminen epäonnistui",
+    "sendFailed": "Viestin lähettäminen epäonnistui. Yritä uudelleen.",
+    "tokenLimitExceeded": "Token-raja ylitetty. Viestiä ei voi lähettää."
+  },
+  "header": {
+    "clearConversation": "Tyhjennä keskustelu",
+    "connected": "Yhdistetty",
+    "disconnected": "Katkaistu",
+    "files": "Tiedostot",
+    "moreOptions": "Lisäasetukset",
+    "toggleSidebar": "Vaihda sivupalkkia"
+  },
+  "input": {
+    "attachFile": "Liitä tiedosto",
+    "attachFiles": "Liitä tiedostoja (kuvia, PDF)",
+    "characters_one": "merkki",
+    "characters_other": "merkkiä",
+    "fileTooLarge": "Tiedosto liian suuri: {{name}}. Maksimikoko: {{maxSize}}MB",
+    "maxFilesError_one": "tiedostoa ei voi liittää",
+    "maxFilesError_other": "tiedostoja ei voi liittää",
+    "placeholder": "Kirjoita viestisi...",
+    "send": "Lähetä",
+    "sendMessage": "Lähetä viesti",
+    "startTyping": "Aloita kirjoittaminen...",
+    "unsupportedFileType": "Tuettu tiedostotyyppi: {{type}}. Tuetut: kuvat, PDF"
+  },
+  "limits": {
+    "global": "Globaali raja",
+    "monthly": "Kuukausiraja",
+    "remaining_one": "rajaa jäljellä",
+    "remaining_other": "rajoja jäljellä"
+  },
+  "message": {
+    "error": "Virhe",
+    "you": "Sinä"
+  },
+  "placeholder": "Viesti {{agentName}}...",
+  "selectAgent": {
+    "description": "Valitse AI-agentti sivupalkista aloittaaksesi keskustelun. Jokaisella agentilla on erilaiset kyvyt ja mallit.",
+    "title": "Valitse agentti"
+  },
+  "streaming": {
+    "disable": "Poista käytöstä suoratoistovastaukset",
+    "enable": "Ota käyttöön suoratoistovastaukset",
+    "regular": "Säännöllinen",
+    "streaming": "Suoratoisto"
+  },
+  "thinking": "{{agentName}} ajattelee...",
+  "threads": {
+    "deleteConfirm": "Oletko varma, että haluat poistaa tämän keskustelun?",
+    "deleteConversation": "Poista keskustelu",
+    "messageCount_one": "{{count}} viesti",
+    "messageCount_other": "{{count}} viestiä",
+    "newConversation": "Uusi keskustelu",
+    "newThread": "Uusi keskustelu",
+    "noConversations": "Ei vielä keskusteluja",
+    "startNew": "Aloita uusi keskustelu",
+    "title": "Keskustelut"
+  }
+}

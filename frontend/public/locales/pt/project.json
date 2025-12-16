@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Voltar ao Painel",
+  "dashboard": "Painel",
+  "desktop": {
+    "actions": {
+      "enterFullscreen": "Entrar em Tela Cheia",
+      "exitFullscreen": "Sair da Tela Cheia",
+      "hideEditor": "Ocultar Editor",
+      "hideSidebar": "Ocultar Barra Lateral",
+      "showEditor": "Mostrar Editor",
+      "showSidebar": "Mostrar Barra Lateral"
+    },
+    "panels": {
+      "aiAgents": "Agentes de IA",
+      "projectFiles": "Arquivos do Projeto"
+    }
+  },
+  "editor": {
+    "noFileSelected": "Nenhum arquivo selecionado"
+  },
+  "loading": "Carregando projeto...",
+  "mobile": {
+    "actions": {
+      "install": "Instalar",
+      "installApp": "Instalar App",
+      "share": "Compartilhar"
+    },
+    "menu": {
+      "currentSelection": "Seleção Atual",
+      "filesAvailableOffline_one": "Arquivos disponíveis offline",
+      "filesAvailableOffline_other": "Arquivos disponíveis offline",
+      "filesPendingUpload_one": "Arquivo pendente de upload",
+      "filesPendingUpload_other": "Arquivos pendentes de upload",
+      "noAgentSelected": "Nenhum agente selecionado",
+      "noFileSelected": "Nenhum arquivo selecionado",
+      "offlineMode": "Modo Offline",
+      "online": "Online",
+      "status": "Status"
+    },
+    "views": {
+      "agents": "Agentes",
+      "chat": "Chat",
+      "editor": "Editor",
+      "files": "Arquivos"
+    }
+  },
+  "noAgents": {
+    "description": "Você precisa de pelo menos um agente de IA para usar este projeto.",
+    "title": "Nenhum agente de IA disponível"
+  },
+  "notFound": {
+    "description": "O projeto que você está procurando não existe ou você não tem acesso a ele.",
+    "title": "Projeto não encontrado"
+  }
+}

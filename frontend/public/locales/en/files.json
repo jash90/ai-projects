@@ -1,0 +1,89 @@
+{
+  "dialog": {
+    "cancel": "Cancel",
+    "content": "Content",
+    "contentHint": "You can edit the content after creating the file.",
+    "contentPlaceholder": "File content...",
+    "create": "Create File",
+    "createTitle": "Create New File",
+    "creating": "Creating...",
+    "fileName": "File Name",
+    "fileNamePlaceholder": "e.g., main.js, README.md",
+    "fileNameRequired": "File name is required",
+    "fileType": "File Type",
+    "fileTypeRequired": "File type is required"
+  },
+  "editor": {
+    "autoSave": {
+      "pending": "Auto-save: Pending",
+      "upToDate": "Auto-save: Up to date"
+    },
+    "characters_one": "{{count}} character",
+    "characters_other": "{{count}} characters",
+    "language": "Language: {{language}}",
+    "lines_one": "{{count}} line",
+    "lines_other": "{{count}} lines",
+    "loading": "Loading editor...",
+    "noFile": {
+      "description": "Select a file from the explorer to start editing",
+      "title": "No file selected"
+    },
+    "placeholder": "Start typing...",
+    "revert": "Revert",
+    "revertConfirm": "Are you sure you want to revert all unsaved changes?",
+    "save": "Save",
+    "saving": "Saving...",
+    "shortcuts": {
+      "exitFullscreen": "Press Esc to exit fullscreen",
+      "save": "Ctrl+S to save"
+    },
+    "type": "Type: {{type}}",
+    "unsavedChanges": "Unsaved changes",
+    "unsavedChangesText": "Unsaved changes"
+  },
+  "explorer": {
+    "contextMenu": {
+      "copyContent": "Copy Content",
+      "delete": "Delete",
+      "open": "Open"
+    },
+    "createTitle": "Create new file",
+    "deleteConfirm": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+    "dismiss": "Dismiss",
+    "empty": {
+      "description": "Create your first file to get started",
+      "title": "No files in this project"
+    },
+    "fileCount_one": "{{count}} file",
+    "fileCount_other": "{{count}} files",
+    "noResults": "No files match your search",
+    "searchPlaceholder": "Search files...",
+    "shown_one": "{{count}} shown",
+    "shown_other": "{{count}} shown",
+    "title": "Files",
+    "uploadTitle": "Upload files from computer"
+  },
+  "upload": {
+    "cancel": "Cancel",
+    "complete": "Upload complete",
+    "description": "Upload files from your computer. Files will be read and saved as editable text files in the project.",
+    "done": "Done",
+    "dropzone": {
+      "active": "Drop files here",
+      "andMore_one": "and {{count}} more file",
+      "andMore_other": "and {{count}} more files",
+      "description": "Drag and drop files here, or click to select files",
+      "maxSize": "Maximum file size: {{size}}MB",
+      "supportedTypes": "Supported types: {{types}}",
+      "title": "Upload files from your computer"
+    },
+    "errors": {
+      "tooLarge": "File \"{{name}}\" is too large. Maximum size is {{maxSize}}MB.",
+      "unsupportedType": "File type not supported. Allowed types: {{types}}"
+    },
+    "success_one": "{{count}} file uploaded successfully!",
+    "success_other": "{{count}} files uploaded successfully!",
+    "title": "Upload Files to Project",
+    "uploading": "Uploading Files"
+  }
+}

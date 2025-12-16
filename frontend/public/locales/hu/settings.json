@@ -1,0 +1,88 @@
+{
+  "preferences": {
+    "appearance": {
+      "dark": "Sötét",
+      "description": "Testreszabhatja, hogyan nézzen ki az AI Projects az eszközén",
+      "light": "Világos",
+      "system": "Rendszer",
+      "theme": "Téma",
+      "title": "Megjelenés"
+    },
+    "language": {
+      "title": "Nyelv",
+      "description": "Válassza ki a kívánt nyelvet"
+    },
+    "notifications": {
+      "description": "Válassza ki, milyen értesítéseket szeretne kapni",
+      "email": {
+        "description": "Kapjon e-mail értesítéseket a fiókjáról és a használatról",
+        "title": "E-mail Értesítések"
+      },
+      "push": {
+        "description": "Kapjon értesítéseket a projektfrissítésekről és a rendszerfigyelmeztetésekről",
+        "title": "Push Értesítések"
+      },
+      "title": "Értesítések"
+    },
+    "updateError": "A beállítások frissítése nem sikerült",
+    "updateSuccess": "A beállítások sikeresen frissítve"
+  },
+  "profile": {
+    "description": "Frissítse személyes adatait és e-mail címét",
+    "email": "E-mail",
+    "reset": "Visszaállítás",
+    "role": {
+      "admin": "Adminisztrátor",
+      "user": "Felhasználó"
+    },
+    "saveChanges": "Változtatások Mentése",
+    "title": "Profil Információ",
+    "updateError": "A profil frissítése nem sikerült",
+    "updateSuccess": "A profil sikeresen frissítve",
+    "username": "Felhasználónév"
+  },
+  "security": {
+    "clear": "Törlés",
+    "confirmPassword": "Új Jelszó Megerősítése",
+    "currentPassword": "Jelenlegi Jelszó",
+    "description": "Frissítse jelszavát, hogy fiókját biztonságban tartsa",
+    "newPassword": "Új Jelszó",
+    "passwordMismatch": "Az új jelszavak nem egyeznek",
+    "passwordsDoNotMatch": "A jelszavak nem egyeznek",
+    "passwordTooShort": "Az új jelszónak legalább 6 karakter hosszúnak kell lennie",
+    "title": "Jelszó Módosítása",
+    "updateError": "A jelszó frissítése nem sikerült",
+    "updatePassword": "Jelszó Frissítése",
+    "updateSuccess": "A jelszó sikeresen frissítve"
+  },
+  "subtitle": "Kezelje fiókja beállításait és az alkalmazás beállításait",
+  "tabs": {
+    "preferences": "Beállítások",
+    "profile": "Profil",
+    "security": "Biztonság",
+    "usage": "Használat"
+  },
+  "title": "Beállítások",
+  "usage": {
+    "account": {
+      "description": "Fiókjának adatai és korlátai",
+      "globalLimit": "Globális Korlát",
+      "monthlyLimit": "Havi Korlát",
+      "projects": "Projektek",
+      "role": "Szerep",
+      "title": "Fiók Információ"
+    },
+    "stats": {
+      "description": "Kövesse nyomon a token használatát és költségeit",
+      "loading": "A használati statisztikák betöltése...",
+      "monthlyCost": "Havi költség",
+      "monthlyUsage": "Havi használat",
+      "percentUsed": "{{percent}}% felhasználva",
+      "thisMonth": "Ez a hónap",
+      "title": "Használati statisztikák",
+      "totalCost": "Összes költség",
+      "totalTokens": "Összes token",
+      "totalUsage": "Összes használat"
+    }
+  }
+}

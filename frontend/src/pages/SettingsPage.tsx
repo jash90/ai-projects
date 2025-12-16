@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   User,
@@ -17,11 +18,13 @@ import {
   Coins,
   FolderOpen,
   Check,
+  Globe,
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { LanguageSelector } from '@/components/ui/LanguageSelector'
 import { settingsApi } from '@/lib/api'
 import { useAuth } from '@/stores/authStore'
 import { uiStore } from '@/stores/uiStore'
@@ -30,6 +33,7 @@ import { formatNumber, formatCurrency, cn } from '@/lib/utils'
 import toast from 'react-hot-toast'
 
 const SettingsPage: React.FC = () => {
+  const { t } = useTranslation('settings')
   const { user, updateUser } = useAuth()
   const queryClient = useQueryClient()
   const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'preferences' | 'usage'>('profile')
@@ -69,33 +73,33 @@ const SettingsPage: React.FC = () => {
     onSuccess: (response) => {
       if (response.data?.user) {
         updateUser(response.data.user)
-        toast.success('Profile updated successfully')
+        toast.success(t('profile.updateSuccess'))
       }
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.error || 'Failed to update profile')
+      toast.error(error.response?.data?.error || t('profile.updateError'))
     },
   })
 
   const updatePasswordMutation = useMutation({
     mutationFn: settingsApi.updatePassword,
     onSuccess: () => {
-      toast.success('Password updated successfully')
+      toast.success(t('security.updateSuccess'))
       setPasswordForm({ current_password: '', new_password: '', confirm_password: '' })
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.error || 'Failed to update password')
+      toast.error(error.response?.data?.error || t('security.updateError'))
     },
   })
 
   const updatePreferencesMutation = useMutation({
     mutationFn: settingsApi.updatePreferences,
     onSuccess: () => {
-      toast.success('Preferences updated successfully')
+      toast.success(t('preferences.updateSuccess'))
       queryClient.invalidateQueries({ queryKey: ['user-preferences'] })
     },
     onError: () => {
-      toast.error('Failed to update preferences')
+      toast.error(t('preferences.updateError'))
     },
   })
 
@@ -115,11 +119,11 @@ const SettingsPage: React.FC = () => {
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (passwordForm.new_password !== passwordForm.confirm_password) {
-      toast.error('New passwords do not match')
+      toast.error(t('security.passwordMismatch'))
       return
     }
     if (passwordForm.new_password.length < 6) {
-      toast.error('New password must be at least 6 characters')
+      toast.error(t('security.passwordTooShort'))
       return
     }
     updatePasswordMutation.mutate({
@@ -139,10 +143,10 @@ const SettingsPage: React.FC = () => {
   }
 
   const tabs = [
-    { id: 'profile', label: 'Profile', icon: User },
-    { id: 'security', label: 'Security', icon: Lock },
-    { id: 'preferences', label: 'Preferences', icon: Palette },
-    { id: 'usage', label: 'Usage', icon: BarChart3 },
+    { id: 'profile', label: t('tabs.profile'), icon: User },
+    { id: 'security', label: t('tabs.security'), icon: Lock },
+    { id: 'preferences', label: t('tabs.preferences'), icon: Palette },
+    { id: 'usage', label: t('tabs.usage'), icon: BarChart3 },
   ]
 
   // Calculate usage percentage
@@ -157,8 +161,8 @@ const SettingsPage: React.FC = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <PageHeader
-        title="Settings"
-        subtitle="Manage your account preferences and application settings"
+        title={t('title')}
+        subtitle={t('subtitle')}
         showBackButton={true}
         backTo="/dashboard"
         tabs={tabs}
@@ -178,8 +182,8 @@ const SettingsPage: React.FC = () => {
                     <User className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <CardTitle>Profile Information</CardTitle>
-                    <CardDescription>Update your personal details and email address</CardDescription>
+                    <CardTitle>{t('profile.title')}</CardTitle>
+                    <CardDescription>{t('profile.description')}</CardDescription>
                   </div>
                 </div>
               </CardHeader>
@@ -194,14 +198,14 @@ const SettingsPage: React.FC = () => {
                       <p className="font-medium text-foreground">{user?.username}</p>
                       <p className="text-sm text-muted-foreground">{user?.email}</p>
                       <Badge variant={user?.role === 'admin' ? 'default' : 'secondary'} size="sm" className="mt-1">
-                        {user?.role === 'admin' ? 'Administrator' : 'User'}
+                        {user?.role === 'admin' ? t('profile.role.admin') : t('profile.role.user')}
                       </Badge>
                     </div>
                   </div>
 
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-foreground">Username</label>
+                      <label className="text-sm font-medium text-foreground">{t('profile.username')}</label>
                       <input
                         type="text"
                         value={profileForm.username}
@@ -212,7 +216,7 @@ const SettingsPage: React.FC = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-foreground">Email</label>
+                      <label className="text-sm font-medium text-foreground">{t('profile.email')}</label>
                       <input
                         type="email"
                         value={profileForm.email}
@@ -230,7 +234,7 @@ const SettingsPage: React.FC = () => {
                       isLoading={updateProfileMutation.isPending}
                       leftIcon={<Save className="w-4 h-4" />}
                     >
-                      Save Changes
+                      {t('profile.saveChanges')}
                     </Button>
 
                     <Button
@@ -243,7 +247,7 @@ const SettingsPage: React.FC = () => {
                         })
                       }
                     >
-                      Reset
+                      {t('profile.reset')}
                     </Button>
                   </div>
                 </form>
@@ -260,15 +264,15 @@ const SettingsPage: React.FC = () => {
                     <Lock className="w-5 h-5 text-warning" />
                   </div>
                   <div>
-                    <CardTitle>Change Password</CardTitle>
-                    <CardDescription>Update your password to keep your account secure</CardDescription>
+                    <CardTitle>{t('security.title')}</CardTitle>
+                    <CardDescription>{t('security.description')}</CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handlePasswordSubmit} className="space-y-5">
                   <PasswordField
-                    label="Current Password"
+                    label={t('security.currentPassword')}
                     value={passwordForm.current_password}
                     onChange={(e) => setPasswordForm({ ...passwordForm, current_password: e.target.value })}
                     show={showPasswords.current}
@@ -276,7 +280,7 @@ const SettingsPage: React.FC = () => {
                   />
 
                   <PasswordField
-                    label="New Password"
+                    label={t('security.newPassword')}
                     value={passwordForm.new_password}
                     onChange={(e) => setPasswordForm({ ...passwordForm, new_password: e.target.value })}
                     show={showPasswords.new}
@@ -285,7 +289,7 @@ const SettingsPage: React.FC = () => {
                   />
 
                   <PasswordField
-                    label="Confirm New Password"
+                    label={t('security.confirmPassword')}
                     value={passwordForm.confirm_password}
                     onChange={(e) => setPasswordForm({ ...passwordForm, confirm_password: e.target.value })}
                     show={showPasswords.confirm}
@@ -295,7 +299,7 @@ const SettingsPage: React.FC = () => {
                       passwordForm.new_password &&
                       passwordForm.confirm_password &&
                       passwordForm.new_password !== passwordForm.confirm_password
-                        ? 'Passwords do not match'
+                        ? t('security.passwordsDoNotMatch')
                         : undefined
                     }
                   />
@@ -311,7 +315,7 @@ const SettingsPage: React.FC = () => {
                       isLoading={updatePasswordMutation.isPending}
                       leftIcon={<Lock className="w-4 h-4" />}
                     >
-                      Update Password
+                      {t('security.updatePassword')}
                     </Button>
 
                     <Button
@@ -322,7 +326,7 @@ const SettingsPage: React.FC = () => {
                         setShowPasswords({ current: false, new: false, confirm: false })
                       }}
                     >
-                      Clear
+                      {t('security.clear')}
                     </Button>
                   </div>
                 </form>
@@ -341,19 +345,19 @@ const SettingsPage: React.FC = () => {
                       <Palette className="w-5 h-5 text-accent-foreground" />
                     </div>
                     <div>
-                      <CardTitle>Appearance</CardTitle>
-                      <CardDescription>Customize how AI Projects looks on your device</CardDescription>
+                      <CardTitle>{t('preferences.appearance.title')}</CardTitle>
+                      <CardDescription>{t('preferences.appearance.description')}</CardDescription>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <label className="text-sm font-medium text-foreground">Theme</label>
+                    <label className="text-sm font-medium text-foreground">{t('preferences.appearance.theme')}</label>
                     <div className="grid grid-cols-3 gap-3">
                       {[
-                        { id: 'light', label: 'Light', icon: Sun },
-                        { id: 'dark', label: 'Dark', icon: Moon },
-                        { id: 'system', label: 'System', icon: Monitor },
+                        { id: 'light', label: t('preferences.appearance.light'), icon: Sun },
+                        { id: 'dark', label: t('preferences.appearance.dark'), icon: Moon },
+                        { id: 'system', label: t('preferences.appearance.system'), icon: Monitor },
                       ].map((theme) => (
                         <button
                           key={theme.id}
@@ -377,6 +381,24 @@ const SettingsPage: React.FC = () => {
                 </CardContent>
               </Card>
 
+              {/* Language Settings */}
+              <Card variant="elevated">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+                      <Globe className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <CardTitle>{t('preferences.language.title')}</CardTitle>
+                      <CardDescription>{t('preferences.language.description')}</CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <LanguageSelector variant="grid" />
+                </CardContent>
+              </Card>
+
               {/* Notification Settings */}
               <Card variant="elevated">
                 <CardHeader>
@@ -385,16 +407,16 @@ const SettingsPage: React.FC = () => {
                       <Bell className="w-5 h-5 text-info" />
                     </div>
                     <div>
-                      <CardTitle>Notifications</CardTitle>
-                      <CardDescription>Choose what notifications you want to receive</CardDescription>
+                      <CardTitle>{t('preferences.notifications.title')}</CardTitle>
+                      <CardDescription>{t('preferences.notifications.description')}</CardDescription>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <ToggleSetting
                     icon={<Bell className="w-4 h-4" />}
-                    title="Push Notifications"
-                    description="Receive notifications about project updates and system alerts"
+                    title={t('preferences.notifications.push.title')}
+                    description={t('preferences.notifications.push.description')}
                     enabled={preferences?.notifications_enabled}
                     onChange={() =>
                       handlePreferenceChange('notifications_enabled', !preferences?.notifications_enabled)
@@ -403,8 +425,8 @@ const SettingsPage: React.FC = () => {
 
                   <ToggleSetting
                     icon={<Mail className="w-4 h-4" />}
-                    title="Email Notifications"
-                    description="Receive email updates about your account and usage"
+                    title={t('preferences.notifications.email.title')}
+                    description={t('preferences.notifications.email.description')}
                     enabled={preferences?.email_notifications}
                     onChange={() =>
                       handlePreferenceChange('email_notifications', !preferences?.email_notifications)
@@ -426,8 +448,8 @@ const SettingsPage: React.FC = () => {
                       <BarChart3 className="w-5 h-5 text-success" />
                     </div>
                     <div>
-                      <CardTitle>Usage Statistics</CardTitle>
-                      <CardDescription>Monitor your token usage and costs</CardDescription>
+                      <CardTitle>{t('usage.stats.title')}</CardTitle>
+                      <CardDescription>{t('usage.stats.description')}</CardDescription>
                     </div>
                   </div>
                 </CardHeader>
@@ -438,18 +460,20 @@ const SettingsPage: React.FC = () => {
                       <div className="space-y-4">
                         {user?.token_limit_monthly && (
                           <UsageProgressBar
-                            label="Monthly Usage"
+                            label={t('usage.stats.monthlyUsage')}
                             current={usage.monthly_tokens}
                             limit={user.token_limit_monthly}
                             percent={monthlyUsagePercent}
+                            percentUsedLabel={t('usage.stats.percentUsed', { percent: monthlyUsagePercent.toFixed(1) })}
                           />
                         )}
                         {user?.token_limit_global && (
                           <UsageProgressBar
-                            label="Total Usage"
+                            label={t('usage.stats.totalUsage')}
                             current={usage.total_tokens}
                             limit={user.token_limit_global}
                             percent={globalUsagePercent}
+                            percentUsedLabel={t('usage.stats.percentUsed', { percent: globalUsagePercent.toFixed(1) })}
                           />
                         )}
                       </div>
@@ -458,29 +482,29 @@ const SettingsPage: React.FC = () => {
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <StatItem
                           icon={<BarChart3 className="w-4 h-4" />}
-                          label="Total Tokens"
+                          label={t('usage.stats.totalTokens')}
                           value={formatNumber(usage.total_tokens)}
                         />
                         <StatItem
                           icon={<Coins className="w-4 h-4" />}
-                          label="Total Cost"
+                          label={t('usage.stats.totalCost')}
                           value={formatCurrency(usage.total_cost)}
                         />
                         <StatItem
                           icon={<BarChart3 className="w-4 h-4" />}
-                          label="This Month"
+                          label={t('usage.stats.thisMonth')}
                           value={formatNumber(usage.monthly_tokens)}
                         />
                         <StatItem
                           icon={<Coins className="w-4 h-4" />}
-                          label="Monthly Cost"
+                          label={t('usage.stats.monthlyCost')}
                           value={formatCurrency(usage.monthly_cost)}
                         />
                       </div>
                     </div>
                   ) : (
                     <div className="text-center py-8">
-                      <p className="text-muted-foreground">Loading usage statistics...</p>
+                      <p className="text-muted-foreground">{t('usage.stats.loading')}</p>
                     </div>
                   )}
                 </CardContent>
@@ -494,8 +518,8 @@ const SettingsPage: React.FC = () => {
                       <Shield className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                      <CardTitle>Account Information</CardTitle>
-                      <CardDescription>Your account details and limits</CardDescription>
+                      <CardTitle>{t('usage.account.title')}</CardTitle>
+                      <CardDescription>{t('usage.account.description')}</CardDescription>
                     </div>
                   </div>
                 </CardHeader>
@@ -503,26 +527,26 @@ const SettingsPage: React.FC = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <StatItem
                       icon={<FolderOpen className="w-4 h-4" />}
-                      label="Projects"
+                      label={t('usage.account.projects')}
                       value={usage?.project_count?.toString() || '0'}
                     />
                     <StatItem
                       icon={<Shield className="w-4 h-4" />}
-                      label="Role"
-                      value={user?.role === 'admin' ? 'Administrator' : 'User'}
+                      label={t('usage.account.role')}
+                      value={user?.role === 'admin' ? t('profile.role.admin') : t('profile.role.user')}
                       highlight={user?.role === 'admin'}
                     />
                     {user?.token_limit_global && (
                       <StatItem
                         icon={<BarChart3 className="w-4 h-4" />}
-                        label="Global Limit"
+                        label={t('usage.account.globalLimit')}
                         value={formatNumber(user.token_limit_global)}
                       />
                     )}
                     {user?.token_limit_monthly && (
                       <StatItem
                         icon={<BarChart3 className="w-4 h-4" />}
-                        label="Monthly Limit"
+                        label={t('usage.account.monthlyLimit')}
                         value={formatNumber(user.token_limit_monthly)}
                       />
                     )}
@@ -634,9 +658,10 @@ interface UsageProgressBarProps {
   current: number
   limit: number
   percent: number
+  percentUsedLabel?: string
 }
 
-const UsageProgressBar: React.FC<UsageProgressBarProps> = ({ label, current, limit, percent }) => (
+const UsageProgressBar: React.FC<UsageProgressBarProps> = ({ label, current, limit, percent, percentUsedLabel }) => (
   <div className="space-y-2">
     <div className="flex items-center justify-between text-sm">
       <span className="text-muted-foreground">{label}</span>
@@ -653,7 +678,7 @@ const UsageProgressBar: React.FC<UsageProgressBarProps> = ({ label, current, lim
         style={{ width: `${percent}%` }}
       />
     </div>
-    <p className="text-xs text-muted-foreground">{percent.toFixed(1)}% used</p>
+    <p className="text-xs text-muted-foreground">{percentUsedLabel || `${percent.toFixed(1)}% used`}</p>
   </div>
 )
 
