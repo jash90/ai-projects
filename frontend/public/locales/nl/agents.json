@@ -1,0 +1,139 @@
+{
+  "dialog": {
+    "buttons": {
+      "cancel": "Annuleren",
+      "create": "Agent Aanmaken",
+      "creating": "Aanmaken...",
+      "update": "Agent Bijwerken",
+      "updating": "Bijwerken..."
+    },
+    "fields": {
+      "changeModel": "dialog.fields.changeModel",
+      "description": "Beschrijving",
+      "descriptionPlaceholder": "Beschrijf wat deze agent doet...",
+      "maxTokens": "Max Tokens",
+      "maxTokensHint": "Maximale responslengte",
+      "model": "Model",
+      "modelSelect": "Selecteer model...",
+      "name": "Agent Naam *",
+      "namePlaceholder": "Mijn AI Assistent",
+      "noModelSelected": "dialog.fields.noModelSelected",
+      "notConfigured": "dialog.fields.notConfigured",
+      "provider": "Provider",
+      "providerNotConfigured": "dialog.fields.providerNotConfigured",
+      "providerSettings": "dialog.fields.providerSettings",
+      "selectModel": "dialog.fields.selectModel",
+      "systemPrompt": "Systeem Prompt *",
+      "systemPromptHint": "dialog.fields.systemPromptHint",
+      "systemPromptPlaceholder": "Je bent een behulpzame AI-assistent...",
+      "temperature": "Temperatuur",
+      "temperatureHint": "Lagere waarden = meer gefocust, Hogere waarden = creatiever"
+    },
+    "loadError": "Laden van AI-modellen mislukt",
+    "loading": "AI-providers laden...",
+    "retry": "Opnieuw proberen",
+    "validation": {
+      "modelRequired": "Modelselectie is vereist",
+      "nameRequired": "Agentnaam is vereist",
+      "promptRequired": "Systeemprompt is vereist"
+    }
+  },
+  "models": {
+    "chip": {
+      "removeFromFavorites": "Verwijderen uit favorieten"
+    },
+    "comparison": {
+      "backToList": "← Terug naar Lijst",
+      "browseModels": "Modellen Bladeren",
+      "category": "Categorie",
+      "comparing_one": "Modellen vergelijken",
+      "comparing_other": "Vergelijken {{count}} Modellen",
+      "contextWindow": "Contextvenster",
+      "costTier": "Kosten Niveau",
+      "description": "Beschrijving",
+      "empty": {
+        "description": "Selecteer tot 3 modellen uit de lijst om ze naast elkaar te vergelijken",
+        "title": "Geen Modellen om te Vergelijken"
+      },
+      "legend": "🏆 = Beste in categorie • Klik op een modelkaart om deze te selecteren",
+      "modelId": "Model ID",
+      "removeFromComparison": "Verwijderen uit vergelijking",
+      "selectThisModel": "Selecteer Dit Model",
+      "tokens": "tokens",
+      "unknown": "Onbekend"
+    },
+    "detail": {
+      "addToCompare": "📊 Toevoegen om te Vergelijken",
+      "addToFavorites": "Toevoegen aan favorieten",
+      "by": "door {{provider}}",
+      "capabilities": "Mogelijkheden",
+      "chat": "💬 Chat",
+      "comparisonFull": "Verwijder een model uit de vergelijking om deze toe te voegen (max 3)",
+      "contextWindow": "Contextvenster",
+      "cost": "{{cost}} Kosten",
+      "costTier": "Kostenklasse",
+      "description": "Beschrijving",
+      "favorite": "🤍 Favoriet",
+      "favorited": "❤️ Favoriet",
+      "inComparison": "✓ In vergelijking",
+      "modelId": "Model ID",
+      "noSelection": {
+        "description": "Klik op een model uit de lijst om gedetailleerde informatie te bekijken",
+        "title": "Geen model geselecteerd"
+      },
+      "popularModel": "Populair model",
+      "provider": "Aanbieder",
+      "removeFromFavorites": "Verwijder uit favorieten",
+      "selectThisModel": "Selecteer dit model",
+      "specifications": "Specificaties",
+      "streaming": "🔄 Streaming",
+      "tokens": "tokens"
+    },
+    "picker": {
+      "available_one": "model beschikbaar",
+      "available_other": "{{count}} modellen beschikbaar",
+      "cancel": "Annuleren",
+      "close": "Sluiten (Esc)",
+      "compare": "Vergelijken",
+      "favorites": "Favorieten",
+      "hideFavorites": "Verberg favorieten/recente items",
+      "inComparison_one": "model in vergelijking",
+      "inComparison_other": "modellen in vergelijking",
+      "loading": "OpenRouter-modellen laden...",
+      "recentlyUsed": "Recent gebruikt",
+      "search": "Zoek modellen (bijv. 'gpt', 'claude', 'llama')...",
+      "selectModel": "Selecteer model",
+      "shortcuts": "Ctrl+K: Zoeken • Ctrl+F: Favorieten • Ctrl+C: Vergelijken",
+      "title": "Selecteer OpenRouter-model"
+    }
+  },
+  "panel": {
+    "browseAll": "Blader door alle agenten",
+    "dismiss": "Afwijzen",
+    "empty": {
+      "description": "Neem contact op met de beheerder om agenten te creëren",
+      "title": "Geen agenten beschikbaar"
+    },
+    "maxTokens": "Max:",
+    "noSelection": "Geen agent geselecteerd",
+    "temp": "Temp:",
+    "title": "AI-agenten",
+    "tokens": "tokens"
+  },
+  "picker": {
+    "empty": {
+      "hint": "Probeer een andere zoekterm",
+      "title": "Geen agenten gevonden"
+    },
+    "searchAdmin": "Zoek agenten op naam, beschrijving of model...",
+    "searchUser": "Zoek agenten op naam of beschrijving...",
+    "select": "Selecteer agent",
+    "selected": "Geselecteerd",
+    "title": "Selecteer AI-agent"
+  },
+  "providers": {
+    "anthropic": "Anthropic",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter"
+  }
+}

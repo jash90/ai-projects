@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 interface ModelFavoritesChipProps {
   modelId: string
   modelName: string
@@ -15,6 +17,8 @@ export function ModelFavoritesChip({
   onRemove,
   type
 }: ModelFavoritesChipProps) {
+  const { t } = useTranslation('agents')
+
   return (
     <div
       onClick={onClick}
@@ -43,8 +47,8 @@ export function ModelFavoritesChip({
             onRemove()
           }}
           className="ml-1 hover:text-destructive transition-colors focus:outline-none focus:ring-2 focus:ring-destructive focus:ring-offset-1 rounded"
-          title="Remove from favorites"
-          aria-label={`Remove ${modelName} from favorites`}
+          title={t('models.chip.removeFromFavorites')}
+          aria-label={`${t('models.chip.removeFromFavorites')}: ${modelName}`}
         >
           ✕
         </button>

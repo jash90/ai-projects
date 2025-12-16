@@ -1,0 +1,75 @@
+{
+  "agentNotFound": {
+    "description": "Please select an agent to start chatting",
+    "title": "Agent not found"
+  },
+  "clearConfirm": "Are you sure you want to clear this conversation? This action cannot be undone.",
+  "emptyState": {
+    "description": "Send a message to begin chatting with {{agentName}}",
+    "filesHint": "This agent can access your project files for context",
+    "title": "Start a conversation"
+  },
+  "errors": {
+    "cannotSend": "Cannot send message. Please check your account status.",
+    "createFailed": "Failed to create conversation",
+    "deleteFailed": "Failed to delete conversation",
+    "loadFailed": "Failed to load conversations",
+    "sendFailed": "Failed to send message. Please try again.",
+    "tokenLimitExceeded": "Token limit exceeded. Cannot send message."
+  },
+  "header": {
+    "clearConversation": "Clear Conversation",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "files": "Files",
+    "moreOptions": "More options",
+    "toggleSidebar": "Toggle sidebar"
+  },
+  "input": {
+    "attachFile": "Attach file",
+    "attachFiles": "Attach files (images, PDF)",
+    "characters_one": "input.characters",
+    "characters_other": "input.characters",
+    "fileTooLarge": "File too large: {{name}}. Max size: {{maxSize}}MB",
+    "maxFilesError_one": "input.maxFilesError",
+    "maxFilesError_other": "input.maxFilesError",
+    "placeholder": "Type your message...",
+    "send": "Send",
+    "sendMessage": "Send message",
+    "startTyping": "Start typing...",
+    "unsupportedFileType": "Unsupported file type: {{type}}. Supported: images, PDF"
+  },
+  "limits": {
+    "global": "Global Limit",
+    "monthly": "Monthly Limit",
+    "remaining_one": "limits.remaining",
+    "remaining_other": "limits.remaining"
+  },
+  "message": {
+    "error": "Error",
+    "you": "You"
+  },
+  "placeholder": "Message {{agentName}}...",
+  "selectAgent": {
+    "description": "Choose an AI agent from the sidebar to start a conversation. Each agent has different capabilities and models.",
+    "title": "Select an Agent"
+  },
+  "streaming": {
+    "disable": "Disable streaming responses",
+    "enable": "Enable streaming responses",
+    "regular": "Regular",
+    "streaming": "Streaming"
+  },
+  "thinking": "{{agentName}} is thinking...",
+  "threads": {
+    "deleteConfirm": "Are you sure you want to delete this conversation?",
+    "deleteConversation": "Delete conversation",
+    "messageCount_one": "{{count}} message",
+    "messageCount_other": "{{count}} messages",
+    "newConversation": "New conversation",
+    "newThread": "New conversation",
+    "noConversations": "No conversations yet",
+    "startNew": "Start a new conversation",
+    "title": "Conversations"
+  }
+}

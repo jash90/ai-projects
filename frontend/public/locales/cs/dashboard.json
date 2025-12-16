@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "createProject": "Vytvořit projekt",
+    "newProject": "Nový projekt"
+  },
+  "admin": {
+    "description": "Spravujte uživatele, limity tokenů a nastavení systému",
+    "title": "Admin Panel"
+  },
+  "allProjects": {
+    "empty": {
+      "description": "Začněte vytvořením nového projektu",
+      "title": "Zatím žádné projekty"
+    },
+    "title": "Všechny projekty",
+    "viewAll_one": "Zobrazit všechny projekty",
+    "viewAll_other": "Zobrazit všechny projekty"
+  },
+  "header": {
+    "subtitle": "Spravujte své projekty a spolupracujte s AI agenty",
+    "welcome": "Vítejte zpět, {{username}}"
+  },
+  "quickTip": {
+    "content": "Přidejte soubory do svého projektu, abyste poskytli AI agentům kontext pro lepší asistenci.",
+    "title": "Rychlý tip"
+  },
+  "recentProjects": {
+    "empty": {
+      "description": "Vytvořte svůj první projekt, abyste začali se spoluprací s AI",
+      "title": "Žádné nedávné projekty"
+    },
+    "mostRecent": "Nejnovější",
+    "title": "Nedávné projekty"
+  },
+  "stats": {
+    "activeThisWeek": "Aktivní tento týden",
+    "totalMessages": "Celkový počet zpráv",
+    "totalProjects": "Celkový počet projektů",
+    "trackUsage": "Sledujte své využití AI",
+    "usageStats": "Statistiky využití",
+    "viewTokenUsage": "Zobrazit využití tokenů"
+  },
+  "usagePage": {
+    "subtitle": "Sledujte své využití tokenů a náklady napříč různými poskytovateli AI",
+    "title": "Využití API a statistiky"
+  }
+}

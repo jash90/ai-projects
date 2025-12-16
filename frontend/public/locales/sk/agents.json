@@ -1,0 +1,139 @@
+{
+  "dialog": {
+    "buttons": {
+      "cancel": "Zrušiť",
+      "create": "Vytvoriť agenta",
+      "creating": "Vytváram...",
+      "update": "Aktualizovať agenta",
+      "updating": "Aktualizujem..."
+    },
+    "fields": {
+      "changeModel": "dialog.fields.changeModel",
+      "description": "Popis",
+      "descriptionPlaceholder": "Popíšte, čo tento agent robí...",
+      "maxTokens": "Maximálne tokeny",
+      "maxTokensHint": "Maximálna dĺžka odpovede",
+      "model": "Model",
+      "modelSelect": "Vyberte model...",
+      "name": "Názov agenta *",
+      "namePlaceholder": "Môj AI asistent",
+      "noModelSelected": "dialog.fields.noModelSelected",
+      "notConfigured": "dialog.fields.notConfigured",
+      "provider": "Poskytovateľ",
+      "providerNotConfigured": "dialog.fields.providerNotConfigured",
+      "providerSettings": "dialog.fields.providerSettings",
+      "selectModel": "dialog.fields.selectModel",
+      "systemPrompt": "Systémový prompt *",
+      "systemPromptHint": "dialog.fields.systemPromptHint",
+      "systemPromptPlaceholder": "Ste užitočný AI asistent...",
+      "temperature": "Teplota",
+      "temperatureHint": "Nižšie hodnoty = viac zamerané, Vyššie hodnoty = viac kreatívne"
+    },
+    "loadError": "Nepodarilo sa načítať AI modely",
+    "loading": "Načítavam AI poskytovateľov...",
+    "retry": "Skúsiť znova",
+    "validation": {
+      "modelRequired": "Výber modelu je povinný",
+      "nameRequired": "Názov agenta je povinný",
+      "promptRequired": "Systémový prompt je povinný"
+    }
+  },
+  "models": {
+    "chip": {
+      "removeFromFavorites": "Odstrániť z obľúbených"
+    },
+    "comparison": {
+      "backToList": "← Späť na zoznam",
+      "browseModels": "Prehliadať modely",
+      "category": "Kategória",
+      "comparing_one": "Porovnávam {{count}} model",
+      "comparing_other": "Porovnávam {{count}} modely",
+      "contextWindow": "Kontextové okno",
+      "costTier": "Úroveň nákladov",
+      "description": "Popis",
+      "empty": {
+        "description": "Vyberte až 3 modely zo zoznamu, aby ste ich porovnali vedľa seba",
+        "title": "Žiadne modely na porovnanie"
+      },
+      "legend": "🏆 = Najlepšie v kategórii • Kliknite na akúkoľvek kartu modelu, aby ste ju vybrali",
+      "modelId": "ID modelu",
+      "removeFromComparison": "Odstrániť z porovnania",
+      "selectThisModel": "Vybrať tento model",
+      "tokens": "tokeny",
+      "unknown": "Neznáme"
+    },
+    "detail": {
+      "addToCompare": "📊 Pridať na porovnanie",
+      "addToFavorites": "Pridať k obľúbeným",
+      "by": "od {{provider}}",
+      "capabilities": "Schopnosti",
+      "chat": "💬 Chat",
+      "comparisonFull": "Odstráňte model z porovnania, aby ste pridali tento (max 3)",
+      "contextWindow": "Kontextové okno",
+      "cost": "{{cost}} Náklady",
+      "costTier": "Úroveň nákladov",
+      "description": "Popis",
+      "favorite": "🤍 Oblúbené",
+      "favorited": "❤️ Pridané medzi obľúbené",
+      "inComparison": "✓ V porovnaní",
+      "modelId": "ID modelu",
+      "noSelection": {
+        "description": "Kliknite na model zo zoznamu, aby ste si pozreli podrobné informácie",
+        "title": "Žiadny model nie je vybraný"
+      },
+      "popularModel": "Populárny model",
+      "provider": "Poskytovateľ",
+      "removeFromFavorites": "Odstrániť z obľúbených",
+      "selectThisModel": "Vybrať tento model",
+      "specifications": "Špecifikácie",
+      "streaming": "🔄 Streaming",
+      "tokens": "tokeny"
+    },
+    "picker": {
+      "available_one": "modely sú k dispozícii",
+      "available_other": "{{count}} modely sú k dispozícii",
+      "cancel": "Zrušiť",
+      "close": "Zavrieť (Esc)",
+      "compare": "Porovnať",
+      "favorites": "Obľúbené",
+      "hideFavorites": "Skryť obľúbené/naposledy použité",
+      "inComparison_one": "model je v porovnaní",
+      "inComparison_other": "modely sú v porovnaní",
+      "loading": "Načítavam modely OpenRouter...",
+      "recentlyUsed": "Nedávno použité",
+      "search": "Hľadať modely (napr. 'gpt', 'claude', 'llama')...",
+      "selectModel": "Vybrať model",
+      "shortcuts": "Ctrl+K: Hľadať • Ctrl+F: Obľúbené • Ctrl+C: Porovnať",
+      "title": "Vyberte model OpenRouter"
+    }
+  },
+  "panel": {
+    "browseAll": "Prehliadať všetkých agentov",
+    "dismiss": "Zavrieť",
+    "empty": {
+      "description": "Kontaktujte administrátora, aby vytvoril agentov",
+      "title": "Žiadni agenti nie sú k dispozícii"
+    },
+    "maxTokens": "Max:",
+    "noSelection": "Žiadny agent nie je vybraný",
+    "temp": "Teplota:",
+    "title": "AI agenti",
+    "tokens": "tokeny"
+  },
+  "picker": {
+    "empty": {
+      "hint": "Skúste iný vyhľadávací výraz",
+      "title": "Žiadni agenti nenájdení"
+    },
+    "searchAdmin": "Hľadať agentov podľa mena, popisu alebo modelu...",
+    "searchUser": "Hľadať agentov podľa mena alebo popisu...",
+    "select": "Vybrať agenta",
+    "selected": "Vybrané",
+    "title": "Vyberte AI agenta"
+  },
+  "providers": {
+    "anthropic": "Anthropic",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Επιστροφή στον Πίνακα Ελέγχου",
+  "dashboard": "Πίνακας Ελέγχου",
+  "desktop": {
+    "actions": {
+      "enterFullscreen": "Είσοδος σε Πλήρη Οθόνη",
+      "exitFullscreen": "Έξοδος από Πλήρη Οθόνη",
+      "hideEditor": "Απόκρυψη Επεξεργαστή",
+      "hideSidebar": "Απόκρυψη Πλευρικής Στήλης",
+      "showEditor": "Εμφάνιση Επεξεργαστή",
+      "showSidebar": "Εμφάνιση Πλευρικής Στήλης"
+    },
+    "panels": {
+      "aiAgents": "AI Πράκτορες",
+      "projectFiles": "Αρχεία Έργου"
+    }
+  },
+  "editor": {
+    "noFileSelected": "Δεν έχει επιλεγεί κανένα αρχείο"
+  },
+  "loading": "Φόρτωση έργου...",
+  "mobile": {
+    "actions": {
+      "install": "Εγκατάσταση",
+      "installApp": "Εγκατάσταση Εφαρμογής",
+      "share": "Κοινοποίηση"
+    },
+    "menu": {
+      "currentSelection": "Τρέχουσα Επιλογή",
+      "filesAvailableOffline_one": "Αρχεία διαθέσιμα εκτός σύνδεσης",
+      "filesAvailableOffline_other": "Αρχεία διαθέσιμα εκτός σύνδεσης",
+      "filesPendingUpload_one": "Αρχεία που εκκρεμούν για ανέβασμα",
+      "filesPendingUpload_other": "Αρχεία που εκκρεμούν για ανέβασμα",
+      "noAgentSelected": "Δεν έχει επιλεγεί κανένας πράκτορας",
+      "noFileSelected": "Δεν έχει επιλεγεί κανένα αρχείο",
+      "offlineMode": "Λειτουργία εκτός σύνδεσης",
+      "online": "Σύνδεση",
+      "status": "Κατάσταση"
+    },
+    "views": {
+      "agents": "Πράκτορες",
+      "chat": "Συνομιλία",
+      "editor": "Επεξεργαστής",
+      "files": "Αρχεία"
+    }
+  },
+  "noAgents": {
+    "description": "Χρειάζεστε τουλάχιστον έναν AI πράκτορα για να χρησιμοποιήσετε αυτό το έργο.",
+    "title": "Δεν υπάρχουν διαθέσιμοι AI πράκτορες"
+  },
+  "notFound": {
+    "description": "Το έργο που αναζητάτε δεν υπάρχει ή δεν έχετε πρόσβαση σε αυτό.",
+    "title": "Το έργο δεν βρέθηκε"
+  }
+}

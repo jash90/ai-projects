@@ -1,0 +1,180 @@
+{
+  "cta": {
+    "installPwa": "Install PWA",
+    "start": "Start Building Today",
+    "subtitle": "Join thousands of developers building the future with AI-powered development, mobile-first design, and enterprise-grade security.",
+    "title": "Ready to revolutionize your development experience?"
+  },
+  "features": {
+    "items": {
+      "ai": {
+        "category": "AI",
+        "description": "Dynamic model management with OpenAI GPT and Anthropic Claude models. Specialized AI agents with unique personalities and capabilities.",
+        "title": "Advanced AI Integration"
+      },
+      "analytics": {
+        "category": "Analytics",
+        "description": "Comprehensive monitoring of AI API usage, costs per project, admin-configurable limits, and usage analytics.",
+        "title": "Token Usage Tracking"
+      },
+      "collaboration": {
+        "category": "Collaboration",
+        "description": "WebSocket-powered conversations with typing indicators, streaming responses, and persistent chat history.",
+        "title": "Real-time Chat & Collaboration"
+      },
+      "management": {
+        "category": "Management",
+        "description": "Multi-project support, file management (20+ types), project-specific agents, and real-time file collaboration.",
+        "title": "Advanced Project Management"
+      },
+      "mobile": {
+        "category": "Mobile",
+        "description": "Progressive Web App with offline support, native app installation, touch-optimized interface, and mobile navigation.",
+        "title": "Mobile-First PWA"
+      },
+      "performance": {
+        "category": "Performance",
+        "description": "PostgreSQL with Redis caching, connection pooling, code splitting, service workers, and mobile optimization.",
+        "title": "High Performance Architecture"
+      },
+      "pwa": {
+        "category": "PWA",
+        "description": "Service worker with intelligent caching, background sync, offline file access, and queue management.",
+        "title": "Offline Capabilities"
+      },
+      "security": {
+        "category": "Security",
+        "description": "Role-based access control, admin panel, user management, token limits, activity logging, and comprehensive security.",
+        "title": "Enterprise Security & Admin"
+      },
+      "ux": {
+        "category": "User Experience",
+        "description": "Comprehensive settings for profile, security, preferences, dark/light mode, and personal usage statistics.",
+        "title": "User Settings & Preferences"
+      }
+    },
+    "subtitle": "Enterprise-grade platform with advanced AI integration, mobile-first design, and comprehensive development tools built for modern teams.",
+    "techStack": {
+      "subtitle": "Production-ready stack with TypeScript, React 18, Node.js, PostgreSQL, and AI integration",
+      "title": "Built with Modern Technologies"
+    },
+    "title": "Production-Ready Features"
+  },
+  "footer": {
+    "company": {
+      "about": "About",
+      "blog": "Blog",
+      "careers": "Careers",
+      "contact": "Contact",
+      "title": "Company"
+    },
+    "copyright": "© 2024 AI Projects. All rights reserved.",
+    "product": {
+      "api": "API",
+      "documentation": "Documentation",
+      "features": "Features",
+      "pricing": "Pricing",
+      "title": "Product"
+    },
+    "support": {
+      "community": "Community",
+      "helpCenter": "Help Center",
+      "privacy": "Privacy",
+      "status": "Status",
+      "title": "Support"
+    },
+    "tagline": "The future of development is here. Build amazing projects with AI assistance."
+  },
+  "hero": {
+    "badge": "Production-Ready AI Development Platform",
+    "cta": {
+      "demo": "Watch Demo",
+      "start": "Start Building Free"
+    },
+    "subtitle": "Full-stack platform with advanced AI agents, real-time collaboration, mobile-first PWA design, enterprise security, and comprehensive project management. Work anywhere, anytime.",
+    "title": "The Future of",
+    "titleHighlight": "AI-Powered Development"
+  },
+  "nav": {
+    "features": "Features",
+    "getStarted": "Get Started",
+    "installApp": "Install App",
+    "pricing": "Pricing",
+    "signIn": "Sign In",
+    "testimonials": "Testimonials"
+  },
+  "pricing": {
+    "contactUs": "contact us",
+    "perMonth": "per month",
+    "plans": {
+      "enterprise": {
+        "cta": "Contact Sales",
+        "features": [
+          "Everything in Pro",
+          "Admin panel & RBAC",
+          "Custom token limits",
+          "Activity logging",
+          "SSO & compliance",
+          "Dedicated support"
+        ],
+        "name": "Enterprise",
+        "price": "Custom"
+      },
+      "pro": {
+        "cta": "Start Pro Trial",
+        "features": [
+          "Unlimited projects",
+          "GPT-4 + Claude models",
+          "Real-time collaboration",
+          "Advanced file management",
+          "Usage analytics",
+          "Priority support"
+        ],
+        "name": "Professional",
+        "popular": "Most Popular",
+        "price": "$29"
+      },
+      "starter": {
+        "cta": "Get Started Free",
+        "features": [
+          "5 AI projects",
+          "OpenAI GPT models",
+          "Mobile PWA access",
+          "Offline capabilities",
+          "Community support"
+        ],
+        "name": "Starter",
+        "price": "$0"
+      }
+    },
+    "subtitle": "Full-featured platform with AI integration, mobile PWA, admin controls, and enterprise security. Start free, scale as you grow.",
+    "title": "Enterprise-grade pricing for teams of all sizes"
+  },
+  "stats": {
+    "activeDevelopers": "Active Developers",
+    "projectsBuilt": "AI Projects Built",
+    "rating": "PWA Store Rating",
+    "uptime": "Uptime SLA"
+  },
+  "testimonials": {
+    "items": {
+      "elena": {
+        "content": "Real-time collaboration with WebSocket integration is seamless. The service worker and caching strategies make this the fastest development platform I've used.",
+        "name": "Elena Rodriguez",
+        "role": "DevOps Engineer"
+      },
+      "marcus": {
+        "content": "The admin panel gives us complete control over our team's AI usage. Token tracking and user management features have saved us thousands in API costs.",
+        "name": "Marcus Johnson",
+        "role": "Engineering Manager"
+      },
+      "sarah": {
+        "content": "The mobile-first PWA design is incredible. I can code on my phone during commutes and seamlessly continue on desktop. The offline capabilities are a game-changer.",
+        "name": "Sarah Chen",
+        "role": "Senior Full-stack Developer"
+      }
+    },
+    "subtitle": "See what our community of developers has to say about AI Projects.",
+    "title": "Loved by developers worldwide"
+  }
+}

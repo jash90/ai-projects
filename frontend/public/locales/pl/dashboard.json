@@ -1,0 +1,49 @@
+{
+  "actions": {
+    "createProject": "Utwórz projekt",
+    "newProject": "Nowy projekt"
+  },
+  "admin": {
+    "description": "Zarządzaj użytkownikami, limitami tokenów i ustawieniami systemu",
+    "title": "Panel administratora"
+  },
+  "allProjects": {
+    "empty": {
+      "description": "Rozpocznij od utworzenia nowego projektu",
+      "title": "Brak projektów"
+    },
+    "title": "Wszystkie projekty",
+    "viewAll_one": "wszystkie projekty.zobacz wszystkie",
+    "viewAll_few": "wyświetl wszystkie projekty",
+    "viewAll_many": "wyświetl wszystkie projekty",
+    "viewAll_other": "wszystkie projekty.zobacz wszystkie"
+  },
+  "header": {
+    "subtitle": "Zarządzaj swoimi projektami i współpracuj z agentami AI",
+    "welcome": "Witaj ponownie, {{username}}"
+  },
+  "quickTip": {
+    "content": "Dodaj pliki do swojego projektu, aby dać agentom AI kontekst dla lepszej pomocy.",
+    "title": "Szybka wskazówka"
+  },
+  "recentProjects": {
+    "empty": {
+      "description": "Utwórz swój pierwszy projekt, aby rozpocząć współpracę z AI",
+      "title": "Brak ostatnich projektów"
+    },
+    "mostRecent": "Najnowszy",
+    "title": "Ostatnie projekty"
+  },
+  "stats": {
+    "activeThisWeek": "Aktywne w tym tygodniu",
+    "totalMessages": "Wszystkie wiadomości",
+    "totalProjects": "Wszystkie projekty",
+    "trackUsage": "Śledź użycie AI",
+    "usageStats": "Statystyki użycia",
+    "viewTokenUsage": "Zobacz użycie tokenów"
+  },
+  "usagePage": {
+    "subtitle": "Monitoruj użycie tokenów i koszty u różnych dostawców AI",
+    "title": "Użycie API i statystyki"
+  }
+}

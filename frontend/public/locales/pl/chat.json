@@ -1,0 +1,83 @@
+{
+  "agentNotFound": {
+    "description": "Wybierz agenta, aby rozpocząć czat",
+    "title": "Nie znaleziono agenta"
+  },
+  "clearConfirm": "Czy na pewno chcesz wyczyścić tę rozmowę? Tej czynności nie można cofnąć.",
+  "emptyState": {
+    "description": "Wyślij wiadomość, aby rozpocząć czat z {{agentName}}",
+    "filesHint": "Ten agent może uzyskać dostęp do plików projektu dla kontekstu",
+    "title": "Rozpocznij rozmowę"
+  },
+  "errors": {
+    "cannotSend": "Nie można wysłać wiadomości. Sprawdź status swojego konta.",
+    "createFailed": "Nie udało się utworzyć rozmowy",
+    "deleteFailed": "Nie udało się usunąć rozmowy",
+    "loadFailed": "Nie udało się załadować rozmów",
+    "sendFailed": "Nie udało się wysłać wiadomości. Spróbuj ponownie.",
+    "tokenLimitExceeded": "Przekroczono limit tokenów. Nie można wysłać wiadomości."
+  },
+  "header": {
+    "clearConversation": "Wyczyść rozmowę",
+    "connected": "Połączono",
+    "disconnected": "Rozłączono",
+    "files": "Pliki",
+    "moreOptions": "Więcej opcji",
+    "toggleSidebar": "Przełącz pasek boczny"
+  },
+  "input": {
+    "attachFile": "Załącz plik",
+    "attachFiles": "Załącz pliki (obrazy, PDF)",
+    "characters_one": "input.znaki",
+    "characters_few": "wprowadzonych {{count}} znaki",
+    "characters_many": "wprowadzonych {{count}} znaków",
+    "characters_other": "input.znaki",
+    "fileTooLarge": "Plik za duży: {{name}}. Maksymalny rozmiar: {{maxSize}}MB",
+    "maxFilesError_one": "input.błądMaksPlików",
+    "maxFilesError_few": "Możesz przesłać maksymalnie {{count}} plik",
+    "maxFilesError_many": "Możesz przesłać maksymalnie {{count}} plików",
+    "maxFilesError_other": "input.błądMaksPlików",
+    "placeholder": "Wpisz wiadomość...",
+    "send": "Wyślij",
+    "sendMessage": "Wyślij wiadomość",
+    "startTyping": "Zacznij pisać...",
+    "unsupportedFileType": "Nieobsługiwany typ pliku: {{type}}. Obsługiwane: obrazy, PDF"
+  },
+  "limits": {
+    "global": "Limit globalny",
+    "monthly": "Limit miesięczny",
+    "remaining_one": "limits.pozostało",
+    "remaining_few": "Pozostało {{count}} limitu",
+    "remaining_many": "Pozostało {{count}} limitów",
+    "remaining_other": "limits.pozostało"
+  },
+  "message": {
+    "error": "Błąd",
+    "you": "Ty"
+  },
+  "placeholder": "Wiadomość do {{agentName}}...",
+  "selectAgent": {
+    "description": "Wybierz agenta AI z paska bocznego, aby rozpocząć rozmowę. Każdy agent ma różne możliwości i modele.",
+    "title": "Wybierz agenta"
+  },
+  "streaming": {
+    "disable": "Wyłącz strumieniowanie odpowiedzi",
+    "enable": "Włącz strumieniowanie odpowiedzi",
+    "regular": "Zwykłe",
+    "streaming": "Strumieniowanie"
+  },
+  "thinking": "{{agentName}} myśli...",
+  "threads": {
+    "deleteConfirm": "Czy na pewno chcesz usunąć tę rozmowę?",
+    "deleteConversation": "Usuń rozmowę",
+    "messageCount_one": "{{count}} wiadomość",
+    "messageCount_few": "{{count}} wiadomość",
+    "messageCount_many": "{{count}} wiadomości",
+    "messageCount_other": "{{count}} wiadomości",
+    "newConversation": "Nowa rozmowa",
+    "newThread": "Nowa rozmowa",
+    "noConversations": "Brak rozmów",
+    "startNew": "Rozpocznij nową rozmowę",
+    "title": "Rozmowy"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "agentNotFound": {
+    "description": "Vänligen välj en agent för att börja chatta",
+    "title": "Agent hittades inte"
+  },
+  "clearConfirm": "Är du säker på att du vill rensa denna konversation? Denna åtgärd kan inte ångras.",
+  "emptyState": {
+    "description": "Skicka ett meddelande för att börja chatta med {{agentName}}",
+    "filesHint": "Denna agent kan få tillgång till dina projektfiler för kontext",
+    "title": "Börja en konversation"
+  },
+  "errors": {
+    "cannotSend": "Kan inte skicka meddelande. Vänligen kontrollera din kontostatus.",
+    "createFailed": "Misslyckades med att skapa konversation",
+    "deleteFailed": "Misslyckades med att radera konversation",
+    "loadFailed": "Misslyckades med att ladda konversationer",
+    "sendFailed": "Misslyckades med att skicka meddelande. Vänligen försök igen.",
+    "tokenLimitExceeded": "Tokengräns överskriden. Kan inte skicka meddelande."
+  },
+  "header": {
+    "clearConversation": "Rensa konversation",
+    "connected": "Ansluten",
+    "disconnected": "Frånkopplad",
+    "files": "Filer",
+    "moreOptions": "Fler alternativ",
+    "toggleSidebar": "Växla sidopanel"
+  },
+  "input": {
+    "attachFile": "Bifoga fil",
+    "attachFiles": "Bifoga filer (bilder, PDF)",
+    "characters_one": "tecken",
+    "characters_other": "tecken",
+    "fileTooLarge": "Fil för stor: {{name}}. Max storlek: {{maxSize}}MB",
+    "maxFilesError_one": "Max antal filer överskridet",
+    "maxFilesError_other": "Max antal filer överskridet",
+    "placeholder": "Skriv ditt meddelande...",
+    "send": "Skicka",
+    "sendMessage": "Skicka meddelande",
+    "startTyping": "Börja skriva...",
+    "unsupportedFileType": "Ej stödd filtyp: {{type}}. Stödda: bilder, PDF"
+  },
+  "limits": {
+    "global": "Global gräns",
+    "monthly": "Månatlig gräns",
+    "remaining_one": "återstående gräns",
+    "remaining_other": "återstående gränser"
+  },
+  "message": {
+    "error": "Fel",
+    "you": "Du"
+  },
+  "placeholder": "Meddelande till {{agentName}}...",
+  "selectAgent": {
+    "description": "Välj en AI-agent från sidopanelen för att börja en konversation. Varje agent har olika kapabiliteter och modeller.",
+    "title": "Välj en agent"
+  },
+  "streaming": {
+    "disable": "Inaktivera strömmande svar",
+    "enable": "Aktivera strömmande svar",
+    "regular": "Regelbunden",
+    "streaming": "Strömmande"
+  },
+  "thinking": "{{agentName}} tänker...",
+  "threads": {
+    "deleteConfirm": "Är du säker på att du vill radera denna konversation?",
+    "deleteConversation": "Radera konversation",
+    "messageCount_one": "{{count}} meddelande",
+    "messageCount_other": "{{count}} meddelanden",
+    "newConversation": "Ny konversation",
+    "newThread": "Ny konversation",
+    "noConversations": "Inga konversationer än",
+    "startNew": "Börja en ny konversation",
+    "title": "Konversationer"
+  }
+}

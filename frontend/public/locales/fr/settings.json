@@ -1,0 +1,84 @@
+{
+  "preferences": {
+    "appearance": {
+      "dark": "Sombre",
+      "description": "Personnalisez l'apparence des projets IA sur votre appareil",
+      "light": "Clair",
+      "system": "Système",
+      "theme": "Thème",
+      "title": "Apparence"
+    },
+    "notifications": {
+      "description": "Choisissez les notifications que vous souhaitez recevoir",
+      "email": {
+        "description": "Recevez des mises à jour par email concernant votre compte et votre utilisation",
+        "title": "Notifications par Email"
+      },
+      "push": {
+        "description": "Recevez des notifications sur les mises à jour de projet et les alertes système",
+        "title": "Notifications Push"
+      },
+      "title": "Notifications"
+    },
+    "updateError": "Échec de la mise à jour des préférences",
+    "updateSuccess": "Préférences mises à jour avec succès"
+  },
+  "profile": {
+    "description": "Mettez à jour vos informations personnelles et votre adresse email",
+    "email": "Email",
+    "reset": "Réinitialiser",
+    "role": {
+      "admin": "Administrateur",
+      "user": "Utilisateur"
+    },
+    "saveChanges": "Enregistrer les Modifications",
+    "title": "Informations sur le Profil",
+    "updateError": "Échec de la mise à jour du profil",
+    "updateSuccess": "Profil mis à jour avec succès",
+    "username": "Nom d'utilisateur"
+  },
+  "security": {
+    "clear": "Effacer",
+    "confirmPassword": "Confirmer le Nouveau Mot de Passe",
+    "currentPassword": "Mot de Passe Actuel",
+    "description": "Mettez à jour votre mot de passe pour sécuriser votre compte",
+    "newPassword": "Nouveau Mot de Passe",
+    "passwordMismatch": "Les nouveaux mots de passe ne correspondent pas",
+    "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+    "passwordTooShort": "Le nouveau mot de passe doit comporter au moins 6 caractères",
+    "title": "Changer le Mot de Passe",
+    "updateError": "Échec de la mise à jour du mot de passe",
+    "updatePassword": "Mettre à Jour le Mot de Passe",
+    "updateSuccess": "Mot de passe mis à jour avec succès"
+  },
+  "subtitle": "Gérez vos préférences de compte et les paramètres de l'application",
+  "tabs": {
+    "preferences": "Préférences",
+    "profile": "Profil",
+    "security": "Sécurité",
+    "usage": "Utilisation"
+  },
+  "title": "Paramètres",
+  "usage": {
+    "account": {
+      "description": "Vos informations de compte et vos limites",
+      "globalLimit": "Limite Globale",
+      "monthlyLimit": "Limite Mensuelle",
+      "projects": "Projets",
+      "role": "Rôle",
+      "title": "Informations sur le Compte"
+    },
+    "stats": {
+      "description": "Surveillez votre utilisation de jetons et vos coûts",
+      "loading": "Chargement des statistiques d'utilisation...",
+      "monthlyCost": "Coût Mensuel",
+      "monthlyUsage": "Utilisation Mensuelle",
+      "percentUsed": "{{percent}}% utilisé",
+      "thisMonth": "Ce Mois",
+      "title": "Statistiques d'Utilisation",
+      "totalCost": "Coût Total",
+      "totalTokens": "Total des Jetons",
+      "totalUsage": "Utilisation Totale"
+    }
+  }
+}

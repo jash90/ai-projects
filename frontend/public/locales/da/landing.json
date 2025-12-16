@@ -1,0 +1,180 @@
+{
+  "cta": {
+    "installPwa": "Installer PWA",
+    "start": "Beg at bygge i dag",
+    "subtitle": "Deltag i tusindvis af udviklere, der bygger fremtiden med AI-drevet udvikling, mobil-første design og virksomhedsklasse sikkerhed.",
+    "title": "Klar til at revolutionere din udviklingsoplevelse?"
+  },
+  "features": {
+    "items": {
+      "ai": {
+        "category": "AI",
+        "description": "Dynamisk modelstyring med OpenAI GPT og Anthropic Claude modeller. Specialiserede AI-agenter med unikke personligheder og evner.",
+        "title": "Avanceret AI-integration"
+      },
+      "analytics": {
+        "category": "Analyse",
+        "description": "Omfattende overvågning af AI API-brug, omkostninger pr. projekt, admin-konfigurerbare grænser og brugsanalyser.",
+        "title": "Token-brugsopfølgning"
+      },
+      "collaboration": {
+        "category": "Samarbejde",
+        "description": "WebSocket-drevne samtaler med skriveindikatorer, streaming svar og vedholdende chat-historik.",
+        "title": "Real-time Chat & Samarbejde"
+      },
+      "management": {
+        "category": "Ledelse",
+        "description": "Multi-projekt support, filhåndtering (20+ typer), projekt-specifikke agenter og real-time fil samarbejde.",
+        "title": "Avanceret Projektledelse"
+      },
+      "mobile": {
+        "category": "Mobil",
+        "description": "Progressiv Web App med offline support, installation af native apps, berøringsoptimeret grænseflade og mobil navigation.",
+        "title": "Mobil-Første PWA"
+      },
+      "performance": {
+        "category": "Ydelse",
+        "description": "PostgreSQL med Redis caching, forbindelsespulje, kodeopdeling, servicearbejdere og mobiloptimering.",
+        "title": "Høj Ydelsesarkitektur"
+      },
+      "pwa": {
+        "category": "PWA",
+        "description": "Servicearbejder med intelligent caching, baggrundssynkronisering, offline filadgang og køstyring.",
+        "title": "Offline Funktioner"
+      },
+      "security": {
+        "category": "Sikkerhed",
+        "description": "Rollebaseret adgangskontrol, adminpanel, brugerstyring, token-grænser, aktivitetslogning og omfattende sikkerhed.",
+        "title": "Virksomhedssikkerhed & Admin"
+      },
+      "ux": {
+        "category": "Brugeroplevelse",
+        "description": "Omfattende indstillinger for profil, sikkerhed, præferencer, mørk/lys tilstand og personlige brugsstatistikker.",
+        "title": "Brugerindstillinger & Præferencer"
+      }
+    },
+    "subtitle": "Virksomhedsklasse platform med avanceret AI-integration, mobil-første design og omfattende udviklingsværktøjer bygget til moderne teams.",
+    "techStack": {
+      "subtitle": "Produktionsklar stack med TypeScript, React 18, Node.js, PostgreSQL og AI-integration",
+      "title": "Bygget med Moderne Teknologier"
+    },
+    "title": "Produktionsklare Funktioner"
+  },
+  "footer": {
+    "company": {
+      "about": "Om",
+      "blog": "Blog",
+      "careers": "Karrierer",
+      "contact": "Kontakt",
+      "title": "Virksomhed"
+    },
+    "copyright": "© 2024 AI Projects. Alle rettigheder forbeholdes.",
+    "product": {
+      "api": "API",
+      "documentation": "Dokumentation",
+      "features": "Funktioner",
+      "pricing": "Priser",
+      "title": "Produkt"
+    },
+    "support": {
+      "community": "Fællesskab",
+      "helpCenter": "Hjælp Center",
+      "privacy": "Privatliv",
+      "status": "Status",
+      "title": "Support"
+    },
+    "tagline": "Fremtiden for udvikling er her. Byg fantastiske projekter med AI-assistance."
+  },
+  "hero": {
+    "badge": "Produktionsklar AI udviklingsplatform",
+    "cta": {
+      "demo": "Se demo",
+      "start": "Begynd at bygge gratis"
+    },
+    "subtitle": "Full-stack platform med avancerede AI-agenter, realtids samarbejde, mobil-første PWA design, virksomhedssikkerhed og omfattende projektledelse. Arbejd hvor som helst, når som helst.",
+    "title": "Fremtiden for",
+    "titleHighlight": "AI-drevet udvikling"
+  },
+  "nav": {
+    "features": "Funktioner",
+    "getStarted": "Kom i gang",
+    "installApp": "Installer app",
+    "pricing": "Priser",
+    "signIn": "Log ind",
+    "testimonials": "Udtalelser"
+  },
+  "pricing": {
+    "contactUs": "kontakt os",
+    "perMonth": "pr. måned",
+    "plans": {
+      "enterprise": {
+        "cta": "Kontakt salg",
+        "features": [
+          "Alt i Pro",
+          "Adminpanel & RBAC",
+          "Tilpassede token grænser",
+          "Aktivitetslogning",
+          "SSO & overholdelse",
+          "Dedikeret support"
+        ],
+        "name": "Enterprise",
+        "price": "Tilpasset"
+      },
+      "pro": {
+        "cta": "Start Pro prøveperiode",
+        "features": [
+          "Ubegrænsede projekter",
+          "GPT-4 + Claude modeller",
+          "Realtids samarbejde",
+          "Avanceret filhåndtering",
+          "Brugsanalyse",
+          "Prioriteret support"
+        ],
+        "name": "Professionel",
+        "popular": "Mest populær",
+        "price": "$29"
+      },
+      "starter": {
+        "cta": "Kom i gang gratis",
+        "features": [
+          "5 AI projekter",
+          "OpenAI GPT modeller",
+          "Mobil PWA adgang",
+          "Offline funktioner",
+          "Fællesskabs support"
+        ],
+        "name": "Starter",
+        "price": "$0"
+      }
+    },
+    "subtitle": "Fuld-funktionel platform med AI integration, mobil PWA, adminkontroller og virksomhedssikkerhed. Start gratis, skaler efterhånden som du vokser.",
+    "title": "Virksomhedsniveau priser for teams af alle størrelser"
+  },
+  "stats": {
+    "activeDevelopers": "Aktive udviklere",
+    "projectsBuilt": "AI projekter bygget",
+    "rating": "PWA Store vurdering",
+    "uptime": "Uptime SLA"
+  },
+  "testimonials": {
+    "items": {
+      "elena": {
+        "content": "Realtids samarbejde med WebSocket integration er problemfrit. Servicearbejderen og caching strategierne gør dette til den hurtigste udviklingsplatform, jeg har brugt.",
+        "name": "Elena Rodriguez",
+        "role": "DevOps ingeniør"
+      },
+      "marcus": {
+        "content": "Adminpanelet giver os fuld kontrol over vores teams AI brug. Token sporing og brugerstyringsfunktioner har sparet os for tusindvis i API omkostninger.",
+        "name": "Marcus Johnson",
+        "role": "Ingeniørleder"
+      },
+      "sarah": {
+        "content": "Det mobil-første PWA design er fantastisk. Jeg kan kode på min telefon under pendling og fortsætte problemfrit på desktop. De offline funktioner er en game-changer.",
+        "name": "Sarah Chen",
+        "role": "Senior full-stack udvikler"
+      }
+    },
+    "subtitle": "Se hvad vores fællesskab af udviklere har at sige om AI projekter.",
+    "title": "Elsket af udviklere verden over"
+  }
+}

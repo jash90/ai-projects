@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowRight, 
@@ -27,6 +28,7 @@ import { useAuth } from '@/stores/authStore';
 import { cn } from '@/lib/utils';
 
 export default function LandingPage() {
+  const { t } = useTranslation('landing');
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { canInstall, install, isInstalled } = usePWAFeatures();
@@ -53,86 +55,86 @@ export default function LandingPage() {
   const features = [
     {
       icon: Bot,
-      title: 'Advanced AI Integration',
-      description: 'Dynamic model management with OpenAI GPT and Anthropic Claude models. Specialized AI agents with unique personalities and capabilities.',
-      category: 'AI'
+      title: t('features.items.ai.title'),
+      description: t('features.items.ai.description'),
+      category: t('features.items.ai.category')
     },
     {
       icon: MessageSquare,
-      title: 'Real-time Chat & Collaboration',
-      description: 'WebSocket-powered conversations with typing indicators, streaming responses, and persistent chat history.',
-      category: 'Collaboration'
+      title: t('features.items.collaboration.title'),
+      description: t('features.items.collaboration.description'),
+      category: t('features.items.collaboration.category')
     },
     {
       icon: Smartphone,
-      title: 'Mobile-First PWA',
-      description: 'Progressive Web App with offline support, native app installation, touch-optimized interface, and mobile navigation.',
-      category: 'Mobile'
+      title: t('features.items.mobile.title'),
+      description: t('features.items.mobile.description'),
+      category: t('features.items.mobile.category')
     },
     {
       icon: Shield,
-      title: 'Enterprise Security & Admin',
-      description: 'Role-based access control, admin panel, user management, token limits, activity logging, and comprehensive security.',
-      category: 'Security'
+      title: t('features.items.security.title'),
+      description: t('features.items.security.description'),
+      category: t('features.items.security.category')
     },
     {
       icon: FileText,
-      title: 'Advanced Project Management',
-      description: 'Multi-project support, file management (20+ types), project-specific agents, and real-time file collaboration.',
-      category: 'Management'
+      title: t('features.items.management.title'),
+      description: t('features.items.management.description'),
+      category: t('features.items.management.category')
     },
     {
       icon: Zap,
-      title: 'High Performance Architecture',
-      description: 'PostgreSQL with Redis caching, connection pooling, code splitting, service workers, and mobile optimization.',
-      category: 'Performance'
+      title: t('features.items.performance.title'),
+      description: t('features.items.performance.description'),
+      category: t('features.items.performance.category')
     },
     {
       icon: Database,
-      title: 'Token Usage Tracking',
-      description: 'Comprehensive monitoring of AI API usage, costs per project, admin-configurable limits, and usage analytics.',
-      category: 'Analytics'
+      title: t('features.items.analytics.title'),
+      description: t('features.items.analytics.description'),
+      category: t('features.items.analytics.category')
     },
     {
       icon: Globe,
-      title: 'Offline Capabilities',
-      description: 'Service worker with intelligent caching, background sync, offline file access, and queue management.',
-      category: 'PWA'
+      title: t('features.items.pwa.title'),
+      description: t('features.items.pwa.description'),
+      category: t('features.items.pwa.category')
     },
     {
       icon: Settings,
-      title: 'User Settings & Preferences',
-      description: 'Comprehensive settings for profile, security, preferences, dark/light mode, and personal usage statistics.',
-      category: 'User Experience'
+      title: t('features.items.ux.title'),
+      description: t('features.items.ux.description'),
+      category: t('features.items.ux.category')
     }
   ];
 
   const testimonials = [
     {
-      name: 'Sarah Chen',
-      role: 'Senior Full-stack Developer',
+      name: t('testimonials.items.sarah.name'),
+      role: t('testimonials.items.sarah.role'),
       avatar: '👩‍💻',
-      content: 'The mobile-first PWA design is incredible. I can code on my phone during commutes and seamlessly continue on desktop. The offline capabilities are a game-changer.'
+      content: t('testimonials.items.sarah.content')
     },
     {
-      name: 'Marcus Johnson',
-      role: 'Engineering Manager',
+      name: t('testimonials.items.marcus.name'),
+      role: t('testimonials.items.marcus.role'),
       avatar: '👨‍🚀',
-      content: 'The admin panel gives us complete control over our team\'s AI usage. Token tracking and user management features have saved us thousands in API costs.'
+      content: t('testimonials.items.marcus.content')
     },
     {
-      name: 'Elena Rodriguez',
-      role: 'DevOps Engineer',
+      name: t('testimonials.items.elena.name'),
+      role: t('testimonials.items.elena.role'),
       avatar: '👩‍🔬',
-      content: 'Real-time collaboration with WebSocket integration is seamless. The service worker and caching strategies make this the fastest development platform I\'ve used.'
+      content: t('testimonials.items.elena.content')
     }
   ];
 
   const stats = [
-    { value: '15K+', label: 'Active Developers' },
-    { value: '75K+', label: 'AI Projects Built' },
-    { value: '99.9%', label: 'Uptime SLA' },
-    { value: '4.8/5', label: 'PWA Store Rating' }
+    { value: '15K+', label: t('stats.activeDevelopers') },
+    { value: '75K+', label: t('stats.projectsBuilt') },
+    { value: '99.9%', label: t('stats.uptime') },
+    { value: '4.8/5', label: t('stats.rating') }
   ];
 
   const techStack = [
@@ -172,16 +174,16 @@ export default function LandingPage() {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-8">
               <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
-                Features
+                {t('nav.features')}
               </a>
               <a href="#testimonials" className="text-muted-foreground hover:text-foreground transition-colors">
-                Testimonials
+                {t('nav.testimonials')}
               </a>
               <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">
-                Pricing
+                {t('nav.pricing')}
               </a>
               <Link to="/login" className="text-muted-foreground hover:text-foreground transition-colors">
-                Sign In
+                {t('nav.signIn')}
               </Link>
             </nav>
 
@@ -190,11 +192,11 @@ export default function LandingPage() {
               {canInstall && !isInstalled && (
                 <Button variant="outline" onClick={handleInstallApp} className="flex items-center gap-2">
                   <Download className="w-4 h-4" />
-                  Install App
+                  {t('nav.installApp')}
                 </Button>
               )}
               <Button onClick={handleGetStarted} className="flex items-center gap-2">
-                Get Started
+                {t('nav.getStarted')}
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </div>
@@ -216,43 +218,43 @@ export default function LandingPage() {
           <div className="md:hidden bg-card border-t border-border">
             <div className="container-mobile py-4">
               <nav className="flex flex-col gap-4">
-                <a 
-                  href="#features" 
+                <a
+                  href="#features"
                   className="text-muted-foreground hover:text-foreground transition-colors py-2"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Features
+                  {t('nav.features')}
                 </a>
-                <a 
-                  href="#testimonials" 
+                <a
+                  href="#testimonials"
                   className="text-muted-foreground hover:text-foreground transition-colors py-2"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Testimonials
+                  {t('nav.testimonials')}
                 </a>
-                <a 
-                  href="#pricing" 
+                <a
+                  href="#pricing"
                   className="text-muted-foreground hover:text-foreground transition-colors py-2"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Pricing
+                  {t('nav.pricing')}
                 </a>
-                <Link 
-                  to="/login" 
+                <Link
+                  to="/login"
                   className="text-muted-foreground hover:text-foreground transition-colors py-2"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Sign In
+                  {t('nav.signIn')}
                 </Link>
                 <div className="flex flex-col gap-2 pt-4 border-t border-border">
                   {canInstall && !isInstalled && (
                     <Button variant="outline" onClick={handleInstallApp} className="flex items-center gap-2 justify-center">
                       <Download className="w-4 h-4" />
-                      Install App
+                      {t('nav.installApp')}
                     </Button>
                   )}
                   <Button onClick={handleGetStarted} className="flex items-center gap-2 justify-center">
-                    Get Started
+                    {t('nav.getStarted')}
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 </div>
@@ -273,40 +275,39 @@ export default function LandingPage() {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-sm text-primary font-medium mb-6">
               <Sparkles className="w-4 h-4" />
-              Production-Ready AI Development Platform
+              {t('hero.badge')}
             </div>
 
             {/* Headline */}
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 leading-tight">
-              The Future of{' '}
+              {t('hero.title')}{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">
-                AI-Powered Development
+                {t('hero.titleHighlight')}
               </span>
             </h1>
 
             {/* Subtitle */}
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-              Full-stack platform with advanced AI agents, real-time collaboration, mobile-first PWA design, 
-              enterprise security, and comprehensive project management. Work anywhere, anytime.
+              {t('hero.subtitle')}
             </p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 onClick={handleGetStarted}
                 className="w-full sm:w-auto flex items-center gap-2 text-base px-8 py-3 touch-target"
               >
-                Start Building Free
+                {t('hero.cta.start')}
                 <ArrowRight className="w-5 h-5" />
               </Button>
-              
-              <button 
+
+              <button
                 onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
                 className="inline-flex items-center justify-center gap-2 rounded-md border border-input bg-background px-8 py-3 text-base font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 w-full sm:w-auto touch-target"
               >
                 <Play className="w-5 h-5" />
-                Watch Demo
+                {t('hero.cta.demo')}
               </button>
             </div>
 
@@ -332,11 +333,10 @@ export default function LandingPage() {
         <div className="container-mobile">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Production-Ready Features
+              {t('features.title')}
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Enterprise-grade platform with advanced AI integration, mobile-first design, 
-              and comprehensive development tools built for modern teams.
+              {t('features.subtitle')}
             </p>
           </div>
 
@@ -365,10 +365,10 @@ export default function LandingPage() {
           <div className="mt-16 pt-16 border-t border-border">
             <div className="text-center mb-12">
               <h3 className="text-2xl font-bold text-foreground mb-4">
-                Built with Modern Technologies
+                {t('features.techStack.title')}
               </h3>
               <p className="text-muted-foreground">
-                Production-ready stack with TypeScript, React 18, Node.js, PostgreSQL, and AI integration
+                {t('features.techStack.subtitle')}
               </p>
             </div>
             
@@ -393,10 +393,10 @@ export default function LandingPage() {
         <div className="container-mobile">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Loved by developers worldwide
+              {t('testimonials.title')}
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              See what our community of developers has to say about AI Projects.
+              {t('testimonials.subtitle')}
             </p>
           </div>
 
@@ -431,48 +431,33 @@ export default function LandingPage() {
       {/* Pricing Section */}
       <section id="pricing" className="py-16 md:py-24 bg-muted/30">
         <div className="container-mobile">
-                  <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Enterprise-grade pricing for teams of all sizes
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Full-featured platform with AI integration, mobile PWA, admin controls, and enterprise security. 
-            Start free, scale as you grow.
-          </p>
-        </div>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              {t('pricing.title')}
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              {t('pricing.subtitle')}
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {/* Free Plan */}
             <div className="card-mobile">
               <div className="text-center mb-6">
-                <h3 className="text-xl font-semibold text-foreground mb-2">Starter</h3>
-                <div className="text-3xl font-bold text-foreground mb-1">$0</div>
-                <div className="text-muted-foreground">per month</div>
+                <h3 className="text-xl font-semibold text-foreground mb-2">{t('pricing.plans.starter.name')}</h3>
+                <div className="text-3xl font-bold text-foreground mb-1">{t('pricing.plans.starter.price')}</div>
+                <div className="text-muted-foreground">{t('pricing.perMonth')}</div>
               </div>
               <ul className="space-y-3 mb-8">
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">5 AI projects</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">OpenAI GPT models</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Mobile PWA access</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Offline capabilities</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Community support</span>
-                </li>
+                {(t('pricing.plans.starter.features', { returnObjects: true }) as string[]).map((feature, i) => (
+                  <li key={i} className="flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                    <span className="text-muted-foreground">{feature}</span>
+                  </li>
+                ))}
               </ul>
               <Button variant="outline" className="w-full" onClick={handleGetStarted}>
-                Get Started Free
+                {t('pricing.plans.starter.cta')}
               </Button>
             </div>
 
@@ -480,80 +465,44 @@ export default function LandingPage() {
             <div className="card-mobile border-primary relative">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                 <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
-                  Most Popular
+                  {t('pricing.plans.pro.popular')}
                 </span>
               </div>
               <div className="text-center mb-6">
-                <h3 className="text-xl font-semibold text-foreground mb-2">Professional</h3>
-                <div className="text-3xl font-bold text-foreground mb-1">$29</div>
-                <div className="text-muted-foreground">per month</div>
+                <h3 className="text-xl font-semibold text-foreground mb-2">{t('pricing.plans.pro.name')}</h3>
+                <div className="text-3xl font-bold text-foreground mb-1">{t('pricing.plans.pro.price')}</div>
+                <div className="text-muted-foreground">{t('pricing.perMonth')}</div>
               </div>
               <ul className="space-y-3 mb-8">
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Unlimited projects</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">GPT-4 + Claude models</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Real-time collaboration</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Advanced file management</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Usage analytics</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Priority support</span>
-                </li>
+                {(t('pricing.plans.pro.features', { returnObjects: true }) as string[]).map((feature, i) => (
+                  <li key={i} className="flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                    <span className="text-muted-foreground">{feature}</span>
+                  </li>
+                ))}
               </ul>
               <Button className="w-full" onClick={handleGetStarted}>
-                Start Pro Trial
+                {t('pricing.plans.pro.cta')}
               </Button>
             </div>
 
             {/* Enterprise Plan */}
             <div className="card-mobile">
               <div className="text-center mb-6">
-                <h3 className="text-xl font-semibold text-foreground mb-2">Enterprise</h3>
-                <div className="text-3xl font-bold text-foreground mb-1">Custom</div>
-                <div className="text-muted-foreground">contact us</div>
+                <h3 className="text-xl font-semibold text-foreground mb-2">{t('pricing.plans.enterprise.name')}</h3>
+                <div className="text-3xl font-bold text-foreground mb-1">{t('pricing.plans.enterprise.price')}</div>
+                <div className="text-muted-foreground">{t('pricing.contactUs')}</div>
               </div>
               <ul className="space-y-3 mb-8">
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Everything in Pro</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Admin panel & RBAC</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Custom token limits</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Activity logging</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">SSO & compliance</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                  <span className="text-muted-foreground">Dedicated support</span>
-                </li>
+                {(t('pricing.plans.enterprise.features', { returnObjects: true }) as string[]).map((feature, i) => (
+                  <li key={i} className="flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                    <span className="text-muted-foreground">{feature}</span>
+                  </li>
+                ))}
               </ul>
               <Button variant="outline" className="w-full">
-                Contact Sales
+                {t('pricing.plans.enterprise.cta')}
               </Button>
             </div>
           </div>
@@ -564,31 +513,30 @@ export default function LandingPage() {
       <section className="py-16 md:py-24 bg-gradient-to-r from-primary to-primary/80">
         <div className="container-mobile text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
-            Ready to revolutionize your development experience?
+            {t('cta.title')}
           </h2>
           <p className="text-lg text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
-            Join thousands of developers building the future with AI-powered development, 
-            mobile-first design, and enterprise-grade security.
+            {t('cta.subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               variant="secondary"
               onClick={handleGetStarted}
               className="w-full sm:w-auto flex items-center gap-2 text-base px-8 py-3 touch-target"
             >
-              Start Building Today
+              {t('cta.start')}
               <ArrowRight className="w-5 h-5" />
             </Button>
             {canInstall && !isInstalled && (
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 variant="outline"
                 onClick={handleInstallApp}
                 className="w-full sm:w-auto flex items-center gap-2 text-base px-8 py-3 border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 touch-target"
               >
                 <Download className="w-5 h-5" />
-                Install PWA
+                {t('cta.installPwa')}
               </Button>
             )}
           </div>
@@ -608,7 +556,7 @@ export default function LandingPage() {
                 <span className="text-xl font-bold text-foreground">AI Projects</span>
               </div>
               <p className="text-muted-foreground">
-                The future of development is here. Build amazing projects with AI assistance.
+                {t('footer.tagline')}
               </p>
               <div className="flex items-center gap-4">
                 <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
@@ -622,41 +570,41 @@ export default function LandingPage() {
 
             {/* Product */}
             <div>
-              <h3 className="font-semibold text-foreground mb-4">Product</h3>
+              <h3 className="font-semibold text-foreground mb-4">{t('footer.product.title')}</h3>
               <ul className="space-y-2">
-                <li><a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">Features</a></li>
-                <li><a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">Pricing</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">API</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Documentation</a></li>
+                <li><a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.product.features')}</a></li>
+                <li><a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.product.pricing')}</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.product.api')}</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.product.documentation')}</a></li>
               </ul>
             </div>
 
             {/* Company */}
             <div>
-              <h3 className="font-semibold text-foreground mb-4">Company</h3>
+              <h3 className="font-semibold text-foreground mb-4">{t('footer.company.title')}</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">About</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Blog</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Careers</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Contact</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.company.about')}</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.company.blog')}</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.company.careers')}</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.company.contact')}</a></li>
               </ul>
             </div>
 
             {/* Support */}
             <div>
-              <h3 className="font-semibold text-foreground mb-4">Support</h3>
+              <h3 className="font-semibold text-foreground mb-4">{t('footer.support.title')}</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Help Center</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Community</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Status</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.support.helpCenter')}</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.support.community')}</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.support.status')}</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.support.privacy')}</a></li>
               </ul>
             </div>
           </div>
 
           <div className="border-t border-border mt-12 pt-8 text-center">
             <p className="text-muted-foreground">
-              © 2024 AI Projects. All rights reserved.
+              {t('footer.copyright')}
             </p>
           </div>
         </div>

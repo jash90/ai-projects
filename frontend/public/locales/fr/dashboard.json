@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "createProject": "Créer un projet",
+    "newProject": "Nouveau projet"
+  },
+  "admin": {
+    "description": "Gérer les utilisateurs, les limites de jetons et les paramètres du système",
+    "title": "Panneau d'administration"
+  },
+  "allProjects": {
+    "empty": {
+      "description": "Commencez par créer un nouveau projet",
+      "title": "Pas encore de projets"
+    },
+    "title": "Tous les projets",
+    "viewAll_one": "voir tout",
+    "viewAll_other": "voir tout"
+  },
+  "header": {
+    "subtitle": "Gérez vos projets et collaborez avec des agents IA",
+    "welcome": "Bienvenue de nouveau, {{username}}"
+  },
+  "quickTip": {
+    "content": "Ajoutez des fichiers à votre projet pour donner aux agents IA un contexte pour une meilleure assistance.",
+    "title": "Astuce rapide"
+  },
+  "recentProjects": {
+    "empty": {
+      "description": "Créez votre premier projet pour commencer à collaborer avec l'IA",
+      "title": "Aucun projet récent"
+    },
+    "mostRecent": "Le plus récent",
+    "title": "Projets récents"
+  },
+  "stats": {
+    "activeThisWeek": "Actif cette semaine",
+    "totalMessages": "Messages totaux",
+    "totalProjects": "Projets totaux",
+    "trackUsage": "Suivez votre utilisation de l'IA",
+    "usageStats": "Statistiques d'utilisation",
+    "viewTokenUsage": "Voir l'utilisation des jetons"
+  },
+  "usagePage": {
+    "subtitle": "Surveillez votre utilisation de jetons et vos coûts auprès de différents fournisseurs d'IA",
+    "title": "Utilisation de l'API & Statistiques"
+  }
+}

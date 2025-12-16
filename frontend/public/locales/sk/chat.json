@@ -1,0 +1,75 @@
+{
+  "agentNotFound": {
+    "description": "Vyberte agenta, aby ste začali chatovať",
+    "title": "Agent nenájdený"
+  },
+  "clearConfirm": "Ste si istý, že chcete vymazať túto konverzáciu? Túto akciu nie je možné zrušiť.",
+  "emptyState": {
+    "description": "Odošlite správu, aby ste začali chatovať s {{agentName}}",
+    "filesHint": "Tento agent môže mať prístup k vašim projektovým súborom pre kontext",
+    "title": "Začnite konverzáciu"
+  },
+  "errors": {
+    "cannotSend": "Správu sa nepodarilo odoslať. Skontrolujte stav svojho účtu.",
+    "createFailed": "Nepodarilo sa vytvoriť konverzáciu",
+    "deleteFailed": "Nepodarilo sa vymazať konverzáciu",
+    "loadFailed": "Nepodarilo sa načítať konverzácie",
+    "sendFailed": "Nepodarilo sa odoslať správu. Skúste to znova.",
+    "tokenLimitExceeded": "Prekročený limit tokenov. Správu nemožno odoslať."
+  },
+  "header": {
+    "clearConversation": "Vymazať konverzáciu",
+    "connected": "Pripojené",
+    "disconnected": "Odpojené",
+    "files": "Súbory",
+    "moreOptions": "Viac možností",
+    "toggleSidebar": "Prepnúť bočný panel"
+  },
+  "input": {
+    "attachFile": "Pripojiť súbor",
+    "attachFiles": "Pripojiť súbory (obrázky, PDF)",
+    "characters_one": "input.characters",
+    "characters_other": "input.characters",
+    "fileTooLarge": "Súbor je príliš veľký: {{name}}. Maximálna veľkosť: {{maxSize}}MB",
+    "maxFilesError_one": "input.maxFilesError",
+    "maxFilesError_other": "input.maxFilesError",
+    "placeholder": "Napíšte svoju správu...",
+    "send": "Odoslať",
+    "sendMessage": "Odoslať správu",
+    "startTyping": "Začnite písať...",
+    "unsupportedFileType": "Nepodporovaný typ súboru: {{type}}. Podporované: obrázky, PDF"
+  },
+  "limits": {
+    "global": "Globálny limit",
+    "monthly": "Mesačný limit",
+    "remaining_one": "limits.remaining",
+    "remaining_other": "limits.remaining"
+  },
+  "message": {
+    "error": "Chyba",
+    "you": "Vy"
+  },
+  "placeholder": "Správa {{agentName}}...",
+  "selectAgent": {
+    "description": "Vyberte AI agenta z bočného panela, aby ste začali konverzáciu. Každý agent má rôzne schopnosti a modely.",
+    "title": "Vyberte agenta"
+  },
+  "streaming": {
+    "disable": "Deaktivovať streamovanie odpovedí",
+    "enable": "Aktivovať streamovanie odpovedí",
+    "regular": "Pravidelný",
+    "streaming": "Streamovanie"
+  },
+  "thinking": "{{agentName}} premýšľa...",
+  "threads": {
+    "deleteConfirm": "Ste si istý, že chcete vymazať túto konverzáciu?",
+    "deleteConversation": "Vymazať konverzáciu",
+    "messageCount_one": "{{count}} správa",
+    "messageCount_other": "{{count}} správy",
+    "newConversation": "Nová konverzácia",
+    "newThread": "Nová konverzácia",
+    "noConversations": "Zatiaľ žiadne konverzácie",
+    "startNew": "Začať novú konverzáciu",
+    "title": "Konverzácie"
+  }
+}

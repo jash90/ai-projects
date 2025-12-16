@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
-import { 
-  Home, 
-  FolderOpen, 
-  BarChart3, 
-  Settings, 
-  Shield, 
-  Menu, 
+import {
+  Home,
+  FolderOpen,
+  BarChart3,
+  Settings,
+  Shield,
+  Menu,
   X,
   Plus,
   User,
@@ -21,6 +22,7 @@ interface MobileNavigationProps {
 }
 
 export function MobileNavigation({ onNewProject }: MobileNavigationProps) {
+  const { t } = useTranslation('common');
   const { user, logout } = useAuth();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -58,25 +60,25 @@ export function MobileNavigation({ onNewProject }: MobileNavigationProps) {
 
   const navigationItems = [
     {
-      label: 'Dashboard',
+      label: t('navigation.dashboard'),
       href: '/dashboard',
       icon: Home,
       active: location.pathname === '/dashboard' || location.pathname === '/'
     },
     {
-      label: 'Projects',
+      label: t('navigation.projects'),
       href: '/projects',
       icon: FolderOpen,
       active: location.pathname.startsWith('/projects')
     },
     {
-      label: 'Usage',
+      label: t('navigation.usage'),
       href: '/usage',
       icon: BarChart3,
       active: location.pathname === '/usage'
     },
     {
-      label: 'Settings',
+      label: t('navigation.settings'),
       href: '/settings',
       icon: Settings,
       active: location.pathname === '/settings'
@@ -86,7 +88,7 @@ export function MobileNavigation({ onNewProject }: MobileNavigationProps) {
   // Add admin panel for admin users
   if (user?.role === 'admin') {
     navigationItems.push({
-      label: 'Admin Panel',
+      label: t('navigation.adminPanel'),
       href: '/admin',
       icon: Shield,
       active: location.pathname === '/admin'
@@ -108,7 +110,7 @@ export function MobileNavigation({ onNewProject }: MobileNavigationProps) {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">CP</span>
             </div>
-            <span className="font-semibold text-foreground">AI Projects</span>
+            <span className="font-semibold text-foreground">{t('navigation.brand')}</span>
           </Link>
 
           {/* Actions */}
@@ -131,7 +133,7 @@ export function MobileNavigation({ onNewProject }: MobileNavigationProps) {
               size="sm"
               onClick={() => setIsOpen(!isOpen)}
               className="p-2"
-              aria-label="Toggle menu"
+              aria-label={t('navigation.toggleMenu')}
             >
               {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </Button>
@@ -161,7 +163,7 @@ export function MobileNavigation({ onNewProject }: MobileNavigationProps) {
                 <p className="text-sm text-muted-foreground">{user?.email}</p>
                 {user?.role === 'admin' && (
                   <span className="inline-flex px-2 py-0.5 text-xs font-medium rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 mt-1">
-                    Admin
+                    {t('userMenu.admin')}
                   </span>
                 )}
               </div>
@@ -200,7 +202,7 @@ export function MobileNavigation({ onNewProject }: MobileNavigationProps) {
               className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
             >
               <LogOut className="w-4 h-4 mr-3" />
-              Sign Out
+              {t('navigation.signOut')}
             </Button>
           </div>
         </div>

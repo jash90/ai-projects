@@ -1,0 +1,84 @@
+{
+  "preferences": {
+    "appearance": {
+      "dark": "Escuro",
+      "description": "Personalize a aparência dos Projetos de IA no seu dispositivo",
+      "light": "Claro",
+      "system": "Sistema",
+      "theme": "Tema",
+      "title": "Aparência"
+    },
+    "notifications": {
+      "description": "Escolha quais notificações deseja receber",
+      "email": {
+        "description": "Receber atualizações por e-mail sobre sua conta e uso",
+        "title": "Notificações por E-mail"
+      },
+      "push": {
+        "description": "Receber notificações sobre atualizações de projetos e alertas do sistema",
+        "title": "Notificações Push"
+      },
+      "title": "Notificações"
+    },
+    "updateError": "Falha ao atualizar preferências",
+    "updateSuccess": "Preferências atualizadas com sucesso"
+  },
+  "profile": {
+    "description": "Atualize seus dados pessoais e endereço de e-mail",
+    "email": "E-mail",
+    "reset": "Redefinir",
+    "role": {
+      "admin": "Administrador",
+      "user": "Usuário"
+    },
+    "saveChanges": "Salvar Alterações",
+    "title": "Informações do Perfil",
+    "updateError": "Falha ao atualizar o perfil",
+    "updateSuccess": "Perfil atualizado com sucesso",
+    "username": "Nome de Usuário"
+  },
+  "security": {
+    "clear": "Limpar",
+    "confirmPassword": "Confirmar Nova Senha",
+    "currentPassword": "Senha Atual",
+    "description": "Atualize sua senha para manter sua conta segura",
+    "newPassword": "Nova Senha",
+    "passwordMismatch": "As novas senhas não coincidem",
+    "passwordsDoNotMatch": "As senhas não coincidem",
+    "passwordTooShort": "A nova senha deve ter pelo menos 6 caracteres",
+    "title": "Alterar Senha",
+    "updateError": "Falha ao atualizar a senha",
+    "updatePassword": "Atualizar Senha",
+    "updateSuccess": "Senha atualizada com sucesso"
+  },
+  "subtitle": "Gerencie suas preferências de conta e configurações do aplicativo",
+  "tabs": {
+    "preferences": "Preferências",
+    "profile": "Perfil",
+    "security": "Segurança",
+    "usage": "Uso"
+  },
+  "title": "Configurações",
+  "usage": {
+    "account": {
+      "description": "Seus dados de conta e limites",
+      "globalLimit": "Limite Global",
+      "monthlyLimit": "Limite Mensal",
+      "projects": "Projetos",
+      "role": "Função",
+      "title": "Informações da Conta"
+    },
+    "stats": {
+      "description": "Monitore o uso e os custos do seu token",
+      "loading": "Carregando estatísticas de uso...",
+      "monthlyCost": "Custo Mensal",
+      "monthlyUsage": "Uso Mensal",
+      "percentUsed": "{{percent}}% usado",
+      "thisMonth": "Este Mês",
+      "title": "Estatísticas de Uso",
+      "totalCost": "Custo Total",
+      "totalTokens": "Tokens Totais",
+      "totalUsage": "Uso Total"
+    }
+  }
+}

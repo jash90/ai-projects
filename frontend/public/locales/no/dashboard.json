@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "createProject": "Opprett prosjekt",
+    "newProject": "Nytt prosjekt"
+  },
+  "admin": {
+    "description": "Administrer brukere, tokenbegrensninger og systeminnstillinger",
+    "title": "Adminpanel"
+  },
+  "allProjects": {
+    "empty": {
+      "description": "Start med å opprette et nytt prosjekt",
+      "title": "Ingen prosjekter ennå"
+    },
+    "title": "Alle prosjekter",
+    "viewAll_one": "Vis alle prosjekter",
+    "viewAll_other": "Vis alle prosjekter"
+  },
+  "header": {
+    "subtitle": "Administrer prosjektene dine og samarbeid med AI-agenter",
+    "welcome": "Velkommen tilbake, {{username}}"
+  },
+  "quickTip": {
+    "content": "Legg til filer i prosjektet ditt for å gi AI-agenter kontekst for bedre hjelp.",
+    "title": "Raskt tips"
+  },
+  "recentProjects": {
+    "empty": {
+      "description": "Opprett ditt første prosjekt for å komme i gang med AI-samarbeid",
+      "title": "Ingen nylige prosjekter"
+    },
+    "mostRecent": "Nyligste",
+    "title": "Nylige prosjekter"
+  },
+  "stats": {
+    "activeThisWeek": "Aktiv denne uken",
+    "totalMessages": "Totalt antall meldinger",
+    "totalProjects": "Totalt antall prosjekter",
+    "trackUsage": "Spor AI-bruken din",
+    "usageStats": "Bruksstatistikk",
+    "viewTokenUsage": "Vis tokenbruk"
+  },
+  "usagePage": {
+    "subtitle": "Overvåk tokenbruken og kostnadene dine på tvers av ulike AI-leverandører",
+    "title": "API-bruk og statistikk"
+  }
+}

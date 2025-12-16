@@ -1,0 +1,75 @@
+{
+  "agentNotFound": {
+    "description": "Моля, изберете агент, за да започнете чат",
+    "title": "Агентът не е намерен"
+  },
+  "clearConfirm": "Сигурни ли сте, че искате да изчистите този разговор? Това действие не може да бъде отменено.",
+  "emptyState": {
+    "description": "Изпратете съобщение, за да започнете чат с {{agentName}}",
+    "filesHint": "Този агент може да получи достъп до вашите проектни файлове за контекст",
+    "title": "Започнете разговор"
+  },
+  "errors": {
+    "cannotSend": "Не може да се изпрати съобщение. Моля, проверете статуса на вашия акаунт.",
+    "createFailed": "Неуспешно създаване на разговор",
+    "deleteFailed": "Неуспешно изтриване на разговора",
+    "loadFailed": "Неуспешно зареждане на разговорите",
+    "sendFailed": "Неуспешно изпращане на съобщение. Моля, опитайте отново.",
+    "tokenLimitExceeded": "Надвишен лимит на токени. Не може да се изпрати съобщение."
+  },
+  "header": {
+    "clearConversation": "Изчисти разговора",
+    "connected": "Свързан",
+    "disconnected": "Неподключен",
+    "files": "Файлове",
+    "moreOptions": "Повече опции",
+    "toggleSidebar": "Превключи страничната лента"
+  },
+  "input": {
+    "attachFile": "Прикрепи файл",
+    "attachFiles": "Прикрепи файлове (изображения, PDF)",
+    "characters_one": "въведете.символи",
+    "characters_other": "въведете.символи",
+    "fileTooLarge": "Файлът е твърде голям: {{name}}. Максимален размер: {{maxSize}}MB",
+    "maxFilesError_one": "въведете.maxFilesError",
+    "maxFilesError_other": "въведете.maxFilesError",
+    "placeholder": "Напишете съобщението си...",
+    "send": "Изпрати",
+    "sendMessage": "Изпрати съобщение",
+    "startTyping": "Започнете да пишете...",
+    "unsupportedFileType": "Неподдържан тип файл: {{type}}. Поддържани: изображения, PDF"
+  },
+  "limits": {
+    "global": "Глобален лимит",
+    "monthly": "Месечен лимит",
+    "remaining_one": "лимити.оставащ",
+    "remaining_other": "лимити.оставащи"
+  },
+  "message": {
+    "error": "Грешка",
+    "you": "Вие"
+  },
+  "placeholder": "Съобщение до {{agentName}}...",
+  "selectAgent": {
+    "description": "Изберете AI агент от страничната лента, за да започнете разговор. Всеки агент има различни възможности и модели.",
+    "title": "Изберете агент"
+  },
+  "streaming": {
+    "disable": "Деактивирайте стрийминг отговори",
+    "enable": "Активирайте стрийминг отговори",
+    "regular": "Редовен",
+    "streaming": "Стрийминг"
+  },
+  "thinking": "{{agentName}} мисли...",
+  "threads": {
+    "deleteConfirm": "Сигурни ли сте, че искате да изтриете този разговор?",
+    "deleteConversation": "Изтрий разговор",
+    "messageCount_one": "{{count}} съобщение",
+    "messageCount_other": "{{count}} съобщения",
+    "newConversation": "Нов разговор",
+    "newThread": "Нов разговор",
+    "noConversations": "Все още няма разговори",
+    "startNew": "Започнете нов разговор",
+    "title": "Разговори"
+  }
+}

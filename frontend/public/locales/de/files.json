@@ -1,0 +1,89 @@
+{
+  "dialog": {
+    "cancel": "Abbrechen",
+    "content": "Inhalt",
+    "contentHint": "Sie können den Inhalt nach dem Erstellen der Datei bearbeiten.",
+    "contentPlaceholder": "Dateiinhalt...",
+    "create": "Datei erstellen",
+    "createTitle": "Neue Datei erstellen",
+    "creating": "Wird erstellt...",
+    "fileName": "Dateiname",
+    "fileNamePlaceholder": "z.B. main.js, README.md",
+    "fileNameRequired": "Dateiname ist erforderlich",
+    "fileType": "Dateityp",
+    "fileTypeRequired": "Dateityp ist erforderlich"
+  },
+  "editor": {
+    "autoSave": {
+      "pending": "Automatisches Speichern: Ausstehend",
+      "upToDate": "Automatisches Speichern: Aktuell"
+    },
+    "characters_one": "editor.Zeichen",
+    "characters_other": "editor.Zeichen",
+    "language": "Sprache: {{language}}",
+    "lines_one": "editor.Zeilen",
+    "lines_other": "editor.Zeilen",
+    "loading": "Editor wird geladen...",
+    "noFile": {
+      "description": "Wählen Sie eine Datei aus dem Explorer aus, um mit der Bearbeitung zu beginnen",
+      "title": "Keine Datei ausgewählt"
+    },
+    "placeholder": "Beginnen Sie zu tippen...",
+    "revert": "Zurücksetzen",
+    "revertConfirm": "Sind Sie sicher, dass Sie alle nicht gespeicherten Änderungen zurücksetzen möchten?",
+    "save": "Speichern",
+    "saving": "Wird gespeichert...",
+    "shortcuts": {
+      "exitFullscreen": "Drücken Sie Esc, um den Vollbildmodus zu verlassen",
+      "save": "Strg+S zum Speichern"
+    },
+    "type": "Typ: {{type}}",
+    "unsavedChanges": "Nicht gespeicherte Änderungen",
+    "unsavedChangesText": "Nicht gespeicherte Änderungen"
+  },
+  "explorer": {
+    "contextMenu": {
+      "copyContent": "Inhalt kopieren",
+      "delete": "Löschen",
+      "open": "Öffnen"
+    },
+    "createTitle": "Neue Datei erstellen",
+    "deleteConfirm": "Sind Sie sicher, dass Sie \"{{name}}\" löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "dismiss": "Schließen",
+    "empty": {
+      "description": "Erstellen Sie Ihre erste Datei, um zu beginnen",
+      "title": "Keine Dateien in diesem Projekt"
+    },
+    "fileCount_one": "explorer.Dateianzahl",
+    "fileCount_other": "{{count}} Dateien",
+    "noResults": "Keine Dateien entsprechen Ihrer Suche",
+    "searchPlaceholder": "Dateien suchen...",
+    "shown_one": "explorer.Angezeigt",
+    "shown_other": "explorer.Angezeigt",
+    "title": "Dateien",
+    "uploadTitle": "Dateien vom Computer hochladen"
+  },
+  "upload": {
+    "cancel": "Abbrechen",
+    "complete": "Upload abgeschlossen",
+    "description": "Laden Sie Dateien von Ihrem Computer hoch. Dateien werden als bearbeitbare Textdateien im Projekt gelesen und gespeichert.",
+    "done": "Fertig",
+    "dropzone": {
+      "active": "Dateien hier ablegen",
+      "andMore_one": "upload.dropzone.andMore",
+      "andMore_other": "upload.dropzone.andMore",
+      "description": "Ziehen Sie Dateien hierher oder klicken Sie, um Dateien auszuwählen",
+      "maxSize": "Maximale Dateigröße: {{size}}MB",
+      "supportedTypes": "Unterstützte Typen: {{types}}",
+      "title": "Dateien von Ihrem Computer hochladen"
+    },
+    "errors": {
+      "tooLarge": "Die Datei \"{{name}}\" ist zu groß. Maximale Größe ist {{maxSize}}MB.",
+      "unsupportedType": "Dateityp nicht unterstützt. Erlaubte Typen: {{types}}"
+    },
+    "success_one": "upload.success",
+    "success_other": "{{count}} Dateien erfolgreich hochgeladen!",
+    "title": "Dateien in das Projekt hochladen",
+    "uploading": "Dateien werden hochgeladen"
+  }
+}

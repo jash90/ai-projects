@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Înapoi la tabloul de bord",
+  "dashboard": "Tabloul de bord",
+  "desktop": {
+    "actions": {
+      "enterFullscreen": "Intră în modul pe tot ecranul",
+      "exitFullscreen": "Ieși din modul pe tot ecranul",
+      "hideEditor": "Ascunde editorul",
+      "hideSidebar": "Ascunde bara laterală",
+      "showEditor": "Arată editorul",
+      "showSidebar": "Arată bara laterală"
+    },
+    "panels": {
+      "aiAgents": "Agenți AI",
+      "projectFiles": "Fișierele proiectului"
+    }
+  },
+  "editor": {
+    "noFileSelected": "Niciun fișier selectat"
+  },
+  "loading": "Se încarcă proiectul...",
+  "mobile": {
+    "actions": {
+      "install": "Instalează",
+      "installApp": "Instalează aplicația",
+      "share": "Împărtășește"
+    },
+    "menu": {
+      "currentSelection": "Selecția curentă",
+      "filesAvailableOffline_one": "Fișier disponibil offline",
+      "filesAvailableOffline_other": "Fișiere disponibile offline",
+      "filesPendingUpload_one": "Fișier în așteptare pentru încărcare",
+      "filesPendingUpload_other": "Fișiere în așteptare pentru încărcare",
+      "noAgentSelected": "Niciun agent selectat",
+      "noFileSelected": "Niciun fișier selectat",
+      "offlineMode": "Mod offline",
+      "online": "Online",
+      "status": "Stare"
+    },
+    "views": {
+      "agents": "Agenți",
+      "chat": "Chat",
+      "editor": "Editor",
+      "files": "Fișiere"
+    }
+  },
+  "noAgents": {
+    "description": "Ai nevoie de cel puțin un agent AI pentru a folosi acest proiect.",
+    "title": "Niciun agent AI disponibil"
+  },
+  "notFound": {
+    "description": "Proiectul pe care îl cauți nu există sau nu ai acces la el.",
+    "title": "Proiectul nu a fost găsit"
+  }
+}

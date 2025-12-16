@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Povratak na nadzornu ploču",
+  "dashboard": "Nadzorna ploča",
+  "desktop": {
+    "actions": {
+      "enterFullscreen": "Uđi u cijeli ekran",
+      "exitFullscreen": "Izađi iz cijelog ekrana",
+      "hideEditor": "Sakrij uređivač",
+      "hideSidebar": "Sakrij bočnu traku",
+      "showEditor": "Prikaži uređivač",
+      "showSidebar": "Prikaži bočnu traku"
+    },
+    "panels": {
+      "aiAgents": "AI Agenti",
+      "projectFiles": "Datoteke projekta"
+    }
+  },
+  "editor": {
+    "noFileSelected": "Nema odabrane datoteke"
+  },
+  "loading": "Učitavanje projekta...",
+  "mobile": {
+    "actions": {
+      "install": "Instaliraj",
+      "installApp": "Instaliraj aplikaciju",
+      "share": "Dijeli"
+    },
+    "menu": {
+      "currentSelection": "Trenutni odabir",
+      "filesAvailableOffline_one": "Datoteka dostupna izvan mreže",
+      "filesAvailableOffline_other": "Datoteke dostupne izvan mreže",
+      "filesPendingUpload_one": "Datoteka na čekanju za prijenos",
+      "filesPendingUpload_other": "Datoteke na čekanju za prijenos",
+      "noAgentSelected": "Nema odabranog agenta",
+      "noFileSelected": "Nema odabrane datoteke",
+      "offlineMode": "Offline način",
+      "online": "Online",
+      "status": "Status"
+    },
+    "views": {
+      "agents": "Agenti",
+      "chat": "Razgovor",
+      "editor": "Uređivač",
+      "files": "Datoteke"
+    }
+  },
+  "noAgents": {
+    "description": "Trebate najmanje jednog AI agenta za korištenje ovog projekta.",
+    "title": "Nema dostupnih AI agenata"
+  },
+  "notFound": {
+    "description": "Projekt koji tražite ne postoji ili nemate pristup njemu.",
+    "title": "Projekt nije pronađen"
+  }
+}

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { 
-  File, 
-  Folder, 
-  FolderOpen, 
-  Plus, 
-  Search, 
+import { useTranslation } from 'react-i18next'
+import {
+  File,
+  Folder,
+  FolderOpen,
+  Plus,
+  Search,
   Upload,
   Edit3,
   Trash2,
@@ -36,12 +37,13 @@ interface FileTreeItem {
   file?: FileType
 }
 
-export function FileExplorer({ 
-  projectId, 
-  selectedFileId, 
-  onFileSelect, 
-  className 
+export function FileExplorer({
+  projectId,
+  selectedFileId,
+  onFileSelect,
+  className
 }: FileExplorerProps) {
+  const { t } = useTranslation('files')
   const {
     getProjectFiles,
     fetchProjectFiles,
@@ -177,7 +179,7 @@ export function FileExplorer({
   }
 
   const handleDeleteFile = async (file: FileType) => {
-    if (confirm(`Are you sure you want to delete "${file.name}"? This action cannot be undone.`)) {
+    if (confirm(t('explorer.deleteConfirm', { name: file.name }))) {
       try {
         await deleteFile(file.id)
         setContextMenu(null)
@@ -295,7 +297,7 @@ export function FileExplorer({
     return (
       <div className={cn('flex flex-col h-full', className)}>
         <div className="p-4 border-b border-border">
-          <h2 className="text-lg font-semibold text-foreground">Files</h2>
+          <h2 className="text-lg font-semibold text-foreground">{t('explorer.title')}</h2>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <LoadingSpinner />
@@ -311,7 +313,7 @@ export function FileExplorer({
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
             <File className="w-5 h-5" />
-            Files
+            {t('explorer.title')}
           </h2>
           <div className="flex items-center gap-2">
             <Button
@@ -319,7 +321,7 @@ export function FileExplorer({
               variant="outline"
               onClick={() => setShowUploadDialog(true)}
               className="h-8 px-2"
-              title="Upload files from computer"
+              title={t('explorer.uploadTitle')}
             >
               <Upload className="w-4 h-4" />
             </Button>
@@ -327,7 +329,7 @@ export function FileExplorer({
               size="sm"
               onClick={() => setShowCreateDialog(true)}
               className="h-8 w-8 p-0"
-              title="Create new file"
+              title={t('explorer.createTitle')}
             >
               <Plus className="w-4 h-4" />
             </Button>
@@ -339,7 +341,7 @@ export function FileExplorer({
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             type="text"
-            placeholder="Search files..."
+            placeholder={t('explorer.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9 h-8"
@@ -355,7 +357,7 @@ export function FileExplorer({
               onClick={clearError}
               className="mt-1 h-6 text-xs"
             >
-              Dismiss
+              {t('explorer.dismiss')}
             </Button>
           </div>
         )}
@@ -367,13 +369,13 @@ export function FileExplorer({
           {files.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               <File className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p className="text-sm">No files in this project</p>
-              <p className="text-xs mt-1">Create your first file to get started</p>
+              <p className="text-sm">{t('explorer.empty.title')}</p>
+              <p className="text-xs mt-1">{t('explorer.empty.description')}</p>
             </div>
           ) : fileTree.length === 0 && searchQuery ? (
             <div className="text-center py-8 text-muted-foreground">
               <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
-              <p className="text-sm">No files match your search</p>
+              <p className="text-sm">{t('explorer.noResults')}</p>
             </div>
           ) : (
             <div className="space-y-1">
@@ -387,9 +389,9 @@ export function FileExplorer({
       {files.length > 0 && (
         <div className="p-4 border-t border-border">
           <div className="text-xs text-muted-foreground">
-            {files.length} file{files.length !== 1 ? 's' : ''}
+            {t('explorer.fileCount', { count: files.length })}
             {searchQuery && fileTree.length !== files.length && (
-              <span> • {fileTree.length} shown</span>
+              <span> • {t('explorer.shown', { count: fileTree.length })}</span>
             )}
           </div>
         </div>
@@ -410,24 +412,24 @@ export function FileExplorer({
             }}
           >
             <Edit3 className="w-3 h-3" />
-            Open
+            {t('explorer.contextMenu.open')}
           </button>
-          
+
           <button
             className="w-full px-3 py-1.5 text-left text-sm hover:bg-accent hover:text-accent-foreground flex items-center gap-2"
             onClick={() => handleCopyContent(contextMenu.file)}
           >
             <Copy className="w-3 h-3" />
-            Copy Content
+            {t('explorer.contextMenu.copyContent')}
           </button>
-          
+
           <div className="border-t border-border my-1" />
           <button
             className="w-full px-3 py-1.5 text-left text-sm hover:bg-destructive hover:text-destructive-foreground flex items-center gap-2 text-destructive"
             onClick={() => handleDeleteFile(contextMenu.file)}
           >
             <Trash2 className="w-3 h-3" />
-            Delete
+            {t('explorer.contextMenu.delete')}
           </button>
         </div>
       )}
@@ -437,7 +439,7 @@ export function FileExplorer({
         open={showCreateDialog}
         onClose={() => setShowCreateDialog(false)}
         onSubmit={handleCreateFile}
-        title="Create New File"
+        title={t('dialog.createTitle')}
       />
 
       {/* Upload File Dialog */}

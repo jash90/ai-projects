@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "createProject": "Project Aanmaken",
+    "newProject": "Nieuw Project"
+  },
+  "admin": {
+    "description": "Beheer gebruikers, tokenlimieten en systeemeinstellungen",
+    "title": "Beheerderspaneel"
+  },
+  "allProjects": {
+    "empty": {
+      "description": "Begin met het aanmaken van een nieuw project",
+      "title": "Nog geen projecten"
+    },
+    "title": "Alle Projecten",
+    "viewAll_one": "alleProjects.viewAll",
+    "viewAll_other": "alleProjects.viewAll"
+  },
+  "header": {
+    "subtitle": "Beheer je projecten en werk samen met AI-agenten",
+    "welcome": "Welkom terug, {{username}}"
+  },
+  "quickTip": {
+    "content": "Voeg bestanden toe aan je project om AI-agenten context te geven voor betere ondersteuning.",
+    "title": "Snelle Tip"
+  },
+  "recentProjects": {
+    "empty": {
+      "description": "Maak je eerste project aan om te beginnen met AI-samenwerking",
+      "title": "Geen recente projecten"
+    },
+    "mostRecent": "Meest Recent",
+    "title": "Recente Projecten"
+  },
+  "stats": {
+    "activeThisWeek": "Actief Deze Week",
+    "totalMessages": "Totaal Berichten",
+    "totalProjects": "Totaal Projecten",
+    "trackUsage": "Volg je AI-gebruik",
+    "usageStats": "Gebruik Statistieken",
+    "viewTokenUsage": "Bekijk tokengebruik"
+  },
+  "usagePage": {
+    "subtitle": "Bewaken van je tokengebruik en kosten bij verschillende AI-providers",
+    "title": "API Gebruik & Statistieken"
+  }
+}

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Save, RotateCcw, Maximize2, Minimize2 } from 'lucide-react'
 import { TextFile as FileType } from '@/types'
 import { useFiles } from '@/stores/fileStore'
@@ -21,6 +22,7 @@ declare global {
 }
 
 export function FileEditor({ file, className }: FileEditorProps) {
+  const { t } = useTranslation('files')
   const {
     updateFileContent,
     saveFileContent,
@@ -293,8 +295,8 @@ export function FileEditor({ file, className }: FileEditorProps) {
 
   const handleRevert = () => {
     if (!file || !editorRef.current) return
-    
-    if (confirm('Are you sure you want to revert all unsaved changes?')) {
+
+    if (confirm(t('editor.revertConfirm'))) {
       editorRef.current.setValue(lastSavedContent)
       updateFileContent(file.id, lastSavedContent)
       setHasUnsavedChanges(false)
@@ -324,8 +326,8 @@ export function FileEditor({ file, className }: FileEditorProps) {
         <div className="flex-1 flex items-center justify-center text-muted-foreground">
           <div className="text-center">
             <div className="text-6xl mb-4">📝</div>
-            <h3 className="text-lg font-medium mb-2">No file selected</h3>
-            <p className="text-sm">Select a file from the explorer to start editing</p>
+            <h3 className="text-lg font-medium mb-2">{t('editor.noFile.title')}</h3>
+            <p className="text-sm">{t('editor.noFile.description')}</p>
           </div>
         </div>
       </div>
@@ -343,7 +345,7 @@ export function FileEditor({ file, className }: FileEditorProps) {
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <LoadingSpinner className="w-8 h-8 mb-2" />
-            <p className="text-sm text-muted-foreground">Loading editor...</p>
+            <p className="text-sm text-muted-foreground">{t('editor.loading')}</p>
           </div>
         </div>
       </div>
@@ -364,7 +366,7 @@ export function FileEditor({ file, className }: FileEditorProps) {
           <div className="flex items-center gap-2">
             <h3 className="font-medium text-foreground truncate">{file.name}</h3>
             {hasUnsavedChanges && (
-              <div className="w-2 h-2 bg-orange-500 rounded-full" title="Unsaved changes" />
+              <div className="w-2 h-2 bg-orange-500 rounded-full" title={t('editor.unsavedChanges')} />
             )}
             {isSaving(file.id) && (
               <LoadingSpinner className="w-4 h-4" />
@@ -380,7 +382,7 @@ export function FileEditor({ file, className }: FileEditorProps) {
               className="h-8"
             >
               <RotateCcw className="w-4 h-4 mr-1" />
-              Revert
+              {t('editor.revert')}
             </Button>
 
             <Button
@@ -390,7 +392,7 @@ export function FileEditor({ file, className }: FileEditorProps) {
               className="h-8"
             >
               <Save className="w-4 h-4 mr-1" />
-              {isSaving(file.id) ? 'Saving...' : 'Save'}
+              {isSaving(file.id) ? t('editor.saving') : t('editor.save')}
             </Button>
 
             <Button
@@ -416,11 +418,11 @@ export function FileEditor({ file, className }: FileEditorProps) {
 
         {/* File Info */}
         <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-          <span>Type: {file.type}</span>
-          <span>Lines: {file.content.split('\n').length}</span>
-          <span>Characters: {file.content.length}</span>
+          <span>{t('editor.type', { type: file.type })}</span>
+          <span>{t('editor.lines', { count: file.content.split('\n').length })}</span>
+          <span>{t('editor.characters', { count: file.content.length })}</span>
           {hasUnsavedChanges && (
-            <span className="text-orange-600">• Unsaved changes</span>
+            <span className="text-orange-600">• {t('editor.unsavedChangesText')}</span>
           )}
         </div>
       </div>
@@ -447,7 +449,7 @@ export function FileEditor({ file, className }: FileEditorProps) {
             value={file?.content || ''}
             onChange={(e) => file && updateFileContent(file.id, e.target.value)}
             className="w-full h-full p-4 font-mono text-sm bg-background text-foreground border-0 resize-none focus:outline-none"
-            placeholder="Start typing..."
+            placeholder={t('editor.placeholder')}
           />
         )}
       </div>
@@ -456,12 +458,12 @@ export function FileEditor({ file, className }: FileEditorProps) {
       <div className="px-4 py-2 border-t border-border bg-muted/20">
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-4">
-            <span>Language: {getLanguageFromFileType(file.type, file.name)}</span>
-            <span>Auto-save: {hasUnsavedChanges ? 'Pending' : 'Up to date'}</span>
+            <span>{t('editor.language', { language: getLanguageFromFileType(file.type, file.name) })}</span>
+            <span>{hasUnsavedChanges ? t('editor.autoSave.pending') : t('editor.autoSave.upToDate')}</span>
           </div>
           <div className="flex items-center gap-4">
-            <span>Ctrl+S to save</span>
-            {isFullscreen && <span>Press Esc to exit fullscreen</span>}
+            <span>{t('editor.shortcuts.save')}</span>
+            {isFullscreen && <span>{t('editor.shortcuts.exitFullscreen')}</span>}
           </div>
         </div>
       </div>

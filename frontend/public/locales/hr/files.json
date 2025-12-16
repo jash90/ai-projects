@@ -1,0 +1,89 @@
+{
+  "dialog": {
+    "cancel": "Odustani",
+    "content": "Sadržaj",
+    "contentHint": "Možete urediti sadržaj nakon stvaranja datoteke.",
+    "contentPlaceholder": "Sadržaj datoteke...",
+    "create": "Stvori datoteku",
+    "createTitle": "Stvori novu datoteku",
+    "creating": "Stvaranje...",
+    "fileName": "Naziv datoteke",
+    "fileNamePlaceholder": "npr., main.js, README.md",
+    "fileNameRequired": "Naziv datoteke je obavezan",
+    "fileType": "Tip datoteke",
+    "fileTypeRequired": "Tip datoteke je obavezan"
+  },
+  "editor": {
+    "autoSave": {
+      "pending": "Automatsko spremanje: Na čekanju",
+      "upToDate": "Automatsko spremanje: Ažurirano"
+    },
+    "characters_one": "editor.znak",
+    "characters_other": "editor.znakova",
+    "language": "Jezik: {{language}}",
+    "lines_one": "editor.redak",
+    "lines_other": "editor.redaka",
+    "loading": "Učitavanje uređivača...",
+    "noFile": {
+      "description": "Odaberite datoteku iz istraživača za početak uređivanja",
+      "title": "Nema odabrane datoteke"
+    },
+    "placeholder": "Započnite s tipkanjem...",
+    "revert": "Poništi",
+    "revertConfirm": "Jeste li sigurni da želite poništiti sve nespremljene promjene?",
+    "save": "Spremi",
+    "saving": "Spremanje...",
+    "shortcuts": {
+      "exitFullscreen": "Pritisnite Esc za izlazak iz punog zaslona",
+      "save": "Ctrl+S za spremanje"
+    },
+    "type": "Tip: {{type}}",
+    "unsavedChanges": "Nespremljene promjene",
+    "unsavedChangesText": "Nespremljene promjene"
+  },
+  "explorer": {
+    "contextMenu": {
+      "copyContent": "Kopiraj sadržaj",
+      "delete": "Izbriši",
+      "open": "Otvori"
+    },
+    "createTitle": "Stvori novu datoteku",
+    "deleteConfirm": "Jeste li sigurni da želite izbrisati \"{{name}}\"? Ova radnja se ne može poništiti.",
+    "dismiss": "Odbaci",
+    "empty": {
+      "description": "Stvorite svoju prvu datoteku za početak",
+      "title": "Nema datoteka u ovom projektu"
+    },
+    "fileCount_one": "explorer.datoteka",
+    "fileCount_other": "{{count}} datoteke",
+    "noResults": "Nema datoteka koje odgovaraju vašoj pretrazi",
+    "searchPlaceholder": "Pretraži datoteke...",
+    "shown_one": "explorer.prikazana",
+    "shown_other": "explorer.prikazane",
+    "title": "Datoteke",
+    "uploadTitle": "Prenesi datoteke s računala"
+  },
+  "upload": {
+    "cancel": "Odustani",
+    "complete": "Prenos završen",
+    "description": "Prenesite datoteke s vašeg računala. Datoteke će biti pročitane i spremljene kao uređive tekstualne datoteke u projektu.",
+    "done": "Gotovo",
+    "dropzone": {
+      "active": "Ovdje ispustite datoteke",
+      "andMore_one": "upload.dropzone.andMore",
+      "andMore_other": "upload.dropzone.andMore",
+      "description": "Povucite i ispustite datoteke ovdje ili kliknite za odabir datoteka",
+      "maxSize": "Maksimalna veličina datoteke: {{size}}MB",
+      "supportedTypes": "Podržani tipovi: {{types}}",
+      "title": "Prenesite datoteke s vašeg računala"
+    },
+    "errors": {
+      "tooLarge": "Datoteka \"{{name}}\" je prevelika. Maksimalna veličina je {{maxSize}}MB.",
+      "unsupportedType": "Tip datoteke nije podržan. Dozvoljeni tipovi: {{types}}"
+    },
+    "success_one": "upload.success",
+    "success_other": "{{count}} datoteke uspješno prenesene!",
+    "title": "Prenesite datoteke u projekt",
+    "uploading": "Prenosim datoteke"
+  }
+}

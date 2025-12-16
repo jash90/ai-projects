@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "createProject": "Creează Proiect",
+    "newProject": "Proiect Nou"
+  },
+  "admin": {
+    "description": "Gestionează utilizatorii, limitele de token și setările sistemului",
+    "title": "Panou Admin"
+  },
+  "allProjects": {
+    "empty": {
+      "description": "Începe prin a crea un proiect nou",
+      "title": "Încă nu sunt proiecte"
+    },
+    "title": "Toate Proiectele",
+    "viewAll_one": "vezi toate proiectele",
+    "viewAll_other": "vezi toate proiectele"
+  },
+  "header": {
+    "subtitle": "Gestionează-ți proiectele și colaborează cu agenți AI",
+    "welcome": "Bine ai revenit, {{username}}"
+  },
+  "quickTip": {
+    "content": "Adaugă fișiere la proiectul tău pentru a oferi agenților AI context pentru o asistență mai bună.",
+    "title": "Sfat Rapid"
+  },
+  "recentProjects": {
+    "empty": {
+      "description": "Creează-ți primul proiect pentru a începe colaborarea cu AI",
+      "title": "Nu sunt proiecte recente"
+    },
+    "mostRecent": "Cele Mai Recente",
+    "title": "Proiecte Recente"
+  },
+  "stats": {
+    "activeThisWeek": "Activ în Această Săptămână",
+    "totalMessages": "Mesaje Totale",
+    "totalProjects": "Proiecte Totale",
+    "trackUsage": "Urmărește utilizarea AI",
+    "usageStats": "Statistici de Utilizare",
+    "viewTokenUsage": "Vezi utilizarea token-urilor"
+  },
+  "usagePage": {
+    "subtitle": "Monitorizează utilizarea și costurile token-urilor tale în diferite servicii AI",
+    "title": "Utilizarea API & Statistici"
+  }
+}

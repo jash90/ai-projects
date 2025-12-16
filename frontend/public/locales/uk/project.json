@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Назад до панелі керування",
+  "dashboard": "Панель керування",
+  "desktop": {
+    "actions": {
+      "enterFullscreen": "Увійти в повноекранний режим",
+      "exitFullscreen": "Вийти з повноекранного режиму",
+      "hideEditor": "Сховати редактор",
+      "hideSidebar": "Сховати бокову панель",
+      "showEditor": "Показати редактор",
+      "showSidebar": "Показати бокову панель"
+    },
+    "panels": {
+      "aiAgents": "AI агенти",
+      "projectFiles": "Файли проєкту"
+    }
+  },
+  "editor": {
+    "noFileSelected": "Файл не вибрано"
+  },
+  "loading": "Завантаження проєкту...",
+  "mobile": {
+    "actions": {
+      "install": "Встановити",
+      "installApp": "Встановити додаток",
+      "share": "Поділитися"
+    },
+    "menu": {
+      "currentSelection": "Поточний вибір",
+      "filesAvailableOffline_one": "Файл доступний офлайн",
+      "filesAvailableOffline_other": "Файли доступні офлайн",
+      "filesPendingUpload_one": "Файл, що чекає на завантаження",
+      "filesPendingUpload_other": "Файли, що чекають на завантаження",
+      "noAgentSelected": "Агент не вибрано",
+      "noFileSelected": "Файл не вибрано",
+      "offlineMode": "Офлайн режим",
+      "online": "Онлайн",
+      "status": "Статус"
+    },
+    "views": {
+      "agents": "Агенти",
+      "chat": "Чат",
+      "editor": "Редактор",
+      "files": "Файли"
+    }
+  },
+  "noAgents": {
+    "description": "Вам потрібен принаймні один AI агент для використання цього проєкту.",
+    "title": "AI агенти недоступні"
+  },
+  "notFound": {
+    "description": "Проєкт, який ви шукаєте, не існує або у вас немає доступу до нього.",
+    "title": "Проєкт не знайдено"
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "preferences": {
+    "appearance": {
+      "dark": "Oscuro",
+      "description": "Personaliza cómo se ven los Proyectos de IA en tu dispositivo",
+      "light": "Claro",
+      "system": "Sistema",
+      "theme": "Tema",
+      "title": "Apariencia"
+    },
+    "notifications": {
+      "description": "Elige qué notificaciones deseas recibir",
+      "email": {
+        "description": "Recibe actualizaciones por correo electrónico sobre tu cuenta y uso",
+        "title": "Notificaciones por Correo Electrónico"
+      },
+      "push": {
+        "description": "Recibe notificaciones sobre actualizaciones de proyectos y alertas del sistema",
+        "title": "Notificaciones Push"
+      },
+      "title": "Notificaciones"
+    },
+    "updateError": "Error al actualizar preferencias",
+    "updateSuccess": "Preferencias actualizadas con éxito"
+  },
+  "profile": {
+    "description": "Actualiza tus datos personales y dirección de correo electrónico",
+    "email": "Correo Electrónico",
+    "reset": "Restablecer",
+    "role": {
+      "admin": "Administrador",
+      "user": "Usuario"
+    },
+    "saveChanges": "Guardar Cambios",
+    "title": "Información del Perfil",
+    "updateError": "Error al actualizar el perfil",
+    "updateSuccess": "Perfil actualizado con éxito",
+    "username": "Nombre de Usuario"
+  },
+  "security": {
+    "clear": "Limpiar",
+    "confirmPassword": "Confirmar Nueva Contraseña",
+    "currentPassword": "Contraseña Actual",
+    "description": "Actualiza tu contraseña para mantener tu cuenta segura",
+    "newPassword": "Nueva Contraseña",
+    "passwordMismatch": "Las nuevas contraseñas no coinciden",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden",
+    "passwordTooShort": "La nueva contraseña debe tener al menos 6 caracteres",
+    "title": "Cambiar Contraseña",
+    "updateError": "Error al actualizar la contraseña",
+    "updatePassword": "Actualizar Contraseña",
+    "updateSuccess": "Contraseña actualizada con éxito"
+  },
+  "subtitle": "Gestiona tus preferencias de cuenta y configuraciones de aplicación",
+  "tabs": {
+    "preferences": "Preferencias",
+    "profile": "Perfil",
+    "security": "Seguridad",
+    "usage": "Uso"
+  },
+  "title": "Configuraciones",
+  "usage": {
+    "account": {
+      "description": "Los detalles y límites de tu cuenta",
+      "globalLimit": "Límite Global",
+      "monthlyLimit": "Límite Mensual",
+      "projects": "Proyectos",
+      "role": "Rol",
+      "title": "Información de la Cuenta"
+    },
+    "stats": {
+      "description": "Monitorea tu uso de tokens y costos",
+      "loading": "Cargando estadísticas de uso...",
+      "monthlyCost": "Costo mensual",
+      "monthlyUsage": "Uso mensual",
+      "percentUsed": "{{percent}}% utilizado",
+      "thisMonth": "Este mes",
+      "title": "Estadísticas de uso",
+      "totalCost": "Costo total",
+      "totalTokens": "Tokens totales",
+      "totalUsage": "Uso total"
+    }
+  }
+}

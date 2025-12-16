@@ -1,0 +1,84 @@
+{
+  "preferences": {
+    "appearance": {
+      "dark": "Tumma",
+      "description": "Mukauta, miltä AI-projektit näyttävät laitteellasi",
+      "light": "Vaalea",
+      "system": "Järjestelmä",
+      "theme": "Teema",
+      "title": "Ulkoasu"
+    },
+    "notifications": {
+      "description": "Valitse, mitä ilmoituksia haluat vastaanottaa",
+      "email": {
+        "description": "Vastaanota sähköpostipäivityksiä tilistäsi ja käytöstäsi",
+        "title": "Sähköposti-ilmoitukset"
+      },
+      "push": {
+        "description": "Vastaanota ilmoituksia projektipäivityksistä ja järjestelmävaroituksista",
+        "title": "Push-ilmoitukset"
+      },
+      "title": "Ilmoitukset"
+    },
+    "updateError": "Asetusten päivittäminen epäonnistui",
+    "updateSuccess": "Asetukset päivitettiin onnistuneesti"
+  },
+  "profile": {
+    "description": "Päivitä henkilökohtaiset tietosi ja sähköpostiosoitteesi",
+    "email": "Sähköposti",
+    "reset": "Nollaa",
+    "role": {
+      "admin": "Ylläpitäjä",
+      "user": "Käyttäjä"
+    },
+    "saveChanges": "Tallenna muutokset",
+    "title": "Profiilitiedot",
+    "updateError": "Profiilin päivittäminen epäonnistui",
+    "updateSuccess": "Profiili päivitettiin onnistuneesti",
+    "username": "Käyttäjänimi"
+  },
+  "security": {
+    "clear": "Tyhjennä",
+    "confirmPassword": "Vahvista uusi salasana",
+    "currentPassword": "Nykyinen salasana",
+    "description": "Päivitä salasana pitääksesi tilisi turvassa",
+    "newPassword": "Uusi salasana",
+    "passwordMismatch": "Uudet salasanat eivät täsmää",
+    "passwordsDoNotMatch": "Salasanat eivät täsmää",
+    "passwordTooShort": "Uuden salasanan on oltava vähintään 6 merkkiä",
+    "title": "Vaihda salasana",
+    "updateError": "Salasanan päivittäminen epäonnistui",
+    "updatePassword": "Päivitä salasana",
+    "updateSuccess": "Salasana päivitettiin onnistuneesti"
+  },
+  "subtitle": "Hallitse tilisi asetuksia ja sovelluksen asetuksia",
+  "tabs": {
+    "preferences": "Asetukset",
+    "profile": "Profiili",
+    "security": "Turvallisuus",
+    "usage": "Käyttö"
+  },
+  "title": "Asetukset",
+  "usage": {
+    "account": {
+      "description": "Tilisi tiedot ja rajat",
+      "globalLimit": "Globaaliraja",
+      "monthlyLimit": "Kuukausiraja",
+      "projects": "Projektit",
+      "role": "Rooli",
+      "title": "Tilin tiedot"
+    },
+    "stats": {
+      "description": "Seuraa tokenin käyttöäsi ja kustannuksia",
+      "loading": "Ladataan käyttötilastoja...",
+      "monthlyCost": "Kuukausikustannus",
+      "monthlyUsage": "Kuukausikäyttö",
+      "percentUsed": "{{percent}}% käytetty",
+      "thisMonth": "Tämä kuukausi",
+      "title": "Käyttötilastot",
+      "totalCost": "Kokonaiskustannus",
+      "totalTokens": "Kokonaismerkinnät",
+      "totalUsage": "Kokonaiskäyttö"
+    }
+  }
+}

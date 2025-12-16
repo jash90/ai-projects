@@ -1,0 +1,75 @@
+{
+  "agentNotFound": {
+    "description": "Vennligst velg en agent for å starte chatting",
+    "title": "Agent ikke funnet"
+  },
+  "clearConfirm": "Er du sikker på at du vil slette denne samtalen? Denne handlingen kan ikke angres.",
+  "emptyState": {
+    "description": "Send en melding for å begynne å chatte med {{agentName}}",
+    "filesHint": "Denne agenten kan få tilgang til prosjektfilene dine for kontekst",
+    "title": "Start en samtale"
+  },
+  "errors": {
+    "cannotSend": "Kan ikke sende melding. Vennligst sjekk kontostatusen din.",
+    "createFailed": "Kunne ikke opprette samtale",
+    "deleteFailed": "Kunne ikke slette samtale",
+    "loadFailed": "Kunne ikke laste samtaler",
+    "sendFailed": "Kunne ikke sende melding. Vennligst prøv igjen.",
+    "tokenLimitExceeded": "Token-grense overskredet. Kan ikke sende melding."
+  },
+  "header": {
+    "clearConversation": "Slett samtale",
+    "connected": "Koblet til",
+    "disconnected": "Frakoblet",
+    "files": "Filer",
+    "moreOptions": "Flere alternativer",
+    "toggleSidebar": "Bytt sidepanel"
+  },
+  "input": {
+    "attachFile": "Legg ved fil",
+    "attachFiles": "Legg ved filer (bilder, PDF)",
+    "characters_one": "input.characters",
+    "characters_other": "input.characters",
+    "fileTooLarge": "Fil for stor: {{name}}. Maks størrelse: {{maxSize}}MB",
+    "maxFilesError_one": "input.maxFilesError",
+    "maxFilesError_other": "input.maxFilesError",
+    "placeholder": "Skriv meldingen din...",
+    "send": "Send",
+    "sendMessage": "Send melding",
+    "startTyping": "Begynn å skrive...",
+    "unsupportedFileType": "Ikke støttet filtype: {{type}}. Støttede: bilder, PDF"
+  },
+  "limits": {
+    "global": "Global grense",
+    "monthly": "Månedlig grense",
+    "remaining_one": "limits.remaining",
+    "remaining_other": "limits.remaining"
+  },
+  "message": {
+    "error": "Feil",
+    "you": "Du"
+  },
+  "placeholder": "Melding {{agentName}}...",
+  "selectAgent": {
+    "description": "Velg en AI-agent fra sidepanelet for å starte en samtale. Hver agent har forskjellige evner og modeller.",
+    "title": "Velg en agent"
+  },
+  "streaming": {
+    "disable": "Deaktiver strømme-responser",
+    "enable": "Aktiver strømme-responser",
+    "regular": "Vanlig",
+    "streaming": "Strømmer"
+  },
+  "thinking": "{{agentName}} tenker...",
+  "threads": {
+    "deleteConfirm": "Er du sikker på at du vil slette denne samtalen?",
+    "deleteConversation": "Slett samtale",
+    "messageCount_one": "{{count}} melding",
+    "messageCount_other": "{{count}} meldinger",
+    "newConversation": "Ny samtale",
+    "newThread": "Ny samtale",
+    "noConversations": "Ingen samtaler ennå",
+    "startNew": "Start en ny samtale",
+    "title": "Samtaler"
+  }
+}

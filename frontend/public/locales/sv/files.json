@@ -1,0 +1,89 @@
+{
+  "dialog": {
+    "cancel": "Avbryt",
+    "content": "Innehåll",
+    "contentHint": "Du kan redigera innehållet efter att du har skapat filen.",
+    "contentPlaceholder": "Filinnehåll...",
+    "create": "Skapa fil",
+    "createTitle": "Skapa ny fil",
+    "creating": "Skapar...",
+    "fileName": "Filnamn",
+    "fileNamePlaceholder": "t.ex. main.js, README.md",
+    "fileNameRequired": "Filnamn krävs",
+    "fileType": "Filtyp",
+    "fileTypeRequired": "Filtyp krävs"
+  },
+  "editor": {
+    "autoSave": {
+      "pending": "Automatisk sparande: Väntar",
+      "upToDate": "Automatisk sparande: Uppdaterad"
+    },
+    "characters_one": "tecken",
+    "characters_other": "tecken",
+    "language": "Språk: {{language}}",
+    "lines_one": "rad",
+    "lines_other": "rader",
+    "loading": "Laddar redigeraren...",
+    "noFile": {
+      "description": "Välj en fil från utforskaren för att börja redigera",
+      "title": "Ingen fil vald"
+    },
+    "placeholder": "Börja skriva...",
+    "revert": "Ångra",
+    "revertConfirm": "Är du säker på att du vill ångra alla osparade ändringar?",
+    "save": "Spara",
+    "saving": "Sparar...",
+    "shortcuts": {
+      "exitFullscreen": "Tryck på Esc för att avsluta helskärm",
+      "save": "Ctrl+S för att spara"
+    },
+    "type": "Typ: {{type}}",
+    "unsavedChanges": "Osparade ändringar",
+    "unsavedChangesText": "Osparade ändringar"
+  },
+  "explorer": {
+    "contextMenu": {
+      "copyContent": "Kopiera innehåll",
+      "delete": "Ta bort",
+      "open": "Öppna"
+    },
+    "createTitle": "Skapa ny fil",
+    "deleteConfirm": "Är du säker på att du vill ta bort \"{{name}}\"? Denna åtgärd kan inte ångras.",
+    "dismiss": "Avvisa",
+    "empty": {
+      "description": "Skapa din första fil för att komma igång",
+      "title": "Inga filer i detta projekt"
+    },
+    "fileCount_one": "1 fil",
+    "fileCount_other": "{{count}} filer",
+    "noResults": "Inga filer matchar din sökning",
+    "searchPlaceholder": "Sök filer...",
+    "shown_one": "visad",
+    "shown_other": "visade",
+    "title": "Filer",
+    "uploadTitle": "Ladda upp filer från datorn"
+  },
+  "upload": {
+    "cancel": "Avbryt",
+    "complete": "Uppladdning slutförd",
+    "description": "Ladda upp filer från din dator. Filerna kommer att läsas och sparas som redigerbara textfiler i projektet.",
+    "done": "Klart",
+    "dropzone": {
+      "active": "Släpp filer här",
+      "andMore_one": "ladda upp fler filer",
+      "andMore_other": "ladda upp fler filer",
+      "description": "Dra och släpp filer här, eller klicka för att välja filer",
+      "maxSize": "Maximal filstorlek: {{size}}MB",
+      "supportedTypes": "Stödda typer: {{types}}",
+      "title": "Ladda upp filer från din dator"
+    },
+    "errors": {
+      "tooLarge": "Fil \"{{name}}\" är för stor. Maximal storlek är {{maxSize}}MB.",
+      "unsupportedType": "Filtyp stöds inte. Tillåtna typer: {{types}}"
+    },
+    "success_one": "Filen har laddats upp",
+    "success_other": "{{count}} filer har laddats upp framgångsrikt!",
+    "title": "Ladda upp filer till projektet",
+    "uploading": "Laddar upp filer"
+  }
+}

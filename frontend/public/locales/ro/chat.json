@@ -1,0 +1,75 @@
+{
+  "agentNotFound": {
+    "description": "Vă rugăm să selectați un agent pentru a începe conversația",
+    "title": "Agent necunoscut"
+  },
+  "clearConfirm": "Sunteți sigur că doriți să ștergeți această conversație? Această acțiune nu poate fi anulată.",
+  "emptyState": {
+    "description": "Trimiteți un mesaj pentru a începe conversația cu {{agentName}}",
+    "filesHint": "Acest agent poate accesa fișierele proiectului dvs. pentru context",
+    "title": "Începeți o conversație"
+  },
+  "errors": {
+    "cannotSend": "Nu se poate trimite mesajul. Vă rugăm să verificați starea contului dvs.",
+    "createFailed": "Crearea conversației a eșuat",
+    "deleteFailed": "Ștergerea conversației a eșuat",
+    "loadFailed": "Încărcarea conversațiilor a eșuat",
+    "sendFailed": "Trimiterea mesajului a eșuat. Vă rugăm să încercați din nou.",
+    "tokenLimitExceeded": "Limita de tokenuri a fost depășită. Nu se poate trimite mesajul."
+  },
+  "header": {
+    "clearConversation": "Șterge conversația",
+    "connected": "Conectat",
+    "disconnected": "Dezconectat",
+    "files": "Fișiere",
+    "moreOptions": "Mai multe opțiuni",
+    "toggleSidebar": "Comută bara laterală"
+  },
+  "input": {
+    "attachFile": "Atașați fișier",
+    "attachFiles": "Atașați fișiere (imagini, PDF)",
+    "characters_one": "input.characters",
+    "characters_other": "input.characters",
+    "fileTooLarge": "Fișier prea mare: {{name}}. Dimensiune maximă: {{maxSize}}MB",
+    "maxFilesError_one": "input.maxFilesError",
+    "maxFilesError_other": "input.maxFilesError",
+    "placeholder": "Scrieți mesajul dvs....",
+    "send": "Trimite",
+    "sendMessage": "Trimite mesaj",
+    "startTyping": "Începeți să tastați...",
+    "unsupportedFileType": "Tip de fișier nesuportat: {{type}}. Suportat: imagini, PDF"
+  },
+  "limits": {
+    "global": "Limită globală",
+    "monthly": "Limită lunară",
+    "remaining_one": "limits.remaining",
+    "remaining_other": "limits.remaining"
+  },
+  "message": {
+    "error": "Eroare",
+    "you": "Tu"
+  },
+  "placeholder": "Mesaj {{agentName}}...",
+  "selectAgent": {
+    "description": "Alegeți un agent AI din bara laterală pentru a începe o conversație. Fiecare agent are capacități și modele diferite.",
+    "title": "Selectați un agent"
+  },
+  "streaming": {
+    "disable": "Dezactivează răspunsurile în flux",
+    "enable": "Activează răspunsurile în flux",
+    "regular": "Regulat",
+    "streaming": "Streaming"
+  },
+  "thinking": "{{agentName}} se gândește...",
+  "threads": {
+    "deleteConfirm": "Sunteți sigur că doriți să ștergeți această conversație?",
+    "deleteConversation": "Șterge conversația",
+    "messageCount_one": "{{count}} mesaj",
+    "messageCount_other": "{{count}} mesaje",
+    "newConversation": "Conversație nouă",
+    "newThread": "Conversație nouă",
+    "noConversations": "Nu există conversații încă",
+    "startNew": "Începe o conversație nouă",
+    "title": "Conversații"
+  }
+}

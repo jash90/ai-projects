@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Takaisin kojelaudalle",
+  "dashboard": "Kojelauta",
+  "desktop": {
+    "actions": {
+      "enterFullscreen": "Siirry koko näyttöön",
+      "exitFullscreen": "Poistu koko näytöstä",
+      "hideEditor": "Piilota editori",
+      "hideSidebar": "Piilota sivupalkki",
+      "showEditor": "Näytä editori",
+      "showSidebar": "Näytä sivupalkki"
+    },
+    "panels": {
+      "aiAgents": "AI-agentit",
+      "projectFiles": "Projektitiedostot"
+    }
+  },
+  "editor": {
+    "noFileSelected": "Ei tiedostoa valittuna"
+  },
+  "loading": "Ladataan projektia...",
+  "mobile": {
+    "actions": {
+      "install": "Asenna",
+      "installApp": "Asenna sovellus",
+      "share": "Jaa"
+    },
+    "menu": {
+      "currentSelection": "Nykyinen valinta",
+      "filesAvailableOffline_one": "Tiedosto saatavilla offline-tilassa",
+      "filesAvailableOffline_other": "Tiedostot saatavilla offline-tilassa",
+      "filesPendingUpload_one": "Tiedosto odottaa latausta",
+      "filesPendingUpload_other": "Tiedostot odottavat latausta",
+      "noAgentSelected": "Ei agenttia valittuna",
+      "noFileSelected": "Ei tiedostoa valittuna",
+      "offlineMode": "Offline-tila",
+      "online": "Verkossa",
+      "status": "Tila"
+    },
+    "views": {
+      "agents": "Agentit",
+      "chat": "Keskustelu",
+      "editor": "Editori",
+      "files": "Tiedostot"
+    }
+  },
+  "noAgents": {
+    "description": "Tarvitset vähintään yhden AI-agentin käyttääksesi tätä projektia.",
+    "title": "Ei AI-agenteja saatavilla"
+  },
+  "notFound": {
+    "description": "Etsimääsi projektia ei ole olemassa tai sinulla ei ole pääsyä siihen.",
+    "title": "Projektia ei löytynyt"
+  }
+}

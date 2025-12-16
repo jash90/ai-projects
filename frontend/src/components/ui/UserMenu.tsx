@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { User, LogOut, Shield, Settings } from 'lucide-react'
 import { useAuth } from '@/stores/authStore'
@@ -9,6 +10,7 @@ interface UserMenuProps {
 }
 
 export function UserMenu({ className = '', showAdminLink = true }: UserMenuProps) {
+  const { t } = useTranslation('common')
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [showMenu, setShowMenu] = useState(false)
@@ -54,7 +56,7 @@ export function UserMenu({ className = '', showAdminLink = true }: UserMenuProps
             <p className="text-xs text-muted-foreground">{user.email}</p>
             {user.role === 'admin' && (
               <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 mt-1">
-                Admin
+                {t('userMenu.admin')}
               </span>
             )}
           </div>
@@ -65,7 +67,7 @@ export function UserMenu({ className = '', showAdminLink = true }: UserMenuProps
             onClick={() => setShowMenu(false)}
           >
             <Settings className="w-4 h-4" />
-            Settings
+            {t('userMenu.settings')}
           </Link>
           
           {user.role === 'admin' && showAdminLink && (
@@ -75,7 +77,7 @@ export function UserMenu({ className = '', showAdminLink = true }: UserMenuProps
               onClick={() => setShowMenu(false)}
             >
               <Shield className="w-4 h-4" />
-              Admin Panel
+              {t('userMenu.adminPanel')}
             </Link>
           )}
           
@@ -89,7 +91,7 @@ export function UserMenu({ className = '', showAdminLink = true }: UserMenuProps
             className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors w-full text-left"
           >
             <LogOut className="w-4 h-4" />
-            Logout
+            {t('userMenu.logout')}
           </button>
         </div>
       )}

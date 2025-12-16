@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   ArrowLeft,
@@ -38,6 +39,7 @@ import { cn } from '@/lib/utils'
 type MobileView = 'chat' | 'agents' | 'files' | 'editor'
 
 function ProjectPage() {
+  const { t } = useTranslation('project')
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
   const isMobile = useIsMobile()
@@ -167,7 +169,7 @@ function ProjectPage() {
           <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
             <LoadingSpinner className="w-8 h-8" />
           </div>
-          <p className="text-muted-foreground">Loading project...</p>
+          <p className="text-muted-foreground">{t('loading')}</p>
         </div>
       </div>
     )
@@ -181,12 +183,12 @@ function ProjectPage() {
             <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-destructive/10 flex items-center justify-center">
               <FolderOpen className="w-8 h-8 text-destructive" />
             </div>
-            <h2 className="text-xl font-semibold text-foreground mb-2">Project not found</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-2">{t('notFound.title')}</h2>
             <p className="text-muted-foreground mb-6">
-              The project you're looking for doesn't exist or you don't have access to it.
+              {t('notFound.description')}
             </p>
             <Button onClick={() => navigate('/dashboard')} variant="gradient" leftIcon={<ArrowLeft className="w-4 h-4" />}>
-              Back to Dashboard
+              {t('backToDashboard')}
             </Button>
           </CardContent>
         </Card>
@@ -202,12 +204,12 @@ function ProjectPage() {
             <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-warning/10 flex items-center justify-center">
               <Bot className="w-8 h-8 text-warning" />
             </div>
-            <h2 className="text-xl font-semibold text-foreground mb-2">No AI agents available</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-2">{t('noAgents.title')}</h2>
             <p className="text-muted-foreground mb-6">
-              You need at least one AI agent to use this project.
+              {t('noAgents.description')}
             </p>
             <Button onClick={() => navigate('/dashboard')} variant="gradient" leftIcon={<ArrowLeft className="w-4 h-4" />}>
-              Back to Dashboard
+              {t('backToDashboard')}
             </Button>
           </CardContent>
         </Card>
@@ -248,7 +250,7 @@ function ProjectPage() {
             {isOffline && (
               <Badge variant="warning" size="sm" className="gap-1">
                 <WifiOff className="w-3 h-3" />
-                <span className="hidden xs:inline">Offline</span>
+                <span className="hidden xs:inline">{t('mobile.menu.offlineMode')}</span>
               </Badge>
             )}
 
@@ -266,7 +268,7 @@ function ProjectPage() {
                 size="sm"
                 onClick={handleInstallApp}
                 className="h-8 w-8 p-0"
-                title="Install App"
+                title={t('mobile.actions.installApp')}
               >
                 <Download className="w-4 h-4" />
               </Button>
@@ -289,7 +291,7 @@ function ProjectPage() {
               size="sm"
               onClick={toggleFullscreen}
               className="h-8 w-8 p-0"
-              title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+              title={isFullscreen ? t('desktop.actions.exitFullscreen') : t('desktop.actions.enterFullscreen')}
             >
               {isFullscreen ? (
                 <Minimize2 className="w-4 h-4" />
@@ -335,7 +337,7 @@ function ProjectPage() {
                 className="flex items-center gap-2"
               >
                 <MessageSquare className="w-4 h-4" />
-                Chat
+                {t('mobile.views.chat')}
               </Button>
 
               <Button
@@ -345,7 +347,7 @@ function ProjectPage() {
                 className="flex items-center gap-2"
               >
                 <Bot className="w-4 h-4" />
-                Agents
+                {t('mobile.views.agents')}
               </Button>
 
               <Button
@@ -355,7 +357,7 @@ function ProjectPage() {
                 className="flex items-center gap-2"
               >
                 <FileText className="w-4 h-4" />
-                Files
+                {t('mobile.views.files')}
               </Button>
 
               <Button
@@ -366,51 +368,51 @@ function ProjectPage() {
                 disabled={!selectedFile}
               >
                 <Code className="w-4 h-4" />
-                Editor
+                {t('mobile.views.editor')}
               </Button>
             </div>
 
             {/* Connection Status */}
             <div className="p-3 rounded-xl bg-muted/30 space-y-2">
-              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</div>
+              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('mobile.menu.status')}</div>
               <div className="flex items-center gap-2">
                 {isOffline ? (
                   <Badge variant="warning" size="sm" dot>
                     <WifiOff className="w-3 h-3 mr-1" />
-                    Offline Mode
+                    {t('mobile.menu.offlineMode')}
                   </Badge>
                 ) : (
                   <Badge variant="success" size="sm" dot>
                     <Wifi className="w-3 h-3 mr-1" />
-                    Online
+                    {t('mobile.menu.online')}
                   </Badge>
                 )}
               </div>
 
               {hasOfflineFiles && (
                 <p className="text-xs text-muted-foreground">
-                  {offlineFiles.size} files available offline
+                  {t('mobile.menu.filesAvailableOffline', { count: offlineFiles.size })}
                 </p>
               )}
 
               {hasPendingUploads && (
                 <div className="flex items-center gap-2 text-xs text-info">
                   <Upload className="w-3 h-3" />
-                  <span>{pendingUploads.length} files pending upload</span>
+                  <span>{t('mobile.menu.filesPendingUpload', { count: pendingUploads.length })}</span>
                 </div>
               )}
             </div>
 
             {/* Current Selections */}
             <div className="p-3 rounded-xl bg-muted/30 space-y-2">
-              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Current Selection</div>
+              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t('mobile.menu.currentSelection')}</div>
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-sm">
                   <div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center">
                     <Bot className="w-3 h-3 text-primary" />
                   </div>
                   <span className="text-foreground truncate">
-                    {selectedAgent?.name || 'No agent selected'}
+                    {selectedAgent?.name || t('mobile.menu.noAgentSelected')}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
@@ -418,7 +420,7 @@ function ProjectPage() {
                     <FileText className="w-3 h-3 text-accent-foreground" />
                   </div>
                   <span className="text-foreground truncate">
-                    {selectedFile?.name || 'No file selected'}
+                    {selectedFile?.name || t('mobile.menu.noFileSelected')}
                   </span>
                 </div>
               </div>
@@ -433,7 +435,7 @@ function ProjectPage() {
                 className="flex-1"
                 leftIcon={<Share className="w-3 h-3" />}
               >
-                Share
+                {t('mobile.actions.share')}
               </Button>
 
               {canInstall && !isInstalled && (
@@ -444,7 +446,7 @@ function ProjectPage() {
                   className="flex-1"
                   leftIcon={<Download className="w-3 h-3" />}
                 >
-                  Install
+                  {t('mobile.actions.install')}
                 </Button>
               )}
             </div>
@@ -505,7 +507,7 @@ function ProjectPage() {
               )}
             >
               <MessageSquare className="w-5 h-5" />
-              <span className="text-[10px] font-medium">Chat</span>
+              <span className="text-[10px] font-medium">{t('mobile.views.chat')}</span>
             </button>
 
             <button
@@ -518,7 +520,7 @@ function ProjectPage() {
               )}
             >
               <Bot className="w-5 h-5" />
-              <span className="text-[10px] font-medium">Agents</span>
+              <span className="text-[10px] font-medium">{t('mobile.views.agents')}</span>
             </button>
 
             <button
@@ -531,7 +533,7 @@ function ProjectPage() {
               )}
             >
               <FileText className="w-5 h-5" />
-              <span className="text-[10px] font-medium">Files</span>
+              <span className="text-[10px] font-medium">{t('mobile.views.files')}</span>
             </button>
 
             <button
@@ -546,7 +548,7 @@ function ProjectPage() {
               )}
             >
               <Code className="w-5 h-5" />
-              <span className="text-[10px] font-medium">Editor</span>
+              <span className="text-[10px] font-medium">{t('mobile.views.editor')}</span>
             </button>
           </div>
         </div>
@@ -566,7 +568,7 @@ function ProjectPage() {
           className="flex items-center gap-2"
           leftIcon={<ArrowLeft className="w-4 h-4" />}
         >
-          Dashboard
+          {t('dashboard')}
         </Button>
 
         <div className="h-6 w-px bg-border" />
@@ -615,7 +617,7 @@ function ProjectPage() {
             size="sm"
             onClick={() => setLeftPanelCollapsed(!leftPanelCollapsed)}
             className="hidden md:flex h-8 w-8 p-0"
-            title={leftPanelCollapsed ? "Show Sidebar" : "Hide Sidebar"}
+            title={leftPanelCollapsed ? t('desktop.actions.showSidebar') : t('desktop.actions.hideSidebar')}
           >
             {leftPanelCollapsed ? (
               <PanelLeftOpen className="w-4 h-4" />
@@ -629,7 +631,7 @@ function ProjectPage() {
             size="sm"
             onClick={() => setRightPanelCollapsed(!rightPanelCollapsed)}
             className="hidden lg:flex h-8 w-8 p-0"
-            title={rightPanelCollapsed ? "Show Editor" : "Hide Editor"}
+            title={rightPanelCollapsed ? t('desktop.actions.showEditor') : t('desktop.actions.hideEditor')}
           >
             {rightPanelCollapsed ? (
               <Code className="w-4 h-4" />
@@ -655,7 +657,7 @@ function ProjectPage() {
               <div className="px-4 py-3 border-b border-border/50 bg-muted/30">
                 <div className="flex items-center gap-2">
                   <Bot className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-medium text-foreground">AI Agents</span>
+                  <span className="text-sm font-medium text-foreground">{t('desktop.panels.aiAgents')}</span>
                 </div>
               </div>
               <AgentPanel
@@ -672,7 +674,7 @@ function ProjectPage() {
               <div className="px-4 py-3 border-b border-border/50 bg-muted/30">
                 <div className="flex items-center gap-2">
                   <FolderOpen className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-medium text-foreground">Project Files</span>
+                  <span className="text-sm font-medium text-foreground">{t('desktop.panels.projectFiles')}</span>
                 </div>
               </div>
               <FileExplorer
@@ -706,7 +708,7 @@ function ProjectPage() {
                 <div className="flex items-center gap-2 min-w-0">
                   <Code className="w-4 h-4 text-primary shrink-0" />
                   <span className="text-sm font-medium text-foreground truncate">
-                    {selectedFile?.name || 'No file selected'}
+                    {selectedFile?.name || t('editor.noFileSelected')}
                   </span>
                 </div>
                 {selectedFile && (

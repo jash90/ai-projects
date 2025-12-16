@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Späť na panel",
+  "dashboard": "Panel",
+  "desktop": {
+    "actions": {
+      "enterFullscreen": "Prejsť na celú obrazovku",
+      "exitFullscreen": "Opustiť celú obrazovku",
+      "hideEditor": "Skryť editor",
+      "hideSidebar": "Skryť bočný panel",
+      "showEditor": "Zobraziť editor",
+      "showSidebar": "Zobraziť bočný panel"
+    },
+    "panels": {
+      "aiAgents": "AI agenti",
+      "projectFiles": "Súbory projektu"
+    }
+  },
+  "editor": {
+    "noFileSelected": "Nie je vybraný žiadny súbor"
+  },
+  "loading": "Načítavam projekt...",
+  "mobile": {
+    "actions": {
+      "install": "Nainštalovať",
+      "installApp": "Nainštalovať aplikáciu",
+      "share": "Zdieľať"
+    },
+    "menu": {
+      "currentSelection": "Aktuálny výber",
+      "filesAvailableOffline_one": "Súbor dostupný offline",
+      "filesAvailableOffline_other": "Súbory dostupné offline",
+      "filesPendingUpload_one": "Súbor čakajúci na nahratie",
+      "filesPendingUpload_other": "Súbory čakajúce na nahratie",
+      "noAgentSelected": "Nie je vybraný žiadny agent",
+      "noFileSelected": "Nie je vybraný žiadny súbor",
+      "offlineMode": "Offline režim",
+      "online": "Online",
+      "status": "Stav"
+    },
+    "views": {
+      "agents": "Agenti",
+      "chat": "Chat",
+      "editor": "Editor",
+      "files": "Súbory"
+    }
+  },
+  "noAgents": {
+    "description": "Na použitie tohto projektu potrebujete aspoň jedného AI agenta.",
+    "title": "Žiadni AI agenti nie sú k dispozícii"
+  },
+  "notFound": {
+    "description": "Projekt, ktorý hľadáte, neexistuje alebo k nemu nemáte prístup.",
+    "title": "Projekt nenájdený"
+  }
+}

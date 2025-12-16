@@ -1,0 +1,101 @@
+{
+  "dialog": {
+    "cancel": "Anuluj",
+    "content": "Zawartość",
+    "contentHint": "Możesz edytować zawartość po utworzeniu pliku.",
+    "contentPlaceholder": "Zawartość pliku...",
+    "create": "Utwórz plik",
+    "createTitle": "Utwórz nowy plik",
+    "creating": "Tworzenie...",
+    "fileName": "Nazwa pliku",
+    "fileNamePlaceholder": "np. main.js, README.md",
+    "fileNameRequired": "Nazwa pliku jest wymagana",
+    "fileType": "Typ pliku",
+    "fileTypeRequired": "Typ pliku jest wymagany"
+  },
+  "editor": {
+    "autoSave": {
+      "pending": "Auto-zapis: Oczekuje",
+      "upToDate": "Auto-zapis: Aktualne"
+    },
+    "characters_one": "edytor.znaki",
+    "characters_few": "edytora.znaków",
+    "characters_many": "edytora.znaków",
+    "characters_other": "edytor.znaki",
+    "language": "Język: {{language}}",
+    "lines_one": "edytor.linie",
+    "lines_few": "edytora.linii",
+    "lines_many": "edytora.linii",
+    "lines_other": "edytor.linie",
+    "loading": "Ładowanie edytora...",
+    "noFile": {
+      "description": "Wybierz plik z eksploratora, aby rozpocząć edycję",
+      "title": "Nie wybrano pliku"
+    },
+    "placeholder": "Zacznij pisać...",
+    "revert": "Przywróć",
+    "revertConfirm": "Czy na pewno chcesz przywrócić wszystkie niezapisane zmiany?",
+    "save": "Zapisz",
+    "saving": "Zapisywanie...",
+    "shortcuts": {
+      "exitFullscreen": "Naciśnij Esc, aby wyjść z trybu pełnoekranowego",
+      "save": "Ctrl+S aby zapisać"
+    },
+    "type": "Typ: {{type}}",
+    "unsavedChanges": "Niezapisane zmiany",
+    "unsavedChangesText": "Niezapisane zmiany"
+  },
+  "explorer": {
+    "contextMenu": {
+      "copyContent": "Kopiuj zawartość",
+      "delete": "Usuń",
+      "open": "Otwórz"
+    },
+    "createTitle": "Utwórz nowy plik",
+    "deleteConfirm": "Czy na pewno chcesz usunąć \"{{name}}\"? Tej czynności nie można cofnąć.",
+    "dismiss": "Zamknij",
+    "empty": {
+      "description": "Utwórz swój pierwszy plik, aby rozpocząć",
+      "title": "Brak plików w tym projekcie"
+    },
+    "fileCount_one": "eksplorator.liczbaPlików",
+    "fileCount_few": "explorer.liczby plików",
+    "fileCount_many": "explorer.liczby plików",
+    "fileCount_other": "{{count}} pliki",
+    "noResults": "Żadne pliki nie pasują do wyszukiwania",
+    "searchPlaceholder": "Szukaj plików...",
+    "shown_one": "eksplorator.wyświetlone",
+    "shown_few": "explorer.wyświetlonych",
+    "shown_many": "explorer.wyświetlonych",
+    "shown_other": "eksplorator.wyświetlone",
+    "title": "Pliki",
+    "uploadTitle": "Prześlij pliki z komputera"
+  },
+  "upload": {
+    "cancel": "Anuluj",
+    "complete": "Przesyłanie zakończone",
+    "description": "Prześlij pliki z komputera. Pliki zostaną odczytane i zapisane jako edytowalne pliki tekstowe w projekcie.",
+    "done": "Gotowe",
+    "dropzone": {
+      "active": "Upuść pliki tutaj",
+      "andMore_one": "upload.strefaUpuszczania.iWięcej",
+      "andMore_few": "upload.strefa upuszczania i więcej",
+      "andMore_many": "upload.strefa upuszczania i więcej",
+      "andMore_other": "upload.strefaUpuszczania.iWięcej",
+      "description": "Przeciągnij i upuść pliki tutaj lub kliknij, aby wybrać pliki",
+      "maxSize": "Maksymalny rozmiar pliku: {{size}}MB",
+      "supportedTypes": "Obsługiwane typy: {{types}}",
+      "title": "Prześlij pliki z komputera"
+    },
+    "errors": {
+      "tooLarge": "Plik \"{{name}}\" jest za duży. Maksymalny rozmiar to {{maxSize}}MB.",
+      "unsupportedType": "Typ pliku nie jest obsługiwany. Dozwolone typy: {{types}}"
+    },
+    "success_one": "upload.sukces",
+    "success_few": "upload.sukces",
+    "success_many": "upload.sukces",
+    "success_other": "{{count}} pliki przesłane pomyślnie!",
+    "title": "Prześlij pliki do projektu",
+    "uploading": "Przesyłanie plików"
+  }
+}

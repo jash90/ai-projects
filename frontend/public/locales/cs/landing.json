@@ -1,0 +1,180 @@
+{
+  "cta": {
+    "installPwa": "Nainstalovat PWA",
+    "start": "Začněte stavět dnes",
+    "subtitle": "Připojte se k tisícům vývojářů, kteří budují budoucnost s vývojem poháněným AI, designem zaměřeným na mobilní zařízení a podnikatelskou bezpečností.",
+    "title": "Připraveni revolucionalizovat svůj vývojářský zážitek?"
+  },
+  "features": {
+    "items": {
+      "ai": {
+        "category": "AI",
+        "description": "Dynamické řízení modelů s OpenAI GPT a modely Anthropic Claude. Specializovaní AI agenti s jedinečnými osobnostmi a schopnostmi.",
+        "title": "Pokročilá integrace AI"
+      },
+      "analytics": {
+        "category": "Analytika",
+        "description": "Komplexní sledování využití AI API, nákladů na projekt, administrátorem konfigurovatelné limity a analytika využití.",
+        "title": "Sledování využití tokenů"
+      },
+      "collaboration": {
+        "category": "Spolupráce",
+        "description": "Konverzace poháněné WebSocket s indikátory psaní, streamováním odpovědí a trvalou historií chatu.",
+        "title": "Chat a spolupráce v reálném čase"
+      },
+      "management": {
+        "category": "Správa",
+        "description": "Podpora více projektů, správa souborů (20+ typů), projektově specifické agenty a spolupráce na souborech v reálném čase.",
+        "title": "Pokročilá správa projektů"
+      },
+      "mobile": {
+        "category": "Mobilní",
+        "description": "Progresivní webová aplikace s offline podporou, instalací nativní aplikace, dotykově optimalizovaným rozhraním a mobilní navigací.",
+        "title": "Mobilní PWA"
+      },
+      "performance": {
+        "category": "Výkon",
+        "description": "PostgreSQL s Redis cachingem, poolingem připojení, dělením kódu, service workers a mobilní optimalizací.",
+        "title": "Architektura s vysokým výkonem"
+      },
+      "pwa": {
+        "category": "PWA",
+        "description": "Service worker s inteligentním cachingem, synchronizací na pozadí, offline přístupem k souborům a správou front.",
+        "title": "Offline funkce"
+      },
+      "security": {
+        "category": "Bezpečnost",
+        "description": "Řízení přístupu na základě rolí, administrátorský panel, správa uživatelů, limity tokenů, protokolování aktivit a komplexní bezpečnost.",
+        "title": "Podniková bezpečnost a správa"
+      },
+      "ux": {
+        "category": "Uživatelská zkušenost",
+        "description": "Komplexní nastavení pro profil, bezpečnost, preference, tmavý/světlý režim a osobní statistiky používání.",
+        "title": "Nastavení a preference uživatelů"
+      }
+    },
+    "subtitle": "Platforma podnikové úrovně s pokročilou integrací AI, designem zaměřeným na mobilní zařízení a komplexními vývojovými nástroji vytvořenými pro moderní týmy.",
+    "techStack": {
+      "subtitle": "Stack připravený na produkci s TypeScript, React 18, Node.js, PostgreSQL a integrací AI",
+      "title": "Vytvořeno s moderními technologiemi"
+    },
+    "title": "Funkce připravené na produkci"
+  },
+  "footer": {
+    "company": {
+      "about": "O nás",
+      "blog": "Blog",
+      "careers": "Kariéra",
+      "contact": "Kontakt",
+      "title": "Společnost"
+    },
+    "copyright": "© 2024 AI Projects. Všechna práva vyhrazena.",
+    "product": {
+      "api": "API",
+      "documentation": "Dokumentace",
+      "features": "Funkce",
+      "pricing": "Ceny",
+      "title": "Produkt"
+    },
+    "support": {
+      "community": "Komunita",
+      "helpCenter": "Centrum nápovědy",
+      "privacy": "Ochrana soukromí",
+      "status": "Stav",
+      "title": "Podpora"
+    },
+    "tagline": "Budoucnost vývoje je zde. Vytvářejte úžasné projekty s pomocí AI."
+  },
+  "hero": {
+    "badge": "Platforma pro vývoj AI připravená na produkci",
+    "cta": {
+      "demo": "Sledovat ukázku",
+      "start": "Začněte stavět zdarma"
+    },
+    "subtitle": "Plnohodnotná platforma s pokročilými AI agenty, spoluprací v reálném čase, designem zaměřeným na mobilní PWA, podnikovou bezpečností a komplexním řízením projektů. Pracujte kdekoli a kdykoli.",
+    "title": "Budoucnost",
+    "titleHighlight": "Vývoje poháněného AI"
+  },
+  "nav": {
+    "features": "Funkce",
+    "getStarted": "Začněte",
+    "installApp": "Nainstalovat aplikaci",
+    "pricing": "Ceny",
+    "signIn": "Přihlásit se",
+    "testimonials": "Reference"
+  },
+  "pricing": {
+    "contactUs": "kontaktujte nás",
+    "perMonth": "za měsíc",
+    "plans": {
+      "enterprise": {
+        "cta": "Kontaktujte prodej",
+        "features": [
+          "Vše v Pro",
+          "Admin panel & RBAC",
+          "Vlastní limity tokenů",
+          "Záznam aktivit",
+          "SSO & shoda",
+          "Dedikovaná podpora"
+        ],
+        "name": "Podnik",
+        "price": "Na míru"
+      },
+      "pro": {
+        "cta": "Začněte zkušební verzi Pro",
+        "features": [
+          "Neomezené projekty",
+          "Modely GPT-4 + Claude",
+          "Spolupráce v reálném čase",
+          "Pokročilé řízení souborů",
+          "Analytika použití",
+          "Prioritní podpora"
+        ],
+        "name": "Profesionální",
+        "popular": "Nejoblíbenější",
+        "price": "$29"
+      },
+      "starter": {
+        "cta": "Začněte zdarma",
+        "features": [
+          "5 AI projektů",
+          "Modely OpenAI GPT",
+          "Přístup k mobilní PWA",
+          "Offline funkce",
+          "Podpora komunity"
+        ],
+        "name": "Začátečník",
+        "price": "$0"
+      }
+    },
+    "subtitle": "Plně vybavená platforma s integrací AI, mobilní PWA, administrativními kontrolami a podnikovou bezpečností. Začněte zdarma, škálujte podle potřeby.",
+    "title": "Ceny na úrovni podniků pro týmy všech velikostí"
+  },
+  "stats": {
+    "activeDevelopers": "Aktivní vývojáři",
+    "projectsBuilt": "Vybudované AI projekty",
+    "rating": "Hodnocení PWA obchodu",
+    "uptime": "SLA dostupnosti"
+  },
+  "testimonials": {
+    "items": {
+      "elena": {
+        "content": "Spolupráce v reálném čase s integrací WebSocket je bezproblémová. Pracovník služby a strategie ukládání do mezipaměti činí tuto platformu pro vývoj nejrychlejší, kterou jsem kdy používal.",
+        "name": "Elena Rodriguez",
+        "role": "DevOps inženýr"
+      },
+      "marcus": {
+        "content": "Admin panel nám dává úplnou kontrolu nad používáním AI naším týmem. Sledování tokenů a funkce správy uživatelů nám ušetřily tisíce na nákladech na API.",
+        "name": "Marcus Johnson",
+        "role": "Manažer inženýrství"
+      },
+      "sarah": {
+        "content": "Design zaměřený na mobilní PWA je neuvěřitelný. Můžu kódovat na svém telefonu během dojíždění a bezproblémově pokračovat na desktopu. Offline funkce jsou revoluční.",
+        "name": "Sarah Chen",
+        "role": "Senior full-stack vývojář"
+      }
+    },
+    "subtitle": "Podívejte se, co říká naše komunita vývojářů o AI projektech.",
+    "title": "Milováno vývojáři po celém světě"
+  }
+}
