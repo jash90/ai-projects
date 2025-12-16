@@ -4,6 +4,7 @@ import { ChatHeader } from './ChatHeader'
 import { ChatInput } from './ChatInput'
 import { TokenLimitBanner } from './TokenLimitBanner'
 import { ThreadList } from './ThreadList'
+import { MessageIcon } from '@/components/icons'
 import { threadStore, useActiveThread, useThreadMessages, useThreadSending, useMessagesLoading } from '@/stores/threadStore'
 import { useTokenLimits } from '@/hooks/useTokenLimits'
 import { cn } from '@/lib/utils'
@@ -240,19 +241,7 @@ export function ThreadChat({ project, agent, className, onToggleSidebar }: Threa
               )}
               title={showThreadList ? 'Hide conversations' : 'Show conversations'}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg>
+              <MessageIcon size={16} />
             </button>
           }
         />
