@@ -49,6 +49,7 @@
   "userMenu": {
     "admin": "Admin",
     "adminPanel": "Adminisztrációs panel",
+    "language": "Nyelv",
     "logout": "Kijelentkezés",
     "settings": "Beállítások"
   }

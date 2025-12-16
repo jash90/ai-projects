@@ -8,6 +8,10 @@
       "theme": "Téma",
       "title": "Vzhľad"
     },
+    "language": {
+      "title": "Jazyk",
+      "description": "Vyberte si preferovaný jazyk"
+    },
     "notifications": {
       "description": "Vyberte, aké oznámenia chcete dostávať",
       "email": {

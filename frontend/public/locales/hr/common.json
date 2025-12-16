@@ -49,6 +49,7 @@
   "userMenu": {
     "admin": "Administrator",
     "adminPanel": "Administratorska ploča",
+    "language": "Jezik",
     "logout": "Odjava",
     "settings": "Postavke"
   }

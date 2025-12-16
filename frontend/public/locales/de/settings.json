@@ -8,6 +8,10 @@
       "theme": "Thema",
       "title": "Erscheinungsbild"
     },
+    "language": {
+      "title": "Sprache",
+      "description": "Wählen Sie Ihre bevorzugte Sprache"
+    },
     "notifications": {
       "description": "Wählen Sie aus, welche Benachrichtigungen Sie erhalten möchten",
       "email": {

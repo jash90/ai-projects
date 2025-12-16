@@ -8,6 +8,10 @@
       "theme": "Tema",
       "title": "Aspetto"
     },
+    "language": {
+      "title": "Lingua",
+      "description": "Scegli la tua lingua preferita"
+    },
     "notifications": {
       "description": "Scegli quali notifiche desideri ricevere",
       "email": {

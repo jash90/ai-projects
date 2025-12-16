@@ -55,6 +55,7 @@
   "userMenu": {
     "admin": "Admin",
     "adminPanel": "Panel administracyjny",
+    "language": "Język",
     "logout": "Wyloguj",
     "settings": "Ustawienia"
   }

@@ -8,6 +8,10 @@
       "theme": "Тема",
       "title": "Вигляд"
     },
+    "language": {
+      "title": "Мова",
+      "description": "Виберіть бажану мову"
+    },
     "notifications": {
       "description": "Виберіть, які сповіщення ви хочете отримувати",
       "email": {

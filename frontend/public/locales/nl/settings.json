@@ -8,6 +8,10 @@
       "theme": "Thema",
       "title": "Uiterlijk"
     },
+    "language": {
+      "title": "Taal",
+      "description": "Kies je voorkeurstaal"
+    },
     "notifications": {
       "description": "Kies welke meldingen je wilt ontvangen",
       "email": {

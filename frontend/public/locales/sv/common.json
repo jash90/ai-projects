@@ -49,6 +49,7 @@
   "userMenu": {
     "admin": "Admin",
     "adminPanel": "Adminpanel",
+    "language": "Språk",
     "logout": "Logga ut",
     "settings": "Inställningar"
   }

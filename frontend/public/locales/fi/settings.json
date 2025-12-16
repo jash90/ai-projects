@@ -8,6 +8,10 @@
       "theme": "Teema",
       "title": "Ulkoasu"
     },
+    "language": {
+      "title": "Kieli",
+      "description": "Valitse haluamasi kieli"
+    },
     "notifications": {
       "description": "Valitse, mitä ilmoituksia haluat vastaanottaa",
       "email": {

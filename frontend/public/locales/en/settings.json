@@ -8,6 +8,10 @@
       "theme": "Theme",
       "title": "Appearance"
     },
+    "language": {
+      "title": "Language",
+      "description": "Choose your preferred language"
+    },
     "notifications": {
       "description": "Choose what notifications you want to receive",
       "email": {

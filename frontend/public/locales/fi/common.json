@@ -49,6 +49,7 @@
   "userMenu": {
     "admin": "Ylläpitäjä",
     "adminPanel": "Ylläpitäjän paneeli",
+    "language": "Kieli",
     "logout": "Kirjaudu ulos",
     "settings": "Asetukset"
   }

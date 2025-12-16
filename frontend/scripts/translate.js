@@ -202,40 +202,64 @@ function unflattenObject(obj) {
   return result;
 }
 
+// Check if a value looks like a translation key (e.g., "editor.characters", "login.github")
+// These are placeholder values that were never properly translated
+function isKeyLikeValue(value) {
+  if (typeof value !== 'string') return false;
+  // Pattern: word.word or word.word.word (looks like a key path)
+  // But exclude real values like "e.g., main.js" or URLs
+  if (value.includes(' ') || value.includes(',')) return false;
+  if (value.startsWith('http') || value.startsWith('/')) return false;
+  // Must have exactly format: lowercase.lowercase or camelCase.camelCase
+  return /^[a-zA-Z_]+\.[a-zA-Z_]+(\.[a-zA-Z_]+)*$/.test(value);
+}
+
 // Find missing keys in target compared to source
 // Also detects keys with "__MISSING__" placeholder value
+// Also detects keys with key-like values (e.g., "login.github")
 function findMissingKeys(source, target) {
   const flatSource = flattenObject(source);
   const flatTarget = target ? flattenObject(target) : {};
 
   const missing = {};
 
-  // 1. Keys that exist in source but missing or __MISSING__ in target
+  // 1. Keys that exist in source but missing or need translation in target
   for (const [key, value] of Object.entries(flatSource)) {
     if (!(key in flatTarget)) {
+      // Key doesn't exist in target
       missing[key] = value;
     } else if (flatTarget[key] === '__MISSING__') {
-      missing[key] = value; // Use source value for translation
+      // Key exists but has __MISSING__ placeholder
+      missing[key] = value;
+    } else if (isKeyLikeValue(flatTarget[key])) {
+      // Key exists but value looks like a translation key (placeholder)
+      missing[key] = value;
     }
   }
 
-  // 2. Keys that exist ONLY in target with __MISSING__ (e.g., Polish plural forms _few, _many)
-  // These don't exist in English but need translation based on context
+  // 2. Keys that exist ONLY in target with __MISSING__ or key-like values
+  // (e.g., Polish plural forms _few, _many)
   for (const [key, value] of Object.entries(flatTarget)) {
-    if (value === '__MISSING__' && !(key in missing)) {
+    const needsTranslation = value === '__MISSING__' || isKeyLikeValue(value);
+
+    if (needsTranslation && !(key in missing)) {
       // Find a related key to use as context for translation
-      // e.g., for "comparing_few" use "comparing_other" or "comparing_one"
       const baseKey = key.replace(/_(one|few|many|other|zero|two)$/, '');
       const relatedKey = Object.keys(flatSource).find(k =>
         k.startsWith(baseKey + '_') || k === baseKey
       );
 
-      if (relatedKey) {
-        // Use related key's value as context, mark it as plural form
-        missing[key] = `[PLURAL_FORM:${key.split('_').pop()}] ${flatSource[relatedKey]}`;
+      if (relatedKey && !isKeyLikeValue(flatSource[relatedKey])) {
+        // Use related key's value as context
+        const pluralSuffix = key.match(/_(one|few|many|other|zero|two)$/);
+        if (pluralSuffix) {
+          missing[key] = `[PLURAL_FORM:${pluralSuffix[1]}] ${flatSource[relatedKey]}`;
+        } else {
+          missing[key] = flatSource[relatedKey];
+        }
       } else {
-        // No related key found, use the key itself as hint
-        missing[key] = key;
+        // No good related key found, use a descriptive placeholder
+        missing[key] = `[NEEDS_TRANSLATION] ${key}`;
       }
     }
   }

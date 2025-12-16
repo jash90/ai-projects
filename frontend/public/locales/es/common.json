@@ -49,6 +49,7 @@
   "userMenu": {
     "admin": "Administrador",
     "adminPanel": "Panel de administración",
+    "language": "Idioma",
     "logout": "Cerrar sesión",
     "settings": "Configuraciones"
   }

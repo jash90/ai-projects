@@ -49,6 +49,7 @@
   "userMenu": {
     "admin": "Admin",
     "adminPanel": "Panou Admin",
+    "language": "Limbă",
     "logout": "Deconectare",
     "settings": "Setări"
   }
