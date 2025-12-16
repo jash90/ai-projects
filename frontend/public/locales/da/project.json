@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Tilbage til Dashboard",
+  "dashboard": "Dashboard",
+  "desktop": {
+    "actions": {
+      "enterFullscreen": "Gå ind i fuldskærm",
+      "exitFullscreen": "Forlad fuldskærm",
+      "hideEditor": "Skjul editor",
+      "hideSidebar": "Skjul sidebar",
+      "showEditor": "Vis editor",
+      "showSidebar": "Vis sidebar"
+    },
+    "panels": {
+      "aiAgents": "AI-agenter",
+      "projectFiles": "Projektfiler"
+    }
+  },
+  "editor": {
+    "noFileSelected": "Ingen fil valgt"
+  },
+  "loading": "Indlæser projekt...",
+  "mobile": {
+    "actions": {
+      "install": "Installer",
+      "installApp": "Installer app",
+      "share": "Del"
+    },
+    "menu": {
+      "currentSelection": "Nuværende valg",
+      "filesAvailableOffline_one": "Filer tilgængelige offline",
+      "filesAvailableOffline_other": "Filer tilgængelige offline",
+      "filesPendingUpload_one": "Fil venter på upload",
+      "filesPendingUpload_other": "Filer venter på upload",
+      "noAgentSelected": "Ingen agent valgt",
+      "noFileSelected": "Ingen fil valgt",
+      "offlineMode": "Offline tilstand",
+      "online": "Online",
+      "status": "Status"
+    },
+    "views": {
+      "agents": "Agenter",
+      "chat": "Chat",
+      "editor": "Editor",
+      "files": "Filer"
+    }
+  },
+  "noAgents": {
+    "description": "Du har brug for mindst én AI-agent for at bruge dette projekt.",
+    "title": "Ingen AI-agenter tilgængelige"
+  },
+  "notFound": {
+    "description": "Det projekt, du leder efter, eksisterer ikke, eller du har ikke adgang til det.",
+    "title": "Projekt ikke fundet"
+  }
+}

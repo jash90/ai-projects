@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Dialog } from '@/components/ui/Dialog'
 import { Button } from '@/components/ui/Button'
 import { Autocomplete, AutocompleteOption, AutocompleteFilters } from '@/components/ui/Autocomplete'
@@ -30,6 +31,7 @@ export function ModelPickerModal({
   error,
   onRetry
 }: ModelPickerModalProps) {
+  const { t } = useTranslation('agents')
   const [viewMode, setViewMode] = useState<ViewMode>('browse')
   const [currentModelId, setCurrentModelId] = useState<string>(selectedModelId || '')
   const [selectedDetailModel, setSelectedDetailModel] = useState<AutocompleteOption | null>(null)
@@ -166,7 +168,7 @@ export function ModelPickerModal({
       <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-muted/30">
           <div className="flex items-center gap-4">
             <h2 className="text-xl font-semibold text-foreground">
-              Select OpenRouter Model
+              {t('models.picker.title')}
             </h2>
             {viewMode === 'browse' && comparisonModelIds.length > 0 && (
               <Button
@@ -174,18 +176,18 @@ export function ModelPickerModal({
                 size="sm"
                 onClick={() => setViewMode('compare')}
               >
-                📊 Compare ({comparisonModelIds.length})
+                📊 {t('models.picker.compare')} ({comparisonModelIds.length})
               </Button>
             )}
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs text-muted-foreground">
-              Ctrl+K: Search • Ctrl+F: Favorites • Ctrl+C: Compare
+              {t('models.picker.shortcuts')}
             </span>
             <button
               onClick={onClose}
               className="p-2 hover:bg-muted rounded-md transition-colors"
-              title="Close (Esc)"
+              title={t('models.picker.close')}
             >
               ✕
             </button>
@@ -199,7 +201,7 @@ export function ModelPickerModal({
               {/* Favorites */}
               {favoriteModels.length > 0 && (
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-medium text-muted-foreground mb-2">Favorites</div>
+                  <div className="text-xs font-medium text-muted-foreground mb-2">{t('models.picker.favorites')}</div>
                   <div className="flex flex-wrap gap-2">
                     {favoriteModels.map(model => (
                       <ModelFavoritesChip
@@ -219,7 +221,7 @@ export function ModelPickerModal({
               {/* Recents */}
               {recentModels.length > 0 && (
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-medium text-muted-foreground mb-2">Recently Used</div>
+                  <div className="text-xs font-medium text-muted-foreground mb-2">{t('models.picker.recentlyUsed')}</div>
                   <div className="flex flex-wrap gap-2">
                     {recentModels.map(model => (
                       <ModelFavoritesChip
@@ -239,7 +241,7 @@ export function ModelPickerModal({
               <button
                 onClick={() => setShowFavoritesBar(false)}
                 className="text-muted-foreground hover:text-foreground transition-colors p-1"
-                title="Hide favorites/recents"
+                title={t('models.picker.hideFavorites')}
               >
                 ✕
               </button>
@@ -256,7 +258,7 @@ export function ModelPickerModal({
                 <div className="p-4 w-full">
                   <Autocomplete
                     id="model-picker"
-                    placeholder="Search models (e.g., 'gpt', 'claude', 'llama')..."
+                    placeholder={t('models.picker.search')}
                     options={models}
                     value={currentModelId}
                     onChange={handleModelChange}
@@ -264,7 +266,7 @@ export function ModelPickerModal({
                     groupByCategory={true}
                     maxHeight="calc(95vh - 250px)"
                     isLoading={isLoading}
-                    loadingMessage="Loading OpenRouter models..."
+                    loadingMessage={t('models.picker.loading')}
                     error={error}
                     onRetry={onRetry}
                     enableFilters={true}
@@ -304,8 +306,8 @@ export function ModelPickerModal({
         {viewMode === 'browse' && (
           <div className="px-6 py-4 border-t border-border flex items-center justify-between bg-muted/30">
             <div className="text-sm text-muted-foreground">
-              {models.length} models available
-              {comparisonModelIds.length > 0 && ` • ${comparisonModelIds.length} in comparison`}
+              {t('models.picker.available', { count: models.length })}
+              {comparisonModelIds.length > 0 && ` • ${t('models.picker.inComparison', { count: comparisonModelIds.length })}`}
             </div>
             <div className="flex gap-3">
               <Button
@@ -313,14 +315,14 @@ export function ModelPickerModal({
                 variant="outline"
                 onClick={onClose}
               >
-                Cancel
+                {t('models.picker.cancel')}
               </Button>
               <Button
                 type="button"
                 onClick={handleSelect}
                 disabled={!currentModelId}
               >
-                Select Model
+                {t('models.picker.selectModel')}
               </Button>
             </div>
           </div>

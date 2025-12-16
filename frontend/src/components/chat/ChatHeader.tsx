@@ -1,7 +1,7 @@
-
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Menu, FileText, Trash2, Settings } from 'lucide-react'
-import { Project, Agent } from '@/types'
+import type { Project, Agent } from '@/types'
 import { Button } from '@/components/ui/Button'
 import { StreamingToggle } from './StreamingToggle'
 import { cn, getInitials, generateColorFromString } from '@/lib/utils'
@@ -34,6 +34,7 @@ function ChatHeader({
   className,
   extraActions
 }: ChatHeaderProps) {
+  const { t } = useTranslation('chat')
   const [showMenu, setShowMenu] = useState(false)
   const { user } = useAuth()
   const isAdmin = user?.role === 'admin'
@@ -65,7 +66,7 @@ function ChatHeader({
             className="md:hidden"
           >
             <Menu className="w-5 h-5" />
-            <span className="sr-only">Toggle sidebar</span>
+            <span className="sr-only">{t('header.toggleSidebar')}</span>
           </Button>
         )}
 
@@ -99,7 +100,7 @@ function ChatHeader({
                 )}
               />
               <span className="text-xs">
-                {isConnected ? 'Connected' : 'Disconnected'}
+                {isConnected ? t('header.connected') : t('header.disconnected')}
               </span>
             </div>
           </div>
@@ -127,7 +128,7 @@ function ChatHeader({
           className="h-8"
         >
           <FileText className="w-4 h-4 mr-1" />
-          Files
+          {t('header.files')}
         </Button>
 
         {/* Options Menu */}
@@ -139,7 +140,7 @@ function ChatHeader({
             className="h-8 w-8"
           >
             <Settings className="w-4 h-4" />
-            <span className="sr-only">More options</span>
+            <span className="sr-only">{t('header.moreOptions')}</span>
           </Button>
 
           {showMenu && (
@@ -152,7 +153,7 @@ function ChatHeader({
                 }}
               >
                 <Trash2 className="w-3 h-3" />
-                Clear Conversation
+                {t('header.clearConversation')}
               </button>
             </div>
           )}

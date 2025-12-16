@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Bot, Check, X, Search } from 'lucide-react'
 import { Agent } from '@/types'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/Dialog'
@@ -24,6 +25,7 @@ export function AgentPickerDialog({
   onAgentSelect,
   isAdmin = false
 }: AgentPickerDialogProps) {
+  const { t } = useTranslation('agents')
   const [searchQuery, setSearchQuery] = useState('')
 
   const getProviderIcon = (provider: string) => {
@@ -78,7 +80,7 @@ export function AgentPickerDialog({
           <div className="flex items-center justify-between">
             <DialogTitle className="flex items-center gap-2">
               <Bot className="w-5 h-5" />
-              Select AI Agent
+              {t('picker.title')}
             </DialogTitle>
             <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
               <X className="w-4 h-4" />
@@ -89,7 +91,7 @@ export function AgentPickerDialog({
           <div className="relative mt-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder={isAdmin ? "Search agents by name, description, or model..." : "Search agents by name or description..."}
+              placeholder={isAdmin ? t('picker.searchAdmin') : t('picker.searchUser')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-9"
@@ -102,9 +104,9 @@ export function AgentPickerDialog({
             {filteredAgents.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
                 <Bot className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p className="text-sm">No agents found</p>
+                <p className="text-sm">{t('picker.empty.title')}</p>
                 {searchQuery && (
-                  <p className="text-xs mt-1">Try a different search term</p>
+                  <p className="text-xs mt-1">{t('picker.empty.hint')}</p>
                 )}
               </div>
             ) : (
@@ -172,10 +174,10 @@ export function AgentPickerDialog({
                             {agent.model}
                           </span>
                           <span className="px-2 py-1 rounded bg-muted text-muted-foreground">
-                            Temp: {agent.temperature}
+                            {t('panel.temp')} {agent.temperature}
                           </span>
                           <span className="px-2 py-1 rounded bg-muted text-muted-foreground">
-                            Max: {agent.max_tokens} tokens
+                            {t('panel.maxTokens')} {agent.max_tokens} {t('panel.tokens')}
                           </span>
                         </div>
                       )}
@@ -190,7 +192,7 @@ export function AgentPickerDialog({
                           handleSelect(agent)
                         }}
                       >
-                        {isSelected ? 'Selected' : 'Select Agent'}
+                        {isSelected ? t('picker.selected') : t('picker.select')}
                       </Button>
                     </div>
                   )

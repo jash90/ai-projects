@@ -1,0 +1,59 @@
+{
+  "backToDashboard": "Powrót do pulpitu",
+  "dashboard": "Pulpit",
+  "desktop": {
+    "actions": {
+      "enterFullscreen": "Pełny ekran",
+      "exitFullscreen": "Wyjdź z pełnego ekranu",
+      "hideEditor": "Ukryj edytor",
+      "hideSidebar": "Ukryj panel boczny",
+      "showEditor": "Pokaż edytor",
+      "showSidebar": "Pokaż panel boczny"
+    },
+    "panels": {
+      "aiAgents": "Agenci AI",
+      "projectFiles": "Pliki projektu"
+    }
+  },
+  "editor": {
+    "noFileSelected": "Nie wybrano pliku"
+  },
+  "loading": "Ładowanie projektu...",
+  "mobile": {
+    "actions": {
+      "install": "Zainstaluj",
+      "installApp": "Zainstaluj aplikację",
+      "share": "Udostępnij"
+    },
+    "menu": {
+      "currentSelection": "Obecny wybór",
+      "filesAvailableOffline_one": "Pliki dostępne offline",
+      "filesAvailableOffline_few": "pliki dostępne offline",
+      "filesAvailableOffline_many": "plików dostępnych offline",
+      "filesAvailableOffline_other": "Pliki dostępne offline",
+      "filesPendingUpload_one": "Plik oczekujący na przesłanie",
+      "filesPendingUpload_few": "pliki oczekujące na przesłanie",
+      "filesPendingUpload_many": "plików oczekujących na przesłanie",
+      "filesPendingUpload_other": "Pliki oczekujące na przesłanie",
+      "noAgentSelected": "Nie wybrano agenta",
+      "noFileSelected": "Nie wybrano pliku",
+      "offlineMode": "Tryb offline",
+      "online": "Online",
+      "status": "Status"
+    },
+    "views": {
+      "agents": "Agenci",
+      "chat": "Czat",
+      "editor": "Edytor",
+      "files": "Pliki"
+    }
+  },
+  "noAgents": {
+    "description": "Potrzebujesz co najmniej jednego agenta AI, aby korzystać z tego projektu.",
+    "title": "Brak dostępnych agentów AI"
+  },
+  "notFound": {
+    "description": "Projekt, którego szukasz, nie istnieje lub nie masz do niego dostępu.",
+    "title": "Nie znaleziono projektu"
+  }
+}

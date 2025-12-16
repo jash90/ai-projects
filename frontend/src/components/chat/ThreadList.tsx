@@ -1,6 +1,7 @@
 import type { MouseEvent } from 'react'
 import { useEffect } from 'react'
 import { formatDistanceToNow } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
 import { Thread } from '../../types'
 import { cn } from '../../lib/utils'
@@ -13,6 +14,7 @@ interface ThreadListProps {
 }
 
 export function ThreadList({ projectId, onThreadSelect, className }: ThreadListProps) {
+  const { t } = useTranslation('chat')
   const threads = useThreads(projectId)
   const activeThread = useActiveThread(projectId)
   const isLoading = useThreadsLoading(projectId)
@@ -21,10 +23,10 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
     if (projectId) {
       threadStore.getState().fetchThreads(projectId).catch((error) => {
         console.error('Failed to fetch threads:', error)
-        toast.error('Failed to load conversations')
+        toast.error(t('errors.loadFailed'))
       })
     }
-  }, [projectId])
+  }, [projectId, t])
 
   const handleCreateThread = async () => {
     try {
@@ -32,7 +34,7 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
       onThreadSelect?.(thread)
     } catch (error) {
       console.error('Failed to create thread:', error)
-      toast.error('Failed to create conversation')
+      toast.error(t('errors.createFailed'))
     }
   }
 
@@ -43,12 +45,12 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
 
   const handleDeleteThread = async (e: MouseEvent, threadId: string) => {
     e.stopPropagation()
-    if (confirm('Are you sure you want to delete this conversation?')) {
+    if (confirm(t('threads.deleteConfirm'))) {
       try {
         await threadStore.getState().deleteThread(threadId, projectId)
       } catch (error) {
         console.error('Failed to delete thread:', error)
-        toast.error('Failed to delete conversation')
+        toast.error(t('errors.deleteFailed'))
       }
     }
   }
@@ -71,11 +73,11 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
     <div className={cn('flex flex-col h-full', className)}>
       {/* Header */}
       <div className="flex items-center justify-between p-3 border-b border-border">
-        <h3 className="font-semibold text-sm text-foreground">Conversations</h3>
+        <h3 className="font-semibold text-sm text-foreground">{t('threads.title')}</h3>
         <button
           onClick={handleCreateThread}
           className="p-1.5 hover:bg-accent rounded-md transition-colors"
-          title="New conversation"
+          title={t('threads.newConversation')}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -101,12 +103,12 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
           </div>
         ) : threads.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
-            <div className="text-muted-foreground text-sm mb-2">No conversations yet</div>
+            <div className="text-muted-foreground text-sm mb-2">{t('threads.noConversations')}</div>
             <button
               onClick={handleCreateThread}
               className="text-primary text-sm hover:underline"
             >
-              Start a new conversation
+              {t('threads.startNew')}
             </button>
           </div>
         ) : (
@@ -123,7 +125,7 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
                     <div className="font-medium text-sm text-foreground truncate">
-                      {thread.title || 'New conversation'}
+                      {thread.title || t('threads.newThread')}
                     </div>
                     {thread.last_message && (
                       <div className="text-xs text-muted-foreground mt-1 truncate">
@@ -144,7 +146,7 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
                   <button
                     onClick={(e) => handleDeleteThread(e, thread.id)}
                     className="opacity-0 group-hover:opacity-100 p-1 hover:bg-destructive/10 hover:text-destructive rounded transition-all"
-                    title="Delete conversation"
+                    title={t('threads.deleteConversation')}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +166,7 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
                 {typeof thread.message_count === 'number' && thread.message_count > 0 && (
                   <div className="absolute right-3 bottom-3">
                     <span className="text-xs text-muted-foreground">
-                      {thread.message_count} msg
+                      {t('threads.messageCount', { count: thread.message_count })}
                     </span>
                   </div>
                 )}

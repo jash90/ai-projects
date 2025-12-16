@@ -1,4 +1,4 @@
-
+import { useTranslation } from 'react-i18next'
 import { AlertTriangle, AlertCircle, Info } from 'lucide-react';
 import { useTokenLimits } from '@/hooks/useTokenLimits';
 import { cn } from '@/lib/utils';
@@ -8,7 +8,8 @@ interface TokenLimitBannerProps {
 }
 
 export function TokenLimitBanner({ className }: TokenLimitBannerProps) {
-  const { 
+  const { t } = useTranslation('chat')
+  const {
     canSendMessage, 
     getLimitStatusMessage, 
     getProgressPercentages,
@@ -77,8 +78,8 @@ export function TokenLimitBanner({ className }: TokenLimitBannerProps) {
             {globalLimit && globalLimit > 0 && (
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span>Global Limit</span>
-                  <span>{remainingGlobalTokens !== null ? `${formatNumber(remainingGlobalTokens)} remaining` : ''}</span>
+                  <span>{t('limits.global')}</span>
+                  <span>{remainingGlobalTokens !== null ? t('limits.remaining', { count: remainingGlobalTokens, formatted: formatNumber(remainingGlobalTokens) }) : ''}</span>
                 </div>
                 <div className="w-full bg-current/10 rounded-full h-1.5">
                   <div 
@@ -95,8 +96,8 @@ export function TokenLimitBanner({ className }: TokenLimitBannerProps) {
             {monthlyLimit && monthlyLimit > 0 && (
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span>Monthly Limit</span>
-                  <span>{remainingMonthlyTokens !== null ? `${formatNumber(remainingMonthlyTokens)} remaining` : ''}</span>
+                  <span>{t('limits.monthly')}</span>
+                  <span>{remainingMonthlyTokens !== null ? t('limits.remaining', { count: remainingMonthlyTokens, formatted: formatNumber(remainingMonthlyTokens) }) : ''}</span>
                 </div>
                 <div className="w-full bg-current/10 rounded-full h-1.5">
                   <div 

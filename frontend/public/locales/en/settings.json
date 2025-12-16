@@ -1,0 +1,88 @@
+{
+  "preferences": {
+    "appearance": {
+      "dark": "Dark",
+      "description": "Customize how AI Projects looks on your device",
+      "light": "Light",
+      "system": "System",
+      "theme": "Theme",
+      "title": "Appearance"
+    },
+    "language": {
+      "title": "Language",
+      "description": "Choose your preferred language"
+    },
+    "notifications": {
+      "description": "Choose what notifications you want to receive",
+      "email": {
+        "description": "Receive email updates about your account and usage",
+        "title": "Email Notifications"
+      },
+      "push": {
+        "description": "Receive notifications about project updates and system alerts",
+        "title": "Push Notifications"
+      },
+      "title": "Notifications"
+    },
+    "updateError": "Failed to update preferences",
+    "updateSuccess": "Preferences updated successfully"
+  },
+  "profile": {
+    "description": "Update your personal details and email address",
+    "email": "Email",
+    "reset": "Reset",
+    "role": {
+      "admin": "Administrator",
+      "user": "User"
+    },
+    "saveChanges": "Save Changes",
+    "title": "Profile Information",
+    "updateError": "Failed to update profile",
+    "updateSuccess": "Profile updated successfully",
+    "username": "Username"
+  },
+  "security": {
+    "clear": "Clear",
+    "confirmPassword": "Confirm New Password",
+    "currentPassword": "Current Password",
+    "description": "Update your password to keep your account secure",
+    "newPassword": "New Password",
+    "passwordMismatch": "New passwords do not match",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "passwordTooShort": "New password must be at least 6 characters",
+    "title": "Change Password",
+    "updateError": "Failed to update password",
+    "updatePassword": "Update Password",
+    "updateSuccess": "Password updated successfully"
+  },
+  "subtitle": "Manage your account preferences and application settings",
+  "tabs": {
+    "preferences": "Preferences",
+    "profile": "Profile",
+    "security": "Security",
+    "usage": "Usage"
+  },
+  "title": "Settings",
+  "usage": {
+    "account": {
+      "description": "Your account details and limits",
+      "globalLimit": "Global Limit",
+      "monthlyLimit": "Monthly Limit",
+      "projects": "Projects",
+      "role": "Role",
+      "title": "Account Information"
+    },
+    "stats": {
+      "description": "Monitor your token usage and costs",
+      "loading": "Loading usage statistics...",
+      "monthlyCost": "Monthly Cost",
+      "monthlyUsage": "Monthly Usage",
+      "percentUsed": "{{percent}}% used",
+      "thisMonth": "This Month",
+      "title": "Usage Statistics",
+      "totalCost": "Total Cost",
+      "totalTokens": "Total Tokens",
+      "totalUsage": "Total Usage"
+    }
+  }
+}

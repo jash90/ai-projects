@@ -1,0 +1,88 @@
+{
+  "preferences": {
+    "appearance": {
+      "dark": "Scuro",
+      "description": "Personalizza l'aspetto dei progetti AI sul tuo dispositivo",
+      "light": "Chiaro",
+      "system": "Sistema",
+      "theme": "Tema",
+      "title": "Aspetto"
+    },
+    "language": {
+      "title": "Lingua",
+      "description": "Scegli la tua lingua preferita"
+    },
+    "notifications": {
+      "description": "Scegli quali notifiche desideri ricevere",
+      "email": {
+        "description": "Ricevi aggiornamenti via email sul tuo account e utilizzo",
+        "title": "Notifiche Email"
+      },
+      "push": {
+        "description": "Ricevi notifiche sugli aggiornamenti dei progetti e sugli avvisi di sistema",
+        "title": "Notifiche Push"
+      },
+      "title": "Notifiche"
+    },
+    "updateError": "Impossibile aggiornare le preferenze",
+    "updateSuccess": "Preferenze aggiornate con successo"
+  },
+  "profile": {
+    "description": "Aggiorna i tuoi dati personali e l'indirizzo email",
+    "email": "Email",
+    "reset": "Ripristina",
+    "role": {
+      "admin": "Amministratore",
+      "user": "Utente"
+    },
+    "saveChanges": "Salva Modifiche",
+    "title": "Informazioni sul Profilo",
+    "updateError": "Impossibile aggiornare il profilo",
+    "updateSuccess": "Profilo aggiornato con successo",
+    "username": "Nome Utente"
+  },
+  "security": {
+    "clear": "Pulisci",
+    "confirmPassword": "Conferma Nuova Password",
+    "currentPassword": "Password Corrente",
+    "description": "Aggiorna la tua password per mantenere sicuro il tuo account",
+    "newPassword": "Nuova Password",
+    "passwordMismatch": "Le nuove password non corrispondono",
+    "passwordsDoNotMatch": "Le password non corrispondono",
+    "passwordTooShort": "La nuova password deve contenere almeno 6 caratteri",
+    "title": "Cambia Password",
+    "updateError": "Impossibile aggiornare la password",
+    "updatePassword": "Aggiorna Password",
+    "updateSuccess": "Password aggiornata con successo"
+  },
+  "subtitle": "Gestisci le preferenze del tuo account e le impostazioni dell'applicazione",
+  "tabs": {
+    "preferences": "Preferenze",
+    "profile": "Profilo",
+    "security": "Sicurezza",
+    "usage": "Utilizzo"
+  },
+  "title": "Impostazioni",
+  "usage": {
+    "account": {
+      "description": "I dettagli e i limiti del tuo account",
+      "globalLimit": "Limite Globale",
+      "monthlyLimit": "Limite Mensile",
+      "projects": "Progetti",
+      "role": "Ruolo",
+      "title": "Informazioni sull'Account"
+    },
+    "stats": {
+      "description": "Monitora l'utilizzo e i costi del tuo token",
+      "loading": "Caricamento statistiche di utilizzo...",
+      "monthlyCost": "Costo Mensile",
+      "monthlyUsage": "Utilizzo Mensile",
+      "percentUsed": "{{percent}}% utilizzato",
+      "thisMonth": "Questo Mese",
+      "title": "Statistiche di Utilizzo",
+      "totalCost": "Costo Totale",
+      "totalTokens": "Token Totali",
+      "totalUsage": "Utilizzo Totale"
+    }
+  }
+}

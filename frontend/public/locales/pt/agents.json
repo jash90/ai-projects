@@ -1,0 +1,139 @@
+{
+  "dialog": {
+    "buttons": {
+      "cancel": "Cancelar",
+      "create": "Criar Agente",
+      "creating": "Criando...",
+      "update": "Atualizar Agente",
+      "updating": "Atualizando..."
+    },
+    "fields": {
+      "changeModel": "Alterar modelo",
+      "description": "Descrição",
+      "descriptionPlaceholder": "Descreva o que este agente faz...",
+      "maxTokens": "Máx Tokens",
+      "maxTokensHint": "Comprimento máximo da resposta",
+      "model": "Modelo",
+      "modelSelect": "Selecionar modelo...",
+      "name": "Nome do Agente *",
+      "namePlaceholder": "Meu Assistente de IA",
+      "noModelSelected": "Nenhum modelo selecionado",
+      "notConfigured": "Não configurado",
+      "provider": "Fornecedor",
+      "providerNotConfigured": "Fornecedor não configurado",
+      "providerSettings": "Configurar nas Definições",
+      "selectModel": "Selecionar um modelo",
+      "systemPrompt": "Prompt do Sistema *",
+      "systemPromptHint": "Instruções que definem como o agente se comporta",
+      "systemPromptPlaceholder": "Você é um assistente de IA útil...",
+      "temperature": "Temperatura",
+      "temperatureHint": "Valores mais baixos = mais focado, Valores mais altos = mais criativo"
+    },
+    "loadError": "Falha ao carregar modelos de IA",
+    "loading": "Carregando fornecedores de IA...",
+    "retry": "Tentar novamente",
+    "validation": {
+      "modelRequired": "A seleção do modelo é obrigatória",
+      "nameRequired": "O nome do agente é obrigatório",
+      "promptRequired": "O prompt do sistema é obrigatório"
+    }
+  },
+  "models": {
+    "chip": {
+      "removeFromFavorites": "Remover dos favoritos"
+    },
+    "comparison": {
+      "backToList": "← Voltar à Lista",
+      "browseModels": "Navegar Modelos",
+      "category": "Categoria",
+      "comparing_one": "Comparando {{count}} modelo",
+      "comparing_other": "Comparando {{count}} Modelos",
+      "contextWindow": "Janela de Contexto",
+      "costTier": "Nível de Custo",
+      "description": "Descrição",
+      "empty": {
+        "description": "Selecione até 3 modelos da lista para compará-los lado a lado",
+        "title": "Nenhum Modelo para Comparar"
+      },
+      "legend": "🏆 = Melhor na categoria • Clique em qualquer cartão de modelo para selecioná-lo",
+      "modelId": "ID do Modelo",
+      "removeFromComparison": "Remover da comparação",
+      "selectThisModel": "Selecionar Este Modelo",
+      "tokens": "tokens",
+      "unknown": "Desconhecido"
+    },
+    "detail": {
+      "addToCompare": "📊 Adicionar para Comparar",
+      "addToFavorites": "Adicionar aos favoritos",
+      "by": "por {{provider}}",
+      "capabilities": "Capacidades",
+      "chat": "💬 Chat",
+      "comparisonFull": "Remova um modelo da comparação para adicionar este (máx. 3)",
+      "contextWindow": "Janela de Contexto",
+      "cost": "Custo de {{cost}}",
+      "costTier": "Faixa de Custo",
+      "description": "Descrição",
+      "favorite": "🤍 Favorito",
+      "favorited": "❤️ Favoritado",
+      "inComparison": "✓ Em Comparação",
+      "modelId": "ID do Modelo",
+      "noSelection": {
+        "description": "Clique em um modelo da lista para ver informações detalhadas",
+        "title": "Nenhum Modelo Selecionado"
+      },
+      "popularModel": "Modelo Popular",
+      "provider": "Fornecedor",
+      "removeFromFavorites": "Remover dos favoritos",
+      "selectThisModel": "Selecionar Este Modelo",
+      "specifications": "Especificações",
+      "streaming": "🔄 Streaming",
+      "tokens": "tokens"
+    },
+    "picker": {
+      "available_one": "{{count}} modelo disponível",
+      "available_other": "{{count}} modelos disponíveis",
+      "cancel": "Cancelar",
+      "close": "Fechar (Esc)",
+      "compare": "Comparar",
+      "favorites": "Favoritos",
+      "hideFavorites": "Ocultar favoritos/recents",
+      "inComparison_one": "{{count}} modelo em comparação",
+      "inComparison_other": "{{count}} modelos em comparação",
+      "loading": "Carregando modelos OpenRouter...",
+      "recentlyUsed": "Usados Recentemente",
+      "search": "Pesquisar modelos (ex.: 'gpt', 'claude', 'llama')...",
+      "selectModel": "Selecionar Modelo",
+      "shortcuts": "Ctrl+K: Pesquisar • Ctrl+F: Favoritos • Ctrl+C: Comparar",
+      "title": "Selecionar Modelo OpenRouter"
+    }
+  },
+  "panel": {
+    "browseAll": "Navegar por Todos os Agentes",
+    "dismiss": "Dispensar",
+    "empty": {
+      "description": "Entre em contato com o administrador para criar agentes",
+      "title": "Nenhum agente disponível"
+    },
+    "maxTokens": "Máx.:",
+    "noSelection": "Nenhum agente selecionado",
+    "temp": "Temp:",
+    "title": "Agentes de IA",
+    "tokens": "tokens"
+  },
+  "picker": {
+    "empty": {
+      "hint": "Tente um termo de busca diferente",
+      "title": "Nenhum agente encontrado"
+    },
+    "searchAdmin": "Pesquisar agentes por nome, descrição ou modelo...",
+    "searchUser": "Pesquisar agentes por nome ou descrição...",
+    "select": "Selecionar Agente",
+    "selected": "Selecionado",
+    "title": "Selecionar Agente de IA"
+  },
+  "providers": {
+    "anthropic": "Anthropic",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "agentNotFound": {
+    "description": "Kérjük, válasszon egy ügynököt a csevegés megkezdéséhez",
+    "title": "Ügynök nem található"
+  },
+  "clearConfirm": "Biztos benne, hogy törölni szeretné ezt a beszélgetést? Ez a művelet nem vonható vissza.",
+  "emptyState": {
+    "description": "Küldjön egy üzenetet, hogy elkezdhesse a csevegést {{agentName}}-el",
+    "filesHint": "Ez az ügynök hozzáférhet a projektfájljaihoz a kontextus érdekében",
+    "title": "Beszélgetés indítása"
+  },
+  "errors": {
+    "cannotSend": "Az üzenet nem küldhető el. Kérjük, ellenőrizze a fiókjának állapotát.",
+    "createFailed": "A beszélgetés létrehozása nem sikerült",
+    "deleteFailed": "A beszélgetés törlése nem sikerült",
+    "loadFailed": "A beszélgetések betöltése nem sikerült",
+    "sendFailed": "Az üzenet küldése nem sikerült. Kérjük, próbálja újra.",
+    "tokenLimitExceeded": "A token limit túllépve. Az üzenet nem küldhető el."
+  },
+  "header": {
+    "clearConversation": "Beszélgetés törlése",
+    "connected": "Csatlakozva",
+    "disconnected": "Kapcsolat megszakítva",
+    "files": "Fájlok",
+    "moreOptions": "További lehetőségek",
+    "toggleSidebar": "Oldalsáv váltása"
+  },
+  "input": {
+    "attachFile": "Fájl csatolása",
+    "attachFiles": "Fájlok csatolása (képek, PDF)",
+    "characters_one": "karakter",
+    "characters_other": "karakter",
+    "fileTooLarge": "A fájl túl nagy: {{name}}. Maximális méret: {{maxSize}}MB",
+    "maxFilesError_one": "max fájlok hiba",
+    "maxFilesError_other": "max fájlok hiba",
+    "placeholder": "Írja be az üzenetét...",
+    "send": "Küldés",
+    "sendMessage": "Üzenet küldése",
+    "startTyping": "Kezdje el gépelni...",
+    "unsupportedFileType": "Támogatott fájltípus: {{type}}. Támogatott: képek, PDF"
+  },
+  "limits": {
+    "global": "Globális limit",
+    "monthly": "Havi limit",
+    "remaining_one": "maradt limit",
+    "remaining_other": "maradt limit"
+  },
+  "message": {
+    "error": "Hiba",
+    "you": "Ön"
+  },
+  "placeholder": "Üzenet {{agentName}}-nek...",
+  "selectAgent": {
+    "description": "Válasszon egy AI ügynököt az oldalsávból a beszélgetés megkezdéséhez. Minden ügynöknek különböző képességei és modelljei vannak.",
+    "title": "Ügynök kiválasztása"
+  },
+  "streaming": {
+    "disable": "Streaming válaszok letiltása",
+    "enable": "Streaming válaszok engedélyezése",
+    "regular": "Rendszeres",
+    "streaming": "Streaming"
+  },
+  "thinking": "{{agentName}} gondolkodik...",
+  "threads": {
+    "deleteConfirm": "Biztos benne, hogy törölni szeretné ezt a beszélgetést?",
+    "deleteConversation": "Beszélgetés törlése",
+    "messageCount_one": "{{count}} üzenet",
+    "messageCount_other": "{{count}} üzenet",
+    "newConversation": "Új beszélgetés",
+    "newThread": "Új beszélgetés",
+    "noConversations": "Még nincsenek beszélgetések",
+    "startNew": "Indíts egy új beszélgetést",
+    "title": "Beszélgetések"
+  }
+}

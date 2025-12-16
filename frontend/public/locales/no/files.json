@@ -1,0 +1,89 @@
+{
+  "dialog": {
+    "cancel": "Avbryt",
+    "content": "Innhold",
+    "contentHint": "Du kan redigere innholdet etter at filen er opprettet.",
+    "contentPlaceholder": "Filinnhold...",
+    "create": "Opprett fil",
+    "createTitle": "Opprett ny fil",
+    "creating": "Oppretter...",
+    "fileName": "Filnavn",
+    "fileNamePlaceholder": "f.eks., main.js, README.md",
+    "fileNameRequired": "Filnavn er påkrevd",
+    "fileType": "Filtype",
+    "fileTypeRequired": "Filtype er påkrevd"
+  },
+  "editor": {
+    "autoSave": {
+      "pending": "Auto-lagring: Venter",
+      "upToDate": "Auto-lagring: Oppdatert"
+    },
+    "characters_one": "editor.tegn",
+    "characters_other": "editor.tegn",
+    "language": "Språk: {{language}}",
+    "lines_one": "editor.linje",
+    "lines_other": "editor.linjer",
+    "loading": "Laster inn editor...",
+    "noFile": {
+      "description": "Velg en fil fra utforskeren for å begynne å redigere",
+      "title": "Ingen fil valgt"
+    },
+    "placeholder": "Begynn å skrive...",
+    "revert": "Tilbakestill",
+    "revertConfirm": "Er du sikker på at du vil tilbakestille alle usparte endringer?",
+    "save": "Lagre",
+    "saving": "Lagrer...",
+    "shortcuts": {
+      "exitFullscreen": "Trykk Esc for å avslutte fullskjerm",
+      "save": "Ctrl+S for å lagre"
+    },
+    "type": "Type: {{type}}",
+    "unsavedChanges": "Usparte endringer",
+    "unsavedChangesText": "Usparte endringer"
+  },
+  "explorer": {
+    "contextMenu": {
+      "copyContent": "Kopier innhold",
+      "delete": "Slett",
+      "open": "Åpne"
+    },
+    "createTitle": "Opprett ny fil",
+    "deleteConfirm": "Er du sikker på at du vil slette \"{{name}}\"? Denne handlingen kan ikke angres.",
+    "dismiss": "Avvis",
+    "empty": {
+      "description": "Opprett din første fil for å komme i gang",
+      "title": "Ingen filer i dette prosjektet"
+    },
+    "fileCount_one": "explorer.fil",
+    "fileCount_other": "{{count}} filer",
+    "noResults": "Ingen filer samsvarer med søket ditt",
+    "searchPlaceholder": "Søk etter filer...",
+    "shown_one": "explorer.vises",
+    "shown_other": "explorer.vises",
+    "title": "Filer",
+    "uploadTitle": "Last opp filer fra datamaskin"
+  },
+  "upload": {
+    "cancel": "Avbryt",
+    "complete": "Opplasting fullført",
+    "description": "Last opp filer fra datamaskinen din. Filene vil bli lest og lagret som redigerbare tekstfiler i prosjektet.",
+    "done": "Ferdig",
+    "dropzone": {
+      "active": "Slipp filer her",
+      "andMore_one": "last opp flere filer",
+      "andMore_other": "last opp flere filer",
+      "description": "Dra og slipp filer her, eller klikk for å velge filer",
+      "maxSize": "Maksimal filstørrelse: {{size}}MB",
+      "supportedTypes": "Støttede typer: {{types}}",
+      "title": "Last opp filer fra datamaskinen din"
+    },
+    "errors": {
+      "tooLarge": "Fil \"{{name}}\" er for stor. Maksimal størrelse er {{maxSize}}MB.",
+      "unsupportedType": "Filtype ikke støttet. Tillatte typer: {{types}}"
+    },
+    "success_one": "fil lastet opp",
+    "success_other": "{{count}} filer lastet opp vellykket!",
+    "title": "Last opp filer til prosjektet",
+    "uploading": "Laster opp filer"
+  }
+}

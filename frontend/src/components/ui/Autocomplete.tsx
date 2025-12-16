@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useId } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Input } from './Input'
 import { Label } from './Label'
 import { useDebounce } from '@/hooks/useDebounce'
@@ -51,7 +52,7 @@ interface AutocompleteProps {
 export function Autocomplete({
   id,
   label,
-  placeholder = 'Search...',
+  placeholder,
   options,
   value,
   onChange,
@@ -63,7 +64,7 @@ export function Autocomplete({
   groupByCategory = false,
   maxHeight = '400px',
   isLoading = false,
-  loadingMessage = 'Loading...',
+  loadingMessage,
   onRetry,
   enableFilters = false,
   filters = {},
@@ -72,9 +73,14 @@ export function Autocomplete({
   persistentOpen = false,
   inputRef: externalInputRef
 }: AutocompleteProps) {
+  const { t } = useTranslation('common')
   // Generate stable unique ID for ARIA attributes when id prop is not provided
   const generatedId = useId()
   const baseId = id ?? generatedId
+
+  // Use translated defaults
+  const effectivePlaceholder = placeholder ?? t('autocomplete.search')
+  const effectiveLoadingMessage = loadingMessage ?? t('autocomplete.loading')
 
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const [searchQuery, setSearchQuery] = useState('')
@@ -424,7 +430,7 @@ export function Autocomplete({
               onChange={handleInputChange}
               onFocus={handleInputFocus}
               onKeyDown={handleKeyDown}
-              placeholder={placeholder}
+              placeholder={effectivePlaceholder}
               disabled={disabled}
               className={error ? 'border-destructive' : ''}
               autoComplete="off"
@@ -434,17 +440,17 @@ export function Autocomplete({
               aria-activedescendant={isOpen ? activeDescendantId : undefined}
               aria-autocomplete="list"
               aria-haspopup="listbox"
-              aria-label={label || placeholder}
+              aria-label={label || effectivePlaceholder}
             />
             {/* Screen reader announcements */}
             <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
               {isOpen && flatOptions.length > 0 && (
-                `${flatOptions.length} ${flatOptions.length === 1 ? 'option' : 'options'} available`
+                t('autocomplete.option', { count: flatOptions.length })
               )}
               {isOpen && flatOptions.length === 0 && !isLoading && (
-                'No options available'
+                t('autocomplete.noOptionsAvailable')
               )}
-              {isLoading && 'Loading options...'}
+              {isLoading && t('autocomplete.loadingOptions')}
             </div>
           </div>
           {enableFilters && (
@@ -454,7 +460,7 @@ export function Autocomplete({
               className={`px-3 py-2 border border-border rounded-md hover:bg-accent transition-colors ${
                 hasActiveFilters ? 'bg-primary text-primary-foreground' : 'bg-background'
               }`}
-              title="Toggle filters"
+              title={t('autocomplete.toggleFilters')}
             >
               🔍 {hasActiveFilters && `(${
                 (filters.costTiers?.length || 0) +
@@ -470,14 +476,14 @@ export function Autocomplete({
         {enableFilters && showFilters && (
           <div className="mt-2 p-3 bg-muted/50 border border-border rounded-md space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Filters</span>
+              <span className="text-sm font-medium">{t('autocomplete.filters')}</span>
               {hasActiveFilters && (
                 <button
                   type="button"
                   onClick={clearFilters}
                   className="text-xs text-primary hover:underline"
                 >
-                  Clear all
+                  {t('autocomplete.clearAll')}
                 </button>
               )}
             </div>
@@ -485,7 +491,7 @@ export function Autocomplete({
             {/* Cost Tier Filter */}
             {availableCostTiers.length > 0 && (
               <div>
-                <Label className="text-xs">Cost Tier</Label>
+                <Label className="text-xs">{t('autocomplete.costTier')}</Label>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {availableCostTiers.map(tier => (
                     <button
@@ -508,7 +514,7 @@ export function Autocomplete({
             {/* Provider Filter */}
             {availableProviders.length > 0 && (
               <div>
-                <Label className="text-xs">Provider</Label>
+                <Label className="text-xs">{t('autocomplete.provider')}</Label>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {availableProviders.map(provider => (
                     <button
@@ -530,22 +536,22 @@ export function Autocomplete({
 
             {/* Context Window Filter */}
             <div>
-              <Label className="text-xs">Context Window (tokens)</Label>
+              <Label className="text-xs">{t('autocomplete.contextWindow')}</Label>
               <div className="flex gap-2 mt-1">
                 <div className="flex-1">
                   <input
                     type="number"
-                    placeholder="Min"
+                    placeholder={t('autocomplete.min')}
                     value={filters.minContextWindow || ''}
                     onChange={(e) => onFiltersChange?.({ ...filters, minContextWindow: e.target.value ? parseInt(e.target.value) : undefined })}
                     className="w-full px-2 py-1 text-xs border border-border rounded bg-background"
                   />
                 </div>
-                <span className="text-xs text-muted-foreground self-center">to</span>
+                <span className="text-xs text-muted-foreground self-center">{t('autocomplete.to')}</span>
                 <div className="flex-1">
                   <input
                     type="number"
-                    placeholder="Max"
+                    placeholder={t('autocomplete.max')}
                     value={filters.maxContextWindow || ''}
                     onChange={(e) => onFiltersChange?.({ ...filters, maxContextWindow: e.target.value ? parseInt(e.target.value) : undefined })}
                     className="w-full px-2 py-1 text-xs border border-border rounded bg-background"
@@ -561,7 +567,7 @@ export function Autocomplete({
             ref={listRef}
             id={listboxId}
             role="listbox"
-            aria-label={`${label || placeholder} options`}
+            aria-label={`${label || effectivePlaceholder} options`}
             className="absolute z-50 w-full mt-1 bg-background border border-border rounded-md shadow-lg overflow-auto"
             style={{ maxHeight }}
           >
@@ -569,13 +575,13 @@ export function Autocomplete({
             {isLoading ? (
               <div className="px-3 py-8 text-sm text-center text-muted-foreground">
                 <div className="inline-block w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin mb-3"></div>
-                <div>{loadingMessage}</div>
+                <div>{effectiveLoadingMessage}</div>
               </div>
             ) : error ? (
               /* Error State */
               <div className="px-3 py-8 text-sm text-center">
                 <div className="text-2xl mb-2">⚠️</div>
-                <div className="text-destructive font-medium mb-2">Failed to load options</div>
+                <div className="text-destructive font-medium mb-2">{t('autocomplete.failedToLoad')}</div>
                 <div className="text-muted-foreground text-xs mb-3">{error}</div>
                 {onRetry && (
                   <button
@@ -585,7 +591,7 @@ export function Autocomplete({
                     }}
                     className="px-3 py-1.5 text-xs bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors"
                   >
-                    Try Again
+                    {t('autocomplete.tryAgain')}
                   </button>
                 )}
               </div>
@@ -596,8 +602,8 @@ export function Autocomplete({
                 {!debouncedSearchQuery && options.length > 0 && (
                   <div className="px-3 py-2 text-xs text-muted-foreground border-b border-border bg-muted/30 flex items-center justify-between">
                     <span>
-                      {options.length} {options.length === 1 ? 'model' : 'models'} available
-                      {showPopularFirst && ' • ⭐ Popular models first'}
+                      {t('autocomplete.model', { count: options.length })}
+                      {showPopularFirst && ` • ⭐ ${t('autocomplete.popularFirst')}`}
                     </span>
                     {groupByCategory && groupedOptions.length > 1 && (
                       <div className="flex gap-2">
@@ -605,18 +611,18 @@ export function Autocomplete({
                           type="button"
                           onClick={expandAllCategories}
                           className="text-primary hover:underline"
-                          title="Expand all categories"
+                          title={t('autocomplete.expandAll')}
                         >
-                          Expand all
+                          {t('autocomplete.expandAll')}
                         </button>
                         <span className="text-muted-foreground">|</span>
                         <button
                           type="button"
                           onClick={collapseAllCategories}
                           className="text-primary hover:underline"
-                          title="Collapse all categories"
+                          title={t('autocomplete.collapseAll')}
                         >
-                          Collapse all
+                          {t('autocomplete.collapseAll')}
                         </button>
                       </div>
                     )}
@@ -624,7 +630,7 @@ export function Autocomplete({
                 )}
                 {debouncedSearchQuery && flatOptions.length > 0 && (
                   <div className="px-3 py-2 text-xs text-muted-foreground border-b border-border bg-muted/30">
-                    {flatOptions.length} {flatOptions.length === 1 ? 'result' : 'results'} for "{debouncedSearchQuery}"
+                    {t('autocomplete.result', { count: flatOptions.length, query: debouncedSearchQuery })}
                   </div>
                 )}
                 {groupedOptions.map((group, groupIndex) => {
@@ -652,7 +658,7 @@ export function Autocomplete({
                             </span>
                           </span>
                           <span className="text-xs font-normal normal-case opacity-0 group-hover:opacity-100 transition-opacity">
-                            {isCollapsed ? 'Click to expand' : 'Click to collapse'}
+                            {isCollapsed ? t('autocomplete.clickToExpand') : t('autocomplete.clickToCollapse')}
                           </span>
                         </button>
                       )}
@@ -686,7 +692,7 @@ export function Autocomplete({
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
                                   {option.isPopular && (
-                                    <span className="text-yellow-500 text-xs" title="Popular">⭐</span>
+                                    <span className="text-yellow-500 text-xs" title={t('autocomplete.popular')}>⭐</span>
                                   )}
                                   <span className="text-sm font-medium truncate">{option.name}</span>
                                 </div>
@@ -699,19 +705,19 @@ export function Autocomplete({
                                   <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
                                     {option.metadata.provider && (
                                       <span className="flex items-center gap-1">
-                                        <span className="opacity-70">Provider:</span>
+                                        <span className="opacity-70">{t('autocomplete.providerLabel')}</span>
                                         <span className="font-medium">{option.metadata.provider}</span>
                                       </span>
                                     )}
                                     {option.metadata.contextWindow && (
                                       <span className="flex items-center gap-1">
-                                        <span className="opacity-70">Context:</span>
+                                        <span className="opacity-70">{t('autocomplete.contextLabel')}</span>
                                         <span className="font-medium">{(option.metadata.contextWindow / 1000).toFixed(0)}K</span>
                                       </span>
                                     )}
                                     {option.metadata.cost && (
                                       <span className="flex items-center gap-1">
-                                        <span className="opacity-70">Cost:</span>
+                                        <span className="opacity-70">{t('autocomplete.costLabel')}</span>
                                         <span className="font-medium">{option.metadata.cost}</span>
                                       </span>
                                     )}
@@ -732,8 +738,8 @@ export function Autocomplete({
             ) : (
               <div className="px-3 py-8 text-sm text-center text-muted-foreground">
                 <div className="text-2xl mb-2">🔍</div>
-                <div>No models found</div>
-                <div className="text-xs mt-1">Try a different search term</div>
+                <div>{t('autocomplete.noModelsFound')}</div>
+                <div className="text-xs mt-1">{t('autocomplete.tryDifferentSearch')}</div>
               </div>
             )}
           </div>

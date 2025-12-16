@@ -1,0 +1,139 @@
+{
+  "dialog": {
+    "buttons": {
+      "cancel": "Mégsem",
+      "create": "Ügynök létrehozása",
+      "creating": "Létrehozás...",
+      "update": "Ügynök frissítése",
+      "updating": "Frissítés..."
+    },
+    "fields": {
+      "changeModel": "modell megváltoztatása",
+      "description": "Leírás",
+      "descriptionPlaceholder": "Írd le, mit csinál ez az ügynök...",
+      "maxTokens": "Max Token",
+      "maxTokensHint": "Maximális válasz hossz",
+      "model": "Modell",
+      "modelSelect": "Modell kiválasztása...",
+      "name": "Ügynök neve *",
+      "namePlaceholder": "AI Asszisztensem",
+      "noModelSelected": "Nincs kiválasztott modell",
+      "notConfigured": "Nincs konfigurálva",
+      "provider": "Szolgáltató",
+      "providerNotConfigured": "A szolgáltató nincs konfigurálva",
+      "providerSettings": "Szolgáltató beállítások",
+      "selectModel": "Modell kiválasztása",
+      "systemPrompt": "Rendszerüzenet *",
+      "systemPromptHint": "A rendszerüzenet útmutatást ad az ügynöknek",
+      "systemPromptPlaceholder": "Te egy segítőkész AI asszisztens vagy...",
+      "temperature": "Hőmérséklet",
+      "temperatureHint": "Alacsonyabb értékek = fókuszáltabb, Magasabb értékek = kreatívabb"
+    },
+    "loadError": "AI modellek betöltése sikertelen",
+    "loading": "AI szolgáltatók betöltése...",
+    "retry": "Újrapróbálkozás",
+    "validation": {
+      "modelRequired": "A modell kiválasztása kötelező",
+      "nameRequired": "Az ügynök neve kötelező",
+      "promptRequired": "A rendszerüzenet kötelező"
+    }
+  },
+  "models": {
+    "chip": {
+      "removeFromFavorites": "Eltávolítás a kedvencekből"
+    },
+    "comparison": {
+      "backToList": "← Vissza a listához",
+      "browseModels": "Modellek böngészése",
+      "category": "Kategória",
+      "comparing_one": "Összehasonlítás {{count}} modell",
+      "comparing_other": "Összehasonlítás {{count}} modellel",
+      "contextWindow": "Konteksterület",
+      "costTier": "Költségszint",
+      "description": "Leírás",
+      "empty": {
+        "description": "Válassz ki legfeljebb 3 modellt a listából, hogy összehasonlítsd őket egymás mellett",
+        "title": "Nincsenek összehasonlítandó modellek"
+      },
+      "legend": "🏆 = Legjobb a kategóriában • Kattints bármelyik modellkártyára a kiválasztáshoz",
+      "modelId": "Modell azonosító",
+      "removeFromComparison": "Eltávolítás az összehasonlításból",
+      "selectThisModel": "Válaszd ezt a modellt",
+      "tokens": "token",
+      "unknown": "Ismeretlen"
+    },
+    "detail": {
+      "addToCompare": "📊 Hozzáadás az összehasonlításhoz",
+      "addToFavorites": "Hozzáadás a kedvencekhez",
+      "by": "{{provider}} által",
+      "capabilities": "Képességek",
+      "chat": "💬 Csevegés",
+      "comparisonFull": "Távolíts el egy modellt az összehasonlításból, hogy hozzáadd ezt (max 3)",
+      "contextWindow": "Konteksterület",
+      "cost": "{{cost}} Költség",
+      "costTier": "Költségszint",
+      "description": "Leírás",
+      "favorite": "🤍 Kedvenc",
+      "favorited": "❤️ Kedvencként jelölve",
+      "inComparison": "✓ Összehasonlításban",
+      "modelId": "Modell azonosító",
+      "noSelection": {
+        "description": "Kattints egy modellre a listából a részletes információk megtekintéséhez",
+        "title": "Nincs kiválasztott modell"
+      },
+      "popularModel": "Népszerű modell",
+      "provider": "Szolgáltató",
+      "removeFromFavorites": "Eltávolítás a kedvencekből",
+      "selectThisModel": "Válaszd ezt a modellt",
+      "specifications": "Műszaki adatok",
+      "streaming": "🔄 Streaming",
+      "tokens": "token"
+    },
+    "picker": {
+      "available_one": "modell elérhető",
+      "available_other": "{{count}} modell elérhető",
+      "cancel": "Mégse",
+      "close": "Bezárás (Esc)",
+      "compare": "Összehasonlítás",
+      "favorites": "Kedvencek",
+      "hideFavorites": "Kedvencek/legutóbbiak elrejtése",
+      "inComparison_one": "modell összehasonlításban",
+      "inComparison_other": "modellek összehasonlításban",
+      "loading": "OpenRouter modellek betöltése...",
+      "recentlyUsed": "Legutóbb használt",
+      "search": "Modellek keresése (pl. 'gpt', 'claude', 'llama')...",
+      "selectModel": "Modell kiválasztása",
+      "shortcuts": "Ctrl+K: Keresés • Ctrl+F: Kedvencek • Ctrl+C: Összehasonlítás",
+      "title": "OpenRouter Modell Kiválasztása"
+    }
+  },
+  "panel": {
+    "browseAll": "Minden ügynök böngészése",
+    "dismiss": "Elvetés",
+    "empty": {
+      "description": "Lépj kapcsolatba az adminisztrátorral ügynökök létrehozásához",
+      "title": "Nincs elérhető ügynök"
+    },
+    "maxTokens": "Max:",
+    "noSelection": "Nincs kiválasztott ügynök",
+    "temp": "Hőmérséklet:",
+    "title": "AI Ügynökök",
+    "tokens": "token"
+  },
+  "picker": {
+    "empty": {
+      "hint": "Próbálj meg egy másik keresési kifejezést",
+      "title": "Nincs található ügynök"
+    },
+    "searchAdmin": "Ügynökök keresése név, leírás vagy modell alapján...",
+    "searchUser": "Ügynökök keresése név vagy leírás alapján...",
+    "select": "Ügynök kiválasztása",
+    "selected": "Kiválasztva",
+    "title": "AI Ügynök kiválasztása"
+  },
+  "providers": {
+    "anthropic": "Anthropic",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter"
+  }
+}

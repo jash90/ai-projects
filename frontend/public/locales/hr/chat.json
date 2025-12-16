@@ -1,0 +1,75 @@
+{
+  "agentNotFound": {
+    "description": "Molimo odaberite agenta za početak razgovora",
+    "title": "Agent nije pronađen"
+  },
+  "clearConfirm": "Jeste li sigurni da želite očistiti ovaj razgovor? Ova radnja se ne može poništiti.",
+  "emptyState": {
+    "description": "Pošaljite poruku kako biste započeli razgovor s {{agentName}}",
+    "filesHint": "Ovaj agent može pristupiti vašim projektima za kontekst",
+    "title": "Započnite razgovor"
+  },
+  "errors": {
+    "cannotSend": "Ne mogu poslati poruku. Molimo provjerite status svog računa.",
+    "createFailed": "Neuspješno stvaranje razgovora",
+    "deleteFailed": "Neuspješno brisanje razgovora",
+    "loadFailed": "Neuspješno učitavanje razgovora",
+    "sendFailed": "Neuspješno slanje poruke. Molimo pokušajte ponovo.",
+    "tokenLimitExceeded": "Prekoračen limit tokena. Ne mogu poslati poruku."
+  },
+  "header": {
+    "clearConversation": "Očisti razgovor",
+    "connected": "Povezano",
+    "disconnected": "Prekinuto",
+    "files": "Datoteke",
+    "moreOptions": "Više opcija",
+    "toggleSidebar": "Prebaci bočnu traku"
+  },
+  "input": {
+    "attachFile": "Priloži datoteku",
+    "attachFiles": "Priloži datoteke (slike, PDF)",
+    "characters_one": "input.characters",
+    "characters_other": "input.characters",
+    "fileTooLarge": "Datoteka prevelika: {{name}}. Maksimalna veličina: {{maxSize}}MB",
+    "maxFilesError_one": "input.maxFilesError",
+    "maxFilesError_other": "input.maxFilesError",
+    "placeholder": "Upišite svoju poruku...",
+    "send": "Pošalji",
+    "sendMessage": "Pošalji poruku",
+    "startTyping": "Započnite tipkanje...",
+    "unsupportedFileType": "Nepodržani tip datoteke: {{type}}. Podržani: slike, PDF"
+  },
+  "limits": {
+    "global": "Globalni limit",
+    "monthly": "Mjesečni limit",
+    "remaining_one": "limits.remaining",
+    "remaining_other": "limits.remaining"
+  },
+  "message": {
+    "error": "Greška",
+    "you": "Vi"
+  },
+  "placeholder": "Poruka {{agentName}}...",
+  "selectAgent": {
+    "description": "Odaberite AI agenta iz bočne trake za započinjanje razgovora. Svaki agent ima različite mogućnosti i modele.",
+    "title": "Odaberite agenta"
+  },
+  "streaming": {
+    "disable": "Onemogući strimanje odgovora",
+    "enable": "Omogući strimanje odgovora",
+    "regular": "Redovni",
+    "streaming": "Strimanje"
+  },
+  "thinking": "{{agentName}} razmišlja...",
+  "threads": {
+    "deleteConfirm": "Jeste li sigurni da želite izbrisati ovaj razgovor?",
+    "deleteConversation": "Izbriši razgovor",
+    "messageCount_one": "{{count}} poruka",
+    "messageCount_other": "{{count}} poruke",
+    "newConversation": "Novi razgovor",
+    "newThread": "Novi razgovor",
+    "noConversations": "Još nema razgovora",
+    "startNew": "Započni novi razgovor",
+    "title": "Razgovori"
+  }
+}

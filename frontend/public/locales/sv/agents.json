@@ -1,0 +1,139 @@
+{
+  "dialog": {
+    "buttons": {
+      "cancel": "Avbryt",
+      "create": "Skapa Agent",
+      "creating": "Skapar...",
+      "update": "Uppdatera Agent",
+      "updating": "Uppdaterar..."
+    },
+    "fields": {
+      "changeModel": "Ändra modell",
+      "description": "Beskrivning",
+      "descriptionPlaceholder": "Beskriv vad denna agent gör...",
+      "maxTokens": "Max Tokens",
+      "maxTokensHint": "Maximal svarslängd",
+      "model": "Modell",
+      "modelSelect": "Välj modell...",
+      "name": "Agentnamn *",
+      "namePlaceholder": "Min AI-assistent",
+      "noModelSelected": "Ingen modell vald",
+      "notConfigured": "Inte konfigurerad",
+      "provider": "Leverantör",
+      "providerNotConfigured": "Leverantör inte konfigurerad",
+      "providerSettings": "Konfigurera i Inställningar",
+      "selectModel": "Välj en modell",
+      "systemPrompt": "Systemprompt *",
+      "systemPromptHint": "Instruktioner som definierar hur agenten beter sig",
+      "systemPromptPlaceholder": "Du är en hjälpsam AI-assistent...",
+      "temperature": "Temperatur",
+      "temperatureHint": "Lägre värden = mer fokuserad, Högre värden = mer kreativ"
+    },
+    "loadError": "Misslyckades med att ladda AI-modeller",
+    "loading": "Laddar AI-leverantörer...",
+    "retry": "Försök igen",
+    "validation": {
+      "modelRequired": "Modellval krävs",
+      "nameRequired": "Agentnamn krävs",
+      "promptRequired": "Systemprompt krävs"
+    }
+  },
+  "models": {
+    "chip": {
+      "removeFromFavorites": "Ta bort från favoriter"
+    },
+    "comparison": {
+      "backToList": "← Tillbaka till listan",
+      "browseModels": "Bläddra bland modeller",
+      "category": "Kategori",
+      "comparing_one": "Jämför {{count}} modell",
+      "comparing_other": "Jämför {{count}} modeller",
+      "contextWindow": "Kontextfönster",
+      "costTier": "Kostnadsnivå",
+      "description": "Beskrivning",
+      "empty": {
+        "description": "Välj upp till 3 modeller från listan för att jämföra dem sida vid sida",
+        "title": "Inga modeller att jämföra"
+      },
+      "legend": "🏆 = Bäst i kategori • Klicka på valfri modellkort för att välja den",
+      "modelId": "Modell-ID",
+      "removeFromComparison": "Ta bort från jämförelse",
+      "selectThisModel": "Välj denna modell",
+      "tokens": "tokens",
+      "unknown": "Okänd"
+    },
+    "detail": {
+      "addToCompare": "📊 Lägg till för jämförelse",
+      "addToFavorites": "Lägg till i favoriter",
+      "by": "av {{provider}}",
+      "capabilities": "Funktioner",
+      "chat": "💬 Chatt",
+      "comparisonFull": "Ta bort en modell från jämförelsen för att lägga till denna (max 3)",
+      "contextWindow": "Kontextfönster",
+      "cost": "{{cost}} Kostnad",
+      "costTier": "Kostnadsnivå",
+      "description": "Beskrivning",
+      "favorite": "🤍 Favorit",
+      "favorited": "❤️ Favoritmarkerad",
+      "inComparison": "✓ I Jämförelse",
+      "modelId": "Modell-ID",
+      "noSelection": {
+        "description": "Klicka på en modell från listan för att se detaljerad information",
+        "title": "Ingen Modell Vald"
+      },
+      "popularModel": "Populär Modell",
+      "provider": "Leverantör",
+      "removeFromFavorites": "Ta bort från favoriter",
+      "selectThisModel": "Välj Denna Modell",
+      "specifications": "Specifikationer",
+      "streaming": "🔄 Streaming",
+      "tokens": "tokens"
+    },
+    "picker": {
+      "available_one": "{{count}} modell tillgänglig",
+      "available_other": "{{count}} modeller tillgängliga",
+      "cancel": "Avbryt",
+      "close": "Stäng (Esc)",
+      "compare": "Jämför",
+      "favorites": "Favoriter",
+      "hideFavorites": "Dölj favoriter/senaste",
+      "inComparison_one": "{{count}} modell i jämförelse",
+      "inComparison_other": "{{count}} modeller i jämförelse",
+      "loading": "Laddar OpenRouter-modeller...",
+      "recentlyUsed": "Senast Använda",
+      "search": "Sök modeller (t.ex. 'gpt', 'claude', 'llama')...",
+      "selectModel": "Välj Modell",
+      "shortcuts": "Ctrl+K: Sök • Ctrl+F: Favoriter • Ctrl+C: Jämför",
+      "title": "Välj OpenRouter Modell"
+    }
+  },
+  "panel": {
+    "browseAll": "Bläddra Bland Alla Agenter",
+    "dismiss": "Avfärda",
+    "empty": {
+      "description": "Kontakta administratören för att skapa agenter",
+      "title": "Inga agenter tillgängliga"
+    },
+    "maxTokens": "Max:",
+    "noSelection": "Ingen agent vald",
+    "temp": "Temp:",
+    "title": "AI Agenter",
+    "tokens": "tokens"
+  },
+  "picker": {
+    "empty": {
+      "hint": "Försök med en annan sökterm",
+      "title": "Inga agenter hittades"
+    },
+    "searchAdmin": "Sök agenter efter namn, beskrivning eller modell...",
+    "searchUser": "Sök agenter efter namn eller beskrivning...",
+    "select": "Välj Agent",
+    "selected": "Vald",
+    "title": "Välj AI-agent"
+  },
+  "providers": {
+    "anthropic": "Anthropic",
+    "openai": "OpenAI",
+    "openrouter": "OpenRouter"
+  }
+}

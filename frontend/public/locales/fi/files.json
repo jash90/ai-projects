@@ -1,0 +1,89 @@
+{
+  "dialog": {
+    "cancel": "Peruuta",
+    "content": "Sisältö",
+    "contentHint": "Voit muokata sisältöä tiedoston luomisen jälkeen.",
+    "contentPlaceholder": "Tiedoston sisältö...",
+    "create": "Luo tiedosto",
+    "createTitle": "Luo uusi tiedosto",
+    "creating": "Luodaan...",
+    "fileName": "Tiedoston nimi",
+    "fileNamePlaceholder": "esim., main.js, README.md",
+    "fileNameRequired": "Tiedoston nimi on pakollinen",
+    "fileType": "Tiedostotyyppi",
+    "fileTypeRequired": "Tiedostotyyppi on pakollinen"
+  },
+  "editor": {
+    "autoSave": {
+      "pending": "Automaattinen tallennus: Odottaa",
+      "upToDate": "Automaattinen tallennus: Ajantasalla"
+    },
+    "characters_one": "editor.merkki",
+    "characters_other": "editor.merkkiä",
+    "language": "Kieli: {{language}}",
+    "lines_one": "editor.rivi",
+    "lines_other": "editor.riviä",
+    "loading": "Ladataan editoria...",
+    "noFile": {
+      "description": "Valitse tiedosto selaimesta aloittaaksesi muokkaamisen",
+      "title": "Ei tiedostoa valittuna"
+    },
+    "placeholder": "Aloita kirjoittaminen...",
+    "revert": "Palauta",
+    "revertConfirm": "Oletko varma, että haluat palauttaa kaikki tallentamattomat muutokset?",
+    "save": "Tallenna",
+    "saving": "Tallennetaan...",
+    "shortcuts": {
+      "exitFullscreen": "Paina Esc poistuaksesi koko näytön tilasta",
+      "save": "Ctrl+S tallentaaksesi"
+    },
+    "type": "Tyyppi: {{type}}",
+    "unsavedChanges": "Tallentamattomat muutokset",
+    "unsavedChangesText": "Tallentamattomat muutokset"
+  },
+  "explorer": {
+    "contextMenu": {
+      "copyContent": "Kopioi sisältö",
+      "delete": "Poista",
+      "open": "Avaa"
+    },
+    "createTitle": "Luo uusi tiedosto",
+    "deleteConfirm": "Oletko varma, että haluat poistaa \"{{name}}\"? Tätä toimintoa ei voi peruuttaa.",
+    "dismiss": "Hylkää",
+    "empty": {
+      "description": "Luo ensimmäinen tiedostosi aloittaaksesi",
+      "title": "Ei tiedostoja tässä projektissa"
+    },
+    "fileCount_one": "explorer.tiedosto",
+    "fileCount_other": "{{count}} tiedostoa",
+    "noResults": "Ei tiedostoja, jotka vastaavat hakua",
+    "searchPlaceholder": "Hae tiedostoja...",
+    "shown_one": "explorer.näytetään",
+    "shown_other": "explorer.näytetään",
+    "title": "Tiedostot",
+    "uploadTitle": "Lataa tiedostoja tietokoneelta"
+  },
+  "upload": {
+    "cancel": "Peruuta",
+    "complete": "Lataus valmis",
+    "description": "Lataa tiedostoja tietokoneeltasi. Tiedostot luetaan ja tallennetaan muokattavina tekstitiedostoina projektiin.",
+    "done": "Valmis",
+    "dropzone": {
+      "active": "Vedä tiedostot tänne",
+      "andMore_one": "lisää tiedosto",
+      "andMore_other": "lisää tiedostoja",
+      "description": "Vedä ja pudota tiedostot tänne tai napsauta valitaksesi tiedostoja",
+      "maxSize": "Suurin tiedostokoko: {{size}}MB",
+      "supportedTypes": "Tuetut tyypit: {{types}}",
+      "title": "Lataa tiedostoja tietokoneeltasi"
+    },
+    "errors": {
+      "tooLarge": "Tiedosto \"{{name}}\" on liian suuri. Suurin koko on {{maxSize}}MB.",
+      "unsupportedType": "Tiedostotyyppiä ei tueta. Sallittuja tyyppejä: {{types}}"
+    },
+    "success_one": "tiedosto ladattu onnistuneesti!",
+    "success_other": "{{count}} tiedostoa ladattu onnistuneesti!",
+    "title": "Lataa tiedostoja projektiin",
+    "uploading": "Ladataan tiedostoja"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Vissza a műszerfalra",
+  "dashboard": "Műszerfal",
+  "desktop": {
+    "actions": {
+      "enterFullscreen": "Teljes képernyőre lépés",
+      "exitFullscreen": "Kilépés a teljes képernyőről",
+      "hideEditor": "Szerkesztő elrejtése",
+      "hideSidebar": "Oldalsáv elrejtése",
+      "showEditor": "Szerkesztő megjelenítése",
+      "showSidebar": "Oldalsáv megjelenítése"
+    },
+    "panels": {
+      "aiAgents": "AI ügynökök",
+      "projectFiles": "Projektfájlok"
+    }
+  },
+  "editor": {
+    "noFileSelected": "Nincs fájl kiválasztva"
+  },
+  "loading": "Projekt betöltése...",
+  "mobile": {
+    "actions": {
+      "install": "Telepítés",
+      "installApp": "Alkalmazás telepítése",
+      "share": "Megosztás"
+    },
+    "menu": {
+      "currentSelection": "Jelenlegi kiválasztás",
+      "filesAvailableOffline_one": "Fájl elérhető offline",
+      "filesAvailableOffline_other": "Fájlok elérhetőek offline",
+      "filesPendingUpload_one": "Fájl várakozik feltöltésre",
+      "filesPendingUpload_other": "Fájlok várakoznak feltöltésre",
+      "noAgentSelected": "Nincs ügynök kiválasztva",
+      "noFileSelected": "Nincs fájl kiválasztva",
+      "offlineMode": "Offline mód",
+      "online": "Online",
+      "status": "Állapot"
+    },
+    "views": {
+      "agents": "Ügynökök",
+      "chat": "Csevegés",
+      "editor": "Szerkesztő",
+      "files": "Fájlok"
+    }
+  },
+  "noAgents": {
+    "description": "Legalább egy AI ügynökre van szükséged a projekt használatához.",
+    "title": "Nincsenek elérhető AI ügynökök"
+  },
+  "notFound": {
+    "description": "A keresett projekt nem létezik, vagy nincs hozzáférésed.",
+    "title": "Projekt nem található"
+  }
+}

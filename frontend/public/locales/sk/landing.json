@@ -1,0 +1,188 @@
+{
+  "cta": {
+    "installPwa": "Nainštalovať aplikáciu",
+    "start": "Začnite stavať zadarmo",
+    "subtitle": "Pridajte sa k tímom, ktoré už stavajú inteligentnejšie s AI. Zadarmo na začiatok, bez potreby kreditnej karty.",
+    "title": "Pripravení stavať s AI?"
+  },
+  "features": {
+    "items": {
+      "ai": {
+        "category": "AI",
+        "description": "Vyberte si z modelov GPT-4, Claude a ďalších AI modelov. Vytvorte vlastných agentov prispôsobených vašim projektom.",
+        "title": "Inteligentní AI asistenti"
+      },
+      "analytics": {
+        "category": "Analytika",
+        "description": "Sledujte používanie AI a náklady na projekt. Nastavte rozpočty a nikdy nebuďte prekvapení faktúrami.",
+        "title": "Sledovanie používania a nákladov"
+      },
+      "collaboration": {
+        "category": "Spolupráca",
+        "description": "Chat s AI v reálnom čase. Sledujte odpovede, ako sa generujú. Vaša história konverzácie je vždy uložená.",
+        "title": "Chat s AI v reálnom čase"
+      },
+      "management": {
+        "category": "Projekty",
+        "description": "Organizujte prácu v projektoch. Nahrávajte dokumenty, obrázky a kód. Vaša AI si pamätá kontext.",
+        "title": "Organizácia projektov"
+      },
+      "mobile": {
+        "category": "Mobilné",
+        "description": "Nainštalujte ako aplikáciu na akékoľvek zariadenie. Pracujte na svojom telefóne, tablete alebo počítači s rovnakým skvelým zážitkom.",
+        "title": "Funguje všade"
+      },
+      "performance": {
+        "category": "Platforma",
+        "description": "Nainštalujte na akékoľvek zariadenie, pracujte offline, synchronizujte automaticky. Rýchlo a spoľahlivo, nech ste kdekoľvek.",
+        "title": "Pracujte kdekoľvek"
+      },
+      "pwa": {
+        "category": "Offline",
+        "description": "Pokračujte v práci bez internetu. Vaše zmeny sa automaticky synchronizujú, keď sa vrátite online.",
+        "title": "Offline režim"
+      },
+      "security": {
+        "category": "Bezpečnosť",
+        "description": "Bezpečnosť na úrovni podniku s povoleniami tímu, limitmi používania a kompletnými auditnými stopami.",
+        "title": "Bezpečnosť tímu"
+      },
+      "ux": {
+        "category": "Prispôsobenie",
+        "description": "Personalizujte svoje pracovisko s tmavým/svetlým režimom, preferenciami notifikácií a vlastnými nastaveniami.",
+        "title": "Vaše pracovisko, váš spôsob"
+      }
+    },
+    "subtitle": "Všetko, čo potrebujete na stavbu s AI. Jednoduché na začiatok, dostatočne silné pre tímy.",
+    "techStack": {
+      "subtitle": "Stack pripravený na produkciu s TypeScript, React 18, Node.js, PostgreSQL a integráciou AI",
+      "title": "Vytvorené s modernými technológiami",
+      "categories": {
+        "ai": "AI",
+        "backend": "Backend",
+        "database": "Databáza",
+        "frontend": "Frontend",
+        "mobile": "Mobilné",
+        "realtime": "V reálnom čase"
+      }
+    },
+    "title": "Všetko, čo potrebujete"
+  },
+  "footer": {
+    "company": {
+      "about": "O nás",
+      "blog": "Blog",
+      "careers": "Kariéra",
+      "contact": "Kontakt",
+      "title": "Spoločnosť"
+    },
+    "copyright": "© 2025 AI Projects. Všetky práva vyhradené.",
+    "product": {
+      "api": "API",
+      "documentation": "Dokumentácia",
+      "features": "Funkcie",
+      "pricing": "Cenník",
+      "title": "Produkt"
+    },
+    "support": {
+      "community": "Komunita",
+      "helpCenter": "Centrum pomoci",
+      "privacy": "Ochrana súkromia",
+      "status": "Stav",
+      "title": "Podpora"
+    },
+    "tagline": "Budúcnosť vývoja je tu. Vytvárajte úžasné projekty s pomocou AI."
+  },
+  "hero": {
+    "badge": "AI pracovisko pre moderné tímy",
+    "cta": {
+      "demo": "Pozrieť si demo",
+      "start": "Začnite stavať zadarmo"
+    },
+    "subtitle": "Vytvárajte projekty s AI asistentmi, ktorí rozumejú vášmu kontextu. Spolupracujte v reálnom čase, pracujte offline a spravujte všetko zo svojho telefónu alebo počítača.",
+    "title": "Stavajte inteligentnejšie",
+    "titleHighlight": "s AI"
+  },
+  "nav": {
+    "features": "Funkcie",
+    "getStarted": "Začať",
+    "installApp": "Nainštalovať aplikáciu",
+    "pricing": "Ceny",
+    "signIn": "Prihlásiť sa",
+    "testimonials": "Referencie"
+  },
+  "pricing": {
+    "contactUs": "kontaktujte nás",
+    "perMonth": "mesačne",
+    "plans": {
+      "enterprise": {
+        "cta": "Kontaktovať predaj",
+        "features": [
+          "Všetko v Pro",
+          "Admin panel a tímové úlohy",
+          "Vlastné limity používania",
+          "Auditné záznamy aktivít",
+          "Integrácia SSO",
+          "Zasvätená podpora"
+        ],
+        "name": "Podnik",
+        "price": "Na mieru"
+      },
+      "pro": {
+        "cta": "Začať Pro skúšku",
+        "features": [
+          "Neobmedzené projekty",
+          "GPT-4 a Claude",
+          "Tímová spolupráca",
+          "Neobmedzené súbory",
+          "Analytika používania",
+          "Prioritná podpora"
+        ],
+        "name": "Profesionálny",
+        "popular": "Najobľúbenejšie",
+        "price": "$29"
+      },
+      "starter": {
+        "cta": "Začať zadarmo",
+        "features": [
+          "5 projektov",
+          "Prístup k GPT-4",
+          "Mobilná aplikácia",
+          "Pracujte offline",
+          "Podpora komunity"
+        ],
+        "name": "Začiatočník",
+        "price": "$0"
+      }
+    },
+    "subtitle": "Začnite zadarmo, upgradujte, keď potrebujete viac. Žiadne prekvapenia, zrušte kedykoľvek.",
+    "title": "Jednoduché, transparentné ceny"
+  },
+  "stats": {
+    "activeDevelopers": "Vytvorené projekty",
+    "projectsBuilt": "AI konverzácie",
+    "rating": "Spokojnosť používateľov",
+    "uptime": "Dostupnosť"
+  },
+  "testimonials": {
+    "items": {
+      "elena": {
+        "content": "Chat v reálnom čase s AI je neuveriteľne rýchly. Dostávam okamžité odpovede, zatiaľ čo je môj kód stále čerstvý v mojej mysli.",
+        "name": "Elena Rodriguez",
+        "role": "Softvérový vývojár"
+      },
+      "marcus": {
+        "content": "Znížili sme naše náklady na AI o 40 % vďaka sledovaniu využitia. Teraz presne viem, ktoré projekty používajú čo, a môžem nastaviť limity pre tím.",
+        "name": "Marcus Johnson",
+        "role": "Inžiniersky manažér"
+      },
+      "sarah": {
+        "content": "Milujem, že môžem začať konverzáciu s AI na svojom telefóne počas obeda a pokračovať na svojom laptopu v kancelárii. Všetko sa jednoducho synchronizuje.",
+        "name": "Sarah Chen",
+        "role": "Produktový dizajnér"
+      }
+    },
+    "subtitle": "Pridajte sa k tisícom tímov, ktoré už budujú s AI projektmi.",
+    "title": "Dôveryhodné tímami po celom svete"
+  }
+}

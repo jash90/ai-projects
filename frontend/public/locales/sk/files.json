@@ -1,0 +1,89 @@
+{
+  "dialog": {
+    "cancel": "Zrušiť",
+    "content": "Obsah",
+    "contentHint": "Môžete upraviť obsah po vytvorení súboru.",
+    "contentPlaceholder": "Obsah súboru...",
+    "create": "Vytvoriť súbor",
+    "createTitle": "Vytvoriť nový súbor",
+    "creating": "Vytváranie...",
+    "fileName": "Názov súboru",
+    "fileNamePlaceholder": "napr. main.js, README.md",
+    "fileNameRequired": "Názov súboru je povinný",
+    "fileType": "Typ súboru",
+    "fileTypeRequired": "Typ súboru je povinný"
+  },
+  "editor": {
+    "autoSave": {
+      "pending": "Automatické ukladanie: Čaká sa",
+      "upToDate": "Automatické ukladanie: Aktuálne"
+    },
+    "characters_one": "editor.znak",
+    "characters_other": "editor.znaky",
+    "language": "Jazyk: {{language}}",
+    "lines_one": "editor.riadok",
+    "lines_other": "editor.riadky",
+    "loading": "Načítava sa editor...",
+    "noFile": {
+      "description": "Vyberte súbor z prieskumníka, aby ste začali upravovať",
+      "title": "Žiadny súbor nie je vybraný"
+    },
+    "placeholder": "Začnite písať...",
+    "revert": "Vrátiť",
+    "revertConfirm": "Ste si istý, že chcete vrátiť všetky neuložené zmeny?",
+    "save": "Uložiť",
+    "saving": "Ukladá sa...",
+    "shortcuts": {
+      "exitFullscreen": "Stlačte Esc na opustenie celého displeja",
+      "save": "Ctrl+S na uloženie"
+    },
+    "type": "Typ: {{type}}",
+    "unsavedChanges": "Neuložené zmeny",
+    "unsavedChangesText": "Neuložené zmeny"
+  },
+  "explorer": {
+    "contextMenu": {
+      "copyContent": "Kopírovať obsah",
+      "delete": "Zmazať",
+      "open": "Otvoriť"
+    },
+    "createTitle": "Vytvoriť nový súbor",
+    "deleteConfirm": "Ste si istý, že chcete zmazať \"{{name}}\"? Túto akciu nie je možné zrušiť.",
+    "dismiss": "Zavrieť",
+    "empty": {
+      "description": "Vytvorte svoj prvý súbor, aby ste mohli začať",
+      "title": "V tomto projekte nie sú žiadne súbory"
+    },
+    "fileCount_one": "explorer.súbor",
+    "fileCount_other": "{{count}} súbory",
+    "noResults": "Žiadne súbory nezodpovedajú vášmu vyhľadávaniu",
+    "searchPlaceholder": "Hľadať súbory...",
+    "shown_one": "explorer.zobrazený",
+    "shown_other": "explorer.zobrazené",
+    "title": "Súbory",
+    "uploadTitle": "Nahrať súbory z počítača"
+  },
+  "upload": {
+    "cancel": "Zrušiť",
+    "complete": "Nahrávanie dokončené",
+    "description": "Nahrajte súbory z vášho počítača. Soubory budú prečítané a uložené ako editovateľné textové súbory v projekte.",
+    "done": "Hotovo",
+    "dropzone": {
+      "active": "Sem vložte súbory",
+      "andMore_one": "a ďalší súbor",
+      "andMore_other": "a ďalšie súbory",
+      "description": "Pretiahnite sem súbory alebo kliknite na výber súborov",
+      "maxSize": "Maximálna veľkosť súboru: {{size}}MB",
+      "supportedTypes": "Podporované typy: {{types}}",
+      "title": "Nahrajte súbory z vášho počítača"
+    },
+    "errors": {
+      "tooLarge": "Súbor \"{{name}}\" je príliš veľký. Maximálna veľkosť je {{maxSize}}MB.",
+      "unsupportedType": "Typ súboru nie je podporovaný. Povolené typy: {{types}}"
+    },
+    "success_one": "súbor bol úspešne nahraný!",
+    "success_other": "{{count}} súbory boli úspešne nahrané!",
+    "title": "Nahrajte súbory do projektu",
+    "uploading": "Nahrávanie súborov"
+  }
+}

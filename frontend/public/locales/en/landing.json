@@ -1,0 +1,188 @@
+{
+  "cta": {
+    "installPwa": "Install App",
+    "start": "Start Building Free",
+    "subtitle": "Join teams already building smarter with AI. Free to start, no credit card required.",
+    "title": "Ready to build with AI?"
+  },
+  "features": {
+    "items": {
+      "ai": {
+        "category": "AI",
+        "description": "Choose from GPT-4, Claude and other AI models. Create custom agents tailored to your projects.",
+        "title": "Smart AI Assistants"
+      },
+      "analytics": {
+        "category": "Analytics",
+        "description": "Track AI usage and costs per project. Set budgets and never get surprised by bills.",
+        "title": "Usage & Cost Tracking"
+      },
+      "collaboration": {
+        "category": "Collaboration",
+        "description": "Chat with AI in real-time. See responses as they're generated. Your conversation history is always saved.",
+        "title": "Real-time AI Chat"
+      },
+      "management": {
+        "category": "Projects",
+        "description": "Organize work in projects. Upload documents, images, and code. Your AI remembers the context.",
+        "title": "Project Organization"
+      },
+      "mobile": {
+        "category": "Mobile",
+        "description": "Install as an app on any device. Work on your phone, tablet, or desktop with the same great experience.",
+        "title": "Works Everywhere"
+      },
+      "performance": {
+        "category": "Platform",
+        "description": "Install on any device, work offline, sync automatically. Fast and reliable wherever you are.",
+        "title": "Work Anywhere"
+      },
+      "pwa": {
+        "category": "Offline",
+        "description": "Keep working without internet. Your changes sync automatically when you're back online.",
+        "title": "Offline Mode"
+      },
+      "security": {
+        "category": "Security",
+        "description": "Enterprise-grade security with team permissions, usage limits, and complete audit trails.",
+        "title": "Team Security"
+      },
+      "ux": {
+        "category": "Customization",
+        "description": "Personalize your workspace with dark/light mode, notification preferences, and custom settings.",
+        "title": "Your Workspace, Your Way"
+      }
+    },
+    "subtitle": "Everything you need to build with AI. Simple to start, powerful enough for teams.",
+    "techStack": {
+      "categories": {
+        "ai": "AI",
+        "backend": "Backend",
+        "database": "Database",
+        "frontend": "Frontend",
+        "mobile": "Mobile",
+        "realtime": "Real-time"
+      },
+      "subtitle": "Production-ready stack with TypeScript, React 18, Node.js, PostgreSQL, and AI integration",
+      "title": "Built with Modern Technologies"
+    },
+    "title": "Everything You Need"
+  },
+  "footer": {
+    "company": {
+      "about": "About",
+      "blog": "Blog",
+      "careers": "Careers",
+      "contact": "Contact",
+      "title": "Company"
+    },
+    "copyright": "© 2025 AI Projects. All rights reserved.",
+    "product": {
+      "api": "API",
+      "documentation": "Documentation",
+      "features": "Features",
+      "pricing": "Pricing",
+      "title": "Product"
+    },
+    "support": {
+      "community": "Community",
+      "helpCenter": "Help Center",
+      "privacy": "Privacy",
+      "status": "Status",
+      "title": "Support"
+    },
+    "tagline": "The future of development is here. Build amazing projects with AI assistance."
+  },
+  "hero": {
+    "badge": "AI Workspace for Modern Teams",
+    "cta": {
+      "demo": "Watch Demo",
+      "start": "Start Building Free"
+    },
+    "subtitle": "Create projects with AI assistants that understand your context. Collaborate in real-time, work offline, and manage everything from your phone or desktop.",
+    "title": "Build Smarter",
+    "titleHighlight": "with AI"
+  },
+  "nav": {
+    "features": "Features",
+    "getStarted": "Get Started",
+    "installApp": "Install App",
+    "pricing": "Pricing",
+    "signIn": "Sign In",
+    "testimonials": "Testimonials"
+  },
+  "pricing": {
+    "contactUs": "contact us",
+    "perMonth": "per month",
+    "plans": {
+      "enterprise": {
+        "cta": "Contact Sales",
+        "features": [
+          "Everything in Pro",
+          "Admin panel & team roles",
+          "Custom usage limits",
+          "Activity audit logs",
+          "SSO integration",
+          "Dedicated support"
+        ],
+        "name": "Enterprise",
+        "price": "Custom"
+      },
+      "pro": {
+        "cta": "Start Pro Trial",
+        "features": [
+          "Unlimited projects",
+          "GPT-4 & Claude",
+          "Team collaboration",
+          "Unlimited files",
+          "Usage analytics",
+          "Priority support"
+        ],
+        "name": "Professional",
+        "popular": "Most Popular",
+        "price": "$29"
+      },
+      "starter": {
+        "cta": "Get Started Free",
+        "features": [
+          "5 projects",
+          "GPT-4 access",
+          "Mobile app",
+          "Work offline",
+          "Community support"
+        ],
+        "name": "Starter",
+        "price": "$0"
+      }
+    },
+    "subtitle": "Start free, upgrade when you need more. No surprises, cancel anytime.",
+    "title": "Simple, Transparent Pricing"
+  },
+  "stats": {
+    "activeDevelopers": "Projects Created",
+    "projectsBuilt": "AI Conversations",
+    "rating": "User Satisfaction",
+    "uptime": "Uptime"
+  },
+  "testimonials": {
+    "items": {
+      "elena": {
+        "content": "The real-time chat with AI is incredibly responsive. I get instant answers while my code is still fresh in my mind.",
+        "name": "Elena Rodriguez",
+        "role": "Software Developer"
+      },
+      "marcus": {
+        "content": "We cut our AI costs by 40% thanks to the usage tracking. Now I know exactly which projects use what, and can set limits for the team.",
+        "name": "Marcus Johnson",
+        "role": "Engineering Manager"
+      },
+      "sarah": {
+        "content": "I love that I can start a conversation with AI on my phone during lunch and pick it up on my laptop at the office. Everything just syncs.",
+        "name": "Sarah Chen",
+        "role": "Product Designer"
+      }
+    },
+    "subtitle": "Join thousands of teams already building with AI Projects.",
+    "title": "Trusted by Teams Worldwide"
+  }
+}

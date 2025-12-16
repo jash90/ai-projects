@@ -1,0 +1,47 @@
+{
+  "actions": {
+    "createProject": "Luo projekti",
+    "newProject": "Uusi projekti"
+  },
+  "admin": {
+    "description": "Hallitse käyttäjiä, token-rajoja ja järjestelmäasetuksia",
+    "title": "Ylläpano"
+  },
+  "allProjects": {
+    "empty": {
+      "description": "Aloita luomalla uusi projekti",
+      "title": "Ei projekteja vielä"
+    },
+    "title": "Kaikki projektit",
+    "viewAll_one": "Näytä kaikki projektit",
+    "viewAll_other": "Näytä kaikki projektit"
+  },
+  "header": {
+    "subtitle": "Hallitse projektejasi ja tee yhteistyötä AI-agenttien kanssa",
+    "welcome": "Tervetuloa takaisin, {{username}}"
+  },
+  "quickTip": {
+    "content": "Lisää tiedostoja projektiisi antaaksesi AI-agenteille kontekstia paremman avun saamiseksi.",
+    "title": "Nopea vinkki"
+  },
+  "recentProjects": {
+    "empty": {
+      "description": "Luo ensimmäinen projektisi aloittaaksesi AI-yhteistyön",
+      "title": "Ei äskettäisiä projekteja"
+    },
+    "mostRecent": "Äskettäin",
+    "title": "Äskettäin projektit"
+  },
+  "stats": {
+    "activeThisWeek": "Aktiivinen tällä viikolla",
+    "totalMessages": "Yhteensä viestejä",
+    "totalProjects": "Yhteensä projekteja",
+    "trackUsage": "Seuraa AI-käyttöäsi",
+    "usageStats": "Käyttötilastot",
+    "viewTokenUsage": "Näytä token-käyttö"
+  },
+  "usagePage": {
+    "subtitle": "Seuraa token-käyttöäsi ja kustannuksiasi eri AI-palveluntarjoajien välillä",
+    "title": "API-käyttö ja tilastot"
+  }
+}

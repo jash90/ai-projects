@@ -1,0 +1,88 @@
+{
+  "preferences": {
+    "appearance": {
+      "dark": "Donker",
+      "description": "Pas aan hoe AI-projecten eruitzien op je apparaat",
+      "light": "Licht",
+      "system": "Systeem",
+      "theme": "Thema",
+      "title": "Uiterlijk"
+    },
+    "language": {
+      "title": "Taal",
+      "description": "Kies je voorkeurstaal"
+    },
+    "notifications": {
+      "description": "Kies welke meldingen je wilt ontvangen",
+      "email": {
+        "description": "Ontvang e-mailupdates over je account en gebruik",
+        "title": "E-mailmeldingen"
+      },
+      "push": {
+        "description": "Ontvang meldingen over projectupdates en systeemwaarschuwingen",
+        "title": "Pushmeldingen"
+      },
+      "title": "Meldingen"
+    },
+    "updateError": "Bijwerken van voorkeuren is mislukt",
+    "updateSuccess": "Voorkeuren succesvol bijgewerkt"
+  },
+  "profile": {
+    "description": "Werk je persoonlijke gegevens en e-mailadres bij",
+    "email": "E-mail",
+    "reset": "Resetten",
+    "role": {
+      "admin": "Beheerder",
+      "user": "Gebruiker"
+    },
+    "saveChanges": "Wijzigingen Opslaan",
+    "title": "Profielinformatie",
+    "updateError": "Bijwerken van profiel is mislukt",
+    "updateSuccess": "Profiel succesvol bijgewerkt",
+    "username": "Gebruikersnaam"
+  },
+  "security": {
+    "clear": "Wissen",
+    "confirmPassword": "Bevestig nieuw wachtwoord",
+    "currentPassword": "Huidig wachtwoord",
+    "description": "Werk je wachtwoord bij om je account veilig te houden",
+    "newPassword": "Nieuw wachtwoord",
+    "passwordMismatch": "Nieuwe wachtwoorden komen niet overeen",
+    "passwordsDoNotMatch": "Wachtwoorden komen niet overeen",
+    "passwordTooShort": "Nieuw wachtwoord moet minimaal 6 tekens bevatten",
+    "title": "Wachtwoord Wijzigen",
+    "updateError": "Bijwerken van wachtwoord is mislukt",
+    "updatePassword": "Wachtwoord Bijwerken",
+    "updateSuccess": "Wachtwoord succesvol bijgewerkt"
+  },
+  "subtitle": "Beheer je accountvoorkeuren en applicatie-instellingen",
+  "tabs": {
+    "preferences": "Voorkeuren",
+    "profile": "Profiel",
+    "security": "Beveiliging",
+    "usage": "Gebruik"
+  },
+  "title": "Instellingen",
+  "usage": {
+    "account": {
+      "description": "Je accountgegevens en limieten",
+      "globalLimit": "Globale Limiet",
+      "monthlyLimit": "Maandelijkse Limiet",
+      "projects": "Projecten",
+      "role": "Rol",
+      "title": "Accountinformatie"
+    },
+    "stats": {
+      "description": "Houd je tokengebruik en kosten in de gaten",
+      "loading": "Laad gebruiksstatistieken...",
+      "monthlyCost": "Maandelijkse kosten",
+      "monthlyUsage": "Maandelijks gebruik",
+      "percentUsed": "{{percent}}% gebruikt",
+      "thisMonth": "Deze maand",
+      "title": "Gebruikstatistieken",
+      "totalCost": "Totale kosten",
+      "totalTokens": "Totaal aantal tokens",
+      "totalUsage": "Totaal gebruik"
+    }
+  }
+}

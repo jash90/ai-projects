@@ -1,0 +1,89 @@
+{
+  "dialog": {
+    "cancel": "Anulează",
+    "content": "Conținut",
+    "contentHint": "Poți edita conținutul după ce ai creat fișierul.",
+    "contentPlaceholder": "Conținut fișier...",
+    "create": "Creează fișier",
+    "createTitle": "Creează fișier nou",
+    "creating": "Se creează...",
+    "fileName": "Nume fișier",
+    "fileNamePlaceholder": "de exemplu, main.js, README.md",
+    "fileNameRequired": "Numele fișierului este necesar",
+    "fileType": "Tip fișier",
+    "fileTypeRequired": "Tipul fișierului este necesar"
+  },
+  "editor": {
+    "autoSave": {
+      "pending": "Salvare automată: În așteptare",
+      "upToDate": "Salvare automată: La zi"
+    },
+    "characters_one": "editor.caracter",
+    "characters_other": "editor.caractere",
+    "language": "Limba: {{language}}",
+    "lines_one": "editor.linie",
+    "lines_other": "editor.linii",
+    "loading": "Se încarcă editorul...",
+    "noFile": {
+      "description": "Selectează un fișier din explorator pentru a începe editarea",
+      "title": "Niciun fișier selectat"
+    },
+    "placeholder": "Începe să scrii...",
+    "revert": "Revenire",
+    "revertConfirm": "Ești sigur că vrei să revii la toate modificările nesalvate?",
+    "save": "Salvează",
+    "saving": "Se salvează...",
+    "shortcuts": {
+      "exitFullscreen": "Apasă Esc pentru a ieși din modul pe tot ecranul",
+      "save": "Ctrl+S pentru a salva"
+    },
+    "type": "Tip: {{type}}",
+    "unsavedChanges": "Modificări nesalvate",
+    "unsavedChangesText": "Modificări nesalvate"
+  },
+  "explorer": {
+    "contextMenu": {
+      "copyContent": "Copiază conținutul",
+      "delete": "Șterge",
+      "open": "Deschide"
+    },
+    "createTitle": "Creează fișier nou",
+    "deleteConfirm": "Ești sigur că vrei să ștergi \"{{name}}\"? Această acțiune nu poate fi anulată.",
+    "dismiss": "Respinge",
+    "empty": {
+      "description": "Creează-ți primul fișier pentru a începe",
+      "title": "Niciun fișier în acest proiect"
+    },
+    "fileCount_one": "explorer.fișier",
+    "fileCount_other": "{{count}} fișiere",
+    "noResults": "Niciun fișier nu se potrivește cu căutarea ta",
+    "searchPlaceholder": "Caută fișiere...",
+    "shown_one": "explorer.afisat",
+    "shown_other": "explorer.afisate",
+    "title": "Fișiere",
+    "uploadTitle": "Încarcă fișiere de pe computer"
+  },
+  "upload": {
+    "cancel": "Anulează",
+    "complete": "Încărcare completă",
+    "description": "Încărcați fișiere de pe computerul dvs. Fișierele vor fi citite și salvate ca fișiere text editabile în proiect.",
+    "done": "Finalizat",
+    "dropzone": {
+      "active": "Aruncați fișiere aici",
+      "andMore_one": "încărcați fișiere aici",
+      "andMore_other": "încărcați fișiere aici",
+      "description": "Trageți și plasați fișiere aici sau faceți clic pentru a selecta fișiere",
+      "maxSize": "Dimensiunea maximă a fișierului: {{size}}MB",
+      "supportedTypes": "Tipuri acceptate: {{types}}",
+      "title": "Încărcați fișiere de pe computerul dvs."
+    },
+    "errors": {
+      "tooLarge": "Fișierul \"{{name}}\" este prea mare. Dimensiunea maximă este {{maxSize}}MB.",
+      "unsupportedType": "Tipul de fișier nu este acceptat. Tipuri permise: {{types}}"
+    },
+    "success_one": "Fișier încărcat cu succes!",
+    "success_other": "{{count}} fișiere încărcate cu succes!",
+    "title": "Încărcați fișiere în proiect",
+    "uploading": "Încărcare fișiere"
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "cta": {
+    "installPwa": "Installa l'app",
+    "start": "Inizia a costruire gratuitamente",
+    "subtitle": "Unisciti ai team che stanno già costruendo in modo più intelligente con l'IA. Inizia gratuitamente, senza carta di credito richiesta.",
+    "title": "Pronto a costruire con l'IA?"
+  },
+  "features": {
+    "items": {
+      "ai": {
+        "category": "IA",
+        "description": "Scegli tra GPT-4, Claude e altri modelli di IA. Crea agenti personalizzati su misura per i tuoi progetti.",
+        "title": "Assistenti IA Intelligenti"
+      },
+      "analytics": {
+        "category": "Analisi",
+        "description": "Monitora l'uso dell'IA e i costi per progetto. Imposta budget e non essere mai sorpreso dalle fatture.",
+        "title": "Monitoraggio Utilizzo & Costi"
+      },
+      "collaboration": {
+        "category": "Collaborazione",
+        "description": "Chatta con l'IA in tempo reale. Vedi le risposte mentre vengono generate. La tua cronologia conversazioni è sempre salvata.",
+        "title": "Chat IA in Tempo Reale"
+      },
+      "management": {
+        "category": "Progetti",
+        "description": "Organizza il lavoro in progetti. Carica documenti, immagini e codice. La tua IA ricorda il contesto.",
+        "title": "Organizzazione Progetti"
+      },
+      "mobile": {
+        "category": "Mobile",
+        "description": "Installa come app su qualsiasi dispositivo. Lavora sul tuo telefono, tablet o desktop con la stessa ottima esperienza.",
+        "title": "Funziona Ovunque"
+      },
+      "performance": {
+        "category": "Piattaforma",
+        "description": "Installa su qualsiasi dispositivo, lavora offline, sincronizza automaticamente. Veloce e affidabile ovunque ti trovi.",
+        "title": "Lavora Ovunque"
+      },
+      "pwa": {
+        "category": "Offline",
+        "description": "Continua a lavorare senza internet. Le tue modifiche si sincronizzano automaticamente quando torni online.",
+        "title": "Modalità Offline"
+      },
+      "security": {
+        "category": "Sicurezza",
+        "description": "Sicurezza di livello enterprise con permessi per il team, limiti di utilizzo e audit trail completi.",
+        "title": "Sicurezza del Team"
+      },
+      "ux": {
+        "category": "Personalizzazione",
+        "description": "Personalizza il tuo spazio di lavoro con modalità scura/chiara, preferenze di notifica e impostazioni personalizzate.",
+        "title": "Il Tuo Spazio di Lavoro, a Tuo Modo"
+      }
+    },
+    "subtitle": "Tutto ciò di cui hai bisogno per costruire con l'IA. Facile da iniziare, abbastanza potente per i team.",
+    "techStack": {
+      "subtitle": "Stack pronto per la produzione con TypeScript, React 18, Node.js, PostgreSQL e integrazione dell'IA",
+      "title": "Costruito con Tecnologie Moderne",
+      "categories": {
+        "ai": "IA",
+        "backend": "Backend",
+        "database": "Database",
+        "frontend": "Frontend",
+        "mobile": "Mobile",
+        "realtime": "In Tempo Reale"
+      }
+    },
+    "title": "Tutto Ciò di Cui Hai Bisogno"
+  },
+  "footer": {
+    "company": {
+      "about": "Chi Siamo",
+      "blog": "Blog",
+      "careers": "Carriere",
+      "contact": "Contatto",
+      "title": "Azienda"
+    },
+    "copyright": "© 2025 AI Projects. Tutti i diritti riservati.",
+    "product": {
+      "api": "API",
+      "documentation": "Documentazione",
+      "features": "Funzionalità",
+      "pricing": "Prezzi",
+      "title": "Prodotto"
+    },
+    "support": {
+      "community": "Comunità",
+      "helpCenter": "Centro Assistenza",
+      "privacy": "Privacy",
+      "status": "Stato",
+      "title": "Supporto"
+    },
+    "tagline": "Il futuro dello sviluppo è qui. Crea progetti straordinari con l'assistenza dell'AI."
+  },
+  "hero": {
+    "badge": "Spazio di Lavoro IA per Team Moderni",
+    "cta": {
+      "demo": "Guarda la Demo",
+      "start": "Inizia a Costruire Gratis"
+    },
+    "subtitle": "Crea progetti con assistenti IA che comprendono il tuo contesto. Collabora in tempo reale, lavora offline e gestisci tutto dal tuo telefono o desktop.",
+    "title": "Costruisci in Modo Più Intelligente",
+    "titleHighlight": "con l'IA"
+  },
+  "nav": {
+    "features": "Caratteristiche",
+    "getStarted": "Inizia",
+    "installApp": "Installa l'App",
+    "pricing": "Prezzi",
+    "signIn": "Accedi",
+    "testimonials": "Testimonianze"
+  },
+  "pricing": {
+    "contactUs": "contattaci",
+    "perMonth": "al mese",
+    "plans": {
+      "enterprise": {
+        "cta": "Contatta le Vendite",
+        "features": [
+          "Tutto in Pro",
+          "Pannello di amministrazione & ruoli del team",
+          "Limiti di utilizzo personalizzati",
+          "Registri di audit delle attività",
+          "Integrazione SSO",
+          "Supporto dedicato"
+        ],
+        "name": "Enterprise",
+        "price": "Personalizzato"
+      },
+      "pro": {
+        "cta": "Inizia la Pro Trial",
+        "features": [
+          "Progetti illimitati",
+          "GPT-4 & Claude",
+          "Collaborazione di team",
+          "File illimitati",
+          "Analisi dell'utilizzo",
+          "Supporto prioritario"
+        ],
+        "name": "Professionale",
+        "popular": "Più Popolare",
+        "price": "$29"
+      },
+      "starter": {
+        "cta": "Inizia Gratis",
+        "features": [
+          "5 progetti",
+          "Accesso a GPT-4",
+          "App mobile",
+          "Lavora offline",
+          "Supporto della comunità"
+        ],
+        "name": "Starter",
+        "price": "$0"
+      }
+    },
+    "subtitle": "Inizia gratuitamente, aggiorna quando hai bisogno di più. Nessuna sorpresa, annulla in qualsiasi momento.",
+    "title": "Prezzi Semplici e Trasparenti"
+  },
+  "stats": {
+    "activeDevelopers": "Progetti Creati",
+    "projectsBuilt": "Conversazioni IA",
+    "rating": "Soddisfazione Utente",
+    "uptime": "Tempo di Attività"
+  },
+  "testimonials": {
+    "items": {
+      "elena": {
+        "content": "La chat in tempo reale con l'IA è incredibilmente reattiva. Ricevo risposte immediate mentre il mio codice è ancora fresco nella mia mente.",
+        "name": "Elena Rodriguez",
+        "role": "Sviluppatore Software"
+      },
+      "marcus": {
+        "content": "Abbiamo ridotto i nostri costi per l'IA del 40% grazie al monitoraggio dell'uso. Ora so esattamente quali progetti utilizzano cosa e posso impostare limiti per il team.",
+        "name": "Marcus Johnson",
+        "role": "Responsabile Ingegneria"
+      },
+      "sarah": {
+        "content": "Mi piace poter avviare una conversazione con l'IA sul mio telefono durante il pranzo e riprenderla sul mio laptop in ufficio. Tutto si sincronizza.",
+        "name": "Sarah Chen",
+        "role": "Designer di Prodotto"
+      }
+    },
+    "subtitle": "Unisciti a migliaia di team che già lavorano con AI Projects.",
+    "title": "Fidato da Team in tutto il Mondo"
+  }
+}
