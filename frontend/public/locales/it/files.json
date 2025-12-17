@@ -18,11 +18,11 @@
       "pending": "Salvataggio automatico: In attesa",
       "upToDate": "Salvataggio automatico: Aggiornato"
     },
-    "characters_one": "editor.carattere",
-    "characters_other": "editor.caratteri",
+    "characters_one": "{{count}} carattere",
+    "characters_other": "{{count}} caratteri",
     "language": "Lingua: {{language}}",
-    "lines_one": "editor.riga",
-    "lines_other": "editor.righe",
+    "lines_one": "{{count}} riga",
+    "lines_other": "{{count}} righe",
     "loading": "Caricamento editor...",
     "noFile": {
       "description": "Seleziona un file dall'esplora per iniziare a modificare",
@@ -54,12 +54,12 @@
       "description": "Crea il tuo primo file per iniziare",
       "title": "Nessun file in questo progetto"
     },
-    "fileCount_one": "explorer.fileCount",
+    "fileCount_one": "{{count}} file",
     "fileCount_other": "{{count}} file",
     "noResults": "Nessun file corrisponde alla tua ricerca",
     "searchPlaceholder": "Cerca file...",
-    "shown_one": "explorer.mostrato",
-    "shown_other": "explorer.mostrati",
+    "shown_one": "{{count}} mostrato",
+    "shown_other": "{{count}} mostrati",
     "title": "File",
     "uploadTitle": "Carica file dal computer"
   },
@@ -70,8 +70,8 @@
     "done": "Fatto",
     "dropzone": {
       "active": "Trascina i file qui",
-      "andMore_one": "carica.dropzone.eAltro",
-      "andMore_other": "carica.dropzone.eAltro",
+      "andMore_one": "e {{count}} altro file",
+      "andMore_other": "e {{count}} altri file",
       "description": "Trascina e rilascia i file qui, oppure clicca per selezionare i file",
       "maxSize": "Dimensione massima del file: {{size}}MB",
       "supportedTypes": "Tipi supportati: {{types}}",
@@ -81,7 +81,7 @@
       "tooLarge": "Il file \"{{name}}\" è troppo grande. La dimensione massima è {{maxSize}}MB.",
       "unsupportedType": "Tipo di file non supportato. Tipi consentiti: {{types}}"
     },
-    "success_one": "carica.successo",
+    "success_one": "{{count}} file caricato con successo!",
     "success_other": "{{count}} file caricati con successo!",
     "title": "Carica file nel progetto",
     "uploading": "Caricamento file"

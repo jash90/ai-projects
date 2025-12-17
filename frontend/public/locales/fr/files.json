@@ -54,12 +54,12 @@
       "description": "Créez votre premier fichier pour commencer",
       "title": "Aucun fichier dans ce projet"
     },
-    "fileCount_one": "explorer.fileCount",
+    "fileCount_one": "{{count}} fichier",
     "fileCount_other": "{{count}} fichiers",
     "noResults": "Aucun fichier ne correspond à votre recherche",
     "searchPlaceholder": "Rechercher des fichiers...",
-    "shown_one": "explorer.shown",
-    "shown_other": "explorer.shown",
+    "shown_one": "{{count}} affiché",
+    "shown_other": "{{count}} affichés",
     "title": "Fichiers",
     "uploadTitle": "Télécharger des fichiers depuis l'ordinateur"
   },

@@ -28,11 +28,11 @@
   "input": {
     "attachFile": "Bestand bijvoegen",
     "attachFiles": "Bestanden bijvoegen (afbeeldingen, PDF)",
-    "characters_one": "input.characters",
-    "characters_other": "input.characters",
+    "characters_one": "{{count}} teken",
+    "characters_other": "{{count}} tekens",
     "fileTooLarge": "Bestand te groot: {{name}}. Max grootte: {{maxSize}}MB",
-    "maxFilesError_one": "input.maxFilesError",
-    "maxFilesError_other": "input.maxFilesError",
+    "maxFilesError_one": "Maximaal {{count}} bestand toegestaan",
+    "maxFilesError_other": "Maximaal {{count}} bestanden toegestaan",
     "placeholder": "Typ je bericht...",
     "send": "Verzenden",
     "sendMessage": "Bericht verzenden",
@@ -42,8 +42,8 @@
   "limits": {
     "global": "Globale limiet",
     "monthly": "Maandelijkse limiet",
-    "remaining_one": "limits.remaining",
-    "remaining_other": "limits.remaining"
+    "remaining_one": "{{count}} token over",
+    "remaining_other": "{{count}} tokens over"
   },
   "message": {
     "error": "Fout",

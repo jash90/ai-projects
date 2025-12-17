@@ -18,11 +18,11 @@
       "pending": "Automatisches Speichern: Ausstehend",
       "upToDate": "Automatisches Speichern: Aktuell"
     },
-    "characters_one": "editor.Zeichen",
-    "characters_other": "editor.Zeichen",
+    "characters_one": "{{count}} Zeichen",
+    "characters_other": "{{count}} Zeichen",
     "language": "Sprache: {{language}}",
-    "lines_one": "editor.Zeilen",
-    "lines_other": "editor.Zeilen",
+    "lines_one": "{{count}} Zeile",
+    "lines_other": "{{count}} Zeilen",
     "loading": "Editor wird geladen...",
     "noFile": {
       "description": "Wählen Sie eine Datei aus dem Explorer aus, um mit der Bearbeitung zu beginnen",
@@ -54,12 +54,12 @@
       "description": "Erstellen Sie Ihre erste Datei, um zu beginnen",
       "title": "Keine Dateien in diesem Projekt"
     },
-    "fileCount_one": "explorer.Dateianzahl",
+    "fileCount_one": "{{count}} Datei",
     "fileCount_other": "{{count}} Dateien",
     "noResults": "Keine Dateien entsprechen Ihrer Suche",
     "searchPlaceholder": "Dateien suchen...",
-    "shown_one": "explorer.Angezeigt",
-    "shown_other": "explorer.Angezeigt",
+    "shown_one": "{{count}} angezeigt",
+    "shown_other": "{{count}} angezeigt",
     "title": "Dateien",
     "uploadTitle": "Dateien vom Computer hochladen"
   },
@@ -70,8 +70,8 @@
     "done": "Fertig",
     "dropzone": {
       "active": "Dateien hier ablegen",
-      "andMore_one": "upload.dropzone.andMore",
-      "andMore_other": "upload.dropzone.andMore",
+      "andMore_one": "und {{count}} weitere Datei",
+      "andMore_other": "und {{count}} weitere Dateien",
       "description": "Ziehen Sie Dateien hierher oder klicken Sie, um Dateien auszuwählen",
       "maxSize": "Maximale Dateigröße: {{size}}MB",
       "supportedTypes": "Unterstützte Typen: {{types}}",
@@ -81,7 +81,7 @@
       "tooLarge": "Die Datei \"{{name}}\" ist zu groß. Maximale Größe ist {{maxSize}}MB.",
       "unsupportedType": "Dateityp nicht unterstützt. Erlaubte Typen: {{types}}"
     },
-    "success_one": "upload.success",
+    "success_one": "{{count}} Datei erfolgreich hochgeladen!",
     "success_other": "{{count}} Dateien erfolgreich hochgeladen!",
     "title": "Dateien in das Projekt hochladen",
     "uploading": "Dateien werden hochgeladen"

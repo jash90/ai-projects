@@ -7,12 +7,16 @@ import { TokenLimitUpdate } from '../types';
 import { pool } from '../database/connection';
 import Joi from 'joi';
 import logger from '../utils/logger';
+import adminSubscriptionRoutes from './admin/subscriptions';
 
 const router: Router = Router();
 
 // Apply authentication and admin check to all routes
 router.use(authenticateToken);
 router.use(requireAdmin);
+
+// Mount subscription management routes
+router.use('/subscriptions', adminSubscriptionRoutes);
 
 // Validation schemas
 const updateTokenLimitsSchema = Joi.object({

@@ -55,8 +55,6 @@
     },
     "subtitle": "Všetko, čo potrebujete na stavbu s AI. Jednoduché na začiatok, dostatočne silné pre tímy.",
     "techStack": {
-      "subtitle": "Stack pripravený na produkciu s TypeScript, React 18, Node.js, PostgreSQL a integráciou AI",
-      "title": "Vytvorené s modernými technológiami",
       "categories": {
         "ai": "AI",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobilné",
         "realtime": "V reálnom čase"
-      }
+      },
+      "subtitle": "Stack pripravený na produkciu s TypeScript, React 18, Node.js, PostgreSQL a integráciou AI",
+      "title": "Vytvorené s modernými technológiami"
     },
     "title": "Všetko, čo potrebujete"
   },

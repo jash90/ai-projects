@@ -13,8 +13,8 @@
       "title": "Noch keine Projekte"
     },
     "title": "Alle Projekte",
-    "viewAll_one": "alleProjekte.alleAnzeigen",
-    "viewAll_other": "alleProjekte.alleAnzeigen"
+    "viewAll_one": "Zeige {{count}} Projekt",
+    "viewAll_other": "Zeige alle {{count}} Projekte"
   },
   "header": {
     "subtitle": "Verwalten Sie Ihre Projekte und arbeiten Sie mit KI-Agenten zusammen",

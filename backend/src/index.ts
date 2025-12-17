@@ -27,6 +27,8 @@ import settingsRoutes from './routes/settings';
 import debugRoutes from './routes/debug';
 import markdownRoutes from './routes/markdown';
 import threadRoutes from './routes/threads';
+import subscriptionRoutes from './routes/subscriptions';
+import stripeWebhookRoutes from './routes/webhooks/stripe';
 import { setupSwagger } from './swagger';
 
 const app: express.Express = express();
@@ -114,6 +116,9 @@ app.get('/api/health', (req, res) => {
 // Track database readiness (declared here for healthcheck access, set in startServer)
 let isDatabaseReady = false;
 
+// Stripe webhook needs raw body - MUST be before JSON body parser
+app.use('/api/webhooks/stripe', express.raw({ type: 'application/json' }), stripeWebhookRoutes);
+
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -178,6 +183,7 @@ app.use('/api/settings', settingsRoutes);  // User settings routes
 app.use('/api/debug', debugRoutes);  // Debug routes (development/testing)
 app.use('/api/markdown', markdownRoutes); // Markdown routes
 app.use('/api/threads', threadRoutes);    // Thread-based chat routes
+app.use('/api/subscriptions', subscriptionRoutes); // Subscription management routes
 
 // 404 handler
 app.use('*', (req, res) => {
@@ -194,8 +200,8 @@ import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 // In production with nginx, we only serve API routes
 // nginx handles static files and frontend routing
 if (process.env.NODE_ENV === 'production') {
-  console.log('🌐 Production mode: nginx will serve static files');
-  console.log('🔧 Backend will only handle API routes');
+  logger.info('Production mode: nginx will serve static files');
+  logger.info('Backend will only handle API routes');
 } else {
   // In development, serve static files directly
   const path = require('path');
@@ -205,7 +211,7 @@ if (process.env.NODE_ENV === 'production') {
   const indexPath = path.join(frontendDistPath, 'index.html');
   
   if (fs.existsSync(frontendDistPath)) {
-    console.log('✅ Development mode: serving static files directly');
+    logger.info('Development mode: serving static files directly');
     
     // Serwuj statyczne pliki z frontend build
     app.use(express.static(frontendDistPath));

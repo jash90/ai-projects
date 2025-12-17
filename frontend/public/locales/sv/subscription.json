@@ -1,0 +1,63 @@
+{
+  "pricing": {
+    "title": "Välj din plan",
+    "subtitle": "Välj den perfekta planen för dina behov",
+    "monthly": "Månatlig",
+    "yearly": "Årlig",
+    "savePercent": "Spara upp till {{percent}}%",
+    "popular": "Mest populär",
+    "currentPlan": "Aktuell plan",
+    "getStarted": "Kom igång gratis",
+    "upgrade": "Uppgradera",
+    "downgrade": "Nedgradera",
+    "perMonth": "månad",
+    "billedYearly": "faktureras årligen",
+    "save": "Spara",
+    "stripeNotConfigured": "Betalningssystemet är inte konfigurerat än. Vänligen kontakta supporten.",
+    "questions": "Har du frågor?",
+    "contactUs": "Kontakta oss"
+  },
+  "settings": {
+    "title": "Prenumeration",
+    "description": "Hantera din prenumeration och fakturering",
+    "currentPlan": "Aktuell plan",
+    "planName": "Plan",
+    "status": "Status",
+    "billingCycle": "Faktureringscykel",
+    "nextBilling": "Nästa faktureringsdatum",
+    "cancelAt": "Avbryts vid",
+    "manageBilling": "Hantera fakturering",
+    "cancelSubscription": "Avbryt prenumeration",
+    "resumeSubscription": "Återuppta prenumeration",
+    "upgradeNow": "Uppgradera nu",
+    "viewPlans": "Visa planer",
+    "history": "Prenumerationshistorik",
+    "noHistory": "Inga ändringar av prenumerationen ännu",
+    "freePlan": "Du har den kostnadsfria planen",
+    "freePlanDescription": "Uppgradera för att låsa upp fler funktioner och högre gränser",
+    "cancelConfirm": "Är du säker på att du vill avbryta din prenumeration?",
+    "cancelImmediate": "Avbryt omedelbart",
+    "cancelAtPeriodEnd": "Avbryt vid periodens slut",
+    "keepSubscription": "Behåll prenumerationen"
+  },
+  "status": {
+    "active": "Aktiv",
+    "canceled": "Avbruten",
+    "past_due": "Förfallen",
+    "trialing": "Provperiod",
+    "paused": "Pausad",
+    "incomplete": "Ofullständig"
+  },
+  "cycle": {
+    "monthly": "Månatlig",
+    "yearly": "Årlig"
+  },
+  "history": {
+    "subscribed": "Prenumererat på {{plan}}",
+    "upgraded": "Uppgraderad till {{plan}}",
+    "downgraded": "Nedgraderad till {{plan}}",
+    "canceled": "Prenumeration avbruten",
+    "resumed": "Prenumeration återupptagen",
+    "renewed": "Prenumerationen förnyad"
+  }
+}

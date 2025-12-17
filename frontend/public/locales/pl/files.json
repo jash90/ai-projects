@@ -18,15 +18,11 @@
       "pending": "Auto-zapis: Oczekuje",
       "upToDate": "Auto-zapis: Aktualne"
     },
-    "characters_one": "edytor.znaki",
-    "characters_few": "edytora.znaków",
-    "characters_many": "edytora.znaków",
-    "characters_other": "edytor.znaki",
+    "characters_one": "{{count}} znak",
+    "characters_other": "{{count}} znaki",
     "language": "Język: {{language}}",
-    "lines_one": "edytor.linie",
-    "lines_few": "edytora.linii",
-    "lines_many": "edytora.linii",
-    "lines_other": "edytor.linie",
+    "lines_one": "{{count}} linia",
+    "lines_other": "{{count}} linie",
     "loading": "Ładowanie edytora...",
     "noFile": {
       "description": "Wybierz plik z eksploratora, aby rozpocząć edycję",
@@ -59,14 +55,10 @@
       "title": "Brak plików w tym projekcie"
     },
     "fileCount_one": "eksplorator.liczbaPlików",
-    "fileCount_few": "explorer.liczby plików",
-    "fileCount_many": "explorer.liczby plików",
     "fileCount_other": "{{count}} pliki",
     "noResults": "Żadne pliki nie pasują do wyszukiwania",
     "searchPlaceholder": "Szukaj plików...",
     "shown_one": "eksplorator.wyświetlone",
-    "shown_few": "explorer.wyświetlonych",
-    "shown_many": "explorer.wyświetlonych",
     "shown_other": "eksplorator.wyświetlone",
     "title": "Pliki",
     "uploadTitle": "Prześlij pliki z komputera"
@@ -79,8 +71,6 @@
     "dropzone": {
       "active": "Upuść pliki tutaj",
       "andMore_one": "upload.strefaUpuszczania.iWięcej",
-      "andMore_few": "upload.strefa upuszczania i więcej",
-      "andMore_many": "upload.strefa upuszczania i więcej",
       "andMore_other": "upload.strefaUpuszczania.iWięcej",
       "description": "Przeciągnij i upuść pliki tutaj lub kliknij, aby wybrać pliki",
       "maxSize": "Maksymalny rozmiar pliku: {{size}}MB",
@@ -91,9 +81,7 @@
       "tooLarge": "Plik \"{{name}}\" jest za duży. Maksymalny rozmiar to {{maxSize}}MB.",
       "unsupportedType": "Typ pliku nie jest obsługiwany. Dozwolone typy: {{types}}"
     },
-    "success_one": "upload.sukces",
-    "success_few": "upload.sukces",
-    "success_many": "upload.sukces",
+    "success_one": "{{count}} plik został pomyślnie przesłany!",
     "success_other": "{{count}} pliki przesłane pomyślnie!",
     "title": "Prześlij pliki do projektu",
     "uploading": "Przesyłanie plików"

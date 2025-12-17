@@ -18,8 +18,8 @@
       "pending": "Guardado automático: Pendiente",
       "upToDate": "Guardado automático: Actualizado"
     },
-    "characters_one": "editor.caracteres",
-    "characters_other": "editor.caracteres",
+    "characters_one": "{{count}} carácter",
+    "characters_other": "{{count}} caracteres",
     "language": "Idioma: {{language}}",
     "lines_one": "editor.líneas",
     "lines_other": "editor.líneas",
@@ -54,12 +54,12 @@
       "description": "Crea tu primer archivo para comenzar",
       "title": "No hay archivos en este proyecto"
     },
-    "fileCount_one": "explorer.fileCount",
+    "fileCount_one": "{{count}} archivo",
     "fileCount_other": "{{count}} archivos",
     "noResults": "No hay archivos que coincidan con tu búsqueda",
     "searchPlaceholder": "Buscar archivos...",
-    "shown_one": "explorer.shown",
-    "shown_other": "explorer.shown",
+    "shown_one": "{{count}} mostrado",
+    "shown_other": "{{count}} mostrados",
     "title": "Archivos",
     "uploadTitle": "Subir archivos desde el ordenador"
   },

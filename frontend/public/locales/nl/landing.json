@@ -55,8 +55,6 @@
     },
     "subtitle": "Alles wat je nodig hebt om met AI te bouwen. Eenvoudig om te beginnen, krachtig genoeg voor teams.",
     "techStack": {
-      "subtitle": "Productieklaar stack met TypeScript, React 18, Node.js, PostgreSQL en AI-integratie",
-      "title": "Gebouwd met Moderne Technologieën",
       "categories": {
         "ai": "AI",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobiel",
         "realtime": "Real-time"
-      }
+      },
+      "subtitle": "Productieklaar stack met TypeScript, React 18, Node.js, PostgreSQL en AI-integratie",
+      "title": "Gebouwd met Moderne Technologieën"
     },
     "title": "Alles Wat Je Nodig Hebt"
   },

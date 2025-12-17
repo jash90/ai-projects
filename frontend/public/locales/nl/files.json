@@ -18,11 +18,11 @@
       "pending": "Automatisch opslaan: In afwachting",
       "upToDate": "Automatisch opslaan: Actueel"
     },
-    "characters_one": "editor.kenmerk",
-    "characters_other": "editor.kenmerken",
+    "characters_one": "{{count}} teken",
+    "characters_other": "{{count}} tekens",
     "language": "Taal: {{language}}",
-    "lines_one": "editor.regel",
-    "lines_other": "editor.regels",
+    "lines_one": "{{count}} regel",
+    "lines_other": "{{count}} regels",
     "loading": "Editor laden...",
     "noFile": {
       "description": "Selecteer een bestand uit de verkenner om te beginnen met bewerken",
@@ -54,12 +54,12 @@
       "description": "Maak je eerste bestand om te beginnen",
       "title": "Geen bestanden in dit project"
     },
-    "fileCount_one": "explorer.bestandsaantal",
+    "fileCount_one": "{{count}} bestand",
     "fileCount_other": "{{count}} bestanden",
     "noResults": "Geen bestanden die overeenkomen met je zoekopdracht",
     "searchPlaceholder": "Bestanden zoeken...",
-    "shown_one": "explorer.weergegeven",
-    "shown_other": "explorer.weergegeven",
+    "shown_one": "{{count}} weergegeven",
+    "shown_other": "{{count}} weergegeven",
     "title": "Bestanden",
     "uploadTitle": "Bestanden uploaden vanaf computer"
   },
@@ -70,8 +70,8 @@
     "done": "Klaar",
     "dropzone": {
       "active": "Bestanden hierheen slepen",
-      "andMore_one": "upload.dropzone.andMore",
-      "andMore_other": "upload.dropzone.andMore",
+      "andMore_one": "en {{count}} meer bestand",
+      "andMore_other": "en {{count}} meer bestanden",
       "description": "Sleep bestanden hierheen, of klik om bestanden te selecteren",
       "maxSize": "Maximale bestandsgrootte: {{size}}MB",
       "supportedTypes": "Ondersteunde types: {{types}}",
@@ -81,7 +81,7 @@
       "tooLarge": "Bestand \"{{name}}\" is te groot. Maximale grootte is {{maxSize}}MB.",
       "unsupportedType": "Bestandstype niet ondersteund. Toegestane types: {{types}}"
     },
-    "success_one": "upload.success",
+    "success_one": "{{count}} bestand succesvol geüpload!",
     "success_other": "{{count}} bestanden succesvol geüpload!",
     "title": "Bestanden uploaden naar project",
     "uploading": "Bestanden aan het uploaden"

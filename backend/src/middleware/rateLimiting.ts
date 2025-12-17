@@ -149,3 +149,17 @@ export const creationLimiter = rateLimit({
     next(createRateLimitError(resetTime));
   }
 });
+
+// Checkout rate limiting (prevents spam checkout attempts)
+export const checkoutLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 3, // 3 checkout attempts per minute
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Too many checkout attempts. Please wait a moment before trying again.',
+  handler: (req, res, next) => {
+    const { createRateLimitError } = require('../utils/errors');
+    const resetTime = new Date(Date.now() + 60 * 1000); // 1 minute from now
+    next(createRateLimitError(resetTime));
+  }
+});

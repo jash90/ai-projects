@@ -28,11 +28,11 @@
   "input": {
     "attachFile": "Allega file",
     "attachFiles": "Allega file (immagini, PDF)",
-    "characters_one": "input.characters",
-    "characters_other": "input.characters",
+    "characters_one": "{{count}} carattere",
+    "characters_other": "{{count}} caratteri",
     "fileTooLarge": "File troppo grande: {{name}}. Dimensione massima: {{maxSize}}MB",
-    "maxFilesError_one": "input.maxFilesError",
-    "maxFilesError_other": "input.maxFilesError",
+    "maxFilesError_one": "Massimo {{count}} file consentito",
+    "maxFilesError_other": "Massimo {{count}} file consentiti",
     "placeholder": "Scrivi il tuo messaggio...",
     "send": "Invia",
     "sendMessage": "Invia messaggio",
@@ -42,8 +42,8 @@
   "limits": {
     "global": "Limite globale",
     "monthly": "Limite mensile",
-    "remaining_one": "limits.remaining",
-    "remaining_other": "limits.remaining"
+    "remaining_one": "{{count}} token rimanente",
+    "remaining_other": "{{count}} token rimanenti"
   },
   "message": {
     "error": "Errore",

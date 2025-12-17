@@ -55,8 +55,6 @@
     },
     "subtitle": "Alt hvad du behøver for at bygge med AI. Simpelt at starte, kraftfuldt nok til teams.",
     "techStack": {
-      "subtitle": "Produktionsklar stack med TypeScript, React 18, Node.js, PostgreSQL og AI-integration",
-      "title": "Bygget med Moderne Teknologier",
       "categories": {
         "ai": "AI",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobil",
         "realtime": "Realtid"
-      }
+      },
+      "subtitle": "Produktionsklar stack med TypeScript, React 18, Node.js, PostgreSQL og AI-integration",
+      "title": "Bygget med Moderne Teknologier"
     },
     "title": "Alt hvad du Beholder"
   },

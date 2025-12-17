@@ -1,0 +1,63 @@
+{
+  "pricing": {
+    "title": "Kies uw plan",
+    "subtitle": "Selecteer het perfecte plan voor uw behoeften",
+    "monthly": "Maandelijks",
+    "yearly": "Jaarlijks",
+    "savePercent": "Bespaar tot {{percent}}%",
+    "popular": "Meest populair",
+    "currentPlan": "Huidige plan",
+    "getStarted": "Gratis beginnen",
+    "upgrade": "Upgrade",
+    "downgrade": "Downgrade",
+    "perMonth": "maand",
+    "billedYearly": "jaarlijks gefactureerd",
+    "save": "Opslaan",
+    "stripeNotConfigured": "Betalingssysteem is nog niet geconfigureerd. Neem contact op met de ondersteuning.",
+    "questions": "Heeft u vragen?",
+    "contactUs": "Neem contact met ons op"
+  },
+  "settings": {
+    "title": "Abonnement",
+    "description": "Beheer uw abonnement en facturering",
+    "currentPlan": "Huidige plan",
+    "planName": "Plan",
+    "status": "Status",
+    "billingCycle": "Factureringscyclus",
+    "nextBilling": "Volgende factuurdatum",
+    "cancelAt": "Annuleert op",
+    "manageBilling": "Beheer facturering",
+    "cancelSubscription": "Abonnement annuleren",
+    "resumeSubscription": "Abonnement hervatten",
+    "upgradeNow": "Nu upgraden",
+    "viewPlans": "Bekijk plannen",
+    "history": "Abonnementsgeschiedenis",
+    "noHistory": "Nog geen abonnementswijzigingen",
+    "freePlan": "U heeft het gratis plan",
+    "freePlanDescription": "Upgrade om meer functies en hogere limieten te ontgrendelen",
+    "cancelConfirm": "Weet u zeker dat u uw abonnement wilt annuleren?",
+    "cancelImmediate": "Onmiddellijk annuleren",
+    "cancelAtPeriodEnd": "Annuleren aan het einde van de periode",
+    "keepSubscription": "Abonnement behouden"
+  },
+  "status": {
+    "active": "Actief",
+    "canceled": "Geannuleerd",
+    "past_due": "Te laat",
+    "trialing": "Proefperiode",
+    "paused": "Pauze",
+    "incomplete": "Incompleet"
+  },
+  "cycle": {
+    "monthly": "Maandelijks",
+    "yearly": "Jaarlijks"
+  },
+  "history": {
+    "subscribed": "Geabonneerd op {{plan}}",
+    "upgraded": "Geüpgraded naar {{plan}}",
+    "downgraded": "Gedowngrade naar {{plan}}",
+    "canceled": "Abonnement geannuleerd",
+    "resumed": "Abonnement hervat",
+    "renewed": "Abonnement vernieuwd"
+  }
+}

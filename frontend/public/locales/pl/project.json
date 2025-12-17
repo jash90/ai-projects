@@ -28,12 +28,8 @@
     "menu": {
       "currentSelection": "Obecny wybór",
       "filesAvailableOffline_one": "Pliki dostępne offline",
-      "filesAvailableOffline_few": "pliki dostępne offline",
-      "filesAvailableOffline_many": "plików dostępnych offline",
       "filesAvailableOffline_other": "Pliki dostępne offline",
       "filesPendingUpload_one": "Plik oczekujący na przesłanie",
-      "filesPendingUpload_few": "pliki oczekujące na przesłanie",
-      "filesPendingUpload_many": "plików oczekujących na przesłanie",
       "filesPendingUpload_other": "Pliki oczekujące na przesłanie",
       "noAgentSelected": "Nie wybrano agenta",
       "noFileSelected": "Nie wybrano pliku",

@@ -1,0 +1,63 @@
+{
+  "pricing": {
+    "title": "Choose Your Plan",
+    "subtitle": "Select the perfect plan for your needs",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "savePercent": "Save up to {{percent}}%",
+    "popular": "Most Popular",
+    "currentPlan": "Current Plan",
+    "getStarted": "Get Started Free",
+    "upgrade": "Upgrade",
+    "downgrade": "Downgrade",
+    "perMonth": "month",
+    "billedYearly": "billed yearly",
+    "save": "Save",
+    "stripeNotConfigured": "Payment system is not configured yet. Please contact support.",
+    "questions": "Have questions?",
+    "contactUs": "Contact us"
+  },
+  "settings": {
+    "title": "Subscription",
+    "description": "Manage your subscription and billing",
+    "currentPlan": "Current Plan",
+    "planName": "Plan",
+    "status": "Status",
+    "billingCycle": "Billing Cycle",
+    "nextBilling": "Next Billing Date",
+    "cancelAt": "Cancels At",
+    "manageBilling": "Manage Billing",
+    "cancelSubscription": "Cancel Subscription",
+    "resumeSubscription": "Resume Subscription",
+    "upgradeNow": "Upgrade Now",
+    "viewPlans": "View Plans",
+    "history": "Subscription History",
+    "noHistory": "No subscription changes yet",
+    "freePlan": "You're on the free plan",
+    "freePlanDescription": "Upgrade to unlock more features and higher limits",
+    "cancelConfirm": "Are you sure you want to cancel your subscription?",
+    "cancelImmediate": "Cancel Immediately",
+    "cancelAtPeriodEnd": "Cancel at Period End",
+    "keepSubscription": "Keep Subscription"
+  },
+  "status": {
+    "active": "Active",
+    "canceled": "Canceled",
+    "past_due": "Past Due",
+    "trialing": "Trial",
+    "paused": "Paused",
+    "incomplete": "Incomplete"
+  },
+  "cycle": {
+    "monthly": "Monthly",
+    "yearly": "Yearly"
+  },
+  "history": {
+    "subscribed": "Subscribed to {{plan}}",
+    "upgraded": "Upgraded to {{plan}}",
+    "downgraded": "Downgraded to {{plan}}",
+    "canceled": "Subscription canceled",
+    "resumed": "Subscription resumed",
+    "renewed": "Subscription renewed"
+  }
+}

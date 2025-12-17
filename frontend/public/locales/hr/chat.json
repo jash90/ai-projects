@@ -28,11 +28,11 @@
   "input": {
     "attachFile": "Priloži datoteku",
     "attachFiles": "Priloži datoteke (slike, PDF)",
-    "characters_one": "input.characters",
-    "characters_other": "input.characters",
+    "characters_one": "{{count}} znak",
+    "characters_other": "{{count}} znakova",
     "fileTooLarge": "Datoteka prevelika: {{name}}. Maksimalna veličina: {{maxSize}}MB",
-    "maxFilesError_one": "input.maxFilesError",
-    "maxFilesError_other": "input.maxFilesError",
+    "maxFilesError_one": "Maksimalno {{count}} datoteka dopušteno",
+    "maxFilesError_other": "Maksimalno {{count}} datoteka dopušteno",
     "placeholder": "Upišite svoju poruku...",
     "send": "Pošalji",
     "sendMessage": "Pošalji poruku",
@@ -42,8 +42,8 @@
   "limits": {
     "global": "Globalni limit",
     "monthly": "Mjesečni limit",
-    "remaining_one": "limits.remaining",
-    "remaining_other": "limits.remaining"
+    "remaining_one": "{{count}} token preostao",
+    "remaining_other": "{{count}} tokena preostalo"
   },
   "message": {
     "error": "Greška",

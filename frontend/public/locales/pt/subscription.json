@@ -1,0 +1,63 @@
+{
+  "pricing": {
+    "title": "Escolha Seu Plano",
+    "subtitle": "Selecione o plano perfeito para suas necessidades",
+    "monthly": "Mensal",
+    "yearly": "Anual",
+    "savePercent": "Economize até {{percent}}%",
+    "popular": "Mais Popular",
+    "currentPlan": "Plano Atual",
+    "getStarted": "Comece Grátis",
+    "upgrade": "Atualizar",
+    "downgrade": "Rebaixar",
+    "perMonth": "mês",
+    "billedYearly": "cobrado anualmente",
+    "save": "Salvar",
+    "stripeNotConfigured": "O sistema de pagamento ainda não está configurado. Por favor, entre em contato com o suporte.",
+    "questions": "Tem perguntas?",
+    "contactUs": "Entre em contato conosco"
+  },
+  "settings": {
+    "title": "Assinatura",
+    "description": "Gerencie sua assinatura e cobrança",
+    "currentPlan": "Plano Atual",
+    "planName": "Plano",
+    "status": "Status",
+    "billingCycle": "Ciclo de Cobrança",
+    "nextBilling": "Próxima Data de Cobrança",
+    "cancelAt": "Cancela Em",
+    "manageBilling": "Gerenciar Cobrança",
+    "cancelSubscription": "Cancelar Assinatura",
+    "resumeSubscription": "Retomar Assinatura",
+    "upgradeNow": "Atualizar Agora",
+    "viewPlans": "Ver Planos",
+    "history": "Histórico de Assinatura",
+    "noHistory": "Nenhuma alteração de assinatura ainda",
+    "freePlan": "Você está no plano gratuito",
+    "freePlanDescription": "Atualize para desbloquear mais recursos e limites mais altos",
+    "cancelConfirm": "Você tem certeza de que deseja cancelar sua assinatura?",
+    "cancelImmediate": "Cancelar Imediatamente",
+    "cancelAtPeriodEnd": "Cancelar no Final do Período",
+    "keepSubscription": "Manter Assinatura"
+  },
+  "status": {
+    "active": "Ativo",
+    "canceled": "Cancelado",
+    "past_due": "Vencido",
+    "trialing": "Teste",
+    "paused": "Pausado",
+    "incomplete": "Incompleto"
+  },
+  "cycle": {
+    "monthly": "Mensal",
+    "yearly": "Anual"
+  },
+  "history": {
+    "subscribed": "Inscrito no {{plan}}",
+    "upgraded": "Atualizado para {{plan}}",
+    "downgraded": "Rebaixado para {{plan}}",
+    "canceled": "Assinatura cancelada",
+    "resumed": "Assinatura retomada",
+    "renewed": "Assinatura renovada"
+  }
+}

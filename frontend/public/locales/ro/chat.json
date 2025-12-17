@@ -28,11 +28,11 @@
   "input": {
     "attachFile": "Atașați fișier",
     "attachFiles": "Atașați fișiere (imagini, PDF)",
-    "characters_one": "input.characters",
-    "characters_other": "input.characters",
+    "characters_one": "{{count}} caracter",
+    "characters_other": "{{count}} caractere",
     "fileTooLarge": "Fișier prea mare: {{name}}. Dimensiune maximă: {{maxSize}}MB",
-    "maxFilesError_one": "input.maxFilesError",
-    "maxFilesError_other": "input.maxFilesError",
+    "maxFilesError_one": "Maximum {{count}} fișier permis",
+    "maxFilesError_other": "Maximum {{count}} fișiere permise",
     "placeholder": "Scrieți mesajul dvs....",
     "send": "Trimite",
     "sendMessage": "Trimite mesaj",
@@ -42,8 +42,8 @@
   "limits": {
     "global": "Limită globală",
     "monthly": "Limită lunară",
-    "remaining_one": "limits.remaining",
-    "remaining_other": "limits.remaining"
+    "remaining_one": "{{count}} token rămas",
+    "remaining_other": "{{count}} tokens rămase"
   },
   "message": {
     "error": "Eroare",

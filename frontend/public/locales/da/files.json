@@ -70,8 +70,8 @@
     "done": "Færdig",
     "dropzone": {
       "active": "Slip filer her",
-      "andMore_one": "upload.dropzone.andMore",
-      "andMore_other": "upload.dropzone.andMore",
+      "andMore_one": "og {{count}} mere fil",
+      "andMore_other": "og {{count}} mere filer",
       "description": "Træk og slip filer her, eller klik for at vælge filer",
       "maxSize": "Maksimal filstørrelse: {{size}}MB",
       "supportedTypes": "Understøttede typer: {{types}}",
@@ -81,7 +81,7 @@
       "tooLarge": "Fil \"{{name}}\" er for stor. Maksimal størrelse er {{maxSize}}MB.",
       "unsupportedType": "Filtypen understøttes ikke. Tilladte typer: {{types}}"
     },
-    "success_one": "upload.success",
+    "success_one": "{{count}} fil uploadet med succes!",
     "success_other": "{{count}} filer blev uploadet med succes!",
     "title": "Upload filer til projektet",
     "uploading": "Uploader filer"

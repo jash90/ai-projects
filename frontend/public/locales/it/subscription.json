@@ -1,0 +1,63 @@
+{
+  "pricing": {
+    "title": "Scegli il tuo piano",
+    "subtitle": "Seleziona il piano perfetto per le tue esigenze",
+    "monthly": "Mensile",
+    "yearly": "Annuale",
+    "savePercent": "Risparmia fino al {{percent}}%",
+    "popular": "Più Popolare",
+    "currentPlan": "Piano Attuale",
+    "getStarted": "Inizia Gratis",
+    "upgrade": "Aggiorna",
+    "downgrade": "Riduci",
+    "perMonth": "mese",
+    "billedYearly": "fatturato annualmente",
+    "save": "Risparmia",
+    "stripeNotConfigured": "Il sistema di pagamento non è ancora configurato. Contatta il supporto.",
+    "questions": "Hai domande?",
+    "contactUs": "Contattaci"
+  },
+  "settings": {
+    "title": "Abbonamento",
+    "description": "Gestisci il tuo abbonamento e la fatturazione",
+    "currentPlan": "Piano Attuale",
+    "planName": "Piano",
+    "status": "Stato",
+    "billingCycle": "Ciclo di Fatturazione",
+    "nextBilling": "Data di Fatturazione Successiva",
+    "cancelAt": "Annulla a",
+    "manageBilling": "Gestisci Fatturazione",
+    "cancelSubscription": "Annulla Abbonamento",
+    "resumeSubscription": "Riprendi Abbonamento",
+    "upgradeNow": "Aggiorna Ora",
+    "viewPlans": "Visualizza Piani",
+    "history": "Storia dell'Abbonamento",
+    "noHistory": "Nessuna modifica all'abbonamento ancora",
+    "freePlan": "Sei sul piano gratuito",
+    "freePlanDescription": "Aggiorna per sbloccare più funzionalità e limiti più elevati",
+    "cancelConfirm": "Sei sicuro di voler annullare il tuo abbonamento?",
+    "cancelImmediate": "Annulla Immediatamente",
+    "cancelAtPeriodEnd": "Annulla alla Fine del Periodo",
+    "keepSubscription": "Mantieni Abbonamento"
+  },
+  "status": {
+    "active": "Attivo",
+    "canceled": "Annullato",
+    "past_due": "Scaduto",
+    "trialing": "Prova",
+    "paused": "In Pausa",
+    "incomplete": "Incompleto"
+  },
+  "cycle": {
+    "monthly": "Mensile",
+    "yearly": "Annuale"
+  },
+  "history": {
+    "subscribed": "Iscritto a {{plan}}",
+    "upgraded": "Aggiornato a {{plan}}",
+    "downgraded": "Ridotto a {{plan}}",
+    "canceled": "Abbonamento annullato",
+    "resumed": "Abbonamento ripreso",
+    "renewed": "Abbonamento rinnovato"
+  }
+}

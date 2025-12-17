@@ -28,11 +28,11 @@
   "input": {
     "attachFile": "Legg ved fil",
     "attachFiles": "Legg ved filer (bilder, PDF)",
-    "characters_one": "input.characters",
-    "characters_other": "input.characters",
+    "characters_one": "{{count}} tegn",
+    "characters_other": "{{count}} tegn",
     "fileTooLarge": "Fil for stor: {{name}}. Maks størrelse: {{maxSize}}MB",
-    "maxFilesError_one": "input.maxFilesError",
-    "maxFilesError_other": "input.maxFilesError",
+    "maxFilesError_one": "Maksimum {{count}} fil tillatt",
+    "maxFilesError_other": "Maksimum {{count}} filer tillatt",
     "placeholder": "Skriv meldingen din...",
     "send": "Send",
     "sendMessage": "Send melding",
@@ -42,8 +42,8 @@
   "limits": {
     "global": "Global grense",
     "monthly": "Månedlig grense",
-    "remaining_one": "limits.remaining",
-    "remaining_other": "limits.remaining"
+    "remaining_one": "{{count}} token gjenstående",
+    "remaining_other": "{{count}} tokens gjenstående"
   },
   "message": {
     "error": "Feil",

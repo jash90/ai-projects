@@ -18,8 +18,8 @@
       "pending": "Automatické uložení: Čeká se",
       "upToDate": "Automatické uložení: Aktuální"
     },
-    "characters_one": "editor.znak",
-    "characters_other": "editor.znaky",
+    "characters_one": "{{count}} znak",
+    "characters_other": "{{count}} znaky",
     "language": "Jazyk: {{language}}",
     "lines_one": "editor.řádek",
     "lines_other": "editor.řádky",
@@ -54,7 +54,7 @@
       "description": "Vytvořte svůj první soubor, abyste mohli začít",
       "title": "V tomto projektu nejsou žádné soubory"
     },
-    "fileCount_one": "explorer.soubor",
+    "fileCount_one": "{{count}} soubor",
     "fileCount_other": "{{count}} soubory",
     "noResults": "Žádné soubory neodpovídají vašemu vyhledávání",
     "searchPlaceholder": "Hledat soubory...",

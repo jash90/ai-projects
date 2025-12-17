@@ -18,11 +18,11 @@
       "pending": "Salvare automată: În așteptare",
       "upToDate": "Salvare automată: La zi"
     },
-    "characters_one": "editor.caracter",
-    "characters_other": "editor.caractere",
+    "characters_one": "{{count}} caracter",
+    "characters_other": "{{count}} caractere",
     "language": "Limba: {{language}}",
-    "lines_one": "editor.linie",
-    "lines_other": "editor.linii",
+    "lines_one": "{{count}} linie",
+    "lines_other": "{{count}} linii",
     "loading": "Se încarcă editorul...",
     "noFile": {
       "description": "Selectează un fișier din explorator pentru a începe editarea",
@@ -58,8 +58,8 @@
     "fileCount_other": "{{count}} fișiere",
     "noResults": "Niciun fișier nu se potrivește cu căutarea ta",
     "searchPlaceholder": "Caută fișiere...",
-    "shown_one": "explorer.afisat",
-    "shown_other": "explorer.afisate",
+    "shown_one": "{{count}} afișat",
+    "shown_other": "{{count}} afișate",
     "title": "Fișiere",
     "uploadTitle": "Încarcă fișiere de pe computer"
   },

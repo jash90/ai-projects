@@ -1,0 +1,63 @@
+{
+  "pricing": {
+    "title": "Choisissez votre plan",
+    "subtitle": "Sélectionnez le plan parfait pour vos besoins",
+    "monthly": "Mensuel",
+    "yearly": "Annuel",
+    "savePercent": "Économisez jusqu'à {{percent}}%",
+    "popular": "Le plus populaire",
+    "currentPlan": "Plan actuel",
+    "getStarted": "Commencez gratuitement",
+    "upgrade": "Mettre à niveau",
+    "downgrade": "Rétrograder",
+    "perMonth": "mois",
+    "billedYearly": "facturé annuellement",
+    "save": "Économiser",
+    "stripeNotConfigured": "Le système de paiement n'est pas encore configuré. Veuillez contacter le support.",
+    "questions": "Vous avez des questions ?",
+    "contactUs": "Contactez-nous"
+  },
+  "settings": {
+    "title": "Abonnement",
+    "description": "Gérez votre abonnement et votre facturation",
+    "currentPlan": "Plan actuel",
+    "planName": "Plan",
+    "status": "Statut",
+    "billingCycle": "Cycle de facturation",
+    "nextBilling": "Date de facturation suivante",
+    "cancelAt": "Annule à",
+    "manageBilling": "Gérer la facturation",
+    "cancelSubscription": "Annuler l'abonnement",
+    "resumeSubscription": "Reprendre l'abonnement",
+    "upgradeNow": "Mettre à niveau maintenant",
+    "viewPlans": "Voir les plans",
+    "history": "Historique des abonnements",
+    "noHistory": "Aucun changement d'abonnement pour le moment",
+    "freePlan": "Vous êtes sur le plan gratuit",
+    "freePlanDescription": "Mettez à niveau pour débloquer plus de fonctionnalités et des limites plus élevées",
+    "cancelConfirm": "Êtes-vous sûr de vouloir annuler votre abonnement ?",
+    "cancelImmediate": "Annuler immédiatement",
+    "cancelAtPeriodEnd": "Annuler à la fin de la période",
+    "keepSubscription": "Conserver l'abonnement"
+  },
+  "status": {
+    "active": "Actif",
+    "canceled": "Annulé",
+    "past_due": "En retard",
+    "trialing": "Essai",
+    "paused": "Suspendu",
+    "incomplete": "Incomplet"
+  },
+  "cycle": {
+    "monthly": "Mensuel",
+    "yearly": "Annuel"
+  },
+  "history": {
+    "subscribed": "Abonné à {{plan}}",
+    "upgraded": "Mis à niveau vers {{plan}}",
+    "downgraded": "Rétrogradé vers {{plan}}",
+    "canceled": "Abonnement annulé",
+    "resumed": "Abonnement repris",
+    "renewed": "Abonnement renouvelé"
+  }
+}

@@ -18,10 +18,10 @@
       "pending": "Automaattinen tallennus: Odottaa",
       "upToDate": "Automaattinen tallennus: Ajantasalla"
     },
-    "characters_one": "editor.merkki",
+    "characters_one": "{{count}} merkki",
     "characters_other": "editor.merkkiä",
     "language": "Kieli: {{language}}",
-    "lines_one": "editor.rivi",
+    "lines_one": "{{count}} rivi",
     "lines_other": "editor.riviä",
     "loading": "Ladataan editoria...",
     "noFile": {
@@ -54,7 +54,7 @@
       "description": "Luo ensimmäinen tiedostosi aloittaaksesi",
       "title": "Ei tiedostoja tässä projektissa"
     },
-    "fileCount_one": "explorer.tiedosto",
+    "fileCount_one": "{{count}} tiedosto",
     "fileCount_other": "{{count}} tiedostoa",
     "noResults": "Ei tiedostoja, jotka vastaavat hakua",
     "searchPlaceholder": "Hae tiedostoja...",

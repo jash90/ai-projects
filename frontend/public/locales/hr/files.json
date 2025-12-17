@@ -18,11 +18,11 @@
       "pending": "Automatsko spremanje: Na čekanju",
       "upToDate": "Automatsko spremanje: Ažurirano"
     },
-    "characters_one": "editor.znak",
-    "characters_other": "editor.znakova",
+    "characters_one": "{{count}} znak",
+    "characters_other": "{{count}} znakova",
     "language": "Jezik: {{language}}",
-    "lines_one": "editor.redak",
-    "lines_other": "editor.redaka",
+    "lines_one": "{{count}} redak",
+    "lines_other": "{{count}} redaka",
     "loading": "Učitavanje uređivača...",
     "noFile": {
       "description": "Odaberite datoteku iz istraživača za početak uređivanja",
@@ -54,12 +54,12 @@
       "description": "Stvorite svoju prvu datoteku za početak",
       "title": "Nema datoteka u ovom projektu"
     },
-    "fileCount_one": "explorer.datoteka",
+    "fileCount_one": "{{count}} datoteka",
     "fileCount_other": "{{count}} datoteke",
     "noResults": "Nema datoteka koje odgovaraju vašoj pretrazi",
     "searchPlaceholder": "Pretraži datoteke...",
-    "shown_one": "explorer.prikazana",
-    "shown_other": "explorer.prikazane",
+    "shown_one": "{{count}} prikazano",
+    "shown_other": "{{count}} prikazano",
     "title": "Datoteke",
     "uploadTitle": "Prenesi datoteke s računala"
   },
@@ -70,8 +70,8 @@
     "done": "Gotovo",
     "dropzone": {
       "active": "Ovdje ispustite datoteke",
-      "andMore_one": "upload.dropzone.andMore",
-      "andMore_other": "upload.dropzone.andMore",
+      "andMore_one": "i {{count}} više datoteka",
+      "andMore_other": "i {{count}} više datoteka",
       "description": "Povucite i ispustite datoteke ovdje ili kliknite za odabir datoteka",
       "maxSize": "Maksimalna veličina datoteke: {{size}}MB",
       "supportedTypes": "Podržani tipovi: {{types}}",
@@ -81,7 +81,7 @@
       "tooLarge": "Datoteka \"{{name}}\" je prevelika. Maksimalna veličina je {{maxSize}}MB.",
       "unsupportedType": "Tip datoteke nije podržan. Dozvoljeni tipovi: {{types}}"
     },
-    "success_one": "upload.success",
+    "success_one": "{{count}} datoteka uspješno prenesena!",
     "success_other": "{{count}} datoteke uspješno prenesene!",
     "title": "Prenesite datoteke u projekt",
     "uploading": "Prenosim datoteke"

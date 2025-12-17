@@ -18,11 +18,11 @@
       "pending": "Auto-lagring: Venter",
       "upToDate": "Auto-lagring: Oppdatert"
     },
-    "characters_one": "editor.tegn",
-    "characters_other": "editor.tegn",
+    "characters_one": "{{count}} tegn",
+    "characters_other": "{{count}} tegn",
     "language": "Språk: {{language}}",
-    "lines_one": "editor.linje",
-    "lines_other": "editor.linjer",
+    "lines_one": "{{count}} linje",
+    "lines_other": "{{count}} linjer",
     "loading": "Laster inn editor...",
     "noFile": {
       "description": "Velg en fil fra utforskeren for å begynne å redigere",
@@ -54,12 +54,12 @@
       "description": "Opprett din første fil for å komme i gang",
       "title": "Ingen filer i dette prosjektet"
     },
-    "fileCount_one": "explorer.fil",
+    "fileCount_one": "{{count}} fil",
     "fileCount_other": "{{count}} filer",
     "noResults": "Ingen filer samsvarer med søket ditt",
     "searchPlaceholder": "Søk etter filer...",
-    "shown_one": "explorer.vises",
-    "shown_other": "explorer.vises",
+    "shown_one": "{{count}} vist",
+    "shown_other": "{{count}} vist",
     "title": "Filer",
     "uploadTitle": "Last opp filer fra datamaskin"
   },
