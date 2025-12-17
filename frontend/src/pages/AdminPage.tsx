@@ -24,6 +24,7 @@ import {
   Bot,
   Plus,
   Trash2,
+  CreditCard,
 } from 'lucide-react';
 import { useAuth } from '@/stores/authStore';
 import { adminApi, agentsApi } from '@/lib/api';
@@ -37,10 +38,11 @@ import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/utils';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
+import AdminSubscriptionsPage from './AdminSubscriptionsPage';
 
 export default function AdminPage() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'users' | 'limits' | 'agents'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'users' | 'limits' | 'agents' | 'subscriptions'>('dashboard');
 
   // Redirect non-admin users
   useEffect(() => {
@@ -133,9 +135,10 @@ export default function AdminPage() {
           { id: 'users', label: 'User Management', icon: Users },
           { id: 'limits', label: 'Token Limits', icon: Target },
           { id: 'agents', label: 'Agents', icon: Bot },
+          { id: 'subscriptions', label: 'Subscriptions', icon: CreditCard },
         ]}
         activeTab={activeTab}
-        onTabChange={(tabId) => setActiveTab(tabId as 'dashboard' | 'users' | 'limits' | 'agents')}
+        onTabChange={(tabId) => setActiveTab(tabId as 'dashboard' | 'users' | 'limits' | 'agents' | 'subscriptions')}
         variant="gradient"
         className="bg-gradient-to-r from-accent/10 via-primary/5 to-accent/10"
       />
@@ -168,6 +171,10 @@ export default function AdminPage() {
             loading={agentsLoading}
             onRefresh={refetchAgents}
           />
+        )}
+
+        {activeTab === 'subscriptions' && (
+          <AdminSubscriptionsPage />
         )}
       </main>
     </div>

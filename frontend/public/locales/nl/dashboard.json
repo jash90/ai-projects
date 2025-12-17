@@ -13,8 +13,8 @@
       "title": "Nog geen projecten"
     },
     "title": "Alle Projecten",
-    "viewAll_one": "alleProjects.viewAll",
-    "viewAll_other": "alleProjects.viewAll"
+    "viewAll_one": "Bekijk {{count}} project",
+    "viewAll_other": "Bekijk alle {{count}} projecten"
   },
   "header": {
     "subtitle": "Beheer je projecten en werk samen met AI-agenten",

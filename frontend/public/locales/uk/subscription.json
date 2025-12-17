@@ -1,0 +1,63 @@
+{
+  "pricing": {
+    "title": "Виберіть свій план",
+    "subtitle": "Виберіть ідеальний план для ваших потреб",
+    "monthly": "Щомісячно",
+    "yearly": "Щорічно",
+    "savePercent": "Зекономте до {{percent}}%",
+    "popular": "Найпопулярніший",
+    "currentPlan": "Поточний план",
+    "getStarted": "Почати безкоштовно",
+    "upgrade": "Підвищити",
+    "downgrade": "Знизити",
+    "perMonth": "місяць",
+    "billedYearly": "оплачено щорічно",
+    "save": "Зекономити",
+    "stripeNotConfigured": "Платіжна система ще не налаштована. Будь ласка, зв'яжіться з підтримкою.",
+    "questions": "Є запитання?",
+    "contactUs": "Зв'яжіться з нами"
+  },
+  "settings": {
+    "title": "Підписка",
+    "description": "Керуйте своєю підпискою та оплатою",
+    "currentPlan": "Поточний план",
+    "planName": "План",
+    "status": "Статус",
+    "billingCycle": "Цикл оплати",
+    "nextBilling": "Дата наступної оплати",
+    "cancelAt": "Скасувати на",
+    "manageBilling": "Керувати оплатою",
+    "cancelSubscription": "Скасувати підписку",
+    "resumeSubscription": "Відновити підписку",
+    "upgradeNow": "Підвищити зараз",
+    "viewPlans": "Переглянути плани",
+    "history": "Історія підписки",
+    "noHistory": "Зміни підписки ще не було",
+    "freePlan": "Ви на безкоштовному плані",
+    "freePlanDescription": "Підвищте, щоб розблокувати більше функцій та вищі ліміти",
+    "cancelConfirm": "Ви впевнені, що хочете скасувати свою підписку?",
+    "cancelImmediate": "Скасувати негайно",
+    "cancelAtPeriodEnd": "Скасувати в кінці періоду",
+    "keepSubscription": "Залишити підписку"
+  },
+  "status": {
+    "active": "Активний",
+    "canceled": "Скасовано",
+    "past_due": "Прострочено",
+    "trialing": "Пробний",
+    "paused": "Призупинено",
+    "incomplete": "Неповний"
+  },
+  "cycle": {
+    "monthly": "Щомісячно",
+    "yearly": "Щорічно"
+  },
+  "history": {
+    "subscribed": "Підписано на {{plan}}",
+    "upgraded": "Підвищено до {{plan}}",
+    "downgraded": "Знижено до {{plan}}",
+    "canceled": "Підписка скасована",
+    "resumed": "Підписка відновлена",
+    "renewed": "Передплату поновлено"
+  }
+}

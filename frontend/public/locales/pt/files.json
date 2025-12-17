@@ -18,11 +18,11 @@
       "pending": "Auto-salvar: Pendente",
       "upToDate": "Auto-salvar: Atualizado"
     },
-    "characters_one": "editor.caractere",
-    "characters_other": "editor.caracteres",
+    "characters_one": "{{count}} caractere",
+    "characters_other": "{{count}} caracteres",
     "language": "Idioma: {{language}}",
-    "lines_one": "editor.linha",
-    "lines_other": "editor.linhas",
+    "lines_one": "{{count}} linha",
+    "lines_other": "{{count}} linhas",
     "loading": "Carregando editor...",
     "noFile": {
       "description": "Selecione um arquivo no explorador para começar a editar",
@@ -58,8 +58,8 @@
     "fileCount_other": "{{count}} arquivos",
     "noResults": "Nenhum arquivo corresponde à sua pesquisa",
     "searchPlaceholder": "Pesquisar arquivos...",
-    "shown_one": "explorer.mostrado",
-    "shown_other": "explorer.mostrados",
+    "shown_one": "{{count}} mostrado",
+    "shown_other": "{{count}} mostrados",
     "title": "Arquivos",
     "uploadTitle": "Carregar arquivos do computador"
   },
@@ -70,8 +70,8 @@
     "done": "Concluído",
     "dropzone": {
       "active": "Solte os arquivos aqui",
-      "andMore_one": "carregue.dropzone.eMais",
-      "andMore_other": "carregue.dropzone.eMais",
+      "andMore_one": "e {{count}} mais arquivo",
+      "andMore_other": "e {{count}} mais arquivos",
       "description": "Arraste e solte arquivos aqui, ou clique para selecionar arquivos",
       "maxSize": "Tamanho máximo do arquivo: {{size}}MB",
       "supportedTypes": "Tipos suportados: {{types}}",
@@ -81,7 +81,7 @@
       "tooLarge": "O arquivo \"{{name}}\" é muito grande. O tamanho máximo é {{maxSize}}MB.",
       "unsupportedType": "Tipo de arquivo não suportado. Tipos permitidos: {{types}}"
     },
-    "success_one": "carregue.sucesso",
+    "success_one": "{{count}} arquivo enviado com sucesso!",
     "success_other": "{{count}} arquivos carregados com sucesso!",
     "title": "Carregar Arquivos para o Projeto",
     "uploading": "Carregando Arquivos"

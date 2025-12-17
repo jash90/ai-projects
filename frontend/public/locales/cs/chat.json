@@ -28,11 +28,11 @@
   "input": {
     "attachFile": "Připojit soubor",
     "attachFiles": "Připojit soubory (obrázky, PDF)",
-    "characters_one": "input.characters",
-    "characters_other": "input.characters",
+    "characters_one": "{{count}} znak",
+    "characters_other": "{{count}} znaky",
     "fileTooLarge": "Soubor je příliš velký: {{name}}. Maximální velikost: {{maxSize}}MB",
-    "maxFilesError_one": "input.maxFilesError",
-    "maxFilesError_other": "input.maxFilesError",
+    "maxFilesError_one": "Maximálně {{count}} soubor povolen",
+    "maxFilesError_other": "Maximálně {{count}} soubory povoleny",
     "placeholder": "Napište svou zprávu...",
     "send": "Odeslat",
     "sendMessage": "Odeslat zprávu",
@@ -42,8 +42,8 @@
   "limits": {
     "global": "Globální limit",
     "monthly": "Měsíční limit",
-    "remaining_one": "limits.remaining",
-    "remaining_other": "limits.remaining"
+    "remaining_one": "{{count}} token zbývá",
+    "remaining_other": "{{count}} tokeny zbývají"
   },
   "message": {
     "error": "Chyba",

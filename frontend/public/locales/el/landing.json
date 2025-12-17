@@ -55,8 +55,6 @@
     },
     "subtitle": "Όλα όσα χρειάζεστε για να δημιουργήσετε με AI. Απλό για να ξεκινήσετε, αρκετά ισχυρό για ομάδες.",
     "techStack": {
-      "subtitle": "Στοίβα έτοιμη για παραγωγή με TypeScript, React 18, Node.js, PostgreSQL και ενσωμάτωση AI",
-      "title": "Κατασκευασμένο με Σύγχρονες Τεχνολογίες",
       "categories": {
         "ai": "AI",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Κινητό",
         "realtime": "Πραγματικός Χρόνος"
-      }
+      },
+      "subtitle": "Στοίβα έτοιμη για παραγωγή με TypeScript, React 18, Node.js, PostgreSQL και ενσωμάτωση AI",
+      "title": "Κατασκευασμένο με Σύγχρονες Τεχνολογίες"
     },
     "title": "Όλα Όσα Χρειάζεστε"
   },

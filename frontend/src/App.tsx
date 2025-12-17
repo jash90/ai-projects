@@ -20,6 +20,7 @@ import ProjectPage from '@/pages/ProjectPage'
 import SettingsPage from '@/pages/SettingsPage'
 import { UsagePage } from '@/pages/UsagePage'
 import AdminPage from '@/pages/AdminPage'
+import PricingPage from '@/pages/PricingPage'
 
 // UI Components
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
@@ -77,7 +78,10 @@ function App() {
           <Routes>
             {/* Landing Page - Always accessible */}
             <Route path="/" element={<LandingPage />} />
-            
+
+            {/* Pricing Page - Always accessible */}
+            <Route path="/pricing" element={<PricingPage />} />
+
             {/* Public Routes */}
             {!isAuthenticated ? (
               <>

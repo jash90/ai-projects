@@ -55,8 +55,6 @@
     },
     "subtitle": "Kaikki, mitä tarvitset rakentaaksesi AI:n kanssa. Helppo aloittaa, tarpeeksi tehokas tiimeille.",
     "techStack": {
-      "subtitle": "Tuotantovalmiit teknologiat, kuten TypeScript, React 18, Node.js, PostgreSQL ja tekoälyintegraatio",
-      "title": "Rakennettu moderneilla teknologioilla",
       "categories": {
         "ai": "AI",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobiili",
         "realtime": "Reaaliaikainen"
-      }
+      },
+      "subtitle": "Tuotantovalmiit teknologiat, kuten TypeScript, React 18, Node.js, PostgreSQL ja tekoälyintegraatio",
+      "title": "Rakennettu moderneilla teknologioilla"
     },
     "title": "Kaikki, mitä tarvitset"
   },

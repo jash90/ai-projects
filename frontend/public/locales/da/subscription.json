@@ -1,0 +1,63 @@
+{
+  "pricing": {
+    "title": "Vælg din plan",
+    "subtitle": "Vælg den perfekte plan til dine behov",
+    "monthly": "Månedlig",
+    "yearly": "Årlig",
+    "savePercent": "Spar op til {{percent}}%",
+    "popular": "Mest populær",
+    "currentPlan": "Nuværende plan",
+    "getStarted": "Kom i gang gratis",
+    "upgrade": "Opgrader",
+    "downgrade": "Nedgrader",
+    "perMonth": "måned",
+    "billedYearly": "faktureres årligt",
+    "save": "Gem",
+    "stripeNotConfigured": "Betalingssystemet er endnu ikke konfigureret. Kontakt venligst support.",
+    "questions": "Har du spørgsmål?",
+    "contactUs": "Kontakt os"
+  },
+  "settings": {
+    "title": "Abonnement",
+    "description": "Administrer dit abonnement og fakturering",
+    "currentPlan": "Nuværende plan",
+    "planName": "Plan",
+    "status": "Status",
+    "billingCycle": "Faktureringscyklus",
+    "nextBilling": "Næste faktureringsdato",
+    "cancelAt": "Annulleres ved",
+    "manageBilling": "Administrer fakturering",
+    "cancelSubscription": "Annuller abonnement",
+    "resumeSubscription": "Genoptag abonnement",
+    "upgradeNow": "Opgrader nu",
+    "viewPlans": "Se planer",
+    "history": "Abonnements historie",
+    "noHistory": "Ingen abonnementsændringer endnu",
+    "freePlan": "Du er på den gratis plan",
+    "freePlanDescription": "Opgrader for at låse op for flere funktioner og højere grænser",
+    "cancelConfirm": "Er du sikker på, at du vil annullere dit abonnement?",
+    "cancelImmediate": "Annuller straks",
+    "cancelAtPeriodEnd": "Annuller ved periodens slutning",
+    "keepSubscription": "Behold abonnement"
+  },
+  "status": {
+    "active": "Aktiv",
+    "canceled": "Annulleret",
+    "past_due": "Forfaldet",
+    "trialing": "Prøve",
+    "paused": "Pauset",
+    "incomplete": "Ufuldstændig"
+  },
+  "cycle": {
+    "monthly": "Månedlig",
+    "yearly": "Årlig"
+  },
+  "history": {
+    "subscribed": "Abonneret på {{plan}}",
+    "upgraded": "Opgraderet til {{plan}}",
+    "downgraded": "Nedgraderet til {{plan}}",
+    "canceled": "Abonnement annulleret",
+    "resumed": "Abonnement genoptaget",
+    "renewed": "Abonnement fornyet"
+  }
+}

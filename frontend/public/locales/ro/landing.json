@@ -55,8 +55,6 @@
     },
     "subtitle": "Tot ce ai nevoie pentru a construi cu AI. Simplu de început, suficient de puternic pentru echipe.",
     "techStack": {
-      "subtitle": "Stack pregătit pentru producție cu TypeScript, React 18, Node.js, PostgreSQL și integrare AI",
-      "title": "Construit cu Tehnologii Moderne",
       "categories": {
         "ai": "AI",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobil",
         "realtime": "În Timp Real"
-      }
+      },
+      "subtitle": "Stack pregătit pentru producție cu TypeScript, React 18, Node.js, PostgreSQL și integrare AI",
+      "title": "Construit cu Tehnologii Moderne"
     },
     "title": "Tot Ce Ai Nevoie"
   },

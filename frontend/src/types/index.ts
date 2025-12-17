@@ -474,3 +474,137 @@ export interface AdminActivity {
   details: any;
   created_at: string;
 }
+
+// Subscription Types
+export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'trialing' | 'paused' | 'incomplete';
+export type BillingCycle = 'monthly' | 'yearly';
+export type PlanName = 'free' | 'pro' | 'enterprise';
+
+export interface SubscriptionPlan {
+  id: string;
+  name: PlanName;
+  display_name: string;
+  description?: string;
+  stripe_price_id_monthly?: string;
+  stripe_price_id_yearly?: string;
+  price_monthly: number;
+  price_yearly: number;
+  token_limit_monthly: number;
+  token_limit_global?: number;
+  features: string[];
+  max_projects?: number;
+  max_agents?: number;
+  max_file_size_mb: number;
+  priority_support: boolean;
+  is_active: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UserSubscription {
+  id: string;
+  user_id: string;
+  plan_id: string;
+  plan?: SubscriptionPlan;
+  stripe_customer_id?: string;
+  stripe_subscription_id?: string;
+  stripe_price_id?: string;
+  status: SubscriptionStatus;
+  billing_cycle: BillingCycle;
+  current_period_start?: string;
+  current_period_end?: string;
+  cancel_at_period_end: boolean;
+  canceled_at?: string;
+  trial_start?: string;
+  trial_end?: string;
+  metadata?: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SubscriptionHistoryEvent {
+  id: string;
+  user_id: string;
+  subscription_id?: string;
+  event_type: 'created' | 'upgraded' | 'downgraded' | 'canceled' | 'renewed' | 'payment_failed' | 'reactivated';
+  from_plan_id?: string;
+  to_plan_id?: string;
+  from_plan_name?: string;
+  to_plan_name?: string;
+  stripe_event_id?: string;
+  details?: Record<string, unknown>;
+  created_at: string;
+}
+
+export interface CreateCheckoutRequest {
+  plan_id: string;
+  billing_cycle: BillingCycle;
+  success_url?: string;
+  cancel_url?: string;
+}
+
+export interface CheckoutSession {
+  session_id: string;
+  url: string;
+}
+
+export interface PortalSession {
+  url: string;
+}
+
+export interface UserLimits {
+  token_limit_monthly: number;
+  token_limit_global?: number;
+  max_projects?: number;
+  max_agents?: number;
+  max_file_size_mb: number;
+}
+
+export interface LimitCheck {
+  allowed: boolean;
+  current: number;
+  max: number | null;
+  message?: string;
+}
+
+// Admin Subscription Plan Management Types
+export interface PlanCreate {
+  name: string;
+  display_name: string;
+  description?: string;
+  price_monthly: number;
+  price_yearly: number;
+  token_limit_monthly: number;
+  token_limit_global?: number;
+  max_projects?: number;
+  max_agents?: number;
+  max_file_size_mb: number;
+  features: string[];
+  priority_support?: boolean;
+  sort_order?: number;
+}
+
+export interface PlanUpdate {
+  display_name?: string;
+  description?: string;
+  price_monthly?: number;
+  price_yearly?: number;
+  token_limit_monthly?: number;
+  token_limit_global?: number;
+  max_projects?: number;
+  max_agents?: number;
+  max_file_size_mb?: number;
+  features?: string[];
+  priority_support?: boolean;
+  sort_order?: number;
+  is_active?: boolean;
+}
+
+export interface StripeSyncResult {
+  success: boolean;
+  price_id_monthly?: string;
+  price_id_yearly?: string;
+  errors?: string[];
+  message?: string;
+}

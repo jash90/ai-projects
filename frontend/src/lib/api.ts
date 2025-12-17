@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios'
-import { ApiResponse, AuthTokens, PaginatedResponse, User, UserPreferences, AdminStats, UserManagement, UserUsageStats, TokenLimitUpdate, AdminActivity, Thread, ThreadMessage } from '@/types'
+import { ApiResponse, AuthTokens, PaginatedResponse, User, UserPreferences, AdminStats, UserManagement, UserUsageStats, TokenLimitUpdate, AdminActivity, Thread, ThreadMessage, SubscriptionPlan, UserSubscription, CreateCheckoutRequest, CheckoutSession, PortalSession, SubscriptionHistoryEvent, UserLimits, LimitCheck, PlanCreate, PlanUpdate, StripeSyncResult } from '@/types'
 import { authStore } from '@/stores/authStore'
 
 class ApiClient {
@@ -638,6 +638,31 @@ export const adminApi = {
         totalPages: number;
       };
     }>>('/admin/activity', params),
+
+  // Subscription plan management
+  getSubscriptionPlans: (includeInactive = true) =>
+    apiClient.get<ApiResponse<SubscriptionPlan[]>>('/admin/subscriptions/plans', {
+      params: { include_inactive: includeInactive }
+    }),
+
+  createSubscriptionPlan: (data: PlanCreate) =>
+    apiClient.post<ApiResponse<SubscriptionPlan>>('/admin/subscriptions/plans', data),
+
+  updateSubscriptionPlan: (planId: string, data: PlanUpdate) =>
+    apiClient.put<ApiResponse<SubscriptionPlan>>(`/admin/subscriptions/plans/${planId}`, data),
+
+  deleteSubscriptionPlan: (planId: string) =>
+    apiClient.delete<ApiResponse>(`/admin/subscriptions/plans/${planId}`),
+
+  syncPlanWithStripe: (planId: string) =>
+    apiClient.post<ApiResponse<StripeSyncResult>>(`/admin/subscriptions/plans/${planId}/sync-stripe`),
+
+  updatePlanPrices: (planId: string, priceMonthly: number, priceYearly: number, syncStripe = false) =>
+    apiClient.put<ApiResponse<SubscriptionPlan>>(`/admin/subscriptions/plans/${planId}/prices`, {
+      price_monthly: priceMonthly,
+      price_yearly: priceYearly,
+      sync_stripe: syncStripe,
+    }),
 };
 
 // Threads API
@@ -782,4 +807,54 @@ export const settingsApi = {
 
   getUsage: () =>
     apiClient.get<ApiResponse<{ stats: UserUsageStats }>>('/settings/usage'),
+};
+
+// Subscription API
+export const subscriptionApi = {
+  // Get available subscription plans
+  getPlans: () =>
+    apiClient.get<ApiResponse<{
+      plans: SubscriptionPlan[];
+      stripe_public_key?: string;
+      stripe_configured: boolean;
+    }>>('/subscriptions/plans'),
+
+  // Get current user's subscription
+  getCurrent: () =>
+    apiClient.get<ApiResponse<{
+      subscription: UserSubscription | null;
+      limits: UserLimits;
+      plan_name: string;
+      is_paid: boolean;
+    }>>('/subscriptions/current'),
+
+  // Create checkout session
+  createCheckout: (data: CreateCheckoutRequest) =>
+    apiClient.post<ApiResponse<CheckoutSession>>('/subscriptions/checkout', data),
+
+  // Create customer portal session
+  createPortal: (returnUrl?: string) =>
+    apiClient.post<ApiResponse<PortalSession>>('/subscriptions/portal', { return_url: returnUrl }),
+
+  // Cancel subscription
+  cancel: (immediately = false) =>
+    apiClient.post<ApiResponse<{ message: string }>>('/subscriptions/cancel', { immediately }),
+
+  // Resume canceled subscription
+  resume: () =>
+    apiClient.post<ApiResponse<{ message: string }>>('/subscriptions/resume'),
+
+  // Get subscription history
+  getHistory: (limit = 50) =>
+    apiClient.get<ApiResponse<{ history: SubscriptionHistoryEvent[] }>>('/subscriptions/history', { limit }),
+
+  // Get subscription limits and usage
+  getLimits: () =>
+    apiClient.get<ApiResponse<{
+      limits: UserLimits;
+      usage: {
+        projects: LimitCheck;
+        agents: LimitCheck;
+      };
+    }>>('/subscriptions/limits'),
 };

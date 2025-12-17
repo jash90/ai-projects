@@ -1,0 +1,63 @@
+{
+  "pricing": {
+    "title": "Valitse suunnitelmasi",
+    "subtitle": "Valitse täydellinen suunnitelma tarpeisiisi",
+    "monthly": "Kuukausittain",
+    "yearly": "Vuosittain",
+    "savePercent": "Säästä jopa {{percent}}%",
+    "popular": "Suosituin",
+    "currentPlan": "Nykyinen suunnitelma",
+    "getStarted": "Aloita ilmaiseksi",
+    "upgrade": "Päivitä",
+    "downgrade": "Alenna",
+    "perMonth": "kuukausi",
+    "billedYearly": "laskutetaan vuosittain",
+    "save": "Tallenna",
+    "stripeNotConfigured": "Maksujärjestelmää ei ole vielä määritetty. Ota yhteyttä tukeen.",
+    "questions": "Onko kysymyksiä?",
+    "contactUs": "Ota meihin yhteyttä"
+  },
+  "settings": {
+    "title": "Tilauksen hallinta",
+    "description": "Hallitse tilaustasi ja laskutusta",
+    "currentPlan": "Nykyinen suunnitelma",
+    "planName": "Suunnitelma",
+    "status": "Tila",
+    "billingCycle": "Laskutusjakso",
+    "nextBilling": "Seuraava laskutuspäivämäärä",
+    "cancelAt": "Peruuta",
+    "manageBilling": "Hallitse laskutusta",
+    "cancelSubscription": "Peruuta tilaus",
+    "resumeSubscription": "Jatka tilausta",
+    "upgradeNow": "Päivitä nyt",
+    "viewPlans": "Näytä suunnitelmat",
+    "history": "Tilauksen historia",
+    "noHistory": "Ei vielä muutoksia tilauksessa",
+    "freePlan": "Olet ilmaisella suunnitelmalla",
+    "freePlanDescription": "Päivitä avatakseen lisää ominaisuuksia ja korkeammat rajat",
+    "cancelConfirm": "Oletko varma, että haluat peruuttaa tilauksesi?",
+    "cancelImmediate": "Peruuta heti",
+    "cancelAtPeriodEnd": "Peruuta jakson lopussa",
+    "keepSubscription": "Pidä tilaus"
+  },
+  "status": {
+    "active": "Aktiivinen",
+    "canceled": "Peruutettu",
+    "past_due": "Erääntynyt",
+    "trialing": "Kokeilu",
+    "paused": "Keskeytetty",
+    "incomplete": "Kesken"
+  },
+  "cycle": {
+    "monthly": "Kuukausittain",
+    "yearly": "Vuosittain"
+  },
+  "history": {
+    "subscribed": "Tilattu {{plan}}",
+    "upgraded": "Päivitetty {{plan}}",
+    "downgraded": "Alennettu {{plan}}",
+    "canceled": "Tilaus peruutettu",
+    "resumed": "Tilaus jatkettu",
+    "renewed": "Tilauksen uusiminen"
+  }
+}

@@ -28,11 +28,11 @@
   "input": {
     "attachFile": "Vedhæft fil",
     "attachFiles": "Vedhæft filer (billeder, PDF)",
-    "characters_one": "input.characters",
-    "characters_other": "input.characters",
+    "characters_one": "{{count}} tegn",
+    "characters_other": "{{count}} tegn",
     "fileTooLarge": "Fil for stor: {{name}}. Maksimal størrelse: {{maxSize}}MB",
-    "maxFilesError_one": "input.maxFilesError",
-    "maxFilesError_other": "input.maxFilesError",
+    "maxFilesError_one": "Maksimum {{count}} fil tilladt",
+    "maxFilesError_other": "Maksimum {{count}} filer tilladt",
     "placeholder": "Skriv din besked...",
     "send": "Send",
     "sendMessage": "Send besked",
@@ -42,8 +42,8 @@
   "limits": {
     "global": "Global grænse",
     "monthly": "Månedlig grænse",
-    "remaining_one": "limits.remaining",
-    "remaining_other": "limits.remaining"
+    "remaining_one": "{{count}} token tilbage",
+    "remaining_other": "{{count}} tokens tilbage"
   },
   "message": {
     "error": "Fejl",

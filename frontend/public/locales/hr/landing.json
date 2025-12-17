@@ -55,8 +55,6 @@
     },
     "subtitle": "Sve što ti treba za izgradnju s AI. Jednostavno za početak, dovoljno moćno za timove.",
     "techStack": {
-      "subtitle": "Stack spreman za proizvodnju s TypeScript, React 18, Node.js, PostgreSQL i AI integracijom",
-      "title": "Izgrađeno s Modernim Tehnologijama",
       "categories": {
         "ai": "AI",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobilno",
         "realtime": "U Stvarnom Vremenu"
-      }
+      },
+      "subtitle": "Stack spreman za proizvodnju s TypeScript, React 18, Node.js, PostgreSQL i AI integracijom",
+      "title": "Izgrađeno s Modernim Tehnologijama"
     },
     "title": "Sve što ti Treba"
   },

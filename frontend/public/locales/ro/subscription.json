@@ -1,0 +1,63 @@
+{
+  "pricing": {
+    "title": "Alegeți Planul Dvs.",
+    "subtitle": "Selectați planul perfect pentru nevoile dvs.",
+    "monthly": "Lunar",
+    "yearly": "Anual",
+    "savePercent": "Economisiți până la {{percent}}%",
+    "popular": "Cel Mai Popular",
+    "currentPlan": "Planul Curent",
+    "getStarted": "Începeți Gratuit",
+    "upgrade": "Îmbunătățiți",
+    "downgrade": "Scădere",
+    "perMonth": "lună",
+    "billedYearly": "facturat anual",
+    "save": "Economisiți",
+    "stripeNotConfigured": "Sistemul de plată nu este configurat încă. Vă rugăm să contactați suportul.",
+    "questions": "Aveți întrebări?",
+    "contactUs": "Contactați-ne"
+  },
+  "settings": {
+    "title": "Abonament",
+    "description": "Gestionați abonamentul și facturarea",
+    "currentPlan": "Planul Curent",
+    "planName": "Plan",
+    "status": "Stare",
+    "billingCycle": "Ciclul de Facturare",
+    "nextBilling": "Data Următoarei Facturări",
+    "cancelAt": "Anulează La",
+    "manageBilling": "Gestionați Facturarea",
+    "cancelSubscription": "Anulați Abonamentul",
+    "resumeSubscription": "Reluați Abonamentul",
+    "upgradeNow": "Îmbunătățiți Acum",
+    "viewPlans": "Vizualizați Planurile",
+    "history": "Istoricul Abonamentului",
+    "noHistory": "Nu există modificări ale abonamentului încă",
+    "freePlan": "Sunteți pe planul gratuit",
+    "freePlanDescription": "Îmbunătățiți pentru a debloca mai multe funcții și limite mai mari",
+    "cancelConfirm": "Sunteți sigur că doriți să anulați abonamentul?",
+    "cancelImmediate": "Anulați Imediat",
+    "cancelAtPeriodEnd": "Anulați la Sfârșitul Perioadei",
+    "keepSubscription": "Păstrați Abonamentul"
+  },
+  "status": {
+    "active": "Activ",
+    "canceled": "Anulat",
+    "past_due": "Întârziat",
+    "trialing": "Perioadă de Probă",
+    "paused": "Pauză",
+    "incomplete": "Incomplet"
+  },
+  "cycle": {
+    "monthly": "Lunar",
+    "yearly": "Anual"
+  },
+  "history": {
+    "subscribed": "Abonat la {{plan}}",
+    "upgraded": "Îmbunătățit la {{plan}}",
+    "downgraded": "Scăzut la {{plan}}",
+    "canceled": "Abonamentul anulat",
+    "resumed": "Abonamentul reluat",
+    "renewed": "Abonamentul a fost reînnoit"
+  }
+}

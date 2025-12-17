@@ -55,8 +55,6 @@
     },
     "subtitle": "Minden, amire szükséged van az AI-val való építéshez. Egyszerű a kezdés, elég erős a csapatok számára.",
     "techStack": {
-      "subtitle": "Termelésre kész stack TypeScript, React 18, Node.js, PostgreSQL és AI integrációval",
-      "title": "Modern Technológiákkal Készült",
       "categories": {
         "ai": "AI",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobil",
         "realtime": "Valós idő"
-      }
+      },
+      "subtitle": "Termelésre kész stack TypeScript, React 18, Node.js, PostgreSQL és AI integrációval",
+      "title": "Modern Technológiákkal Készült"
     },
     "title": "Minden, Amire Szükséged Van"
   },

@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   User,
@@ -19,24 +20,66 @@ import {
   FolderOpen,
   Check,
   Globe,
+  CreditCard,
+  ExternalLink,
+  Calendar,
+  Clock,
+  Sparkles,
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { LanguageSelector } from '@/components/ui/LanguageSelector'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/Dialog'
 import { settingsApi } from '@/lib/api'
 import { useAuth } from '@/stores/authStore'
 import { uiStore } from '@/stores/uiStore'
+import { useSubscription } from '@/stores/subscriptionStore'
 import { UserPreferences } from '@/types'
 import { formatNumber, formatCurrency, cn } from '@/lib/utils'
 import toast from 'react-hot-toast'
 
 const SettingsPage: React.FC = () => {
   const { t } = useTranslation('settings')
+  const { t: tSub } = useTranslation('subscription')
+  const navigate = useNavigate()
   const { user, updateUser } = useAuth()
   const queryClient = useQueryClient()
-  const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'preferences' | 'usage'>('profile')
+  const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'preferences' | 'subscription' | 'usage'>('profile')
+  const [showCancelModal, setShowCancelModal] = useState(false)
+  const [isCancelling, setIsCancelling] = useState(false)
+
+  // Subscription store
+  const {
+    subscription,
+    planName,
+    isPaid,
+    history,
+    isLoading: isLoadingSubscription,
+    fetchCurrentSubscription,
+    fetchHistory,
+    openPortal,
+    cancelSubscription,
+    resumeSubscription,
+    error: subscriptionError,
+    clearError: clearSubscriptionError,
+  } = useSubscription()
+
+  // Fetch subscription data when subscription tab is active
+  useEffect(() => {
+    if (activeTab === 'subscription') {
+      fetchCurrentSubscription()
+      fetchHistory()
+    }
+  }, [activeTab])
 
   // Profile form state
   const [profileForm, setProfileForm] = useState({
@@ -146,6 +189,7 @@ const SettingsPage: React.FC = () => {
     { id: 'profile', label: t('tabs.profile'), icon: User },
     { id: 'security', label: t('tabs.security'), icon: Lock },
     { id: 'preferences', label: t('tabs.preferences'), icon: Palette },
+    { id: 'subscription', label: t('tabs.subscription'), icon: CreditCard },
     { id: 'usage', label: t('tabs.usage'), icon: BarChart3 },
   ]
 
@@ -167,7 +211,7 @@ const SettingsPage: React.FC = () => {
         backTo="/dashboard"
         tabs={tabs}
         activeTab={activeTab}
-        onTabChange={(tabId) => setActiveTab(tabId as 'profile' | 'security' | 'preferences' | 'usage')}
+        onTabChange={(tabId) => setActiveTab(tabId as 'profile' | 'security' | 'preferences' | 'subscription' | 'usage')}
       />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
@@ -437,6 +481,200 @@ const SettingsPage: React.FC = () => {
             </div>
           )}
 
+          {/* Subscription Tab */}
+          {activeTab === 'subscription' && (
+            <div className="space-y-6">
+              {/* Error Message */}
+              {subscriptionError && (
+                <div className="bg-destructive/10 text-destructive p-4 rounded-lg flex items-center justify-between">
+                  <span>{subscriptionError}</span>
+                  <button onClick={clearSubscriptionError} className="text-destructive hover:opacity-70">
+                    &times;
+                  </button>
+                </div>
+              )}
+
+              {/* Current Plan Card */}
+              <Card variant="elevated">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+                      <CreditCard className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <CardTitle>{tSub('settings.title')}</CardTitle>
+                      <CardDescription>{tSub('settings.description')}</CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingSubscription ? (
+                    <div className="space-y-4 animate-pulse">
+                      <div className="h-6 bg-muted rounded w-1/3" />
+                      <div className="h-4 bg-muted rounded w-1/2" />
+                      <div className="h-10 bg-muted rounded w-40" />
+                    </div>
+                  ) : isPaid && subscription ? (
+                    <div className="space-y-6">
+                      {/* Plan Details */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="p-4 rounded-xl bg-muted/30 border border-border/50">
+                          <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                            <Sparkles className="w-4 h-4" />
+                            <span className="text-xs">{tSub('settings.planName')}</span>
+                          </div>
+                          <p className="text-lg font-semibold text-foreground capitalize">{planName}</p>
+                        </div>
+                        <div className="p-4 rounded-xl bg-muted/30 border border-border/50">
+                          <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                            <Shield className="w-4 h-4" />
+                            <span className="text-xs">{tSub('settings.status')}</span>
+                          </div>
+                          <Badge
+                            variant={
+                              subscription.status === 'active'
+                                ? 'success'
+                                : subscription.status === 'canceled'
+                                ? 'destructive'
+                                : subscription.status === 'past_due'
+                                ? 'warning'
+                                : 'secondary'
+                            }
+                          >
+                            {tSub(`status.${subscription.status}`)}
+                          </Badge>
+                        </div>
+                        <div className="p-4 rounded-xl bg-muted/30 border border-border/50">
+                          <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                            <Clock className="w-4 h-4" />
+                            <span className="text-xs">{tSub('settings.billingCycle')}</span>
+                          </div>
+                          <p className="text-lg font-semibold text-foreground">
+                            {tSub(`cycle.${subscription.billing_cycle}`)}
+                          </p>
+                        </div>
+                        <div className="p-4 rounded-xl bg-muted/30 border border-border/50">
+                          <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                            <Calendar className="w-4 h-4" />
+                            <span className="text-xs">
+                              {subscription.cancel_at_period_end
+                                ? tSub('settings.cancelAt')
+                                : tSub('settings.nextBilling')}
+                            </span>
+                          </div>
+                          <p className="text-lg font-semibold text-foreground">
+                            {subscription.current_period_end
+                              ? new Date(subscription.current_period_end).toLocaleDateString()
+                              : '-'}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex flex-wrap gap-3 pt-4 border-t border-border">
+                        <Button
+                          variant="outline"
+                          onClick={() => openPortal()}
+                          leftIcon={<ExternalLink className="w-4 h-4" />}
+                        >
+                          {tSub('settings.manageBilling')}
+                        </Button>
+                        {subscription.status === 'active' && !subscription.cancel_at_period_end && (
+                          <Button
+                            variant="ghost"
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                            onClick={() => setShowCancelModal(true)}
+                            data-testid="cancel-subscription-button"
+                          >
+                            {tSub('settings.cancelSubscription')}
+                          </Button>
+                        )}
+                        {subscription.cancel_at_period_end && (
+                          <Button
+                            variant="secondary"
+                            onClick={() => resumeSubscription()}
+                          >
+                            {tSub('settings.resumeSubscription')}
+                          </Button>
+                        )}
+                        <Button
+                          variant="gradient"
+                          onClick={() => navigate('/pricing')}
+                          leftIcon={<Sparkles className="w-4 h-4" />}
+                        >
+                          {tSub('settings.viewPlans')}
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Free Plan */
+                    <div className="text-center py-8 space-y-4">
+                      <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto">
+                        <CreditCard className="w-8 h-8 text-muted-foreground" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-foreground">
+                          {tSub('settings.freePlan')}
+                        </h3>
+                        <p className="text-muted-foreground mt-1">
+                          {tSub('settings.freePlanDescription')}
+                        </p>
+                      </div>
+                      <Button
+                        variant="gradient"
+                        onClick={() => navigate('/pricing')}
+                        leftIcon={<Sparkles className="w-4 h-4" />}
+                      >
+                        {tSub('settings.upgradeNow')}
+                      </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Subscription History Card */}
+              {history.length > 0 && (
+                <Card variant="bordered">
+                  <CardHeader>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center">
+                        <Clock className="w-5 h-5 text-muted-foreground" />
+                      </div>
+                      <div>
+                        <CardTitle>{tSub('settings.history')}</CardTitle>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {history.slice(0, 5).map((event, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/50"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="w-2 h-2 rounded-full bg-primary" />
+                            <span className="text-sm text-foreground">
+                              {event.event_type === 'created' && tSub('history.subscribed', { plan: event.to_plan_name || planName })}
+                              {event.event_type === 'upgraded' && tSub('history.upgraded', { plan: event.to_plan_name || planName })}
+                              {event.event_type === 'downgraded' && tSub('history.downgraded', { plan: event.to_plan_name || planName })}
+                              {event.event_type === 'canceled' && tSub('history.canceled')}
+                              {event.event_type === 'reactivated' && tSub('history.resumed')}
+                              {event.event_type === 'renewed' && tSub('history.renewed')}
+                            </span>
+                          </div>
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(event.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
+
           {/* Usage Tab */}
           {activeTab === 'usage' && (
             <div className="space-y-6">
@@ -557,6 +795,63 @@ const SettingsPage: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Cancel Subscription Confirmation Modal */}
+      <Dialog
+        open={showCancelModal}
+        onClose={() => !isCancelling && setShowCancelModal(false)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-destructive">
+              {tSub('settings.cancelSubscription')}
+            </DialogTitle>
+            <DialogDescription className="pt-2">
+              {tSub('settings.cancelConfirm')}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2 pt-4">
+            <Button
+              variant="outline"
+              onClick={() => setShowCancelModal(false)}
+              disabled={isCancelling}
+            >
+              {tSub('settings.keepSubscription')}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={async () => {
+                setIsCancelling(true)
+                try {
+                  await cancelSubscription(false)
+                  setShowCancelModal(false)
+                } finally {
+                  setIsCancelling(false)
+                }
+              }}
+              disabled={isCancelling}
+            >
+              {tSub('settings.cancelAtPeriodEnd')}
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={async () => {
+                setIsCancelling(true)
+                try {
+                  await cancelSubscription(true)
+                  setShowCancelModal(false)
+                } finally {
+                  setIsCancelling(false)
+                }
+              }}
+              disabled={isCancelling}
+              data-testid="cancel-modal"
+            >
+              {tSub('settings.cancelImmediate')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

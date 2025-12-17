@@ -1,0 +1,63 @@
+{
+  "pricing": {
+    "title": "Válaszd ki a csomagod",
+    "subtitle": "Válaszd ki a tökéletes csomagot az igényeidhez",
+    "monthly": "Havi",
+    "yearly": "Éves",
+    "savePercent": "Akár {{percent}}% megtakarítás",
+    "popular": "Legnépszerűbb",
+    "currentPlan": "Jelenlegi Csomag",
+    "getStarted": "Kezdj el ingyen",
+    "upgrade": "Frissítés",
+    "downgrade": "Csökkentés",
+    "perMonth": "hó",
+    "billedYearly": "évente számlázva",
+    "save": "Megtakarítás",
+    "stripeNotConfigured": "A fizetési rendszer még nincs beállítva. Kérjük, lépj kapcsolatba a támogatással.",
+    "questions": "Kérdéseid vannak?",
+    "contactUs": "Lépj velünk kapcsolatba"
+  },
+  "settings": {
+    "title": "Előfizetés",
+    "description": "Kezeld az előfizetésedet és a számlázást",
+    "currentPlan": "Jelenlegi Csomag",
+    "planName": "Csomag",
+    "status": "Állapot",
+    "billingCycle": "Számlázási ciklus",
+    "nextBilling": "Következő számlázási dátum",
+    "cancelAt": "Lemondás időpontja",
+    "manageBilling": "Számlázás kezelése",
+    "cancelSubscription": "Előfizetés lemondása",
+    "resumeSubscription": "Előfizetés folytatása",
+    "upgradeNow": "Frissíts most",
+    "viewPlans": "Csomagok megtekintése",
+    "history": "Előfizetési előzmények",
+    "noHistory": "Még nincs előfizetési változás",
+    "freePlan": "Ingyenes csomagon vagy",
+    "freePlanDescription": "Frissíts, hogy több funkciót és magasabb limiteket oldj fel",
+    "cancelConfirm": "Biztosan le akarod mondani az előfizetésedet?",
+    "cancelImmediate": "Azonnali lemondás",
+    "cancelAtPeriodEnd": "Lemondás a periódus végén",
+    "keepSubscription": "Előfizetés megtartása"
+  },
+  "status": {
+    "active": "Aktív",
+    "canceled": "Lemondva",
+    "past_due": "Határidőn túli",
+    "trialing": "Próbaverzió",
+    "paused": "Felfüggesztve",
+    "incomplete": "Hiányos"
+  },
+  "cycle": {
+    "monthly": "Havi",
+    "yearly": "Éves"
+  },
+  "history": {
+    "subscribed": "Előfizettél a {{plan}} csomagra",
+    "upgraded": "Frissítettél a {{plan}} csomagra",
+    "downgraded": "Csökkentetted a {{plan}} csomagra",
+    "canceled": "Előfizetés lemondva",
+    "resumed": "Előfizetés folytatva",
+    "renewed": "Előfizetés megújítva"
+  }
+}

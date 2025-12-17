@@ -4,6 +4,7 @@ import { ProjectModel } from '../models/Project';
 import { authenticateToken, validateProjectAccess } from '../middleware/auth';
 import { validate, commonSchemas } from '../middleware/validation';
 import { generalLimiter, creationLimiter } from '../middleware/rateLimiting';
+import { checkProjectLimit } from '../middleware/subscription';
 import logger from '../utils/logger';
 
 const router: Router = Router();
@@ -352,9 +353,10 @@ router.get('/:id',
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
-router.post('/', 
+router.post('/',
   creationLimiter,
   authenticateToken,
+  checkProjectLimit,
   validate({ body: commonSchemas.project.create }),
   async (req: Request, res: Response) => {
     try {

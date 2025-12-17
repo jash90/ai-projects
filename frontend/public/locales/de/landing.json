@@ -55,8 +55,6 @@
     },
     "subtitle": "Alles, was Sie brauchen, um mit KI zu bauen. Einfach zu starten, leistungsstark genug für Teams.",
     "techStack": {
-      "subtitle": "Produktionsbereiter Stack mit TypeScript, React 18, Node.js, PostgreSQL und KI-Integration",
-      "title": "Mit modernen Technologien gebaut",
       "categories": {
         "ai": "KI",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobil",
         "realtime": "Echtzeit"
-      }
+      },
+      "subtitle": "Produktionsbereiter Stack mit TypeScript, React 18, Node.js, PostgreSQL und KI-Integration",
+      "title": "Mit modernen Technologien gebaut"
     },
     "title": "Alles, was Sie brauchen"
   },

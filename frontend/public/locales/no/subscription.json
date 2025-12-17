@@ -1,0 +1,63 @@
+{
+  "pricing": {
+    "title": "Velg din plan",
+    "subtitle": "Velg den perfekte planen for dine behov",
+    "monthly": "Månedlig",
+    "yearly": "Årlig",
+    "savePercent": "Spar opptil {{percent}}%",
+    "popular": "Mest populær",
+    "currentPlan": "Nåværende plan",
+    "getStarted": "Kom i gang gratis",
+    "upgrade": "Oppgrader",
+    "downgrade": "Nedgrader",
+    "perMonth": "måned",
+    "billedYearly": "faktureres årlig",
+    "save": "Lagre",
+    "stripeNotConfigured": "Betalingssystemet er ikke konfigurert ennå. Vennligst kontakt support.",
+    "questions": "Har du spørsmål?",
+    "contactUs": "Kontakt oss"
+  },
+  "settings": {
+    "title": "Abonnement",
+    "description": "Administrer abonnementet og faktureringen din",
+    "currentPlan": "Nåværende plan",
+    "planName": "Plan",
+    "status": "Status",
+    "billingCycle": "Faktureringssyklus",
+    "nextBilling": "Neste faktureringsdato",
+    "cancelAt": "Avbryter ved",
+    "manageBilling": "Administrer fakturering",
+    "cancelSubscription": "Avbryt abonnement",
+    "resumeSubscription": "Gjenoppta abonnement",
+    "upgradeNow": "Oppgrader nå",
+    "viewPlans": "Se planer",
+    "history": "Abonnements historie",
+    "noHistory": "Ingen abonnementsendringer ennå",
+    "freePlan": "Du er på gratisplanen",
+    "freePlanDescription": "Oppgrader for å låse opp flere funksjoner og høyere grenser",
+    "cancelConfirm": "Er du sikker på at du vil avbryte abonnementet ditt?",
+    "cancelImmediate": "Avbryt umiddelbart",
+    "cancelAtPeriodEnd": "Avbryt ved periodens slutt",
+    "keepSubscription": "Behold abonnement"
+  },
+  "status": {
+    "active": "Aktiv",
+    "canceled": "Avbrutt",
+    "past_due": "Forfalt",
+    "trialing": "Prøveperiode",
+    "paused": "Pause",
+    "incomplete": "Ufullstendig"
+  },
+  "cycle": {
+    "monthly": "Månedlig",
+    "yearly": "Årlig"
+  },
+  "history": {
+    "subscribed": "Abonnert på {{plan}}",
+    "upgraded": "Oppgradert til {{plan}}",
+    "downgraded": "Nedgradert til {{plan}}",
+    "canceled": "Abonnement avbrutt",
+    "resumed": "Abonnement gjenopptatt",
+    "renewed": "Abonnement fornyet"
+  }
+}

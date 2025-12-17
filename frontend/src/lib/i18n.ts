@@ -11,7 +11,7 @@ i18n
     fallbackLng: 'en',
     supportedLngs: ['pl', 'en', 'de', 'fr', 'es', 'it', 'pt', 'nl', 'sv', 'cs', 'ro', 'hu', 'uk', 'da', 'fi', 'no', 'sk', 'bg', 'hr', 'el'],
     defaultNS: 'common',
-    ns: ['common', 'auth', 'dashboard', 'chat', 'files', 'agents', 'admin', 'settings', 'errors', 'project', 'landing'],
+    ns: ['common', 'auth', 'dashboard', 'chat', 'files', 'agents', 'admin', 'settings', 'errors', 'project', 'landing', 'subscription'],
     backend: {
       loadPath: '/locales/{{lng}}/{{ns}}.json',
     },

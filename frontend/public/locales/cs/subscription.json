@@ -1,0 +1,63 @@
+{
+  "pricing": {
+    "title": "Vyberte svůj plán",
+    "subtitle": "Vyberte si ideální plán pro vaše potřeby",
+    "monthly": "Měsíčně",
+    "yearly": "Ročně",
+    "savePercent": "Ušetřete až {{percent}}%",
+    "popular": "Nejpopulárnější",
+    "currentPlan": "Aktuální plán",
+    "getStarted": "Začněte zdarma",
+    "upgrade": "Zvýšit",
+    "downgrade": "Snížit",
+    "perMonth": "měsíc",
+    "billedYearly": "účtováno ročně",
+    "save": "Uložit",
+    "stripeNotConfigured": "Platební systém není zatím nakonfigurován. Prosím, kontaktujte podporu.",
+    "questions": "Máte otázky?",
+    "contactUs": "Kontaktujte nás"
+  },
+  "settings": {
+    "title": "Předplatné",
+    "description": "Spravujte své předplatné a fakturaci",
+    "currentPlan": "Aktuální plán",
+    "planName": "Plán",
+    "status": "Stav",
+    "billingCycle": "Fakturační cyklus",
+    "nextBilling": "Datum další fakturace",
+    "cancelAt": "Zruší se",
+    "manageBilling": "Spravovat fakturaci",
+    "cancelSubscription": "Zrušit předplatné",
+    "resumeSubscription": "Obnovit předplatné",
+    "upgradeNow": "Zvýšit nyní",
+    "viewPlans": "Zobrazit plány",
+    "history": "Historie předplatného",
+    "noHistory": "Žádné změny předplatného zatím",
+    "freePlan": "Jste na bezplatném plánu",
+    "freePlanDescription": "Zvyšte úroveň, abyste odemkli více funkcí a vyšší limity",
+    "cancelConfirm": "Opravdu chcete zrušit své předplatné?",
+    "cancelImmediate": "Zrušit okamžitě",
+    "cancelAtPeriodEnd": "Zrušit na konci období",
+    "keepSubscription": "Udržet předplatné"
+  },
+  "status": {
+    "active": "Aktivní",
+    "canceled": "Zrušeno",
+    "past_due": "Po splatnosti",
+    "trialing": "Zkušební",
+    "paused": "Pozastaveno",
+    "incomplete": "Neúplné"
+  },
+  "cycle": {
+    "monthly": "Měsíčně",
+    "yearly": "Ročně"
+  },
+  "history": {
+    "subscribed": "Přihlášeno k {{plan}}",
+    "upgraded": "Zvýšeno na {{plan}}",
+    "downgraded": "Sníženo na {{plan}}",
+    "canceled": "Předplatné zrušeno",
+    "resumed": "Předplatné obnoveno",
+    "renewed": "Předplatné bylo obnoveno"
+  }
+}

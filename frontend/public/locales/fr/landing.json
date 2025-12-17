@@ -55,8 +55,6 @@
     },
     "subtitle": "Tout ce dont vous avez besoin pour construire avec l'IA. Simple à commencer, assez puissant pour les équipes.",
     "techStack": {
-      "subtitle": "Stack prêt pour la production avec TypeScript, React 18, Node.js, PostgreSQL et intégration IA",
-      "title": "Construit avec des Technologies Modernes",
       "categories": {
         "ai": "IA",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobile",
         "realtime": "Temps Réel"
-      }
+      },
+      "subtitle": "Stack prêt pour la production avec TypeScript, React 18, Node.js, PostgreSQL et intégration IA",
+      "title": "Construit avec des Technologies Modernes"
     },
     "title": "Tout Ce Dont Vous Avez Besoin"
   },

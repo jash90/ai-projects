@@ -54,12 +54,12 @@
       "description": "Създайте първия си файл, за да започнете",
       "title": "Няма файлове в този проект"
     },
-    "fileCount_one": "explorer.fileCount",
+    "fileCount_one": "{{count}} файл",
     "fileCount_other": "{{count}} файла",
     "noResults": "Няма файлове, които да съвпадат с вашето търсене",
     "searchPlaceholder": "Търсене на файлове...",
-    "shown_one": "explorer.shown",
-    "shown_other": "explorer.shown",
+    "shown_one": "{{count}} показан",
+    "shown_other": "{{count}} показани",
     "title": "Файлове",
     "uploadTitle": "Качване на файлове от компютъра"
   },

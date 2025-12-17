@@ -1,0 +1,63 @@
+{
+  "pricing": {
+    "title": "Odaberite svoj plan",
+    "subtitle": "Odaberite savršen plan za svoje potrebe",
+    "monthly": "Mjesečno",
+    "yearly": "Godišnje",
+    "savePercent": "Uštedite do {{percent}}%",
+    "popular": "Najpopularnije",
+    "currentPlan": "Trenutni plan",
+    "getStarted": "Započnite besplatno",
+    "upgrade": "Nadogradite",
+    "downgrade": "Smanjite",
+    "perMonth": "mjesečno",
+    "billedYearly": "naplaćuje se godišnje",
+    "save": "Uštedite",
+    "stripeNotConfigured": "Sustav plaćanja još nije konfiguriran. Molimo kontaktirajte podršku.",
+    "questions": "Imate pitanja?",
+    "contactUs": "Kontaktirajte nas"
+  },
+  "settings": {
+    "title": "Pretplata",
+    "description": "Upravljajte svojom pretplatom i naplatom",
+    "currentPlan": "Trenutni plan",
+    "planName": "Plan",
+    "status": "Status",
+    "billingCycle": "Ciklus naplate",
+    "nextBilling": "Datum sljedeće naplate",
+    "cancelAt": "Otkaži na",
+    "manageBilling": "Upravljajte naplatom",
+    "cancelSubscription": "Otkaži pretplatu",
+    "resumeSubscription": "Nastavi pretplatu",
+    "upgradeNow": "Nadogradite sada",
+    "viewPlans": "Pogledajte planove",
+    "history": "Povijest pretplate",
+    "noHistory": "Nema promjena pretplate još",
+    "freePlan": "Na ste besplatnom planu",
+    "freePlanDescription": "Nadogradite za otključavanje više značajki i viših limita",
+    "cancelConfirm": "Jeste li sigurni da želite otkazati svoju pretplatu?",
+    "cancelImmediate": "Otkaži odmah",
+    "cancelAtPeriodEnd": "Otkaži na kraju razdoblja",
+    "keepSubscription": "Zadrži pretplatu"
+  },
+  "status": {
+    "active": "Aktivno",
+    "canceled": "Otkaženo",
+    "past_due": "Prošlo",
+    "trialing": "Probno",
+    "paused": "Pauzirano",
+    "incomplete": "Nepotpuno"
+  },
+  "cycle": {
+    "monthly": "Mjesečno",
+    "yearly": "Godišnje"
+  },
+  "history": {
+    "subscribed": "Pretplaćeno na {{plan}}",
+    "upgraded": "Nadograđeno na {{plan}}",
+    "downgraded": "Smanjeno na {{plan}}",
+    "canceled": "Pretplata otkazana",
+    "resumed": "Pretplata nastavljena",
+    "renewed": "Pretplata obnovljena"
+  }
+}

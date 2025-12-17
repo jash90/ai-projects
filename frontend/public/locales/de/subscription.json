@@ -1,0 +1,63 @@
+{
+  "pricing": {
+    "title": "Wählen Sie Ihren Plan",
+    "subtitle": "Wählen Sie den perfekten Plan für Ihre Bedürfnisse",
+    "monthly": "Monatlich",
+    "yearly": "Jährlich",
+    "savePercent": "Bis zu {{percent}}% sparen",
+    "popular": "Am Beliebtesten",
+    "currentPlan": "Aktueller Plan",
+    "getStarted": "Kostenlos starten",
+    "upgrade": "Upgrade",
+    "downgrade": "Downgrade",
+    "perMonth": "Monat",
+    "billedYearly": "jährlich abgerechnet",
+    "save": "Sparen",
+    "stripeNotConfigured": "Das Zahlungssystem ist noch nicht konfiguriert. Bitte kontaktieren Sie den Support.",
+    "questions": "Haben Sie Fragen?",
+    "contactUs": "Kontaktieren Sie uns"
+  },
+  "settings": {
+    "title": "Abonnement",
+    "description": "Verwalten Sie Ihr Abonnement und die Abrechnung",
+    "currentPlan": "Aktueller Plan",
+    "planName": "Plan",
+    "status": "Status",
+    "billingCycle": "Abrechnungszyklus",
+    "nextBilling": "Nächstes Abrechnungsdatum",
+    "cancelAt": "Kündigt am",
+    "manageBilling": "Abrechnung verwalten",
+    "cancelSubscription": "Abonnement kündigen",
+    "resumeSubscription": "Abonnement fortsetzen",
+    "upgradeNow": "Jetzt upgraden",
+    "viewPlans": "Pläne anzeigen",
+    "history": "Abonnementverlauf",
+    "noHistory": "Keine Änderungen am Abonnement bisher",
+    "freePlan": "Sie sind im kostenlosen Plan",
+    "freePlanDescription": "Upgrade, um mehr Funktionen und höhere Limits freizuschalten",
+    "cancelConfirm": "Sind Sie sicher, dass Sie Ihr Abonnement kündigen möchten?",
+    "cancelImmediate": "Sofort kündigen",
+    "cancelAtPeriodEnd": "Am Ende des Zeitraums kündigen",
+    "keepSubscription": "Abonnement behalten"
+  },
+  "status": {
+    "active": "Aktiv",
+    "canceled": "Abgebrochen",
+    "past_due": "Überfällig",
+    "trialing": "Testphase",
+    "paused": "Pausiert",
+    "incomplete": "Unvollständig"
+  },
+  "cycle": {
+    "monthly": "Monatlich",
+    "yearly": "Jährlich"
+  },
+  "history": {
+    "subscribed": "Abonniert {{plan}}",
+    "upgraded": "Upgrade auf {{plan}}",
+    "downgraded": "Downgrade auf {{plan}}",
+    "canceled": "Abonnement gekündigt",
+    "resumed": "Abonnement fortgesetzt",
+    "renewed": "Abonnement erneuert"
+  }
+}

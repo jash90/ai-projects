@@ -18,11 +18,11 @@
       "pending": "Automatické ukladanie: Čaká sa",
       "upToDate": "Automatické ukladanie: Aktuálne"
     },
-    "characters_one": "editor.znak",
-    "characters_other": "editor.znaky",
+    "characters_one": "{{count}} znak",
+    "characters_other": "{{count}} znaky",
     "language": "Jazyk: {{language}}",
-    "lines_one": "editor.riadok",
-    "lines_other": "editor.riadky",
+    "lines_one": "{{count}} riadok",
+    "lines_other": "{{count}} riadky",
     "loading": "Načítava sa editor...",
     "noFile": {
       "description": "Vyberte súbor z prieskumníka, aby ste začali upravovať",
