@@ -9,13 +9,32 @@
 import posthog from 'posthog-js';
 import type { UserContext, PageViewProperties, ChatEventProperties, ErrorEventProperties } from './types';
 
+// Module-level ready state managed via official loaded callback
+let posthogReady = false;
+
+/**
+ * Initialize PostHog ready callback
+ * Call this after PostHogProvider has mounted to set up the ready state
+ */
+export function initPostHogReadyCallback(): void {
+  if (typeof posthog !== 'undefined') {
+    // If already loaded, mark as ready
+    if (posthog.isFeatureEnabled !== undefined) {
+      posthogReady = true;
+    }
+    // Register loaded callback for future initialization
+    posthog.onFeatureFlags(() => {
+      posthogReady = true;
+    });
+  }
+}
+
 /**
  * Check if PostHog is loaded and ready
- * With PostHogProvider, this checks if the provider has initialized posthog
+ * Uses public API-based readiness check via onFeatureFlags callback
  */
 function isPostHogReady(): boolean {
-  // Check if posthog instance is loaded (set by PostHogProvider or manual init)
-  return typeof posthog !== 'undefined' && posthog.__loaded === true;
+  return posthogReady && typeof posthog !== 'undefined';
 }
 
 /**

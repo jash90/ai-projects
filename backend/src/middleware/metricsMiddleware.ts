@@ -18,7 +18,8 @@ export function metricsMiddleware(
 ): void {
   // Skip if metrics disabled or path should be skipped
   if (!isMetricsEnabled() || SKIP_PATHS.some((p) => req.path.startsWith(p))) {
-    return next();
+    next();
+    return;
   }
 
   const startTime = process.hrtime.bigint();

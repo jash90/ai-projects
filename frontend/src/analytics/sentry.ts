@@ -46,9 +46,11 @@ export function initializeSentry(): void {
     integrations: [
       Sentry.browserTracingIntegration(),
       Sentry.replayIntegration({
-        // Mask all text for privacy but keep structure
-        maskAllText: false, // Full tracking - no masking
-        blockAllMedia: false, // Full tracking - include media
+        // Privacy-first configuration: mask all text and block media by default
+        // Elements that must remain visible can use data-sentry-unmask attribute
+        // Example: <h1 data-sentry-unmask>Page Title</h1>
+        maskAllText: true,
+        blockAllMedia: true,
       }),
     ],
 

@@ -10,6 +10,11 @@ import type { UserContext, EventContext, BreadcrumbData } from './types';
 
 let isInitialized = false;
 
+// Parse SENTRY_SEND_DEFAULT_PII env var (default: false for privacy compliance)
+// WARNING: Enabling this sends user IP addresses to Sentry. Verify legal/privacy
+// requirements (GDPR, RODO, CCPA) before enabling in production.
+const sendDefaultPii = process.env.SENTRY_SEND_DEFAULT_PII === 'true';
+
 /**
  * Initialize Sentry with Express integration
  */
@@ -34,8 +39,8 @@ export function initializeSentry(app: Express): void {
       profilesSampleRate: parseFloat(process.env.SENTRY_PROFILES_SAMPLE_RATE || '0.1'),
       debug: process.env.SENTRY_DEBUG === 'true',
 
-      // Send default PII data (IP address) for user context
-      sendDefaultPii: true,
+      // Send default PII data (IP address) - controlled via SENTRY_SEND_DEFAULT_PII env var
+      sendDefaultPii,
 
       integrations: [
         nodeProfilingIntegration(),
@@ -154,13 +159,25 @@ export function addBreadcrumb(data: BreadcrumbData): void {
 }
 
 /**
- * Start a new transaction for performance monitoring
+ * Starts an inactive span for manual performance monitoring.
+ * IMPORTANT: Caller MUST call span.end() when the operation completes.
+ * @returns Always returns a span (noop span if Sentry not initialized)
  */
 export function startTransaction(
   name: string,
   op: string
-): Sentry.Span | undefined {
-  if (!isInitialized) return undefined;
+): Sentry.Span {
+  if (!isInitialized) {
+    // Return a noop span that does nothing when not initialized
+    return {
+      end: () => {},
+      setStatus: () => {},
+      setAttribute: () => {},
+      setAttributes: () => {},
+      updateName: () => {},
+      isRecording: () => false,
+    } as unknown as Sentry.Span;
+  }
 
   return Sentry.startInactiveSpan({
     name,
