@@ -1,7 +1,13 @@
-import React from 'react'
+// Sentry must be imported and initialized first for proper instrumentation
+import { initializeSentry } from './analytics/sentry'
 
+// Initialize Sentry before anything else
+initializeSentry()
+
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { PostHogProvider } from 'posthog-js/react'
 import { Toaster } from 'react-hot-toast'
 import App from './App.tsx'
 import './index.css'
@@ -25,11 +31,31 @@ const queryClient = new QueryClient({
   },
 })
 
+// PostHog configuration
+const posthogKey = import.meta.env.VITE_POSTHOG_KEY
+const posthogOptions = {
+  api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com',
+  defaults: '2025-11-30' as const,
+  // Full tracking configuration
+  autocapture: true,
+  capture_pageview: true,
+  capture_pageleave: true,
+  disable_session_recording: false,
+  session_recording: {
+    maskAllInputs: false,
+    maskInputOptions: {},
+  },
+  respect_dnt: false,
+  cross_subdomain_cookie: true,
+  persistence: 'localStorage+cookie' as const,
+}
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-      <Toaster
+    <PostHogProvider apiKey={posthogKey || ''} options={posthogOptions}>
+      <QueryClientProvider client={queryClient}>
+        <App />
+        <Toaster
         position="top-right"
         toastOptions={{
           duration: 4000,
@@ -52,6 +78,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           },
         }}
       />
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </PostHogProvider>
   </React.StrictMode>,
 )
