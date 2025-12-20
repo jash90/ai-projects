@@ -1,11 +1,24 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { sentryVitePlugin } from '@sentry/vite-plugin'
 import { resolve } from 'path'
 
-export default defineConfig({
-  plugins: [react({
-    jsxRuntime: 'automatic',
-  })],
+export default defineConfig(({ mode }) => ({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+    // Sentry plugin for source map upload (production only)
+    mode === 'production' && process.env.SENTRY_AUTH_TOKEN && sentryVitePlugin({
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      telemetry: false,
+      sourcemaps: {
+        filesToDeleteAfterUpload: ['./dist/**/*.map'],
+      },
+    }),
+  ].filter(Boolean),
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
@@ -35,8 +48,9 @@ export default defineConfig({
           router: ['react-router-dom'],
           ui: ['@headlessui/react', 'framer-motion'],
           utils: ['axios', 'zustand', '@tanstack/react-query'],
+          analytics: ['@sentry/react', 'posthog-js'],
         },
       },
     },
   },
-})
+}))
