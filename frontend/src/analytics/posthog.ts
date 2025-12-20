@@ -9,32 +9,12 @@
 import posthog from 'posthog-js';
 import type { UserContext, PageViewProperties, ChatEventProperties, ErrorEventProperties } from './types';
 
-// Module-level ready state managed via official loaded callback
-let posthogReady = false;
-
 /**
- * Initialize PostHog ready callback
- * Call this after PostHogProvider has mounted to set up the ready state
- */
-export function initPostHogReadyCallback(): void {
-  if (typeof posthog !== 'undefined') {
-    // If already loaded, mark as ready
-    if (posthog.isFeatureEnabled !== undefined) {
-      posthogReady = true;
-    }
-    // Register loaded callback for future initialization
-    posthog.onFeatureFlags(() => {
-      posthogReady = true;
-    });
-  }
-}
-
-/**
- * Check if PostHog is loaded and ready
- * Uses public API-based readiness check via onFeatureFlags callback
+ * Check if PostHog is available
+ * PostHog SDK handles queuing internally, so we only need to check if it's defined
  */
 function isPostHogReady(): boolean {
-  return posthogReady && typeof posthog !== 'undefined';
+  return typeof posthog !== 'undefined';
 }
 
 /**
@@ -87,7 +67,7 @@ export function trackPageView(properties?: PageViewProperties): void {
  */
 export function setUserProperty(key: string, value: unknown): void {
   if (!isPostHogReady()) return;
-  posthog.people.set({ [key]: value });
+  posthog.setPersonProperties({ [key]: value });
 }
 
 /**
