@@ -33,21 +33,31 @@ const queryClient = new QueryClient({
 
 // PostHog configuration
 const posthogKey = import.meta.env.VITE_POSTHOG_KEY
+// Session recording controlled by env var (default: disabled)
+const enableSessionRecording = import.meta.env.VITE_POSTHOG_ENABLE_SESSION_RECORDING === 'true'
+
 const posthogOptions = {
   api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com',
   defaults: '2025-11-30' as const,
-  // Full tracking configuration
-  autocapture: true,
+  // Privacy-respecting configuration
+  // NOTE: Tracking should only be enabled after explicit user consent (GDPR/RODO)
+  autocapture: false, // Disabled - use manual event tracking instead
   capture_pageview: true,
   capture_pageleave: true,
-  disable_session_recording: false,
+  disable_session_recording: !enableSessionRecording, // Controlled via VITE_POSTHOG_ENABLE_SESSION_RECORDING
   session_recording: {
-    maskAllInputs: false,
-    maskInputOptions: {},
+    maskAllInputs: true,
+    maskInputOptions: {
+      password: true,
+      email: true,
+      tel: true,
+      creditCard: true,
+      ssn: true,
+    },
   },
-  respect_dnt: false,
-  cross_subdomain_cookie: true,
-  persistence: 'localStorage+cookie' as const,
+  respect_dnt: true, // Respect browser Do Not Track setting
+  cross_subdomain_cookie: false, // Limit cookie scope
+  persistence: 'localStorage' as const, // Avoid cookies where possible
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

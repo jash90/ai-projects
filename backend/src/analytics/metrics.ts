@@ -138,8 +138,9 @@ export function normalizePath(path: string): string {
   return path
     // Replace UUIDs
     .replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, ':id')
-    // Replace numeric IDs
-    .replace(/\/\d+/g, '/:id')
+    // Replace numeric IDs (whole segments only, preserves v1, v2, etc.)
+    // Matches digits that are a complete path segment (between slashes or at end)
+    .replace(/\/(\d+)(?=\/|$)/g, '/:id')
     // Remove query strings
     .split('?')[0];
 }
