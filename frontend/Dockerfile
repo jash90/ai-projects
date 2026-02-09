@@ -38,16 +38,12 @@ RUN apk add --no-cache curl
 # Copy built application from builder
 COPY --from=builder /app/frontend/dist /usr/share/nginx/html
 
-# Copy nginx configuration as template (BACKEND_URL will be substituted at runtime)
-COPY --from=builder /app/frontend/nginx.conf /etc/nginx/conf.d/default.conf.template
-
-# Copy entrypoint script
-COPY --from=builder /app/frontend/docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+# Copy nginx configuration from builder stage
+COPY --from=builder /app/frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:80 || exit 1
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["nginx", "-g", "daemon off;"]
