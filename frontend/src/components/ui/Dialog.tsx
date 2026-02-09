@@ -6,6 +6,7 @@ interface DialogProps {
   onClose: () => void
   children: React.ReactNode
   className?: string
+  size?: 'default' | 'xl'
 }
 
 interface DialogContentProps {
@@ -33,7 +34,7 @@ interface DialogFooterProps {
   className?: string
 }
 
-const Dialog = ({ open, onClose, children, className }: DialogProps) => {
+const Dialog = ({ open, onClose, children, className, size = 'default' }: DialogProps) => {
   const dialogRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -57,7 +58,7 @@ const Dialog = ({ open, onClose, children, className }: DialogProps) => {
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-6">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -68,7 +69,10 @@ const Dialog = ({ open, onClose, children, className }: DialogProps) => {
       <div
         ref={dialogRef}
         className={cn(
-          'relative z-10 w-full max-w-lg bg-background border border-border rounded-lg shadow-lg',
+          'relative z-10 w-full bg-background border border-border rounded-t-xl sm:rounded-lg shadow-lg flex flex-col overflow-hidden',
+          size === 'xl'
+            ? 'max-w-[1200px] max-h-[90vh] sm:max-h-[1200px]'
+            : 'max-w-lg max-h-[90vh] sm:max-h-[85vh]',
           className
         )}
       >

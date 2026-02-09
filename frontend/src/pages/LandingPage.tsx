@@ -454,7 +454,7 @@ export default function LandingPage() {
                 <div className="text-muted-foreground">{t('pricing.perMonth')}</div>
               </div>
               <ul className="space-y-3 mb-8">
-                {(t('pricing.plans.starter.features', { returnObjects: true }) as string[]).map((feature, i) => (
+                {(Array.isArray(t('pricing.plans.starter.features', { returnObjects: true })) ? t('pricing.plans.starter.features', { returnObjects: true }) as string[] : []).map((feature, i) => (
                   <li key={i} className="flex items-center gap-2">
                     <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
                     <span className="text-muted-foreground">{feature}</span>
@@ -479,7 +479,7 @@ export default function LandingPage() {
                 <div className="text-muted-foreground">{t('pricing.perMonth')}</div>
               </div>
               <ul className="space-y-3 mb-8">
-                {(t('pricing.plans.pro.features', { returnObjects: true }) as string[]).map((feature, i) => (
+                {(Array.isArray(t('pricing.plans.pro.features', { returnObjects: true })) ? t('pricing.plans.pro.features', { returnObjects: true }) as string[] : []).map((feature, i) => (
                   <li key={i} className="flex items-center gap-2">
                     <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
                     <span className="text-muted-foreground">{feature}</span>
@@ -499,7 +499,7 @@ export default function LandingPage() {
                 <div className="text-muted-foreground">{t('pricing.contactUs')}</div>
               </div>
               <ul className="space-y-3 mb-8">
-                {(t('pricing.plans.enterprise.features', { returnObjects: true }) as string[]).map((feature, i) => (
+                {(Array.isArray(t('pricing.plans.enterprise.features', { returnObjects: true })) ? t('pricing.plans.enterprise.features', { returnObjects: true }) as string[] : []).map((feature, i) => (
                   <li key={i} className="flex items-center gap-2">
                     <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
                     <span className="text-muted-foreground">{feature}</span>
