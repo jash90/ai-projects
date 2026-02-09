@@ -133,6 +133,7 @@ export interface MessageMetadata {
   processing_time?: number;
   prompt_tokens?: number;
   completion_tokens?: number;
+  estimated_cost?: number;
   attachments?: ChatFileAttachmentInfo[];
 }
 

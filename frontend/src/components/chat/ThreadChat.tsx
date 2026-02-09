@@ -13,6 +13,12 @@ import toast from 'react-hot-toast'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
+function formatTokenCount(tokens: number): string {
+  if (tokens >= 1_000_000) return `${(tokens / 1_000_000).toFixed(1)}M`
+  if (tokens >= 1_000) return `${(tokens / 1_000).toFixed(1)}K`
+  return tokens.toString()
+}
+
 interface ThreadChatProps {
   project: Project
   agent: Agent
@@ -72,15 +78,31 @@ function ThreadChatMessage({ message, agent }: { message: ThreadMessage; agent?:
 
         {/* Metadata */}
         {message.metadata && Object.keys(message.metadata).length > 0 && !isUser && (
-          <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
+          <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground flex-wrap">
             {message.metadata.model && (
               <span className="bg-muted px-1.5 py-0.5 rounded">{message.metadata.model}</span>
             )}
-            {message.metadata.prompt_tokens && (
-              <span>{message.metadata.prompt_tokens} prompt tokens</span>
+            {(message.metadata.prompt_tokens != null || message.metadata.completion_tokens != null) ? (
+              <span className="flex items-center gap-1">
+                {message.metadata.prompt_tokens != null && (
+                  <span title="Input tokens">{formatTokenCount(message.metadata.prompt_tokens)} in</span>
+                )}
+                {message.metadata.prompt_tokens != null && message.metadata.completion_tokens != null && (
+                  <span>/</span>
+                )}
+                {message.metadata.completion_tokens != null && (
+                  <span title="Output tokens">{formatTokenCount(message.metadata.completion_tokens)} out</span>
+                )}
+              </span>
+            ) : message.metadata.tokens != null && message.metadata.tokens > 0 && (
+              <span>{formatTokenCount(message.metadata.tokens)} tokens</span>
             )}
-            {message.metadata.completion_tokens && (
-              <span>{message.metadata.completion_tokens} completion tokens</span>
+            {message.metadata.estimated_cost != null && Number(message.metadata.estimated_cost) > 0 && (
+              <span className="bg-muted px-1.5 py-0.5 rounded" title="Estimated cost">
+                ${Number(message.metadata.estimated_cost) < 0.01
+                  ? Number(message.metadata.estimated_cost).toFixed(4)
+                  : Number(message.metadata.estimated_cost).toFixed(2)}
+              </span>
             )}
           </div>
         )}

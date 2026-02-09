@@ -155,6 +155,9 @@ export interface MessageMetadata {
   tokens?: number;
   model?: string;
   processing_time?: number;
+  prompt_tokens?: number;
+  completion_tokens?: number;
+  estimated_cost?: number;
   attachments?: ChatFileAttachmentInfo[];
 }
 
@@ -389,6 +392,8 @@ export interface Thread {
   last_message?: string;
   last_agent_id?: string;
   last_agent_name?: string;
+  total_tokens?: number;
+  total_cost?: number;
 }
 
 export interface ThreadMessage {
