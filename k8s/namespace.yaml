@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: claude-projects
+  labels:
+    name: claude-projects
+    environment: production

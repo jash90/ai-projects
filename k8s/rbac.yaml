@@ -1,0 +1,155 @@
+# ============================================
+# RBAC Configuration
+# ============================================
+#
+# Implements principle of least privilege:
+# - Separate service accounts per component
+# - Minimal permissions for each role
+# - No cluster-admin access
+#
+# ============================================
+
+# Backend Service Account
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: backend-sa
+  namespace: claude-projects
+automountServiceAccountToken: true
+
+---
+# Backend Role - Read-only access to ConfigMaps and Secrets
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: backend-role
+  namespace: claude-projects
+rules:
+# Allow reading ConfigMaps for configuration
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "list", "watch"]
+
+# Allow reading Secrets for credentials
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list"]
+
+# Allow updating own pod annotations (for leader election if needed)
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "patch"]
+  resourceNames: []  # Restrict to own pod only
+
+---
+# Backend RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: backend-rolebinding
+  namespace: claude-projects
+subjects:
+- kind: ServiceAccount
+  name: backend-sa
+  namespace: claude-projects
+roleRef:
+  kind: Role
+  name: backend-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# Frontend Service Account
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: frontend-sa
+  namespace: claude-projects
+automountServiceAccountToken: false  # Frontend doesn't need K8s API access
+
+---
+# Database Service Account (for backup jobs)
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: postgres-backup-sa
+  namespace: claude-projects
+automountServiceAccountToken: true
+
+---
+# Backup Job Role - Access to PVCs for backup storage
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: postgres-backup-role
+  namespace: claude-projects
+rules:
+# Allow reading PersistentVolumeClaims
+- apiGroups: [""]
+  resources: ["persistentvolumeclaims"]
+  verbs: ["get", "list"]
+
+# Allow reading Secrets for database credentials
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get"]
+  resourceNames:
+  - database-secret
+
+---
+# Backup Job RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: postgres-backup-rolebinding
+  namespace: claude-projects
+subjects:
+- kind: ServiceAccount
+  name: postgres-backup-sa
+  namespace: claude-projects
+roleRef:
+  kind: Role
+  name: postgres-backup-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# Monitoring Service Account (for Prometheus scraping)
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus-sa
+  namespace: claude-projects
+automountServiceAccountToken: true
+
+---
+# Monitoring Role - Read metrics from pods
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: prometheus-role
+  namespace: claude-projects
+rules:
+# Allow reading pods for service discovery
+- apiGroups: [""]
+  resources: ["pods", "services", "endpoints"]
+  verbs: ["get", "list", "watch"]
+
+# Allow reading pod metrics
+- apiGroups: [""]
+  resources: ["pods/metrics"]
+  verbs: ["get"]
+
+---
+# Monitoring RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: prometheus-rolebinding
+  namespace: claude-projects
+subjects:
+- kind: ServiceAccount
+  name: prometheus-sa
+  namespace: claude-projects
+roleRef:
+  kind: Role
+  name: prometheus-role
+  apiGroup: rbac.authorization.k8s.io
