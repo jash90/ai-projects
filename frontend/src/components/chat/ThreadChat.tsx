@@ -4,6 +4,7 @@ import { ChatHeader } from './ChatHeader'
 import { ChatInput } from './ChatInput'
 import { TokenLimitBanner } from './TokenLimitBanner'
 import { ThreadList } from './ThreadList'
+import { Drawer } from '@/components/ui/Drawer'
 import { MessageIcon } from '@/components/icons'
 import { threadStore, useActiveThread, useThreadMessages, useThreadSending, useMessagesLoading } from '@/stores/threadStore'
 import { useTokenLimits } from '@/hooks/useTokenLimits'
@@ -16,7 +17,6 @@ interface ThreadChatProps {
   project: Project
   agent: Agent
   className?: string
-  onToggleSidebar?: () => void
 }
 
 function ThreadChatMessage({ message, agent }: { message: ThreadMessage; agent?: Agent }) {
@@ -24,8 +24,8 @@ function ThreadChatMessage({ message, agent }: { message: ThreadMessage; agent?:
 
   return (
     <div className={cn(
-      'flex gap-3 p-4',
-      isUser ? 'bg-background' : 'bg-muted/30'
+      'flex gap-3 px-3 py-2.5',
+      'bg-background'
     )}>
       {/* Avatar */}
       <div className={cn(
@@ -89,10 +89,10 @@ function ThreadChatMessage({ message, agent }: { message: ThreadMessage; agent?:
   )
 }
 
-export function ThreadChat({ project, agent, className, onToggleSidebar }: ThreadChatProps) {
+export function ThreadChat({ project, agent, className }: ThreadChatProps) {
   const [includeFiles, setIncludeFiles] = useState(true)
   const [streaming, setStreaming] = useState(true)
-  const [showThreadList, setShowThreadList] = useState(true)
+  const [showThreadList, setShowThreadList] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const activeThread = useActiveThread(project.id)
@@ -210,15 +210,13 @@ export function ThreadChat({ project, agent, className, onToggleSidebar }: Threa
 
   return (
     <div className={cn('flex h-full bg-background', className)}>
-      {/* Thread List Sidebar */}
-      {showThreadList && (
-        <div className="w-64 border-r border-border flex-shrink-0">
-          <ThreadList
-            projectId={project.id}
-            onThreadSelect={() => {}}
-          />
-        </div>
-      )}
+      {/* Thread List Drawer */}
+      <Drawer open={showThreadList} onClose={() => setShowThreadList(false)}>
+        <ThreadList
+          projectId={project.id}
+          onThreadSelect={() => setShowThreadList(false)}
+        />
+      </Drawer>
 
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col min-w-0">
@@ -231,7 +229,6 @@ export function ThreadChat({ project, agent, className, onToggleSidebar }: Threa
           streaming={streaming}
           onToggleStreaming={setStreaming}
           onClearConversation={handleClearConversation}
-          onToggleSidebar={onToggleSidebar}
           extraActions={
             <button
               onClick={() => setShowThreadList(!showThreadList)}

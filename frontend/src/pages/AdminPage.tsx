@@ -117,7 +117,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       {/* Header with admin-specific violet gradient */}
       <PageHeader
         title="Admin Panel"
@@ -130,7 +130,7 @@ export default function AdminPage() {
         userMenuProps={{ showAdminLink: false }}
         tabs={[
           { id: 'dashboard', label: 'Dashboard', icon: TrendingUp },
-          { id: 'users', label: 'User Management', icon: Users },
+          { id: 'users', label: 'Users', icon: Users },
           { id: 'limits', label: 'Token Limits', icon: Target },
           { id: 'agents', label: 'Agents', icon: Bot },
         ]}
@@ -204,7 +204,7 @@ function DashboardTab({ stats, loading }: { stats: AdminStats | undefined; loadi
   return (
     <div className="space-y-6">
       {/* Overview Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         <StatCard
           title="Total Users"
           value={formatNumber(stats.total_users || 0)}
@@ -236,44 +236,44 @@ function DashboardTab({ stats, loading }: { stats: AdminStats | undefined; loadi
       </div>
 
       {/* Secondary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
         <Card variant="elevated">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                 <BarChart3 className="w-6 h-6 text-primary" />
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Total Projects</p>
-                <p className="text-2xl font-bold text-foreground">{formatNumber(stats.total_projects || 0)}</p>
+              <div className="min-w-0">
+                <p className="text-sm text-muted-foreground truncate">Total Projects</p>
+                <p className="text-xl sm:text-2xl font-bold text-foreground truncate">{formatNumber(stats.total_projects || 0)}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card variant="elevated">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
                 <TrendingUp className="w-6 h-6 text-accent-foreground" />
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Monthly Tokens</p>
-                <p className="text-2xl font-bold text-foreground">{formatNumber(stats.monthly_tokens || 0)}</p>
+              <div className="min-w-0">
+                <p className="text-sm text-muted-foreground truncate">Monthly Tokens</p>
+                <p className="text-xl sm:text-2xl font-bold text-foreground truncate">{formatNumber(stats.monthly_tokens || 0)}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card variant="elevated">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-success/10 flex items-center justify-center shrink-0">
                 <DollarSign className="w-6 h-6 text-success" />
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Monthly Cost</p>
-                <p className="text-2xl font-bold text-foreground">{formatCurrency(stats.monthly_cost || 0)}</p>
+              <div className="min-w-0">
+                <p className="text-sm text-muted-foreground truncate">Monthly Cost</p>
+                <p className="text-xl sm:text-2xl font-bold text-foreground truncate">{formatCurrency(stats.monthly_cost || 0)}</p>
               </div>
             </div>
           </CardContent>
@@ -284,27 +284,27 @@ function DashboardTab({ stats, loading }: { stats: AdminStats | undefined; loadi
       {stats.top_users && stats.top_users.length > 0 && (
         <Card variant="elevated">
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <Crown className="w-5 h-5 text-warning" />
-                Top Users by Token Usage
+            <div className="flex items-center justify-between gap-2">
+              <CardTitle className="flex items-center gap-2 min-w-0">
+                <Crown className="w-5 h-5 text-warning shrink-0" />
+                <span className="truncate">Top Users by Token Usage</span>
               </CardTitle>
-              <Badge variant="secondary" size="sm">
+              <Badge variant="secondary" size="sm" className="shrink-0">
                 {stats.top_users.length} users
               </Badge>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               {stats.top_users.slice(0, 10).map((user, index) => (
                 <div
                   key={user.user_id}
-                  className="flex items-center justify-between p-4 bg-muted/30 rounded-xl hover:bg-muted/50 transition-colors animate-fade-in"
+                  className="flex items-center justify-between p-3 sm:p-4 bg-muted/30 rounded-xl hover:bg-muted/50 transition-colors animate-fade-in"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                     <div className={cn(
-                      'w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm',
+                      'w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center font-bold text-xs sm:text-sm flex-shrink-0',
                       index === 0 ? 'bg-warning/20 text-warning' :
                       index === 1 ? 'bg-muted text-muted-foreground' :
                       index === 2 ? 'bg-orange-500/20 text-orange-500' :
@@ -312,17 +312,17 @@ function DashboardTab({ stats, loading }: { stats: AdminStats | undefined; loadi
                     )}>
                       #{index + 1}
                     </div>
-                    <div>
-                      <p className="font-medium text-foreground">{user.username}</p>
-                      <p className="text-sm text-muted-foreground">{user.email}</p>
+                    <div className="min-w-0">
+                      <p className="font-medium text-foreground truncate text-sm sm:text-base">{user.username}</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground truncate">{user.email}</p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-semibold text-foreground">{formatNumber(user.total_tokens)} tokens</p>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <span>{formatCurrency(user.total_cost)}</span>
-                      <span className="text-muted-foreground/50">•</span>
-                      <span>{user.project_count} projects</span>
+                  <div className="text-right min-w-0 ml-3 sm:ml-4">
+                    <p className="font-semibold text-foreground text-sm sm:text-base truncate">{formatNumber(user.total_tokens)} tokens</p>
+                    <div className="flex items-center justify-end gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground">
+                      <span className="truncate">{formatCurrency(user.total_cost)}</span>
+                      <span className="text-muted-foreground/50 shrink-0">•</span>
+                      <span className="shrink-0">{user.project_count} proj.</span>
                     </div>
                   </div>
                 </div>
@@ -430,7 +430,7 @@ function UsersTab({
       {/* Users Table */}
       <Card variant="elevated">
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
               <CardTitle className="flex items-center gap-2">
                 <Users className="w-5 h-5 text-primary" />
@@ -447,7 +447,156 @@ function UsersTab({
         </CardHeader>
 
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
+          {/* Mobile card view */}
+          <div className="sm:hidden divide-y divide-border">
+            {users.map((user, index) => (
+              <div
+                key={user.id}
+                className="p-4 space-y-3 animate-fade-in"
+                style={{ animationDelay: `${index * 30}ms` }}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
+                      <span className="text-sm font-semibold text-primary">
+                        {user.username.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-medium text-foreground truncate">{user.username}</p>
+                      <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    {editingLimits[user.id] ? (
+                      <>
+                        <Button
+                          size="sm"
+                          variant="success"
+                          onClick={() => handleSaveLimits(user.id)}
+                          disabled={updateLimitsMutation.isPending}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Save className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleCancelEdit(user.id)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <X className="h-3.5 w-3.5" />
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleEditLimits(user.id, user)}
+                          className="h-8 w-8 p-0"
+                          title="Edit limits"
+                        >
+                          <Edit className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleToggleStatus(user.id, user.is_active)}
+                          disabled={toggleStatusMutation.isPending}
+                          className={cn(
+                            'h-8 w-8 p-0',
+                            user.is_active ? 'hover:text-destructive' : 'hover:text-success'
+                          )}
+                          title={user.is_active ? 'Deactivate user' : 'Activate user'}
+                        >
+                          {user.is_active ? (
+                            <UserX className="h-3.5 w-3.5" />
+                          ) : (
+                            <UserCheck className="h-3.5 w-3.5" />
+                          )}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setSelectedUser(user)}
+                          className="h-8 w-8 p-0"
+                          title="View details"
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge
+                    variant={user.role === 'admin' ? 'default' : 'secondary'}
+                    size="sm"
+                    className={user.role === 'admin' ? 'bg-accent text-accent-foreground' : ''}
+                  >
+                    {user.role === 'admin' && <Crown className="w-3 h-3 mr-1" />}
+                    {user.role}
+                  </Badge>
+                  <Badge
+                    variant={user.is_active ? 'success' : 'destructive'}
+                    size="sm"
+                    dot
+                  >
+                    {user.is_active ? 'Active' : 'Inactive'}
+                  </Badge>
+                </div>
+                <div className="text-sm space-y-1 text-muted-foreground overflow-hidden">
+                  <p className="truncate">Total: {formatNumber(user.total_tokens_used || 0)} · Monthly: {formatNumber(user.monthly_tokens_used || 0)}</p>
+                  {editingLimits[user.id] ? (
+                    <div className="space-y-2 pt-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-muted-foreground w-14">Global:</span>
+                        <input
+                          type="number"
+                          min="0"
+                          value={tempLimits[user.id]?.global || 0}
+                          onChange={(e) =>
+                            setTempLimits({
+                              ...tempLimits,
+                              [user.id]: {
+                                ...tempLimits[user.id],
+                                global: parseInt(e.target.value) || 0,
+                              },
+                            })
+                          }
+                          className="w-24 px-2 py-1 text-xs border border-border rounded-lg bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                        />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-muted-foreground w-14">Monthly:</span>
+                        <input
+                          type="number"
+                          min="0"
+                          value={tempLimits[user.id]?.monthly || 0}
+                          onChange={(e) =>
+                            setTempLimits({
+                              ...tempLimits,
+                              [user.id]: {
+                                ...tempLimits[user.id],
+                                monthly: parseInt(e.target.value) || 0,
+                              },
+                            })
+                          }
+                          className="w-24 px-2 py-1 text-xs border border-border rounded-lg bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="truncate">Global limit: {formatNumber(user.token_limit_global || 0)} · Monthly limit: {formatNumber(user.token_limit_monthly || 0)}</p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop table view */}
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full">
               <thead className="bg-muted/30 border-y border-border">
                 <tr>
@@ -714,7 +863,7 @@ function TokenLimitsTab({
       {/* Global Token Limits */}
       <Card variant="elevated">
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
               <CardTitle className="flex items-center gap-2">
                 <Settings className="w-5 h-5 text-primary" />
@@ -792,34 +941,34 @@ function TokenLimitsTab({
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-6 bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl border border-primary/10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              <div className="p-4 sm:p-6 bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl border border-primary/10">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <Target className="h-6 w-6 text-primary" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                    <Target className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h4 className="font-semibold text-foreground">Global Limit</h4>
                     <p className="text-sm text-muted-foreground">Lifetime token allowance</p>
                   </div>
                 </div>
-                <p className="text-3xl font-bold text-foreground">
+                <p className="text-2xl sm:text-3xl font-bold text-foreground truncate">
                   {formatNumber(globalLimits?.global_limit || 0)}
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">tokens per user</p>
               </div>
 
-              <div className="p-6 bg-gradient-to-br from-accent/5 to-primary/5 rounded-xl border border-accent/10">
+              <div className="p-4 sm:p-6 bg-gradient-to-br from-accent/5 to-primary/5 rounded-xl border border-accent/10">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
-                    <Clock className="h-6 w-6 text-accent-foreground" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
+                    <Clock className="h-5 w-5 sm:h-6 sm:w-6 text-accent-foreground" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h4 className="font-semibold text-foreground">Monthly Limit</h4>
                     <p className="text-sm text-muted-foreground">Monthly token allowance</p>
                   </div>
                 </div>
-                <p className="text-3xl font-bold text-foreground">
+                <p className="text-2xl sm:text-3xl font-bold text-foreground truncate">
                   {formatNumber(globalLimits?.monthly_limit || 0)}
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">tokens per month</p>
@@ -831,35 +980,35 @@ function TokenLimitsTab({
 
       {/* Information Card */}
       <Card variant="bordered" className="bg-info/5 border-info/20">
-        <CardContent className="p-6">
-          <div className="flex items-start gap-4">
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex items-start gap-3 sm:gap-4">
             <div className="w-10 h-10 rounded-xl bg-info/10 flex items-center justify-center flex-shrink-0">
               <Info className="h-5 w-5 text-info" />
             </div>
-            <div>
+            <div className="min-w-0">
               <h4 className="font-semibold text-foreground mb-3">
                 Token Limit Information
               </h4>
               <div className="text-sm text-muted-foreground space-y-2">
-                <p className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-info" />
-                  Global limits apply to a user's total token consumption across their entire account lifetime
+                <p className="flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-info shrink-0 mt-1.5" />
+                  <span>Global limits apply to a user's total token consumption across their entire account lifetime</span>
                 </p>
-                <p className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-info" />
-                  Monthly limits reset at the beginning of each calendar month
+                <p className="flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-info shrink-0 mt-1.5" />
+                  <span>Monthly limits reset at the beginning of each calendar month</span>
                 </p>
-                <p className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-info" />
-                  Individual user limits can be set to override these global defaults
+                <p className="flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-info shrink-0 mt-1.5" />
+                  <span>Individual user limits can be set to override these global defaults</span>
                 </p>
-                <p className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-info" />
-                  Users will receive an error when attempting to exceed their limits
+                <p className="flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-info shrink-0 mt-1.5" />
+                  <span>Users will receive an error when attempting to exceed their limits</span>
                 </p>
-                <p className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-info" />
-                  These limits help control API costs and prevent abuse
+                <p className="flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-info shrink-0 mt-1.5" />
+                  <span>These limits help control API costs and prevent abuse</span>
                 </p>
               </div>
             </div>
@@ -890,19 +1039,19 @@ function UserDetailsModal({
       <Card variant="elevated" className="max-w-2xl w-full max-h-[90vh] overflow-hidden animate-scale-in">
         {/* Header */}
         <CardHeader className="border-b border-border">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                <span className="text-xl font-bold text-primary">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+              <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center shrink-0">
+                <span className="text-base sm:text-xl font-bold text-primary">
                   {user.username.charAt(0).toUpperCase()}
                 </span>
               </div>
-              <div>
-                <CardTitle className="text-lg">{user.username}</CardTitle>
-                <p className="text-sm text-muted-foreground">{user.email}</p>
+              <div className="min-w-0">
+                <CardTitle className="text-lg truncate">{user.username}</CardTitle>
+                <p className="text-sm text-muted-foreground truncate">{user.email}</p>
               </div>
             </div>
-            <Button onClick={onClose} variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <Button onClick={onClose} variant="ghost" size="sm" className="h-8 w-8 p-0 shrink-0">
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -1178,7 +1327,7 @@ function AgentsTab({
       {/* Agents Table */}
       <Card variant="elevated">
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
               <CardTitle className="flex items-center gap-2">
                 <Bot className="w-5 h-5 text-primary" />
@@ -1221,7 +1370,72 @@ function AgentsTab({
               </Button>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <>
+            {/* Mobile card view */}
+            <div className="sm:hidden divide-y divide-border">
+              {agents.map((agent, index) => (
+                <div
+                  key={agent.id}
+                  className="p-4 space-y-3 animate-fade-in overflow-hidden"
+                  style={{ animationDelay: `${index * 30}ms` }}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
+                        <Bot className="w-5 h-5 text-primary" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-medium text-foreground truncate">{agent.name}</p>
+                        {agent.description && (
+                          <p className="text-sm text-muted-foreground truncate">
+                            {agent.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setEditingAgent(agent)}
+                        className="h-8 w-8 p-0"
+                        title="Edit agent"
+                      >
+                        <Edit className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleDeleteAgent(agent)}
+                        disabled={deleteMutation.isPending}
+                        className="h-8 w-8 p-0 hover:text-destructive"
+                        title="Delete agent"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 min-w-0">
+                    <Badge
+                      variant="outline"
+                      size="sm"
+                      className={getProviderColor(agent.provider)}
+                    >
+                      {getProviderIcon(agent.provider)} {agent.provider}
+                    </Badge>
+                    <span className="text-sm text-foreground font-mono truncate min-w-0">{agent.model}</span>
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Temp: <span className="text-foreground font-medium">{agent.temperature}</span>
+                    {' · '}
+                    Tokens: <span className="text-foreground font-medium">{formatNumber(agent.max_tokens)}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop table view */}
+            <div className="hidden sm:block overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-muted/30 border-y border-border">
                   <tr>
@@ -1320,37 +1534,38 @@ function AgentsTab({
                 </tbody>
               </table>
             </div>
+            </>
           )}
         </CardContent>
       </Card>
 
       {/* Information Card */}
       <Card variant="bordered" className="bg-info/5 border-info/20">
-        <CardContent className="p-6">
-          <div className="flex items-start gap-4">
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex items-start gap-3 sm:gap-4">
             <div className="w-10 h-10 rounded-xl bg-info/10 flex items-center justify-center flex-shrink-0">
               <Info className="h-5 w-5 text-info" />
             </div>
-            <div>
+            <div className="min-w-0">
               <h4 className="font-semibold text-foreground mb-3">
                 Agent Management Information
               </h4>
               <div className="text-sm text-muted-foreground space-y-2">
-                <p className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-info" />
-                  Agents are AI assistants that users can select for conversations in their projects
+                <p className="flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-info shrink-0 mt-1.5" />
+                  <span>Agents are AI assistants that users can select for conversations in their projects</span>
                 </p>
-                <p className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-info" />
-                  Each agent has a unique system prompt that defines its personality and capabilities
+                <p className="flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-info shrink-0 mt-1.5" />
+                  <span>Each agent has a unique system prompt that defines its personality and capabilities</span>
                 </p>
-                <p className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-info" />
-                  Only administrators can create, edit, or delete agents
+                <p className="flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-info shrink-0 mt-1.5" />
+                  <span>Only administrators can create, edit, or delete agents</span>
                 </p>
-                <p className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-info" />
-                  Agents that are being used in conversations cannot be deleted
+                <p className="flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-info shrink-0 mt-1.5" />
+                  <span>Agents that are being used in conversations cannot be deleted</span>
                 </p>
               </div>
             </div>

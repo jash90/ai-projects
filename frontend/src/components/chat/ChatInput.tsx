@@ -175,7 +175,6 @@ function ChatInput({
     <div className={cn(
       'border-t bg-background transition-all duration-200',
       isMobile ? 'p-3 safe-area-bottom' : 'p-4',
-      isMobile && isFocused && 'shadow-lg',
       className
     )}>
       {/* File Attachments Preview */}
@@ -281,14 +280,6 @@ function ChatInput({
             spellCheck="true"
           />
 
-          {/* Mobile helper text */}
-          {isMobile && isFocused && (
-            <div className="absolute -top-8 left-0 right-0 text-center">
-              <span className="text-xs text-muted-foreground bg-background px-2 py-1 rounded-md border border-border shadow-sm">
-                {message.length > 0 ? t('input.characters', { count: message.length }) : t('input.startTyping')}
-              </span>
-            </div>
-          )}
         </div>
 
         <Button
@@ -310,11 +301,6 @@ function ChatInput({
           <span className="sr-only">{t('input.sendMessage')}</span>
         </Button>
       </form>
-
-      {/* Mobile keyboard spacer */}
-      {isMobile && isFocused && (
-        <div className="h-4" />
-      )}
     </div>
   )
 }
