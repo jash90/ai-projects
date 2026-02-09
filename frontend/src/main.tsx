@@ -18,6 +18,9 @@ import './lib/i18n'
 // Initialize PWA
 import './utils/pwa'
 
+// Initialize Web Vitals tracking
+import { initWebVitals } from './utils/webVitals'
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -59,6 +62,10 @@ const posthogOptions = {
   cross_subdomain_cookie: false, // Limit cookie scope
   persistence: 'localStorage' as const, // Avoid cookies where possible
 }
+
+// Initialize Web Vitals tracking before render so PerformanceObserver
+// is registered in time to capture FCP/LCP from the first paint
+initWebVitals()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
