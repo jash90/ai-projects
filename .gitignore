@@ -105,6 +105,9 @@ dist
 tmp/
 temp/
 
+# Screenshots
+frontend/screenshots/
+
 # Nx
 .nx
 

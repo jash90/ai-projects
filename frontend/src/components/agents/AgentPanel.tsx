@@ -4,9 +4,11 @@ import { Bot, Grid } from 'lucide-react'
 import { Agent } from '@/types'
 import { useAgents } from '@/stores/agentStore'
 import { useAuth } from '@/stores/authStore'
+import { useIsMobile } from '@/components/ui/MobileNavigation'
 import { Button } from '@/components/ui/Button'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { AgentPickerDialog } from './AgentPickerDialog'
+import { AgentCarousel } from './AgentCarousel'
 import { cn, getInitials, generateColorFromString } from '@/lib/utils'
 
 interface AgentPanelProps {
@@ -20,6 +22,7 @@ export function AgentPanel({ selectedAgentId, onAgentSelect, className }: AgentP
   const [showPickerDialog, setShowPickerDialog] = useState(false)
   const { user } = useAuth()
   const isAdmin = user?.role === 'admin'
+  const isMobile = useIsMobile()
 
   const {
     agents,
@@ -68,30 +71,59 @@ export function AgentPanel({ selectedAgentId, onAgentSelect, className }: AgentP
     )
   }
 
-  return (
-    <div className={cn('flex flex-col h-full bg-card border-r border-border', className)}>
-      {/* Header */}
-      <div className="p-4 border-b border-border">
-        <div className="flex items-center justify-between">
+  if (isMobile) {
+    return (
+      <div className={cn('flex flex-col h-full bg-card', className)}>
+        {/* Header */}
+        <div className="p-4 border-b border-border">
           <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
             <Bot className="w-5 h-5" />
             {t('panel.title')}
           </h2>
+          {error && (
+            <div className="mt-2 p-2 bg-destructive/10 border border-destructive/20 rounded-md">
+              <p className="text-sm text-destructive">{error}</p>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={clearError}
+                className="mt-1 h-6 text-xs"
+              >
+                {t('panel.dismiss')}
+              </Button>
+            </div>
+          )}
         </div>
-        {error && (
-          <div className="mt-2 p-2 bg-destructive/10 border border-destructive/20 rounded-md">
-            <p className="text-sm text-destructive">{error}</p>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={clearError}
-              className="mt-1 h-6 text-xs"
-            >
-              {t('panel.dismiss')}
-            </Button>
-          </div>
-        )}
+
+        {/* Mobile Carousel */}
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          <AgentCarousel
+            agents={agents}
+            selectedAgentId={selectedAgentId}
+            onAgentSelect={onAgentSelect}
+            isAdmin={isAdmin}
+          />
+        </div>
       </div>
+    )
+  }
+
+  return (
+    <div className={cn('flex flex-col h-full bg-card', className)}>
+      {/* Error display */}
+      {error && (
+        <div className="mx-4 mt-3 p-2 bg-destructive/10 border border-destructive/20 rounded-md">
+          <p className="text-sm text-destructive">{error}</p>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={clearError}
+            className="mt-1 h-6 text-xs"
+          >
+            {t('panel.dismiss')}
+          </Button>
+        </div>
+      )}
 
       {/* Selected Agent Card */}
       <div className="flex-1 p-4">

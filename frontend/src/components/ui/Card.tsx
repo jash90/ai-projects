@@ -20,8 +20,6 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         'border border-border',
         'rounded-xl',
         'shadow-design-md',
-        'hover:shadow-design-lg hover:border-primary/20',
-        'transition-all duration-200',
       ].join(' '),
       interactive: [
         'bg-card text-card-foreground',
@@ -29,9 +27,8 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         'rounded-xl',
         'shadow-design-sm',
         'cursor-pointer',
-        'hover:shadow-design-lg hover:border-primary/30 hover:-translate-y-0.5',
-        'active:scale-[0.99]',
-        'transition-all duration-200',
+        'hover:bg-muted/50',
+        'transition-colors duration-200',
       ].join(' '),
       bordered: [
         'bg-transparent text-card-foreground',
@@ -67,7 +64,7 @@ export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
     return (
       <div
         ref={ref}
-        className={cn('flex flex-col space-y-1.5 p-6', className)}
+        className={cn('flex flex-col space-y-1.5 p-4 sm:p-6', className)}
         {...props}
       >
         {children}
@@ -199,17 +196,17 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
         )}
         {...props}
       >
-        <CardContent className="p-6">
-          <div className="flex items-start justify-between">
-            <div className="space-y-2">
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0 space-y-2">
               <p className={cn(
-                'text-sm font-medium',
+                'text-sm font-medium truncate',
                 isGradient ? 'text-white/80' : 'text-muted-foreground'
               )}>
                 {title}
               </p>
               <p className={cn(
-                'text-3xl font-bold tracking-tight',
+                'text-xl sm:text-2xl font-bold tracking-tight truncate',
                 isGradient ? 'text-white' : 'text-foreground'
               )}>
                 {value}
@@ -238,11 +235,11 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
             </div>
             {icon && (
               <div className={cn(
-                'rounded-xl p-3',
+                'shrink-0 rounded-xl p-2 sm:p-3',
                 isGradient ? 'bg-white/20' : 'bg-primary/10'
               )}>
                 <div className={cn(
-                  'h-6 w-6',
+                  'h-5 w-5 sm:h-6 sm:w-6',
                   isGradient ? 'text-white' : 'text-primary'
                 )}>
                   {icon}
