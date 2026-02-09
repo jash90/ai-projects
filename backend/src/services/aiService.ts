@@ -355,13 +355,18 @@ class AIService {
         });
       }
 
+      const pTokens = completion.usage?.prompt_tokens || 0;
+      const cTokens = completion.usage?.completion_tokens || 0;
+      const estimatedCost = TokenService.calculateCost('openai', agent.model, pTokens, cTokens);
+
       return {
         content: choice.message.content,
         metadata: {
           model: agent.model,
           tokens: completion.usage?.total_tokens,
-          prompt_tokens: completion.usage?.prompt_tokens,
-          completion_tokens: completion.usage?.completion_tokens,
+          prompt_tokens: pTokens,
+          completion_tokens: cTokens,
+          estimated_cost: estimatedCost,
           files: projectFiles
         }
       };
@@ -444,13 +449,14 @@ class AIService {
       messages: openaiMessages,
       max_completion_tokens: agent.max_tokens,
       stream: true, // Enable streaming
+      stream_options: { include_usage: true }, // Request token usage in stream
     };
-    
+
     // Only include temperature if the model supports it
     if (!useDefaultTemp) {
       requestParams.temperature = agent.temperature;
     }
-    
+
     try {
       const stream = await this.openai.chat.completions.create(requestParams);
 
@@ -498,6 +504,18 @@ class AIService {
         }
       }
 
+      // Fallback: estimate tokens if stream didn't include usage data
+      if (totalTokens === 0 && fullContent.length > 0) {
+        completionTokens = TokenService.estimateTokens(fullContent);
+        // Estimate prompt tokens from messages (rough approximation)
+        promptTokens = 0;
+        totalTokens = promptTokens + completionTokens;
+        logger.warn('OpenAI stream did not include usage data, using estimated tokens', {
+          model: agent.model,
+          estimatedCompletionTokens: completionTokens
+        });
+      }
+
       // Track token usage if user context is provided
       if (userId && totalTokens > 0) {
         await TokenService.trackUsage({
@@ -514,6 +532,8 @@ class AIService {
         tokensTracked = true;
       }
 
+      const estimatedCost = TokenService.calculateCost('openai', agent.model, promptTokens, completionTokens);
+
       // Yield the final response (not return!) so the for-await-of loop can process it
       yield {
         content: fullContent,
@@ -522,6 +542,7 @@ class AIService {
           tokens: totalTokens,
           prompt_tokens: promptTokens,
           completion_tokens: completionTokens,
+          estimated_cost: estimatedCost,
           files: projectFiles
         }
       };
@@ -674,13 +695,18 @@ class AIService {
         });
       }
 
+      const pTokens = completion.usage?.input_tokens || 0;
+      const cTokens = completion.usage?.output_tokens || 0;
+      const estimatedCost = TokenService.calculateCost('anthropic', agent.model, pTokens, cTokens);
+
       return {
         content: content.text,
         metadata: {
           model: agent.model,
-          tokens: completion.usage ? completion.usage.input_tokens + completion.usage.output_tokens : 0,
-          prompt_tokens: completion.usage?.input_tokens,
-          completion_tokens: completion.usage?.output_tokens,
+          tokens: completion.usage ? pTokens + cTokens : 0,
+          prompt_tokens: pTokens,
+          completion_tokens: cTokens,
+          estimated_cost: estimatedCost,
           files: projectFiles
         }
       };
@@ -846,6 +872,8 @@ class AIService {
         tokensTracked = true;
       }
 
+      const estimatedCost = TokenService.calculateCost('anthropic', agent.model, totalInputTokens, totalOutputTokens);
+
       // Yield the final response (not return!) so the for-await-of loop can process it
       yield {
         content: fullContent,
@@ -854,6 +882,7 @@ class AIService {
           tokens: totalTokens,
           prompt_tokens: totalInputTokens,
           completion_tokens: totalOutputTokens,
+          estimated_cost: estimatedCost,
           files: projectFiles
         }
       };
@@ -1006,6 +1035,8 @@ class AIService {
         totalTokens
       });
 
+      const estimatedCost = TokenService.calculateCost('openrouter', agent.model, promptTokens, completionTokens);
+
       return {
         content: choice.message.content,
         metadata: {
@@ -1013,6 +1044,7 @@ class AIService {
           tokens: totalTokens,
           prompt_tokens: promptTokens,
           completion_tokens: completionTokens,
+          estimated_cost: estimatedCost,
           files: projectFiles
         }
       };
@@ -1095,6 +1127,7 @@ class AIService {
       messages: openrouterMessages,
       max_tokens: agent.max_tokens,
       stream: true,
+      stream_options: { include_usage: true }, // Request token usage in stream
     };
 
     // Only include temperature if the model supports it
@@ -1149,6 +1182,17 @@ class AIService {
         }
       }
 
+      // Fallback: estimate tokens if stream didn't include usage data
+      if (totalTokens === 0 && fullContent.length > 0) {
+        completionTokens = TokenService.estimateTokens(fullContent);
+        promptTokens = 0;
+        totalTokens = promptTokens + completionTokens;
+        logger.warn('OpenRouter stream did not include usage data, using estimated tokens', {
+          model: agent.model,
+          estimatedCompletionTokens: completionTokens
+        });
+      }
+
       // Track token usage if user context is provided
       if (userId && totalTokens > 0) {
         await TokenService.trackUsage({
@@ -1164,6 +1208,8 @@ class AIService {
         });
         tokensTracked = true;
       }
+
+      const estimatedCost = TokenService.calculateCost('openrouter', agent.model, promptTokens, completionTokens);
 
       logger.info('OpenRouter streaming chat completed', {
         provider: 'openrouter',
@@ -1182,6 +1228,7 @@ class AIService {
           tokens: totalTokens,
           prompt_tokens: promptTokens,
           completion_tokens: completionTokens,
+          estimated_cost: estimatedCost,
           files: projectFiles
         }
       };

@@ -3,6 +3,7 @@ import Joi from 'joi';
 import { ThreadModel, ThreadMessageModel } from '../models/Thread';
 import { AgentModel } from '../models/Agent';
 import { FileModel } from '../models/File';
+import { TokenUsageModel } from '../models/TokenUsage';
 import { aiService, ChatResponse } from '../services/aiService';
 import { authenticateToken } from '../middleware/auth';
 import { validate, commonSchemas } from '../middleware/validation';
@@ -285,6 +286,44 @@ router.delete('/:threadId',
       res.status(500).json({
         success: false,
         error: 'Failed to delete thread'
+      });
+    }
+  }
+);
+
+/**
+ * @swagger
+ * /api/threads/{threadId}/stats:
+ *   get:
+ *     summary: Get token usage stats for a thread
+ *     tags: [Threads]
+ *     security:
+ *       - bearerAuth: []
+ */
+router.get('/:threadId/stats',
+  generalLimiter,
+  authenticateToken,
+  validate({
+    params: Joi.object({
+      threadId: commonSchemas.uuid
+    })
+  }),
+  async (req: Request, res: Response) => {
+    try {
+      const { threadId } = req.params;
+      const userId = req.user!.id;
+
+      const stats = await TokenUsageModel.getThreadStats(threadId, userId);
+
+      res.json({
+        success: true,
+        data: stats
+      });
+    } catch (error) {
+      logger.error('Error fetching thread stats:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Failed to fetch thread stats'
       });
     }
   }

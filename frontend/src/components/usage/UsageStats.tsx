@@ -23,15 +23,21 @@ import { cn } from '@/lib/utils'
 interface TokenUsageSummary {
   total_tokens: number
   total_cost: number
+  prompt_tokens: number
+  completion_tokens: number
   by_provider: {
     [provider: string]: {
       tokens: number
       cost: number
+      prompt_tokens: number
+      completion_tokens: number
       models: {
         [model: string]: {
           tokens: number
           cost: number
           requests: number
+          prompt_tokens: number
+          completion_tokens: number
         }
       }
     }
@@ -75,7 +81,9 @@ const ProviderCard: React.FC<{
   data: {
     tokens: number
     cost: number
-    models: { [model: string]: { tokens: number; cost: number; requests: number } }
+    prompt_tokens: number
+    completion_tokens: number
+    models: { [model: string]: { tokens: number; cost: number; requests: number; prompt_tokens: number; completion_tokens: number } }
   }
   totalTokens: number
   formatNumber: (num: number) => string
@@ -137,6 +145,11 @@ const ProviderCard: React.FC<{
           <div>
             <p className="text-xs text-muted-foreground mb-1">Total Tokens</p>
             <p className="text-lg font-bold text-foreground">{formatNumber(data.tokens)}</p>
+            {(data.prompt_tokens > 0 || data.completion_tokens > 0) && (
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {formatNumber(data.prompt_tokens)} in / {formatNumber(data.completion_tokens)} out
+              </p>
+            )}
           </div>
           <div>
             <p className="text-xs text-muted-foreground mb-1">Total Cost</p>
@@ -180,6 +193,11 @@ const ProviderCard: React.FC<{
                   <p className="font-semibold text-foreground text-sm">
                     {formatNumber(modelData.tokens)}
                   </p>
+                  {(modelData.prompt_tokens > 0 || modelData.completion_tokens > 0) && (
+                    <p className="text-xs text-muted-foreground">
+                      {formatNumber(modelData.prompt_tokens)} in / {formatNumber(modelData.completion_tokens)} out
+                    </p>
+                  )}
                   <p className="text-xs text-muted-foreground">
                     {formatCost(modelData.cost)} ({modelPercentage.toFixed(1)}%)
                   </p>
@@ -283,18 +301,19 @@ export function UsageStats({ projectId, agentId, className }: UsageStatsProps) {
     }
   }
 
-  const formatNumber = (num: number): string => {
-    if (num >= 1000000) {
-      return `${(num / 1000000).toFixed(2)}M`
+  const formatNumber = (num: number | string): string => {
+    const n = Number(num)
+    if (n >= 1000000) {
+      return `${(n / 1000000).toFixed(2)}M`
     }
-    if (num >= 1000) {
-      return `${(num / 1000).toFixed(1)}K`
+    if (n >= 1000) {
+      return `${(n / 1000).toFixed(1)}K`
     }
-    return num.toFixed(0)
+    return n.toFixed(0)
   }
 
-  const formatCost = (cost: number): string => {
-    return `$${cost.toFixed(4)}`
+  const formatCost = (cost: number | string): string => {
+    return `$${Number(cost).toFixed(4)}`
   }
 
   if (isLoading) {
@@ -385,7 +404,9 @@ export function UsageStats({ projectId, agentId, className }: UsageStatsProps) {
           value={formatNumber(summary.total_tokens)}
           icon={<Activity className="w-6 h-6" />}
           variant="primary"
-          trend={summary.total_tokens > 0 ? { value: 12, isPositive: true } : undefined}
+          description={summary.prompt_tokens > 0 || summary.completion_tokens > 0
+            ? `${formatNumber(summary.prompt_tokens)} in / ${formatNumber(summary.completion_tokens)} out`
+            : undefined}
         />
 
         <StatCard
@@ -424,12 +445,12 @@ export function UsageStats({ projectId, agentId, className }: UsageStatsProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">Avg Cost per Request</p>
               <p className="text-2xl font-bold text-foreground">
                 {totalRequests > 0
-                  ? formatCost(summary.total_cost / totalRequests)
+                  ? formatCost(Number(summary.total_cost) / totalRequests)
                   : '$0.0000'
                 }
               </p>
@@ -447,10 +468,24 @@ export function UsageStats({ projectId, agentId, className }: UsageStatsProps) {
               <p className="text-sm text-muted-foreground">Cost per 1K Tokens</p>
               <p className="text-2xl font-bold text-foreground">
                 {summary.total_tokens > 0
-                  ? formatCost((summary.total_cost / summary.total_tokens) * 1000)
+                  ? formatCost((Number(summary.total_cost) / Number(summary.total_tokens)) * 1000)
                   : '$0.0000'
                 }
               </p>
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">Input / Output Ratio</p>
+              <p className="text-2xl font-bold text-foreground">
+                {summary.completion_tokens > 0
+                  ? `${(summary.prompt_tokens / summary.completion_tokens).toFixed(1)}x`
+                  : 'N/A'
+                }
+              </p>
+              {(summary.prompt_tokens > 0 || summary.completion_tokens > 0) && (
+                <p className="text-xs text-muted-foreground">
+                  {formatNumber(summary.prompt_tokens)} in / {formatNumber(summary.completion_tokens)} out
+                </p>
+              )}
             </div>
           </div>
         </CardContent>
