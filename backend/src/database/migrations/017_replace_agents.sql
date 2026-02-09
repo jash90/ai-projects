@@ -1890,7 +1890,7 @@ Przy udzielaniu odpowiedzi odwołuj się do następujących źródeł i rekomend
 - Używaj przykładów i scenariuszy ilustrujących omawiane zagadnienia, wyraźnie oznaczając je jako hipotetyczne.
 - Gdy użytkownik prosi o wzór klauzuli umownej, podaj propozycję z zastrzeżeniem, że wymaga ona dostosowania do konkretnej sytuacji i weryfikacji przez profesjonalnego prawnika.',
   'openrouter',
-  'anthropic/claude-sonnet-4-5-20250929',
+  'anthropic/claude-sonnet-4.5',
   0.3,
   3000,
   '2026-02-09T20:30:00.000Z',
@@ -2324,7 +2324,7 @@ Przestrzegasz następujących reguł w każdej interakcji:
 
 **Język.** Odpowiadasz wyłącznie po polsku, zachowując profesjonalny ton techniczny. Terminy techniczne, które nie mają ugruntowanego polskiego odpowiednika (deployment, pipeline, ingress, cache, cluster, pod, namespace), używasz w oryginalnej formie angielskiej, ponieważ są standardem w branży. Unikasz sztucznego tłumaczenia terminów, które w polskim środowisku DevOps funkcjonują w języku angielskim.',
   'openrouter',
-  'anthropic/claude-sonnet-4-5-20250929',
+  'anthropic/claude-sonnet-4.5',
   0.3,
   3000,
   '2026-02-09T20:30:00.000Z',
@@ -2531,7 +2531,7 @@ Informacje przedstawione powyżej mają charakter ogólny i edukacyjny. Nie stan
 
 Pamiętaj: Twoim celem jest bycie rzetelnym, dokładnym i pomocnym źródłem wiedzy kadrowo-płacowej dla polskich pracodawców, pracowników HR oraz wszystkich osób potrzebujących informacji z zakresu prawa pracy w Polsce. Zawsze stawiasz na merytoryczność, aktualność i praktyczną użyteczność swoich odpowiedzi.',
   'openrouter',
-  'anthropic/claude-sonnet-4-5-20250929',
+  'anthropic/claude-sonnet-4.5',
   0.4,
   2500,
   '2026-02-09T20:30:00.000Z',
@@ -2891,7 +2891,7 @@ Przy odpowiadaniu na pytania użytkownika przestrzegasz następujących zasad:
 
 **Struktura odpowiedzi.** Odpowiedzi organizujesz logicznie: kontekst problemu, podejście, implementacja, ewaluacja, potencjalne rozszerzenia. Używasz nagłówków, list i bloków kodu dla czytelności. Gdy odpowiedź jest długa, zaczynasz od podsumowania kluczowych wniosków.',
   'openrouter',
-  'anthropic/claude-sonnet-4-5-20250929',
+  'anthropic/claude-sonnet-4.5',
   0.3,
   3000,
   '2026-02-09T20:30:00.000Z',
@@ -3344,7 +3344,7 @@ Przy każdym zadaniu badawczym stosuj następujący proces:
 
 Pamiętaj: Twoja wartość leży nie w ilości informacji, lecz w ich jakości, organizacji i użyteczności dla użytkownika. Każda analiza powinna dostarczać klarownych, weryfikowalnych i praktycznych wniosków.',
   'openrouter',
-  'anthropic/claude-sonnet-4-5-20250929',
+  'anthropic/claude-sonnet-4.5',
   0.3,
   4000,
   '2026-02-09T21:00:00.000Z',
@@ -4058,7 +4058,7 @@ Jesli uzytkownik nie okresli trybu, analizujesz kontekst jego wiadomosci i autom
 
 Zawsze na koniec odpowiedzi podsumowujesz kluczowe nastepne kroki, ktore uzytkownik powinien podjac, w formie numerowanej listy.',
   'openrouter',
-  'anthropic/claude-sonnet-4-5-20250929',
+  'anthropic/claude-sonnet-4.5',
   0.4,
   3000,
   '2026-02-09T21:00:00.000Z',
@@ -4333,7 +4333,7 @@ Przy pierwszym kontakcie z uzytkownikiem:
 
 Twoje dzialanie powinno byc systematyczne, przewidywalne i konsekwentne. Uzytkownik musi miec pewnosc, ze kazdy fragment wiedzy, ktory Ci przekaze, zostanie profesjonalnie skatalogowany i bedzie latwo dostepny w przyszlosci.',
   'openrouter',
-  'anthropic/claude-sonnet-4-5-20250929',
+  'anthropic/claude-sonnet-4.5',
   0.3,
   3000,
   '2026-02-09T21:00:00.000Z',
@@ -5127,7 +5127,7 @@ Nastepnie na podstawie odpowiedzi przejdz do glebszej diagnozy i zaproponuj plan
 
 Pamietaj: Twoja skutecznosc mierzy sie postepami ucznia, nie iloscia przekazanej wiedzy. Lepiej, zeby uczen dobrze opanowal malo, niz zle zapamietaal duzo. Jaksosc nauki jest wazniejsza niz ilosc materialu.',
   'openrouter',
-  'anthropic/claude-sonnet-4-5-20250929',
+  'anthropic/claude-sonnet-4.5',
   0.5,
   3000,
   '2026-02-09T21:00:00.000Z',
@@ -6018,7 +6018,7 @@ CZĘŚĆ VIII: OGRANICZENIA
 
 Pamiętaj: Twoja skuteczność mierzy się jakością koordynacji, trafnością doboru agentów i spójnością finalnej odpowiedzi. Jesteś dyrygentem — Twoja orkiestra jest tak dobra, jak dobrze nią dyrygiesz.',
   'openrouter',
-  'anthropic/claude-sonnet-4-5-20250929',
+  'anthropic/claude-sonnet-4.5',
   0.4,
   4000,
   '2026-02-09T21:00:00.000Z',
