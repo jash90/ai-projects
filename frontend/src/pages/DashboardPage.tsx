@@ -20,6 +20,7 @@ import { formatDate, formatRelativeTime } from '@/lib/utils'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import { NewProjectDialog } from '@/components/projects/NewProjectDialog'
 import { PageHeader } from '@/components/ui/PageHeader'
+import { MobileNavigation } from '@/components/ui/MobileNavigation'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle, StatCard } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
@@ -50,7 +51,7 @@ const DashboardPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pt-14 pb-20 lg:pt-0 lg:pb-0">
       {/* Header */}
       <PageHeader
         title={t('header.welcome', { username: user?.username })}
@@ -284,6 +285,9 @@ const DashboardPage: React.FC = () => {
           </div>
         </div>
       </main>
+
+      {/* Mobile Navigation */}
+      <MobileNavigation onNewProject={() => setShowNewProjectDialog(true)} />
 
       {/* New Project Dialog */}
       <NewProjectDialog
