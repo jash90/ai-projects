@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Menu, FileText, Trash2, Settings } from 'lucide-react'
+import { FileText, Trash2, Settings } from 'lucide-react'
 import type { Project, Agent } from '@/types'
 import { Button } from '@/components/ui/Button'
 import { StreamingToggle } from './StreamingToggle'
@@ -14,7 +14,6 @@ interface ChatHeaderProps {
   includeFiles?: boolean
   onToggleFiles?: (include: boolean) => void
   onClearConversation?: () => void
-  onToggleSidebar?: () => void
   streaming?: boolean
   onToggleStreaming?: (enabled: boolean) => void
   className?: string
@@ -28,7 +27,6 @@ function ChatHeader({
   includeFiles = true,
   onToggleFiles,
   onClearConversation,
-  onToggleSidebar,
   streaming = true,
   onToggleStreaming,
   className,
@@ -56,22 +54,10 @@ function ChatHeader({
   }
 
   return (
-    <div className={cn('flex items-center justify-between border-b bg-background p-4', className)}>
-      <div className="flex items-center gap-3">
-        {onToggleSidebar && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onToggleSidebar}
-            className="md:hidden"
-          >
-            <Menu className="w-5 h-5" />
-            <span className="sr-only">{t('header.toggleSidebar')}</span>
-          </Button>
-        )}
-
+    <div className={cn('flex items-center justify-between border-b bg-background px-3 py-2', className)}>
+      <div className="flex items-center gap-2">
         <div
-          className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium text-white"
+          className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium text-white"
           style={{ backgroundColor: generateColorFromString(agent.name) }}
         >
           {getInitials(agent.name)}
@@ -92,22 +78,18 @@ function ChatHeader({
                 <span className="text-xs">{agent.model}</span>
               </div>
             )}
-            <div className="flex items-center gap-1">
-              <div
-                className={cn(
-                  'h-2 w-2 rounded-full',
-                  isConnected ? 'bg-green-500' : 'bg-red-500'
-                )}
-              />
-              <span className="text-xs">
-                {isConnected ? t('header.connected') : t('header.disconnected')}
-              </span>
-            </div>
+            <div
+              className={cn(
+                'h-2 w-2 rounded-full',
+                isConnected ? 'bg-green-500' : 'bg-red-500'
+              )}
+              title={isConnected ? t('header.connected') : t('header.disconnected')}
+            />
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1">
         {/* Extra Actions */}
         {extraActions}
 
