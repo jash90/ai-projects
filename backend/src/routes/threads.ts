@@ -8,7 +8,7 @@ import { authenticateToken } from '../middleware/auth';
 import { validate, commonSchemas } from '../middleware/validation';
 import { generalLimiter, aiLimiter } from '../middleware/rateLimiting';
 import { asyncHandler } from '../middleware/errorHandler';
-import { createResourceNotFoundError, createAIServiceError, isAppError } from '../utils/errors';
+import { createResourceNotFoundError, isAppError } from '../utils/errors';
 import logger from '../utils/logger';
 
 const router: Router = Router();
@@ -542,11 +542,6 @@ router.post('/:threadId/chat',
       if (error instanceof Error) {
         if (error.message.includes('access denied')) {
           throw createResourceNotFoundError('Thread', req.params.threadId);
-        }
-
-        if (error.message.includes('API key not configured') ||
-            error.message.includes('Unsupported AI provider')) {
-          throw createAIServiceError('unknown', error.message);
         }
       }
 

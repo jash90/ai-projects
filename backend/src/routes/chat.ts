@@ -9,7 +9,7 @@ import { authenticateToken } from '../middleware/auth';
 import { validate, commonSchemas } from '../middleware/validation';
 import { aiLimiter, generalLimiter } from '../middleware/rateLimiting';
 import { asyncHandler } from '../middleware/errorHandler';
-import { createResourceNotFoundError, createAIServiceError, isAppError, createValidationError } from '../utils/errors';
+import { createResourceNotFoundError, isAppError, createValidationError } from '../utils/errors';
 import logger from '../utils/logger';
 import {
   ChatFileAttachment,
@@ -408,24 +408,16 @@ router.post('/projects/:projectId/agents/:agentId/chat',
         });
       }
     } catch (error) {
-      // Let the async handler deal with AppErrors
       if (isAppError(error)) {
         throw error;
       }
 
-      // Handle specific error types and convert to AppErrors
       if (error instanceof Error) {
         if (error.message.includes('access denied')) {
           throw createResourceNotFoundError('Project', req.params.projectId);
         }
-
-        if (error.message.includes('API key not configured') || 
-            error.message.includes('Unsupported AI provider')) {
-          throw createAIServiceError('unknown', error.message);
-        }
       }
 
-      // Re-throw unknown errors to be handled by global error handler
       throw error;
     }
   })
