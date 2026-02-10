@@ -169,8 +169,9 @@ async function runMigrations(): Promise<void> {
     }
 
     // Create user_management_view for admin panel
+    await client.query(`DROP VIEW IF EXISTS user_management_view`);
     await client.query(`
-      CREATE OR REPLACE VIEW user_management_view AS
+      CREATE VIEW user_management_view AS
       SELECT
         u.id,
         u.email,
