@@ -1,4 +1,45 @@
 {
+  "billing": {
+    "annual": "Annual",
+    "currentPlan": {
+      "description": "Manage your subscription and billing",
+      "globalTokens": "Global Tokens",
+      "maxProjects": "Max Projects",
+      "monthlyTokens": "Monthly Tokens",
+      "priorityModels": "Priority Models",
+      "title": "Current Plan"
+    },
+    "globalTokens": "global tokens",
+    "managePlan": "Manage Subscription",
+    "mo": "mo",
+    "monthly": "Monthly",
+    "monthlyTokens": "monthly tokens",
+    "planName": {
+      "enterprise": "Enterprise",
+      "pro": "Pro",
+      "starter": "Starter"
+    },
+    "popular": "Popular",
+    "portalError": "Could not open billing portal",
+    "priorityModelsAccess": "Priority model access",
+    "prioritySupport": "Priority support",
+    "projects": "projects",
+    "status": {
+      "active": "Active",
+      "billingIssue": "Billing Issue",
+      "cancelled": "Cancelled",
+      "expired": "Expired"
+    },
+    "unlimitedProjects": "Unlimited projects",
+    "unlimitedTokens": "Unlimited tokens",
+    "upgrade": "Upgrade Your Plan",
+    "upgradeDescription": "Unlock more features and higher limits",
+    "upgradeError": "Failed to process upgrade",
+    "upgradeSuccess": "Subscription upgraded successfully!",
+    "upgradeTo": "Upgrade to",
+    "upgradeUnavailable": "Upgrade is not available yet. Please try again later.",
+    "yr": "yr"
+  },
   "preferences": {
     "appearance": {
       "dark": "Dark",
@@ -57,6 +98,7 @@
   },
   "subtitle": "Manage your account preferences and application settings",
   "tabs": {
+    "billing": "Billing",
     "preferences": "Preferences",
     "profile": "Profile",
     "security": "Security",

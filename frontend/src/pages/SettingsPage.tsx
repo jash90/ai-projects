@@ -19,24 +19,34 @@ import {
   FolderOpen,
   Check,
   Globe,
+  CreditCard,
+  ExternalLink,
+  Zap,
+  Crown,
+  Infinity,
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { LanguageSelector } from '@/components/ui/LanguageSelector'
-import { settingsApi } from '@/lib/api'
+import { settingsApi, billingApi } from '@/lib/api'
 import { useAuth } from '@/stores/authStore'
 import { uiStore } from '@/stores/uiStore'
-import { UserPreferences } from '@/types'
+import { subscriptionStore, useSubscriptionTier, useCurrentPlan } from '@/stores/subscriptionStore'
+import { UserPreferences, SubscriptionTier } from '@/types'
 import { formatNumber, formatCurrency, cn } from '@/lib/utils'
+import { purchasePackage, getOfferings as getRCOfferings } from '@/services/revenuecat'
 import toast from 'react-hot-toast'
 
 const SettingsPage: React.FC = () => {
   const { t } = useTranslation('settings')
   const { user, updateUser } = useAuth()
   const queryClient = useQueryClient()
-  const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'preferences' | 'usage'>('profile')
+  const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'billing' | 'preferences' | 'usage'>('profile')
+  const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly')
+  const subscriptionTier = useSubscriptionTier()
+  const currentPlan = useCurrentPlan()
 
   // Profile form state
   const [profileForm, setProfileForm] = useState({
@@ -132,6 +142,52 @@ const SettingsPage: React.FC = () => {
     })
   }
 
+  const PACKAGE_IDENTIFIER_MAP: Record<string, Record<string, string>> = {
+    pro: { monthly: '$rc_monthly', annual: '$rc_annual' },
+    enterprise: { monthly: '$rc_custom_enterprise_monthly', annual: '$rc_custom_enterprise_annual' },
+  }
+
+  const handleUpgrade = async (tier: SubscriptionTier) => {
+    try {
+      await billingApi.ensureCustomer()
+
+      const rcOfferings = await getRCOfferings()
+      if (!rcOfferings) {
+        console.error('[Billing] getRCOfferings returned null — SDK not initialized or API error')
+        toast.error('Upgrade unavailable: RevenueCat SDK not ready. Check console for details.')
+        return
+      }
+
+      if (!rcOfferings.current) {
+        console.error('[Billing] No current offering. Offerings:', rcOfferings)
+        toast.error('Upgrade unavailable: no current offering configured in RevenueCat.')
+        return
+      }
+
+      const packageId = PACKAGE_IDENTIFIER_MAP[tier]?.[billingPeriod]
+      const rcPackage = rcOfferings.current.availablePackages.find(
+        (p: any) => p.identifier === packageId
+      )
+
+      if (!rcPackage) {
+        console.error('[Billing] Package not found.', {
+          lookingFor: packageId,
+          available: rcOfferings.current.availablePackages.map((p: any) => p.identifier),
+        })
+        toast.error(`Upgrade unavailable: package "${packageId}" not found. Available: ${rcOfferings.current.availablePackages.map((p: any) => p.identifier).join(', ')}`)
+        return
+      }
+
+      await purchasePackage(rcPackage)
+      await subscriptionStore.getState().fetchSubscription()
+      toast.success(t('billing.upgradeSuccess', 'Subscription upgraded successfully!'))
+    } catch (error: any) {
+      if (error?.userCancelled) return
+      console.error('[Billing] Purchase error:', error)
+      toast.error(error?.message || t('billing.upgradeError', 'Failed to process upgrade'))
+    }
+  }
+
   const handlePreferenceChange = (key: keyof UserPreferences, value: any) => {
     const updatedPreferences = { ...preferences, [key]: value }
     updatePreferencesMutation.mutate(updatedPreferences)
@@ -145,6 +201,7 @@ const SettingsPage: React.FC = () => {
   const tabs = [
     { id: 'profile', label: t('tabs.profile'), icon: User },
     { id: 'security', label: t('tabs.security'), icon: Lock },
+    { id: 'billing', label: t('tabs.billing', 'Billing'), icon: CreditCard },
     { id: 'preferences', label: t('tabs.preferences'), icon: Palette },
     { id: 'usage', label: t('tabs.usage'), icon: BarChart3 },
   ]
@@ -167,7 +224,7 @@ const SettingsPage: React.FC = () => {
         backTo="/dashboard"
         tabs={tabs}
         activeTab={activeTab}
-        onTabChange={(tabId) => setActiveTab(tabId as 'profile' | 'security' | 'preferences' | 'usage')}
+        onTabChange={(tabId) => setActiveTab(tabId as 'profile' | 'security' | 'billing' | 'preferences' | 'usage')}
       />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
@@ -332,6 +389,209 @@ const SettingsPage: React.FC = () => {
                 </form>
               </CardContent>
             </Card>
+          )}
+
+          {/* Billing Tab */}
+          {activeTab === 'billing' && (
+            <div className="space-y-6">
+              {/* Current Plan Card */}
+              <Card variant="elevated">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+                      <CreditCard className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <CardTitle>{t('billing.currentPlan.title', 'Current Plan')}</CardTitle>
+                        <Badge
+                          variant={subscriptionTier === 'enterprise' ? 'default' : subscriptionTier === 'pro' ? 'default' : 'secondary'}
+                          size="sm"
+                        >
+                          {subscriptionTier === 'enterprise' ? (
+                            <><Crown className="w-3 h-3 mr-1" />{t('billing.planName.enterprise', 'Enterprise')}</>
+                          ) : subscriptionTier === 'pro' ? (
+                            <><Zap className="w-3 h-3 mr-1" />{t('billing.planName.pro', 'Pro')}</>
+                          ) : (
+                            t('billing.planName.starter', 'Starter')
+                          )}
+                        </Badge>
+                      </div>
+                      <CardDescription>{t('billing.currentPlan.description', 'Manage your subscription and billing')}</CardDescription>
+                    </div>
+                    {/* Subscription status badge */}
+                    {user?.subscription_status && user.subscription_status !== 'active' && (
+                      <Badge
+                        variant={user.subscription_status === 'cancelled' ? 'warning' : user.subscription_status === 'billing_issue' ? 'destructive' : 'secondary'}
+                        size="sm"
+                      >
+                        {user.subscription_status === 'cancelled' ? t('billing.status.cancelled', 'Cancelled') :
+                         user.subscription_status === 'billing_issue' ? t('billing.status.billingIssue', 'Billing Issue') :
+                         user.subscription_status}
+                      </Badge>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {/* Plan details */}
+                    {currentPlan && (
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <StatItem
+                          icon={<Coins className="w-4 h-4" />}
+                          label={t('billing.currentPlan.monthlyTokens', 'Monthly Tokens')}
+                          value={currentPlan.monthlyTokenLimit === 0 ? '∞' : formatNumber(currentPlan.monthlyTokenLimit)}
+                        />
+                        <StatItem
+                          icon={<BarChart3 className="w-4 h-4" />}
+                          label={t('billing.currentPlan.globalTokens', 'Global Tokens')}
+                          value={currentPlan.globalTokenLimit === 0 ? '∞' : formatNumber(currentPlan.globalTokenLimit)}
+                        />
+                        <StatItem
+                          icon={<FolderOpen className="w-4 h-4" />}
+                          label={t('billing.currentPlan.maxProjects', 'Max Projects')}
+                          value={currentPlan.maxProjects === 0 ? '∞' : currentPlan.maxProjects.toString()}
+                        />
+                        <StatItem
+                          icon={<Zap className="w-4 h-4" />}
+                          label={t('billing.currentPlan.priorityModels', 'Priority Models')}
+                          value={currentPlan.priorityModels ? t('common.yes', 'Yes') : t('common.no', 'No')}
+                          highlight={currentPlan.priorityModels}
+                        />
+                      </div>
+                    )}
+
+                    {/* Manage button for paid users */}
+                    {subscriptionTier !== 'starter' && (
+                      <Button
+                        variant="outline"
+                        onClick={async () => {
+                          try {
+                            const response = await billingApi.getPortalUrl()
+                            if (response.success && response.data?.url) {
+                              window.open(response.data.url, '_blank')
+                            }
+                          } catch {
+                            toast.error(t('billing.portalError', 'Could not open billing portal'))
+                          }
+                        }}
+                        leftIcon={<ExternalLink className="w-4 h-4" />}
+                      >
+                        {t('billing.managePlan', 'Manage Subscription')}
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Upgrade cards for starter users */}
+              {subscriptionTier === 'starter' && (
+                <Card variant="bordered">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-success/10 rounded-xl flex items-center justify-center">
+                          <Zap className="w-5 h-5 text-success" />
+                        </div>
+                        <div>
+                          <CardTitle>{t('billing.upgrade', 'Upgrade Your Plan')}</CardTitle>
+                          <CardDescription>{t('billing.upgradeDescription', 'Unlock more features and higher limits')}</CardDescription>
+                        </div>
+                      </div>
+                      {/* Monthly / Annual toggle */}
+                      <div className="flex items-center gap-2 bg-muted rounded-lg p-1">
+                        <button
+                          onClick={() => setBillingPeriod('monthly')}
+                          className={cn(
+                            'px-3 py-1.5 text-sm font-medium rounded-md transition-all',
+                            billingPeriod === 'monthly' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                          )}
+                        >
+                          {t('billing.monthly', 'Monthly')}
+                        </button>
+                        <button
+                          onClick={() => setBillingPeriod('annual')}
+                          className={cn(
+                            'px-3 py-1.5 text-sm font-medium rounded-md transition-all',
+                            billingPeriod === 'annual' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                          )}
+                        >
+                          {t('billing.annual', 'Annual')}
+                          <span className="ml-1 text-xs text-success">-17%</span>
+                        </button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Pro Plan */}
+                      <div className="border border-primary rounded-xl p-6 relative">
+                        <div className="absolute -top-3 left-4">
+                          <Badge variant="default" size="sm">{t('billing.popular', 'Popular')}</Badge>
+                        </div>
+                        <div className="mb-4">
+                          <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                            <Zap className="w-5 h-5 text-primary" />
+                            {t('billing.planName.pro', 'Pro')}
+                          </h3>
+                          <div className="mt-2">
+                            <span className="text-3xl font-bold text-foreground">
+                              {billingPeriod === 'monthly' ? '30' : '300'} zł
+                            </span>
+                            <span className="text-muted-foreground">
+                              /{billingPeriod === 'monthly' ? t('billing.mo', 'mo') : t('billing.yr', 'yr')}
+                            </span>
+                          </div>
+                        </div>
+                        <ul className="space-y-2 mb-6 text-sm">
+                          <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> 500K {t('billing.monthlyTokens', 'monthly tokens')}</li>
+                          <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> 5M {t('billing.globalTokens', 'global tokens')}</li>
+                          <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> 25 {t('billing.projects', 'projects')}</li>
+                          <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> {t('billing.priorityModelsAccess', 'Priority model access')}</li>
+                        </ul>
+                        <Button
+                          className="w-full"
+                          onClick={() => handleUpgrade('pro')}
+                        >
+                          {t('billing.upgradeTo', 'Upgrade to')} {t('billing.planName.pro', 'Pro')}
+                        </Button>
+                      </div>
+
+                      {/* Enterprise Plan */}
+                      <div className="border border-border rounded-xl p-6">
+                        <div className="mb-4">
+                          <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                            <Crown className="w-5 h-5 text-warning" />
+                            {t('billing.planName.enterprise', 'Enterprise')}
+                          </h3>
+                          <div className="mt-2">
+                            <span className="text-3xl font-bold text-foreground">
+                              {billingPeriod === 'monthly' ? '100' : '1000'} zł
+                            </span>
+                            <span className="text-muted-foreground">
+                              /{billingPeriod === 'monthly' ? t('billing.mo', 'mo') : t('billing.yr', 'yr')}
+                            </span>
+                          </div>
+                        </div>
+                        <ul className="space-y-2 mb-6 text-sm">
+                          <li className="flex items-center gap-2"><Infinity className="w-4 h-4 text-success" /> {t('billing.unlimitedTokens', 'Unlimited tokens')}</li>
+                          <li className="flex items-center gap-2"><Infinity className="w-4 h-4 text-success" /> {t('billing.unlimitedProjects', 'Unlimited projects')}</li>
+                          <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> {t('billing.priorityModelsAccess', 'Priority model access')}</li>
+                          <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> {t('billing.prioritySupport', 'Priority support')}</li>
+                        </ul>
+                        <Button
+                          variant="outline"
+                          className="w-full"
+                          onClick={() => handleUpgrade('enterprise')}
+                        >
+                          {t('billing.upgradeTo', 'Upgrade to')} {t('billing.planName.enterprise', 'Enterprise')}
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
           )}
 
           {/* Preferences Tab */}

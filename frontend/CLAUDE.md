@@ -41,6 +41,7 @@ Stores in `src/stores/`:
 - `uiStore.ts` - Theme/UI preferences (persisted)
 - `projectStore.ts`, `agentStore.ts`, `fileStore.ts` - Domain data
 - `chatStore.ts`, `conversationStore.ts`, `threadStore.ts` - Chat state
+- `adminStore.ts` - Admin panel state
 
 Pattern for consuming stores:
 ```typescript
@@ -78,6 +79,10 @@ Vite chunking in `vite.config.ts`:
 - `router`: react-router-dom
 - `ui`: @headlessui/react, framer-motion
 - `utils`: axios, zustand, @tanstack/react-query
+- `analytics`: @sentry/react, posthog-js
+
+### Dev Server Proxy
+Vite proxies `/api/*` → `http://localhost:3001` and `/socket.io` → WebSocket in dev mode (`vite.config.ts`). No need to configure CORS locally.
 
 ## Key Patterns
 

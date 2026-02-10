@@ -13,6 +13,28 @@ export type SupportedChatFileType = typeof SUPPORTED_CHAT_FILE_TYPES[number];
 export const MAX_CHAT_FILE_SIZE = 20 * 1024 * 1024; // 20MB max per file
 export const MAX_CHAT_FILES_COUNT = 5; // Max 5 files per message
 
+// Subscription Types
+export type SubscriptionTier = 'starter' | 'pro' | 'enterprise';
+export type SubscriptionStatus = 'active' | 'expired' | 'billing_issue' | 'cancelled' | 'grace_period';
+
+export interface SubscriptionInfo {
+  tier: SubscriptionTier;
+  status: SubscriptionStatus;
+  revenuecat_customer_id?: string;
+}
+
+export interface PlanConfig {
+  tier: SubscriptionTier;
+  name: string;
+  monthlyPrice: number;
+  annualPrice: number;
+  monthlyTokenLimit: number;
+  globalTokenLimit: number;
+  maxProjects: number;
+  priorityModels: boolean;
+  entitlementId?: string;
+}
+
 // User Types
 export interface User {
   id: string;
@@ -21,6 +43,8 @@ export interface User {
   role: 'user' | 'admin';
   token_limit_global?: number;
   token_limit_monthly?: number;
+  subscription_tier?: SubscriptionTier;
+  subscription_status?: SubscriptionStatus;
   is_active: boolean;
   created_at: string;
   updated_at: string;

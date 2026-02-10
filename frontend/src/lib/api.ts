@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios'
-import { ApiResponse, AuthTokens, PaginatedResponse, User, UserPreferences, AdminStats, UserManagement, UserUsageStats, TokenLimitUpdate, AdminActivity, Thread, ThreadMessage } from '@/types'
+import { ApiResponse, AuthTokens, PaginatedResponse, User, UserPreferences, AdminStats, UserManagement, UserUsageStats, TokenLimitUpdate, AdminActivity, Thread, ThreadMessage, SubscriptionInfo, PlanConfig } from '@/types'
 import { authStore } from '@/stores/authStore'
 
 class ApiClient {
@@ -771,6 +771,21 @@ export const threadsApi = {
       total_cost: number;
       request_count: number;
     }>>(`/threads/${threadId}/stats`),
+};
+
+// Billing API
+export const billingApi = {
+  getSubscription: () =>
+    apiClient.get<ApiResponse<{ subscription: SubscriptionInfo; plan: PlanConfig }>>('/billing/subscription'),
+
+  getOfferings: () =>
+    apiClient.get<ApiResponse<{ offerings: PlanConfig[] }>>('/billing/offerings'),
+
+  ensureCustomer: () =>
+    apiClient.post<ApiResponse<{ customer_id: string }>>('/billing/customer'),
+
+  getPortalUrl: () =>
+    apiClient.get<ApiResponse<{ url: string }>>('/billing/portal'),
 };
 
 // Settings API

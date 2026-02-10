@@ -32,6 +32,9 @@ export enum ErrorCode {
   AGENT_NOT_FOUND = 'AGENT_NOT_FOUND',
   CONVERSATION_NOT_FOUND = 'CONVERSATION_NOT_FOUND',
   
+  // Subscription errors
+  SUBSCRIPTION_REQUIRED = 'SUBSCRIPTION_REQUIRED',
+
   // System errors
   DATABASE_ERROR = 'DATABASE_ERROR',
   INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
@@ -252,6 +255,16 @@ export const createValidationError = (details: {
     userMessage: details.userMessage || 'Invalid input provided',
     statusCode: 400,
     metadata: details.metadata
+  });
+};
+
+export const createSubscriptionRequiredError = (feature: string, requiredTier: string): AppError => {
+  return new AppError({
+    code: ErrorCode.SUBSCRIPTION_REQUIRED,
+    message: `Feature "${feature}" requires ${requiredTier} subscription`,
+    userMessage: `This feature requires a ${requiredTier} plan. Please upgrade your subscription to access it.`,
+    statusCode: 403,
+    metadata: { feature, requiredTier },
   });
 };
 

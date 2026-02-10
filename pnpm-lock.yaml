@@ -204,6 +204,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.3.2
         version: 3.10.0(react-hook-form@7.68.0(react@18.3.1))
+      '@revenuecat/purchases-js':
+        specifier: ^1.25.0
+        version: 1.25.0
       '@sentry/react':
         specifier: ^10.32.1
         version: 10.38.0(react@18.3.1)
@@ -2309,6 +2312,9 @@ packages:
   '@remix-run/router@1.23.1':
     resolution: {integrity: sha512-vDbaOzF7yT2Qs4vO6XV1MHcJv+3dgR1sT+l3B8xxOVhUC336prMvqrvsLL/9Dnw2xr6Qhz4J0dmS0llNAbnUmQ==}
     engines: {node: '>=14.0.0'}
+
+  '@revenuecat/purchases-js@1.25.0':
+    resolution: {integrity: sha512-neCnf9t0C21BvBsImVI5Q9wsqGQp/QxYEiM01clMb41lq9DC7A4kZx0J/HkIpnLfdMdKagZWutEzdH9EsnAI6Q==}
 
   '@rolldown/pluginutils@1.0.0-beta.27':
     resolution: {integrity: sha512-+d0F4MKMCbeVUJwG96uQ4SgAznZNSq93I3V+9NHA4OpvqG8mRCpGdKmK8l/dl02h2CCDHwW2FqilnTyDcAnqjA==}
@@ -10114,6 +10120,8 @@ snapshots:
       '@redis/client': 1.6.1
 
   '@remix-run/router@1.23.1': {}
+
+  '@revenuecat/purchases-js@1.25.0': {}
 
   '@rolldown/pluginutils@1.0.0-beta.27': {}
 

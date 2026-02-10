@@ -183,6 +183,20 @@ export const events = {
   featureUsed: (featureName: string, context?: Record<string, unknown>) => {
     trackEvent('feature_used', { featureName, ...context });
   },
+
+  // Subscription Events
+  subscriptionViewed: (currentTier: string) => {
+    trackEvent('subscription_viewed', { currentTier });
+  },
+
+  subscriptionUpgradeStarted: (fromTier: string, toTier: string, billingPeriod: string) => {
+    trackEvent('subscription_upgrade_started', { fromTier, toTier, billingPeriod });
+  },
+
+  subscriptionUpgradeCompleted: (fromTier: string, toTier: string, billingPeriod: string) => {
+    trackEvent('subscription_upgrade_completed', { fromTier, toTier, billingPeriod });
+    setUserProperty('subscription_tier', toTier);
+  },
 };
 
 // Export posthog for advanced usage

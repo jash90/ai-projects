@@ -28,6 +28,11 @@ const config: Config = {
     default_token_limit_global: parseInt(process.env.DEFAULT_TOKEN_LIMIT_GLOBAL || '1000000', 10), // 1M tokens
     default_token_limit_monthly: parseInt(process.env.DEFAULT_TOKEN_LIMIT_MONTHLY || '100000', 10), // 100K tokens/month
   },
+  revenuecat: {
+    api_key: process.env.REVENUECAT_API_KEY || '',
+    project_id: process.env.REVENUECAT_PROJECT_ID || '',
+    webhook_secret: process.env.REVENUECAT_WEBHOOK_SECRET || '',
+  },
   log_level: process.env.LOG_LEVEL || 'info',
 };
 

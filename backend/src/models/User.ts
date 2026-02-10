@@ -1,5 +1,5 @@
 import { pool } from '../database/connection';
-import { User, UserCreate, UserProfileUpdate, UserPasswordUpdate, UserPreferences, UserManagement, AdminStats, UserUsageStats, TokenLimitUpdate } from '../types';
+import { User, UserCreate, UserProfileUpdate, UserPasswordUpdate, UserPreferences, UserManagement, AdminStats, UserUsageStats, TokenLimitUpdate, SubscriptionTier, SubscriptionStatus } from '../types';
 import bcrypt from 'bcryptjs';
 import logger from '../utils/logger';
 import config from '../utils/config';
@@ -20,7 +20,7 @@ export class UserModel {
     const query = `
       INSERT INTO users (email, username, password_hash, role, token_limit_global, token_limit_monthly, is_active)
       VALUES ($1, $2, $3, $4, $5, $6, $7)
-      RETURNING id, email, username, role, token_limit_global, token_limit_monthly, is_active, created_at, updated_at
+      RETURNING id, email, username, role, token_limit_global, token_limit_monthly, subscription_tier, subscription_status, revenuecat_customer_id, is_active, created_at, updated_at
     `;
 
     const result = await pool.query(query, [
@@ -37,7 +37,7 @@ export class UserModel {
 
   static async findByEmail(email: string): Promise<User | null> {
     const query = `
-      SELECT id, email, username, role, token_limit_global, token_limit_monthly, is_active, created_at, updated_at
+      SELECT id, email, username, role, token_limit_global, token_limit_monthly, subscription_tier, subscription_status, revenuecat_customer_id, is_active, created_at, updated_at
       FROM users
       WHERE LOWER(email) = LOWER($1)
     `;
@@ -48,7 +48,7 @@ export class UserModel {
 
   static async findByEmailWithPassword(email: string): Promise<(User & { password_hash: string }) | null> {
     const query = `
-      SELECT id, email, username, role, token_limit_global, token_limit_monthly, is_active, password_hash, created_at, updated_at
+      SELECT id, email, username, role, token_limit_global, token_limit_monthly, subscription_tier, subscription_status, revenuecat_customer_id, is_active, password_hash, created_at, updated_at
       FROM users
       WHERE LOWER(email) = LOWER($1)
     `;
@@ -59,7 +59,7 @@ export class UserModel {
 
   static async findById(id: string): Promise<User | null> {
     const query = `
-      SELECT id, email, username, role, token_limit_global, token_limit_monthly, is_active, created_at, updated_at
+      SELECT id, email, username, role, token_limit_global, token_limit_monthly, subscription_tier, subscription_status, revenuecat_customer_id, is_active, created_at, updated_at
       FROM users
       WHERE id = $1
     `;
@@ -98,7 +98,7 @@ export class UserModel {
       UPDATE users
       SET ${fields.join(', ')}
       WHERE id = $${paramCount}
-      RETURNING id, email, username, role, token_limit_global, token_limit_monthly, is_active, created_at, updated_at
+      RETURNING id, email, username, role, token_limit_global, token_limit_monthly, subscription_tier, subscription_status, revenuecat_customer_id, is_active, created_at, updated_at
     `;
 
     const result = await pool.query(query, values);
@@ -410,10 +410,11 @@ export class UserModel {
         throw new Error('Invalid token usage data');
       }
 
-      // Get global limits if user doesn't have specific limits
+      // Enterprise tier with null limits = unlimited — skip global fallback
+      const isUnlimited = user.subscription_tier === 'enterprise';
       const globalLimits = await this.getGlobalTokenLimits();
-      const globalLimit = user.token_limit_global ?? globalLimits.global;
-      const monthlyLimit = user.token_limit_monthly ?? globalLimits.monthly;
+      const globalLimit = isUnlimited ? 0 : (user.token_limit_global ?? globalLimits.global);
+      const monthlyLimit = isUnlimited ? 0 : (user.token_limit_monthly ?? globalLimits.monthly);
 
       // Calculate remaining tokens
       const remainingGlobal = globalLimit > 0 ? Math.max(0, globalLimit - totalTokensNum) : Infinity;
@@ -540,7 +541,7 @@ export class UserModel {
         UPDATE users
         SET ${fields.join(', ')}
         WHERE id = $${paramCount}
-        RETURNING id, email, username, role, token_limit_global, token_limit_monthly, is_active, created_at, updated_at
+        RETURNING id, email, username, role, token_limit_global, token_limit_monthly, subscription_tier, subscription_status, revenuecat_customer_id, is_active, created_at, updated_at
       `;
 
       const result = await pool.query(query, values);
@@ -585,7 +586,7 @@ export class UserModel {
   static async findByIdWithPassword(userId: string): Promise<(User & { password_hash: string }) | null> {
     try {
       const query = `
-        SELECT id, email, username, password_hash, role, token_limit_global, token_limit_monthly, is_active, created_at, updated_at
+        SELECT id, email, username, password_hash, role, token_limit_global, token_limit_monthly, subscription_tier, subscription_status, revenuecat_customer_id, is_active, created_at, updated_at
         FROM users
         WHERE id = $1
       `;
@@ -639,5 +640,82 @@ export class UserModel {
       logger.error('Error updating user preferences:', error);
       throw error;
     }
+  }
+
+  /**
+   * Update subscription tier, status, and token limits based on plan config
+   */
+  static async updateSubscription(
+    userId: string,
+    tier: SubscriptionTier,
+    status: SubscriptionStatus,
+    revenuecatCustomerId?: string
+  ): Promise<User | null> {
+    const { PLAN_CONFIGS } = await import('../services/revenuecatService');
+    const planConfig = PLAN_CONFIGS[tier];
+
+    const query = `
+      UPDATE users
+      SET subscription_tier = $1,
+          subscription_status = $2,
+          revenuecat_customer_id = COALESCE($3, revenuecat_customer_id),
+          token_limit_monthly = $4,
+          token_limit_global = $5,
+          updated_at = CURRENT_TIMESTAMP
+      WHERE id = $6
+      RETURNING id, email, username, role, token_limit_global, token_limit_monthly, subscription_tier, subscription_status, revenuecat_customer_id, is_active, created_at, updated_at
+    `;
+
+    // Use null for unlimited (enterprise) — checkTokenLimit handles null as unlimited
+    const monthlyLimit = planConfig.monthlyTokenLimit || null;
+    const globalLimit = planConfig.globalTokenLimit || null;
+
+    const result = await pool.query(query, [
+      tier, status, revenuecatCustomerId, monthlyLimit, globalLimit, userId
+    ]);
+
+    if (result.rows[0]) {
+      logger.info('User subscription updated', { userId, tier, status });
+    }
+
+    return result.rows[0] || null;
+  }
+
+  /**
+   * Find user by RevenueCat customer ID (for webhook processing)
+   */
+  static async findByRevenueCatCustomerId(customerId: string): Promise<User | null> {
+    const query = `
+      SELECT id, email, username, role, token_limit_global, token_limit_monthly, subscription_tier, subscription_status, revenuecat_customer_id, is_active, created_at, updated_at
+      FROM users
+      WHERE revenuecat_customer_id = $1
+    `;
+
+    const result = await pool.query(query, [customerId]);
+    return result.rows[0] || null;
+  }
+
+  /**
+   * Get subscription info for a user
+   */
+  static async getSubscriptionInfo(userId: string): Promise<{
+    tier: SubscriptionTier;
+    status: SubscriptionStatus;
+    revenuecat_customer_id?: string;
+  }> {
+    const query = `
+      SELECT subscription_tier, subscription_status, revenuecat_customer_id
+      FROM users
+      WHERE id = $1
+    `;
+
+    const result = await pool.query(query, [userId]);
+    const row = result.rows[0];
+
+    return {
+      tier: row?.subscription_tier || 'starter',
+      status: row?.subscription_status || 'active',
+      revenuecat_customer_id: row?.revenuecat_customer_id || undefined,
+    };
   }
 }
