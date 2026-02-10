@@ -112,6 +112,18 @@ class AIService {
   }
 
   /**
+   * Build system content from agent prompt, project files, and language instruction.
+   */
+  private buildSystemContent(agent: Agent, projectFiles?: string[]): string {
+    let systemContent = agent.system_prompt;
+    if (projectFiles && projectFiles.length > 0) {
+      systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
+    }
+    systemContent += '\n\nIMPORTANT: Always respond in the same language the user writes their message in. Match the user\'s language exactly.';
+    return systemContent;
+  }
+
+  /**
    * Validate OpenRouter model format (must be provider/model-name)
    */
   private validateOpenRouterModel(model: string): void {
@@ -268,11 +280,7 @@ class AIService {
       throw createAIApiKeyInvalidError('openai');
     }
 
-    // Build system message with agent prompt and file context
-    let systemContent = agent.system_prompt;
-    if (projectFiles && projectFiles.length > 0) {
-      systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
-    }
+    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to OpenAI format with multimodal support
     const openaiMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
@@ -392,11 +400,7 @@ class AIService {
       throw createAIApiKeyInvalidError('openai');
     }
 
-    // Build system message with agent prompt and file context
-    let systemContent = agent.system_prompt;
-    if (projectFiles && projectFiles.length > 0) {
-      systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
-    }
+    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to OpenAI format with multimodal support
     const openaiMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
@@ -602,11 +606,7 @@ class AIService {
 
     const actualModel = agent.model;
 
-    // Build system message with agent prompt and file context
-    let systemContent = agent.system_prompt;
-    if (projectFiles && projectFiles.length > 0) {
-      systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
-    }
+    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to Anthropic format with multimodal support
     const anthropicMessages: Anthropic.Messages.MessageParam[] = messages.slice(0, -1).map(msg => ({
@@ -737,11 +737,7 @@ class AIService {
 
     const actualModel = agent.model;
 
-    // Build system message with agent prompt and file context
-    let systemContent = agent.system_prompt;
-    if (projectFiles && projectFiles.length > 0) {
-      systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
-    }
+    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to Anthropic format with multimodal support
     const anthropicMessages: Anthropic.Messages.MessageParam[] = messages.slice(0, -1).map(msg => ({
@@ -940,11 +936,7 @@ class AIService {
     // Validate model format
     this.validateOpenRouterModel(agent.model);
 
-    // Build system message with agent prompt and file context
-    let systemContent = agent.system_prompt;
-    if (projectFiles && projectFiles.length > 0) {
-      systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
-    }
+    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to OpenAI format (OpenRouter is OpenAI-compatible)
     const openrouterMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
@@ -1073,11 +1065,7 @@ class AIService {
     // Validate model format
     this.validateOpenRouterModel(agent.model);
 
-    // Build system message with agent prompt and file context
-    let systemContent = agent.system_prompt;
-    if (projectFiles && projectFiles.length > 0) {
-      systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
-    }
+    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to OpenAI format (OpenRouter is OpenAI-compatible)
     const openrouterMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
