@@ -35,6 +35,7 @@ export default function LandingPage() {
   const { canInstall, install, isInstalled } = usePWAFeatures();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [pricingPeriod, setPricingPeriod] = useState<'monthly' | 'annual'>('monthly');
 
   // Handle scroll for header styling
   useEffect(() => {
@@ -149,6 +150,10 @@ export default function LandingPage() {
 
   const handleGetStarted = () => {
     navigate('/register');
+  };
+
+  const handleGetStartedWithPlan = (plan: string) => {
+    navigate(`/register?plan=${plan}&period=${pricingPeriod}`);
   };
 
   const handleInstallApp = async () => {
@@ -440,9 +445,31 @@ export default function LandingPage() {
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               {t('pricing.title')}
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
               {t('pricing.subtitle')}
             </p>
+            {/* Period toggle */}
+            <div className="inline-flex items-center gap-2 bg-muted rounded-lg p-1">
+              <button
+                onClick={() => setPricingPeriod('monthly')}
+                className={cn(
+                  'px-4 py-2 text-sm font-medium rounded-md transition-all',
+                  pricingPeriod === 'monthly' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                {t('pricing.monthly', 'Monthly')}
+              </button>
+              <button
+                onClick={() => setPricingPeriod('annual')}
+                className={cn(
+                  'px-4 py-2 text-sm font-medium rounded-md transition-all',
+                  pricingPeriod === 'annual' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                {t('pricing.annual', 'Annual')}
+                <span className="ml-1.5 text-xs font-semibold text-green-500">{t('pricing.savePercent', 'Save 17%')}</span>
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -450,8 +477,8 @@ export default function LandingPage() {
             <div className="card-mobile">
               <div className="text-center mb-6">
                 <h3 className="text-xl font-semibold text-foreground mb-2">{t('pricing.plans.starter.name')}</h3>
-                <div className="text-3xl font-bold text-foreground mb-1">{t('pricing.plans.starter.price')}</div>
-                <div className="text-muted-foreground">{t('pricing.perMonth')}</div>
+                <div className="text-3xl font-bold text-foreground mb-1">0 zł</div>
+                <div className="text-muted-foreground">{t('pricing.free', 'Free forever')}</div>
               </div>
               <ul className="space-y-3 mb-8">
                 {(Array.isArray(t('pricing.plans.starter.features', { returnObjects: true })) ? t('pricing.plans.starter.features', { returnObjects: true }) as string[] : []).map((feature, i) => (
@@ -461,7 +488,7 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
-              <Button variant="outline" className="w-full" onClick={handleGetStarted}>
+              <Button variant="outline" className="w-full" onClick={() => handleGetStarted()}>
                 {t('pricing.plans.starter.cta')}
               </Button>
             </div>
@@ -475,8 +502,12 @@ export default function LandingPage() {
               </div>
               <div className="text-center mb-6">
                 <h3 className="text-xl font-semibold text-foreground mb-2">{t('pricing.plans.pro.name')}</h3>
-                <div className="text-3xl font-bold text-foreground mb-1">{t('pricing.plans.pro.price')}</div>
-                <div className="text-muted-foreground">{t('pricing.perMonth')}</div>
+                <div className="text-3xl font-bold text-foreground mb-1">
+                  {pricingPeriod === 'monthly' ? '30' : '300'} zł
+                </div>
+                <div className="text-muted-foreground">
+                  {pricingPeriod === 'monthly' ? t('pricing.perMonth') : t('pricing.perYear', 'per year')}
+                </div>
               </div>
               <ul className="space-y-3 mb-8">
                 {(Array.isArray(t('pricing.plans.pro.features', { returnObjects: true })) ? t('pricing.plans.pro.features', { returnObjects: true }) as string[] : []).map((feature, i) => (
@@ -486,7 +517,7 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
-              <Button className="w-full" onClick={handleGetStarted}>
+              <Button className="w-full" onClick={() => handleGetStartedWithPlan('pro')}>
                 {t('pricing.plans.pro.cta')}
               </Button>
             </div>
@@ -495,8 +526,12 @@ export default function LandingPage() {
             <div className="card-mobile">
               <div className="text-center mb-6">
                 <h3 className="text-xl font-semibold text-foreground mb-2">{t('pricing.plans.enterprise.name')}</h3>
-                <div className="text-3xl font-bold text-foreground mb-1">{t('pricing.plans.enterprise.price')}</div>
-                <div className="text-muted-foreground">{t('pricing.contactUs')}</div>
+                <div className="text-3xl font-bold text-foreground mb-1">
+                  {pricingPeriod === 'monthly' ? '100' : '1000'} zł
+                </div>
+                <div className="text-muted-foreground">
+                  {pricingPeriod === 'monthly' ? t('pricing.perMonth') : t('pricing.perYear', 'per year')}
+                </div>
               </div>
               <ul className="space-y-3 mb-8">
                 {(Array.isArray(t('pricing.plans.enterprise.features', { returnObjects: true })) ? t('pricing.plans.enterprise.features', { returnObjects: true }) as string[] : []).map((feature, i) => (
@@ -506,7 +541,7 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full" onClick={() => handleGetStartedWithPlan('enterprise')}>
                 {t('pricing.plans.enterprise.cta')}
               </Button>
             </div>

@@ -112,8 +112,13 @@
     "testimonials": "Testimonials"
   },
   "pricing": {
+    "annual": "Annual",
     "contactUs": "contact us",
+    "free": "Free forever",
+    "monthly": "Monthly",
     "perMonth": "per month",
+    "perYear": "per year",
+    "savePercent": "Save 17%",
     "plans": {
       "enterprise": {
         "cta": "Contact Sales",
@@ -140,7 +145,7 @@
         ],
         "name": "Professional",
         "popular": "Most Popular",
-        "price": "$29"
+        "price": "30 zł"
       },
       "starter": {
         "cta": "Get Started Free",
@@ -152,7 +157,7 @@
           "Community support"
         ],
         "name": "Starter",
-        "price": "$0"
+        "price": "0 zł"
       }
     },
     "subtitle": "Start free, upgrade when you need more. No surprises, cancel anytime.",

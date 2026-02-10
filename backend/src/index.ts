@@ -32,6 +32,7 @@ import settingsRoutes from './routes/settings';
 import debugRoutes from './routes/debug';
 import markdownRoutes from './routes/markdown';
 import threadRoutes from './routes/threads';
+import billingRoutes from './routes/billing';
 import { setupSwagger } from './swagger';
 
 const app: express.Express = express();
@@ -196,6 +197,7 @@ app.use('/api/settings', settingsRoutes);  // User settings routes
 app.use('/api/debug', debugRoutes);  // Debug routes (development/testing)
 app.use('/api/markdown', markdownRoutes); // Markdown routes
 app.use('/api/threads', threadRoutes);    // Thread-based chat routes
+app.use('/api/billing', billingRoutes);  // Billing & subscription routes
 
 // 404 handler
 app.use('*', (req, res) => {

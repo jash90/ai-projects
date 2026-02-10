@@ -168,6 +168,43 @@ async function runMigrations(): Promise<void> {
       `);
     }
 
+    // Add subscription columns to users table
+    await client.query(`
+      DO $$ BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'users' AND column_name = 'subscription_tier') THEN
+          ALTER TABLE users ADD COLUMN subscription_tier VARCHAR(20) DEFAULT 'starter';
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'users' AND column_name = 'subscription_status') THEN
+          ALTER TABLE users ADD COLUMN subscription_status VARCHAR(20) DEFAULT 'active';
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'users' AND column_name = 'revenuecat_customer_id') THEN
+          ALTER TABLE users ADD COLUMN revenuecat_customer_id VARCHAR(255);
+        END IF;
+      END $$;
+    `);
+
+    // Create subscription_events table for webhook audit logging
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS subscription_events (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+        revenuecat_customer_id VARCHAR(255),
+        event_type VARCHAR(50) NOT NULL,
+        product_id VARCHAR(100),
+        price NUMERIC(10,2),
+        currency VARCHAR(3),
+        raw_payload JSONB,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Create indexes for subscription features
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_users_revenuecat_customer_id ON users(revenuecat_customer_id);
+      CREATE INDEX IF NOT EXISTS idx_subscription_events_user_id ON subscription_events(user_id);
+      CREATE INDEX IF NOT EXISTS idx_subscription_events_event_type ON subscription_events(event_type);
+    `);
+
     // Create user_management_view for admin panel
     await client.query(`
       CREATE OR REPLACE VIEW user_management_view AS
@@ -179,6 +216,9 @@ async function runMigrations(): Promise<void> {
         u.is_active,
         u.token_limit_global,
         u.token_limit_monthly,
+        u.subscription_tier,
+        u.subscription_status,
+        u.revenuecat_customer_id,
         u.created_at,
         u.updated_at,
         COALESCE(p.project_count, 0) as project_count,

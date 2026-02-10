@@ -6,6 +6,8 @@ import { useTheme } from '@/stores/uiStore'
 import { useSocket } from '@/hooks/useSocket'
 import { authApi } from '@/lib/api'
 import { setTheme } from '@/lib/utils'
+import { subscriptionStore } from '@/stores/subscriptionStore'
+import { initializeRevenueCat, resetRevenueCat } from '@/services/revenuecat'
 
 // Layout Components
 import AuthLayout from '@/components/layouts/AuthLayout'
@@ -43,12 +45,25 @@ function App() {
         const response = await authApi.verifyToken()
         if (response.success && response.data) {
           setUser(response.data.user)
+
+          // Initialize RevenueCat and fetch subscription after auth
+          const rcKey = import.meta.env.VITE_REVENUECAT_BILLING_PUBLIC_KEY
+          if (rcKey && response.data.user.id) {
+            initializeRevenueCat(rcKey, response.data.user.id)
+          }
+          subscriptionStore.getState().fetchSubscription()
+          subscriptionStore.getState().fetchOfferings()
+
           return response.data
         } else {
+          resetRevenueCat()
+          subscriptionStore.getState().reset()
           logout()
           return null
         }
       } catch (error) {
+        resetRevenueCat()
+        subscriptionStore.getState().reset()
         logout()
         throw error
       }
