@@ -16,10 +16,9 @@ interface ChatProps {
   project: Project
   agent: Agent
   className?: string
-  onToggleSidebar?: () => void
 }
 
-function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
+function Chat({ project, agent, className }: ChatProps) {
   const { t } = useTranslation('chat')
 
   // Return early if agent is not available
@@ -142,7 +141,6 @@ function Chat({ project, agent, className, onToggleSidebar }: ChatProps) {
         streaming={streaming}
         onToggleStreaming={setStreaming}
         onClearConversation={handleClearConversation}
-        onToggleSidebar={onToggleSidebar}
       />
       
       <ChatMessages

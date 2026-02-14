@@ -22,7 +22,8 @@
     "i18n:translate": "node scripts/translate.js",
     "i18n:translate:sync": "node scripts/translate.js --sync",
     "i18n:translate:all": "node scripts/translate.js --all",
-    "i18n:sync-changed": "node scripts/sync-changed.js"
+    "i18n:sync-changed": "node scripts/sync-changed.js",
+    "screenshots": "tsx scripts/screenshots.ts"
   },
   "dependencies": {
     "@claude-projects/shared": "workspace:*",
@@ -70,6 +71,7 @@
     "zustand": "^4.4.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@sentry/vite-plugin": "^4.6.1",
     "@types/dompurify": "^3.2.0",
     "@types/node": "^20.8.7",

@@ -9,7 +9,6 @@ import {
   Smartphone,
   Star,
   Play,
-  CheckCircle,
   Github,
   Twitter,
   FileText,
@@ -180,9 +179,6 @@ export default function LandingPage() {
               <a href="#testimonials" className="text-muted-foreground hover:text-foreground transition-colors">
                 {t('nav.testimonials')}
               </a>
-              <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">
-                {t('nav.pricing')}
-              </a>
               <Link to="/login" className="text-muted-foreground hover:text-foreground transition-colors">
                 {t('nav.signIn')}
               </Link>
@@ -233,13 +229,6 @@ export default function LandingPage() {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {t('nav.testimonials')}
-                </a>
-                <a
-                  href="#pricing"
-                  className="text-muted-foreground hover:text-foreground transition-colors py-2"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t('nav.pricing')}
                 </a>
                 <Link
                   to="/login"
@@ -433,87 +422,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="py-16 md:py-24 bg-muted/30">
-        <div className="container-mobile">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {t('pricing.title')}
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              {t('pricing.subtitle')}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Free Plan */}
-            <div className="card-mobile">
-              <div className="text-center mb-6">
-                <h3 className="text-xl font-semibold text-foreground mb-2">{t('pricing.plans.starter.name')}</h3>
-                <div className="text-3xl font-bold text-foreground mb-1">{t('pricing.plans.starter.price')}</div>
-                <div className="text-muted-foreground">{t('pricing.perMonth')}</div>
-              </div>
-              <ul className="space-y-3 mb-8">
-                {(t('pricing.plans.starter.features', { returnObjects: true }) as string[]).map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                    <span className="text-muted-foreground">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              <Button variant="outline" className="w-full" onClick={handleGetStarted}>
-                {t('pricing.plans.starter.cta')}
-              </Button>
-            </div>
-
-            {/* Pro Plan */}
-            <div className="card-mobile border-primary relative">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
-                  {t('pricing.plans.pro.popular')}
-                </span>
-              </div>
-              <div className="text-center mb-6">
-                <h3 className="text-xl font-semibold text-foreground mb-2">{t('pricing.plans.pro.name')}</h3>
-                <div className="text-3xl font-bold text-foreground mb-1">{t('pricing.plans.pro.price')}</div>
-                <div className="text-muted-foreground">{t('pricing.perMonth')}</div>
-              </div>
-              <ul className="space-y-3 mb-8">
-                {(t('pricing.plans.pro.features', { returnObjects: true }) as string[]).map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                    <span className="text-muted-foreground">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              <Button className="w-full" onClick={handleGetStarted}>
-                {t('pricing.plans.pro.cta')}
-              </Button>
-            </div>
-
-            {/* Enterprise Plan */}
-            <div className="card-mobile">
-              <div className="text-center mb-6">
-                <h3 className="text-xl font-semibold text-foreground mb-2">{t('pricing.plans.enterprise.name')}</h3>
-                <div className="text-3xl font-bold text-foreground mb-1">{t('pricing.plans.enterprise.price')}</div>
-                <div className="text-muted-foreground">{t('pricing.contactUs')}</div>
-              </div>
-              <ul className="space-y-3 mb-8">
-                {(t('pricing.plans.enterprise.features', { returnObjects: true }) as string[]).map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-                    <span className="text-muted-foreground">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              <Button variant="outline" className="w-full">
-                {t('pricing.plans.enterprise.cta')}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="py-16 md:py-24 bg-gradient-to-r from-primary to-primary/80">
         <div className="container-mobile text-center">
@@ -578,7 +486,6 @@ export default function LandingPage() {
               <h3 className="font-semibold text-foreground mb-4">{t('footer.product.title')}</h3>
               <ul className="space-y-2">
                 <li><a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.product.features')}</a></li>
-                <li><a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.product.pricing')}</a></li>
                 <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.product.api')}</a></li>
                 <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.product.documentation')}</a></li>
               </ul>

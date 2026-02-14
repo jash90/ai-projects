@@ -92,7 +92,7 @@ function NewProjectDialog({ open, onClose, onSuccess }: NewProjectDialogProps) {
       newErrors.name = 'Project name must be less than 200 characters'
     }
 
-    if (formData.description && formData.description?.length || 0 > 1000) {
+    if ((formData.description?.length || 0) > 1000) {
       newErrors.description = 'Description must be less than 1000 characters'
     }
 

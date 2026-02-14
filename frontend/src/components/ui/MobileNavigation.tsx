@@ -108,7 +108,7 @@ export function MobileNavigation({ onNewProject }: MobileNavigationProps) {
           {/* Logo/Brand */}
           <Link to="/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">CP</span>
+              <span className="text-primary-foreground font-bold text-sm">AP</span>
             </div>
             <span className="font-semibold text-foreground">{t('navigation.brand')}</span>
           </Link>

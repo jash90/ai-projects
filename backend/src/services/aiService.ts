@@ -5,6 +5,16 @@ import config from '../utils/config';
 import logger from '../utils/logger';
 import { TokenService } from './tokenService';
 import { UserModel } from '../models/User';
+import {
+  AppError,
+  ErrorCode,
+  isAppError,
+  createAIServiceError,
+  createAIModelUnavailableError,
+  createAIContentFilteredError,
+  createAIApiKeyInvalidError,
+  createRateLimitError
+} from '../utils/errors';
 
 export interface ChatRequest {
   agent: Agent;
@@ -102,14 +112,88 @@ class AIService {
   }
 
   /**
+   * Build system content from agent prompt, project files, and language instruction.
+   */
+  private buildSystemContent(agent: Agent, projectFiles?: string[]): string {
+    let systemContent = agent.system_prompt;
+    if (projectFiles && projectFiles.length > 0) {
+      systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
+    }
+    systemContent += '\n\nIMPORTANT: Always respond in the same language the user writes their message in. Match the user\'s language exactly.';
+    return systemContent;
+  }
+
+  /**
    * Validate OpenRouter model format (must be provider/model-name)
    */
   private validateOpenRouterModel(model: string): void {
     if (!model.includes('/')) {
-      throw new Error(
-        `Invalid OpenRouter model format: "${model}". Expected format: "provider/model-name" (e.g., "anthropic/claude-3-sonnet")`
-      );
+      throw new AppError({
+        code: ErrorCode.AI_MODEL_UNAVAILABLE,
+        message: `Invalid OpenRouter model format: "${model}". Expected format: "provider/model-name"`,
+        userMessage: `Invalid model format: "${model}". OpenRouter models must use "provider/model-name" format (e.g., "anthropic/claude-3-sonnet").`,
+        statusCode: 400
+      });
     }
+  }
+
+  /**
+   * Classify a provider SDK error into the appropriate AppError type.
+   */
+  private classifyProviderError(
+    error: any,
+    provider: string,
+    model: string
+  ): AppError {
+    const msg = (error?.message || error?.error?.message || '').toLowerCase();
+    const status = error?.status || error?.statusCode || error?.response?.status;
+
+    // Model not found / doesn't exist
+    if (
+      (msg.includes('model') && (msg.includes('not found') || msg.includes('does not exist') || msg.includes('not exist'))) ||
+      msg.includes('unknown model') ||
+      msg.includes('model_not_found') ||
+      msg.includes('invalid model') ||
+      status === 404
+    ) {
+      return createAIModelUnavailableError(provider, model, error?.message || 'Model not found');
+    }
+
+    // Invalid API key / auth
+    if (
+      msg.includes('invalid api key') || msg.includes('invalid x-api-key') ||
+      msg.includes('authentication') || msg.includes('unauthorized') ||
+      msg.includes('permission') ||
+      status === 401 || status === 403
+    ) {
+      return createAIApiKeyInvalidError(provider);
+    }
+
+    // Content filtered
+    if (
+      msg.includes('content policy') || msg.includes('content_filter') ||
+      msg.includes('content filtered') || msg.includes('safety') ||
+      msg.includes('blocked')
+    ) {
+      return createAIContentFilteredError(provider);
+    }
+
+    // Rate limit from provider
+    if (msg.includes('rate limit') || status === 429) {
+      return createRateLimitError(new Date(Date.now() + 60000));
+    }
+
+    // Overloaded / unavailable
+    if (
+      msg.includes('overloaded') || msg.includes('capacity') ||
+      msg.includes('unavailable') || msg.includes('timeout') ||
+      status === 503 || status === 529
+    ) {
+      return createAIServiceError(provider, error?.message || 'Service unavailable');
+    }
+
+    // Fallback — generic AI service error
+    return createAIServiceError(provider, error?.message || 'Unknown error');
   }
 
   async chat(request: ChatRequest): Promise<ChatResponse | StreamingChatResponse> {
@@ -131,7 +215,12 @@ class AIService {
         } else if (agent.provider === 'openrouter') {
           return await this.streamChatWithOpenRouter(agent, messages, projectFiles, attachments, userId, projectId, conversationId);
         } else {
-          throw new Error(`Unsupported AI provider: ${agent.provider}`);
+          throw new AppError({
+            code: ErrorCode.AI_SERVICE_UNAVAILABLE,
+            message: `Unsupported AI provider: ${agent.provider}`,
+            userMessage: `Provider "${agent.provider}" is not supported.`,
+            statusCode: 400
+          });
         }
       } else {
         // Return regular response
@@ -144,7 +233,12 @@ class AIService {
         } else if (agent.provider === 'openrouter') {
           response = await this.chatWithOpenRouter(agent, messages, projectFiles, attachments, userId, projectId, conversationId);
         } else {
-          throw new Error(`Unsupported AI provider: ${agent.provider}`);
+          throw new AppError({
+            code: ErrorCode.AI_SERVICE_UNAVAILABLE,
+            message: `Unsupported AI provider: ${agent.provider}`,
+            userMessage: `Provider "${agent.provider}" is not supported.`,
+            statusCode: 400
+          });
         }
 
         const processingTime = Date.now() - startTime;
@@ -183,14 +277,10 @@ class AIService {
     conversationId?: string
   ): Promise<ChatResponse> {
     if (!this.openai) {
-      throw new Error('OpenAI API key not configured');
+      throw createAIApiKeyInvalidError('openai');
     }
 
-    // Build system message with agent prompt and file context
-    let systemContent = agent.system_prompt;
-    if (projectFiles && projectFiles.length > 0) {
-      systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
-    }
+    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to OpenAI format with multimodal support
     const openaiMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
@@ -250,38 +340,51 @@ class AIService {
       requestParams.temperature = agent.temperature;
     }
     
-    const completion = await this.openai.chat.completions.create(requestParams);
+    try {
+      const completion = await this.openai.chat.completions.create(requestParams);
 
-    const choice = completion.choices[0];
-    if (!choice.message.content) {
-      throw new Error('No response content from OpenAI');
-    }
-
-    // Track token usage if user context is provided
-    if (userId && completion.usage) {
-      await TokenService.trackUsage({
-        userId,
-        projectId,
-        agentId: agent.id,
-        conversationId,
-        provider: 'openai',
-        model: agent.model,
-        promptTokens: completion.usage.prompt_tokens || 0,
-        completionTokens: completion.usage.completion_tokens || 0,
-        requestType: 'chat'
-      });
-    }
-
-    return {
-      content: choice.message.content,
-      metadata: {
-        model: agent.model,
-        tokens: completion.usage?.total_tokens,
-        prompt_tokens: completion.usage?.prompt_tokens,
-        completion_tokens: completion.usage?.completion_tokens,
-        files: projectFiles
+      const choice = completion.choices[0];
+      if (!choice.message.content) {
+        throw new Error('No response content from OpenAI');
       }
-    };
+
+      // Track token usage if user context is provided
+      if (userId && completion.usage) {
+        await TokenService.trackUsage({
+          userId,
+          projectId,
+          agentId: agent.id,
+          conversationId,
+          provider: 'openai',
+          model: agent.model,
+          promptTokens: completion.usage.prompt_tokens || 0,
+          completionTokens: completion.usage.completion_tokens || 0,
+          requestType: 'chat'
+        });
+      }
+
+      const pTokens = completion.usage?.prompt_tokens || 0;
+      const cTokens = completion.usage?.completion_tokens || 0;
+      const estimatedCost = TokenService.calculateCost('openai', agent.model, pTokens, cTokens);
+
+      return {
+        content: choice.message.content,
+        metadata: {
+          model: agent.model,
+          tokens: completion.usage?.total_tokens,
+          prompt_tokens: pTokens,
+          completion_tokens: cTokens,
+          estimated_cost: estimatedCost,
+          files: projectFiles
+        }
+      };
+    } catch (error: any) {
+      logger.error('OpenAI API error details:', {
+        error: error?.message, model: agent.model, status: error?.status
+      });
+      if (isAppError(error)) throw error;
+      throw this.classifyProviderError(error, 'openai', agent.model);
+    }
   }
 
   private async streamChatWithOpenAI(
@@ -294,14 +397,10 @@ class AIService {
     conversationId?: string
   ): Promise<StreamingChatResponse> {
     if (!this.openai) {
-      throw new Error('OpenAI API key not configured');
+      throw createAIApiKeyInvalidError('openai');
     }
 
-    // Build system message with agent prompt and file context
-    let systemContent = agent.system_prompt;
-    if (projectFiles && projectFiles.length > 0) {
-      systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
-    }
+    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to OpenAI format with multimodal support
     const openaiMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
@@ -354,18 +453,27 @@ class AIService {
       messages: openaiMessages,
       max_completion_tokens: agent.max_tokens,
       stream: true, // Enable streaming
+      stream_options: { include_usage: true }, // Request token usage in stream
     };
-    
+
     // Only include temperature if the model supports it
     if (!useDefaultTemp) {
       requestParams.temperature = agent.temperature;
     }
-    
-    const stream = await this.openai.chat.completions.create(requestParams);
 
-    return {
-      stream: this.processOpenAIStream(stream, agent, userId, projectId, conversationId, projectFiles)
-    };
+    try {
+      const stream = await this.openai.chat.completions.create(requestParams);
+
+      return {
+        stream: this.processOpenAIStream(stream, agent, userId, projectId, conversationId, projectFiles)
+      };
+    } catch (error: any) {
+      logger.error('OpenAI streaming API error details:', {
+        error: error?.message, model: agent.model, status: error?.status
+      });
+      if (isAppError(error)) throw error;
+      throw this.classifyProviderError(error, 'openai', agent.model);
+    }
   }
 
   private async *processOpenAIStream(
@@ -400,6 +508,18 @@ class AIService {
         }
       }
 
+      // Fallback: estimate tokens if stream didn't include usage data
+      if (totalTokens === 0 && fullContent.length > 0) {
+        completionTokens = TokenService.estimateTokens(fullContent);
+        // Estimate prompt tokens from messages (rough approximation)
+        promptTokens = 0;
+        totalTokens = promptTokens + completionTokens;
+        logger.warn('OpenAI stream did not include usage data, using estimated tokens', {
+          model: agent.model,
+          estimatedCompletionTokens: completionTokens
+        });
+      }
+
       // Track token usage if user context is provided
       if (userId && totalTokens > 0) {
         await TokenService.trackUsage({
@@ -416,6 +536,8 @@ class AIService {
         tokensTracked = true;
       }
 
+      const estimatedCost = TokenService.calculateCost('openai', agent.model, promptTokens, completionTokens);
+
       // Yield the final response (not return!) so the for-await-of loop can process it
       yield {
         content: fullContent,
@@ -424,6 +546,7 @@ class AIService {
           tokens: totalTokens,
           prompt_tokens: promptTokens,
           completion_tokens: completionTokens,
+          estimated_cost: estimatedCost,
           files: projectFiles
         }
       };
@@ -478,16 +601,12 @@ class AIService {
     logger.info(`Anthropic messages check: ${!!this.anthropic?.messages}`);
 
     if (!this.anthropic) {
-      throw new Error('Anthropic API key not configured');
+      throw createAIApiKeyInvalidError('anthropic');
     }
 
     const actualModel = agent.model;
 
-    // Build system message with agent prompt and file context
-    let systemContent = agent.system_prompt;
-    if (projectFiles && projectFiles.length > 0) {
-      systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
-    }
+    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to Anthropic format with multimodal support
     const anthropicMessages: Anthropic.Messages.MessageParam[] = messages.slice(0, -1).map(msg => ({
@@ -576,29 +695,27 @@ class AIService {
         });
       }
 
+      const pTokens = completion.usage?.input_tokens || 0;
+      const cTokens = completion.usage?.output_tokens || 0;
+      const estimatedCost = TokenService.calculateCost('anthropic', agent.model, pTokens, cTokens);
+
       return {
         content: content.text,
         metadata: {
           model: agent.model,
-          tokens: completion.usage ? completion.usage.input_tokens + completion.usage.output_tokens : 0,
-          prompt_tokens: completion.usage?.input_tokens,
-          completion_tokens: completion.usage?.output_tokens,
+          tokens: completion.usage ? pTokens + cTokens : 0,
+          prompt_tokens: pTokens,
+          completion_tokens: cTokens,
+          estimated_cost: estimatedCost,
           files: projectFiles
         }
       };
     } catch (error: any) {
-      logger.error('Anthropic API error details:', error);
-      
-      // Handle different error types
-      if (error?.response?.data?.error?.message) {
-        throw new Error(`Anthropic API error: ${error.response.data.error.message}`);
-      } else if (error?.message) {
-        throw new Error(`Anthropic API error: ${error.message}`);
-      } else if (typeof error === 'string') {
-        throw new Error(`Anthropic API error: ${error}`);
-      } else {
-        throw new Error('Unknown error occurred with Anthropic API');
-      }
+      logger.error('Anthropic API error details:', {
+        error: error?.message, model: agent.model, status: error?.status
+      });
+      if (isAppError(error)) throw error;
+      throw this.classifyProviderError(error, 'anthropic', agent.model);
     }
   }
 
@@ -615,16 +732,12 @@ class AIService {
     logger.info(`Anthropic messages check: ${!!this.anthropic?.messages}`);
 
     if (!this.anthropic) {
-      throw new Error('Anthropic API key not configured');
+      throw createAIApiKeyInvalidError('anthropic');
     }
 
     const actualModel = agent.model;
 
-    // Build system message with agent prompt and file context
-    let systemContent = agent.system_prompt;
-    if (projectFiles && projectFiles.length > 0) {
-      systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
-    }
+    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to Anthropic format with multimodal support
     const anthropicMessages: Anthropic.Messages.MessageParam[] = messages.slice(0, -1).map(msg => ({
@@ -697,18 +810,11 @@ class AIService {
         stream: this.processAnthropicStream(stream, agent, userId, projectId, conversationId, projectFiles)
       };
     } catch (error: any) {
-      logger.error('Anthropic streaming API error details:', error);
-
-      // Handle different error types
-      if (error?.response?.data?.error?.message) {
-        throw new Error(`Anthropic API error: ${error.response.data.error.message}`);
-      } else if (error?.message) {
-        throw new Error(`Anthropic API error: ${error.message}`);
-      } else if (typeof error === 'string') {
-        throw new Error(`Anthropic API error: ${error}`);
-      } else {
-        throw new Error('Unknown error occurred with Anthropic API');
-      }
+      logger.error('Anthropic streaming API error details:', {
+        error: error?.message, model: agent.model, status: error?.status
+      });
+      if (isAppError(error)) throw error;
+      throw this.classifyProviderError(error, 'anthropic', agent.model);
     }
   }
 
@@ -762,6 +868,8 @@ class AIService {
         tokensTracked = true;
       }
 
+      const estimatedCost = TokenService.calculateCost('anthropic', agent.model, totalInputTokens, totalOutputTokens);
+
       // Yield the final response (not return!) so the for-await-of loop can process it
       yield {
         content: fullContent,
@@ -770,6 +878,7 @@ class AIService {
           tokens: totalTokens,
           prompt_tokens: totalInputTokens,
           completion_tokens: totalOutputTokens,
+          estimated_cost: estimatedCost,
           files: projectFiles
         }
       };
@@ -821,17 +930,13 @@ class AIService {
     conversationId?: string
   ): Promise<ChatResponse> {
     if (!this.openrouter) {
-      throw new Error('OpenRouter API key not configured');
+      throw createAIApiKeyInvalidError('openrouter');
     }
 
     // Validate model format
     this.validateOpenRouterModel(agent.model);
 
-    // Build system message with agent prompt and file context
-    let systemContent = agent.system_prompt;
-    if (projectFiles && projectFiles.length > 0) {
-      systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
-    }
+    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to OpenAI format (OpenRouter is OpenAI-compatible)
     const openrouterMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
@@ -922,6 +1027,8 @@ class AIService {
         totalTokens
       });
 
+      const estimatedCost = TokenService.calculateCost('openrouter', agent.model, promptTokens, completionTokens);
+
       return {
         content: choice.message.content,
         metadata: {
@@ -929,23 +1036,16 @@ class AIService {
           tokens: totalTokens,
           prompt_tokens: promptTokens,
           completion_tokens: completionTokens,
+          estimated_cost: estimatedCost,
           files: projectFiles
         }
       };
     } catch (error: any) {
       logger.error('OpenRouter API error details:', {
-        error: error.message,
-        model: agent.model,
-        status: error.status,
-        code: error.code
+        error: error?.message, model: agent.model, status: error?.status
       });
-
-      if (error?.error?.message) {
-        throw new Error(`OpenRouter API error: ${error.error.message}`);
-      } else if (error?.message) {
-        throw new Error(`OpenRouter API error: ${error.message}`);
-      }
-      throw new Error('Unknown error occurred with OpenRouter API');
+      if (isAppError(error)) throw error;
+      throw this.classifyProviderError(error, 'openrouter', agent.model);
     }
   }
 
@@ -959,17 +1059,13 @@ class AIService {
     conversationId?: string
   ): Promise<StreamingChatResponse> {
     if (!this.openrouter) {
-      throw new Error('OpenRouter API key not configured');
+      throw createAIApiKeyInvalidError('openrouter');
     }
 
     // Validate model format
     this.validateOpenRouterModel(agent.model);
 
-    // Build system message with agent prompt and file context
-    let systemContent = agent.system_prompt;
-    if (projectFiles && projectFiles.length > 0) {
-      systemContent += '\n\nProject Files:\n' + projectFiles.join('\n\n');
-    }
+    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to OpenAI format (OpenRouter is OpenAI-compatible)
     const openrouterMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
@@ -1019,6 +1115,7 @@ class AIService {
       messages: openrouterMessages,
       max_tokens: agent.max_tokens,
       stream: true,
+      stream_options: { include_usage: true }, // Request token usage in stream
     };
 
     // Only include temperature if the model supports it
@@ -1034,18 +1131,10 @@ class AIService {
       };
     } catch (error: any) {
       logger.error('OpenRouter streaming API error details:', {
-        error: error.message,
-        model: agent.model,
-        status: error.status,
-        code: error.code
+        error: error?.message, model: agent.model, status: error?.status
       });
-
-      if (error?.error?.message) {
-        throw new Error(`OpenRouter API error: ${error.error.message}`);
-      } else if (error?.message) {
-        throw new Error(`OpenRouter API error: ${error.message}`);
-      }
-      throw new Error('Unknown error occurred with OpenRouter API');
+      if (isAppError(error)) throw error;
+      throw this.classifyProviderError(error, 'openrouter', agent.model);
     }
   }
 
@@ -1081,6 +1170,17 @@ class AIService {
         }
       }
 
+      // Fallback: estimate tokens if stream didn't include usage data
+      if (totalTokens === 0 && fullContent.length > 0) {
+        completionTokens = TokenService.estimateTokens(fullContent);
+        promptTokens = 0;
+        totalTokens = promptTokens + completionTokens;
+        logger.warn('OpenRouter stream did not include usage data, using estimated tokens', {
+          model: agent.model,
+          estimatedCompletionTokens: completionTokens
+        });
+      }
+
       // Track token usage if user context is provided
       if (userId && totalTokens > 0) {
         await TokenService.trackUsage({
@@ -1096,6 +1196,8 @@ class AIService {
         });
         tokensTracked = true;
       }
+
+      const estimatedCost = TokenService.calculateCost('openrouter', agent.model, promptTokens, completionTokens);
 
       logger.info('OpenRouter streaming chat completed', {
         provider: 'openrouter',
@@ -1114,6 +1216,7 @@ class AIService {
           tokens: totalTokens,
           prompt_tokens: promptTokens,
           completion_tokens: completionTokens,
+          estimated_cost: estimatedCost,
           files: projectFiles
         }
       };

@@ -30,15 +30,21 @@ export interface TokenUsageStats {
 export interface TokenUsageSummary {
   total_tokens: number;
   total_cost: number;
+  prompt_tokens: number;
+  completion_tokens: number;
   by_provider: {
     [provider: string]: {
       tokens: number;
       cost: number;
+      prompt_tokens: number;
+      completion_tokens: number;
       models: {
         [model: string]: {
           tokens: number;
           cost: number;
           requests: number;
+          prompt_tokens: number;
+          completion_tokens: number;
         };
       };
     };
@@ -146,11 +152,13 @@ export class TokenUsageModel {
     endDate?: Date
   ): Promise<TokenUsageSummary> {
     let query = `
-      SELECT 
+      SELECT
         provider,
         model,
         COUNT(*) as request_count,
         SUM(total_tokens) as total_tokens,
+        SUM(prompt_tokens) as total_prompt_tokens,
+        SUM(completion_tokens) as total_completion_tokens,
         SUM(estimated_cost) as total_cost
       FROM token_usage
       WHERE user_id = $1
@@ -178,35 +186,79 @@ export class TokenUsageModel {
     const summary: TokenUsageSummary = {
       total_tokens: 0,
       total_cost: 0,
+      prompt_tokens: 0,
+      completion_tokens: 0,
       by_provider: {}
     };
 
     for (const row of result.rows) {
       const tokens = parseInt(row.total_tokens);
       const cost = parseFloat(row.total_cost);
+      const pTokens = parseInt(row.total_prompt_tokens) || 0;
+      const cTokens = parseInt(row.total_completion_tokens) || 0;
 
       summary.total_tokens += tokens;
       summary.total_cost += cost;
+      summary.prompt_tokens += pTokens;
+      summary.completion_tokens += cTokens;
 
       if (!summary.by_provider[row.provider]) {
         summary.by_provider[row.provider] = {
           tokens: 0,
           cost: 0,
+          prompt_tokens: 0,
+          completion_tokens: 0,
           models: {}
         };
       }
 
       summary.by_provider[row.provider].tokens += tokens;
       summary.by_provider[row.provider].cost += cost;
+      summary.by_provider[row.provider].prompt_tokens += pTokens;
+      summary.by_provider[row.provider].completion_tokens += cTokens;
 
       summary.by_provider[row.provider].models[row.model] = {
         tokens,
         cost,
-        requests: parseInt(row.request_count)
+        requests: parseInt(row.request_count),
+        prompt_tokens: pTokens,
+        completion_tokens: cTokens
       };
     }
 
     return summary;
+  }
+
+  static async getThreadStats(
+    threadId: string,
+    userId: string
+  ): Promise<{
+    total_tokens: number;
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_cost: number;
+    request_count: number;
+  }> {
+    const query = `
+      SELECT
+        COALESCE(SUM(prompt_tokens), 0)::int as prompt_tokens,
+        COALESCE(SUM(completion_tokens), 0)::int as completion_tokens,
+        COALESCE(SUM(total_tokens), 0)::int as total_tokens,
+        COALESCE(SUM(estimated_cost), 0)::numeric as total_cost,
+        COUNT(*)::int as request_count
+      FROM token_usage
+      WHERE conversation_id = $1 AND user_id = $2
+    `;
+
+    const result = await pool.query(query, [threadId, userId]);
+    const row = result.rows[0];
+    return {
+      total_tokens: parseInt(row.total_tokens) || 0,
+      prompt_tokens: parseInt(row.prompt_tokens) || 0,
+      completion_tokens: parseInt(row.completion_tokens) || 0,
+      total_cost: parseFloat(row.total_cost) || 0,
+      request_count: parseInt(row.request_count) || 0,
+    };
   }
 
   static async getAgentStats(

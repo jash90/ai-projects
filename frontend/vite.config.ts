@@ -23,10 +23,14 @@ export default defineConfig(({ mode }) => ({
     alias: {
       '@': resolve(__dirname, './src'),
     },
+    dedupe: ['react', 'react-dom'],
   },
   server: {
     port: 3000,
     host: true,
+    hmr: {
+      port: 3010,
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:3001',
