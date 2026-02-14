@@ -130,7 +130,7 @@ export function PageHeader({
                   )}
                 >
                   <tab.icon className="h-4 w-4 mr-1.5 sm:mr-2" />
-                  <span className="hidden xs:inline sm:inline">{tab.label}</span>
+                  <span>{tab.label}</span>
                 </button>
               ))}
             </div>

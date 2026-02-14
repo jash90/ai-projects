@@ -4,7 +4,7 @@ import crypto from 'crypto';
 
 // Pricing per 1K tokens (in USD)
 // Prices as of 2024 - should be updated regularly or fetched from a config
-const MODEL_PRICING = {
+const MODEL_PRICING: Record<string, Record<string, { prompt: number; completion: number }>> = {
   openai: {
     // GPT-4 models
     'gpt-4': { prompt: 0.03, completion: 0.06 },
@@ -13,10 +13,13 @@ const MODEL_PRICING = {
     'gpt-4-turbo-preview': { prompt: 0.01, completion: 0.03 },
     'gpt-4-vision-preview': { prompt: 0.01, completion: 0.03 },
 
-    // Custom models (using GPT-4 pricing as estimate)
+    // GPT-4o models
+    'gpt-4o': { prompt: 0.005, completion: 0.015 },
+    'gpt-4o-mini': { prompt: 0.00015, completion: 0.0006 },
+
+    // Custom / newer models
     'gpt-5': { prompt: 0.04, completion: 0.08 },
     'gpt-5-high': { prompt: 0.05, completion: 0.10 },
-    'gpt-4o': { prompt: 0.005, completion: 0.015 },
     'o3': { prompt: 0.02, completion: 0.04 },
     'o1': { prompt: 0.015, completion: 0.03 },
     'o4-mini': { prompt: 0.0015, completion: 0.002 },
@@ -29,13 +32,22 @@ const MODEL_PRICING = {
     'default': { prompt: 0.01, completion: 0.03 }
   },
   anthropic: {
-    // Custom models (as requested by user)
+    // Claude 4.x models
     'claude-opus-4-1-20250805': { prompt: 0.020, completion: 0.080 },
     'claude-opus-4-20250514': { prompt: 0.018, completion: 0.075 },
     'claude-sonnet-4-20250514': { prompt: 0.008, completion: 0.025 },
+    'claude-sonnet-4-5-20250514': { prompt: 0.003, completion: 0.015 },
+
+    // Claude 3.7
     'claude-3-7-sonnet-latest': { prompt: 0.005, completion: 0.020 },
 
-    // Real Claude 3 models (for fallback)
+    // Claude 3.5 models
+    'claude-3-5-sonnet-20241022': { prompt: 0.003, completion: 0.015 },
+    'claude-3-5-sonnet-latest': { prompt: 0.003, completion: 0.015 },
+    'claude-3-5-haiku-20241022': { prompt: 0.0008, completion: 0.004 },
+    'claude-3-5-haiku-latest': { prompt: 0.0008, completion: 0.004 },
+
+    // Claude 3 models
     'claude-3-opus-20240229': { prompt: 0.015, completion: 0.075 },
     'claude-3-sonnet-20240229': { prompt: 0.003, completion: 0.015 },
     'claude-3-haiku-20240307': { prompt: 0.00025, completion: 0.00125 },
@@ -110,7 +122,8 @@ export class TokenService {
   }
 
   /**
-   * Calculate the cost of tokens for a specific model
+   * Calculate the cost of tokens for a specific model.
+   * Uses MODEL_PRICING map first, falls back to provider default.
    */
   static calculateCost(
     provider: 'openai' | 'anthropic' | 'openrouter',
@@ -118,14 +131,48 @@ export class TokenService {
     promptTokens: number,
     completionTokens: number
   ): number {
-    const providerPricing = MODEL_PRICING[provider];
-    const modelPricing = providerPricing[model] || providerPricing.default;
+    const providerPricing = MODEL_PRICING[provider] || MODEL_PRICING.openai;
+    const modelPricing = providerPricing[model] || providerPricing['default'];
 
     // Calculate cost (pricing is per 1K tokens)
     const promptCost = (promptTokens / 1000) * modelPricing.prompt;
     const completionCost = (completionTokens / 1000) * modelPricing.completion;
 
     return promptCost + completionCost;
+  }
+
+  /**
+   * Calculate cost with DB fallback for models not in MODEL_PRICING.
+   * Tries the static map first, then queries ai_models table.
+   */
+  static async calculateCostWithDbFallback(
+    provider: 'openai' | 'anthropic' | 'openrouter',
+    model: string,
+    promptTokens: number,
+    completionTokens: number
+  ): Promise<number> {
+    const providerPricing = MODEL_PRICING[provider] || MODEL_PRICING.openai;
+
+    // If model is explicitly in the pricing map, use it
+    if (providerPricing[model]) {
+      return this.calculateCost(provider, model, promptTokens, completionTokens);
+    }
+
+    // Try DB fallback
+    try {
+      const { modelService } = await import('./modelService');
+      const modelData = await modelService.getModelById(model);
+      if (modelData && (modelData.cost_per_1k_input_tokens > 0 || modelData.cost_per_1k_output_tokens > 0)) {
+        const promptCost = (promptTokens / 1000) * modelData.cost_per_1k_input_tokens;
+        const completionCost = (completionTokens / 1000) * modelData.cost_per_1k_output_tokens;
+        return promptCost + completionCost;
+      }
+    } catch {
+      // DB lookup failed, use default pricing
+    }
+
+    // Fall back to default pricing
+    return this.calculateCost(provider, model, promptTokens, completionTokens);
   }
 
   /**

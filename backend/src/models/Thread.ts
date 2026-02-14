@@ -10,6 +10,8 @@ export interface Thread {
   last_message?: string;
   last_agent_id?: string;
   last_agent_name?: string;
+  total_tokens?: number;
+  total_cost?: number;
 }
 
 export interface ThreadMessage {
@@ -73,7 +75,9 @@ export class ThreadModel {
   static async findById(threadId: string, userId: string): Promise<Thread | null> {
     const query = `
       SELECT t.id, t.project_id, t.title, t.created_at, t.updated_at,
-             (SELECT COUNT(*)::int FROM thread_messages WHERE thread_id = t.id) as message_count
+             (SELECT COUNT(*)::int FROM thread_messages WHERE thread_id = t.id) as message_count,
+             (SELECT COALESCE(SUM(total_tokens), 0)::int FROM token_usage WHERE conversation_id = t.id) as total_tokens,
+             (SELECT COALESCE(SUM(estimated_cost), 0)::numeric FROM token_usage WHERE conversation_id = t.id) as total_cost
       FROM threads t
       JOIN projects p ON t.project_id = p.id
       WHERE t.id = $1 AND p.user_id = $2
@@ -124,7 +128,9 @@ export class ThreadModel {
           WHERE tm.thread_id = t.id AND tm.role = 'assistant'
           ORDER BY tm.created_at DESC
           LIMIT 1
-        ) as last_agent_name
+        ) as last_agent_name,
+        (SELECT COALESCE(SUM(total_tokens), 0)::int FROM token_usage WHERE conversation_id = t.id) as total_tokens,
+        (SELECT COALESCE(SUM(estimated_cost), 0)::numeric FROM token_usage WHERE conversation_id = t.id) as total_cost
       FROM threads t
       WHERE t.project_id = $1
       ORDER BY t.updated_at DESC

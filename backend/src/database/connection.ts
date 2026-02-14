@@ -234,8 +234,9 @@ async function runMigrations(): Promise<void> {
     }
 
     // Create user_management_view for admin panel
+    await client.query(`DROP VIEW IF EXISTS user_management_view`);
     await client.query(`
-      CREATE OR REPLACE VIEW user_management_view AS
+      CREATE VIEW user_management_view AS
       SELECT
         u.id,
         u.email,
@@ -265,6 +266,13 @@ async function runMigrations(): Promise<void> {
         FROM token_usage
         GROUP BY user_id
       ) tu ON u.id = tu.user_id
+    `);
+
+    // Ensure default agent descriptions are in English
+    await client.query(`
+      UPDATE agents SET description = 'A versatile AI assistant that can help with a wide range of tasks including writing, analysis, problem-solving, and general conversation.' WHERE name = 'General Assistant';
+      UPDATE agents SET description = 'A specialized AI assistant focused on programming, software development, debugging, and technical problem-solving.' WHERE name = 'Code Expert';
+      UPDATE agents SET description = 'An AI assistant specialized in creative writing, storytelling, content creation, and literary analysis.' WHERE name = 'Creative Writer';
     `);
 
     await client.query('COMMIT');

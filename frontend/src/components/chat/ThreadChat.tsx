@@ -4,6 +4,7 @@ import { ChatHeader } from './ChatHeader'
 import { ChatInput } from './ChatInput'
 import { TokenLimitBanner } from './TokenLimitBanner'
 import { ThreadList } from './ThreadList'
+import { Drawer } from '@/components/ui/Drawer'
 import { MessageIcon } from '@/components/icons'
 import { threadStore, useActiveThread, useThreadMessages, useThreadSending, useMessagesLoading } from '@/stores/threadStore'
 import { useTokenLimits } from '@/hooks/useTokenLimits'
@@ -12,11 +13,16 @@ import toast from 'react-hot-toast'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
+function formatTokenCount(tokens: number): string {
+  if (tokens >= 1_000_000) return `${(tokens / 1_000_000).toFixed(1)}M`
+  if (tokens >= 1_000) return `${(tokens / 1_000).toFixed(1)}K`
+  return tokens.toString()
+}
+
 interface ThreadChatProps {
   project: Project
   agent: Agent
   className?: string
-  onToggleSidebar?: () => void
 }
 
 function ThreadChatMessage({ message, agent }: { message: ThreadMessage; agent?: Agent }) {
@@ -24,8 +30,8 @@ function ThreadChatMessage({ message, agent }: { message: ThreadMessage; agent?:
 
   return (
     <div className={cn(
-      'flex gap-3 p-4',
-      isUser ? 'bg-background' : 'bg-muted/30'
+      'flex gap-3 px-3 py-2.5',
+      'bg-background'
     )}>
       {/* Avatar */}
       <div className={cn(
@@ -72,15 +78,31 @@ function ThreadChatMessage({ message, agent }: { message: ThreadMessage; agent?:
 
         {/* Metadata */}
         {message.metadata && Object.keys(message.metadata).length > 0 && !isUser && (
-          <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
+          <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground flex-wrap">
             {message.metadata.model && (
               <span className="bg-muted px-1.5 py-0.5 rounded">{message.metadata.model}</span>
             )}
-            {message.metadata.prompt_tokens && (
-              <span>{message.metadata.prompt_tokens} prompt tokens</span>
+            {(message.metadata.prompt_tokens != null || message.metadata.completion_tokens != null) ? (
+              <span className="flex items-center gap-1">
+                {message.metadata.prompt_tokens != null && (
+                  <span title="Input tokens">{formatTokenCount(message.metadata.prompt_tokens)} in</span>
+                )}
+                {message.metadata.prompt_tokens != null && message.metadata.completion_tokens != null && (
+                  <span>/</span>
+                )}
+                {message.metadata.completion_tokens != null && (
+                  <span title="Output tokens">{formatTokenCount(message.metadata.completion_tokens)} out</span>
+                )}
+              </span>
+            ) : message.metadata.tokens != null && message.metadata.tokens > 0 && (
+              <span>{formatTokenCount(message.metadata.tokens)} tokens</span>
             )}
-            {message.metadata.completion_tokens && (
-              <span>{message.metadata.completion_tokens} completion tokens</span>
+            {message.metadata.estimated_cost != null && Number(message.metadata.estimated_cost) > 0 && (
+              <span className="bg-muted px-1.5 py-0.5 rounded" title="Estimated cost">
+                ${Number(message.metadata.estimated_cost) < 0.01
+                  ? Number(message.metadata.estimated_cost).toFixed(4)
+                  : Number(message.metadata.estimated_cost).toFixed(2)}
+              </span>
             )}
           </div>
         )}
@@ -89,10 +111,10 @@ function ThreadChatMessage({ message, agent }: { message: ThreadMessage; agent?:
   )
 }
 
-export function ThreadChat({ project, agent, className, onToggleSidebar }: ThreadChatProps) {
+export function ThreadChat({ project, agent, className }: ThreadChatProps) {
   const [includeFiles, setIncludeFiles] = useState(true)
   const [streaming, setStreaming] = useState(true)
-  const [showThreadList, setShowThreadList] = useState(true)
+  const [showThreadList, setShowThreadList] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const activeThread = useActiveThread(project.id)
@@ -210,15 +232,13 @@ export function ThreadChat({ project, agent, className, onToggleSidebar }: Threa
 
   return (
     <div className={cn('flex h-full bg-background', className)}>
-      {/* Thread List Sidebar */}
-      {showThreadList && (
-        <div className="w-64 border-r border-border flex-shrink-0">
-          <ThreadList
-            projectId={project.id}
-            onThreadSelect={() => {}}
-          />
-        </div>
-      )}
+      {/* Thread List Drawer */}
+      <Drawer open={showThreadList} onClose={() => setShowThreadList(false)}>
+        <ThreadList
+          projectId={project.id}
+          onThreadSelect={() => setShowThreadList(false)}
+        />
+      </Drawer>
 
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col min-w-0">
@@ -231,7 +251,6 @@ export function ThreadChat({ project, agent, className, onToggleSidebar }: Threa
           streaming={streaming}
           onToggleStreaming={setStreaming}
           onClearConversation={handleClearConversation}
-          onToggleSidebar={onToggleSidebar}
           extraActions={
             <button
               onClick={() => setShowThreadList(!showThreadList)}

@@ -10,7 +10,6 @@ import { authApi } from '@/lib/api'
 import { useAuth } from '@/stores/authStore'
 import { parseError } from '@/lib/utils'
 import { Button } from '@/components/ui/Button'
-import { GoogleIcon, GitHubIcon } from '@/components/icons'
 import toast from 'react-hot-toast'
 
 const useLoginSchema = () => {
@@ -176,38 +175,6 @@ const LoginPage: React.FC = () => {
           {loginMutation.isPending ? t('login.submitting') : t('login.submit')}
         </Button>
       </form>
-
-      {/* Divider */}
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-border" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-card px-2 text-muted-foreground">{t('login.divider')}</span>
-        </div>
-      </div>
-
-      {/* Social Login Buttons (styled placeholders) */}
-      <div className="grid grid-cols-2 gap-3">
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full"
-          onClick={() => toast.error(t('login.socialNotConfigured'))}
-        >
-          <GoogleIcon size={16} className="mr-2" />
-          {t('login.google')}
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full"
-          onClick={() => toast.error(t('login.socialNotConfigured'))}
-        >
-          <GitHubIcon size={16} className="mr-2" />
-          {t('login.github')}
-        </Button>
-      </div>
 
       {/* Sign Up Link */}
       <div className="text-center text-sm">

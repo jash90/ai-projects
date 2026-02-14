@@ -70,6 +70,19 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
     return text.substring(0, maxLength) + '...'
   }
 
+  const formatCost = (cost: number | string) => {
+    const num = Number(cost)
+    if (num >= 1) return `$${num.toFixed(2)}`
+    if (num >= 0.01) return `$${num.toFixed(3)}`
+    return `$${num.toFixed(4)}`
+  }
+
+  const formatTokens = (tokens: number) => {
+    if (tokens >= 1000000) return `${(tokens / 1000000).toFixed(1)}M`
+    if (tokens >= 1000) return `${(tokens / 1000).toFixed(1)}K`
+    return `${tokens}`
+  }
+
   return (
     <div className={cn('flex flex-col h-full', className)}>
       {/* Header */}
@@ -127,6 +140,15 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
                           {thread.last_agent_name}
                         </span>
                       )}
+                      {thread.total_cost != null && thread.total_cost > 0 ? (
+                        <span className="text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                          {formatCost(thread.total_cost)}
+                        </span>
+                      ) : thread.total_tokens != null && thread.total_tokens > 0 ? (
+                        <span className="text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                          {formatTokens(thread.total_tokens)} tokens
+                        </span>
+                      ) : null}
                       <span className="text-xs text-muted-foreground">
                         {formatTime(thread.updated_at)}
                       </span>

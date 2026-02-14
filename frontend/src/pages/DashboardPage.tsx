@@ -20,6 +20,7 @@ import { formatDate, formatRelativeTime } from '@/lib/utils'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import { NewProjectDialog } from '@/components/projects/NewProjectDialog'
 import { PageHeader } from '@/components/ui/PageHeader'
+import { MobileNavigation } from '@/components/ui/MobileNavigation'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle, StatCard } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
@@ -50,12 +51,12 @@ const DashboardPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pt-14 pb-20 lg:pt-0 lg:pb-0">
       {/* Header */}
       <PageHeader
         title={t('header.welcome', { username: user?.username })}
         subtitle={t('header.subtitle')}
-        variant="gradient"
+        variant="minimal"
         actions={
           <Button
             onClick={() => setShowNewProjectDialog(true)}
@@ -69,13 +70,12 @@ const DashboardPage: React.FC = () => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in">
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
           <StatCard
             title={t('stats.totalProjects')}
             value={projectsData?.data?.total || 0}
             icon={<FolderOpen className="w-6 h-6" />}
             variant="primary"
-            trend={projects.length > 0 ? { value: 12, isPositive: true } : undefined}
           />
 
           <StatCard
@@ -166,8 +166,7 @@ const DashboardPage: React.FC = () => {
                       <Link
                         key={project.id}
                         to={`/projects/${project.id}`}
-                        className="block p-4 rounded-xl border border-border bg-background hover:bg-muted/50 hover:border-primary/20 transition-all duration-200 group animate-fade-in"
-                        style={{ animationDelay: `${index * 50}ms` }}
+                        className="block p-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors group"
                       >
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1 min-w-0">
@@ -200,7 +199,7 @@ const DashboardPage: React.FC = () => {
                               </span>
                             </div>
                           </div>
-                          <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all opacity-0 group-hover:opacity-100" />
+                          <ArrowRight className="w-4 h-4 text-muted-foreground/50" />
                         </div>
                       </Link>
                     ))}
@@ -242,12 +241,11 @@ const DashboardPage: React.FC = () => {
                   </div>
                 ) : projects.length > 0 ? (
                   <div className="space-y-2">
-                    {projects.slice(0, 6).map((project, index) => (
+                    {projects.slice(0, 6).map((project) => (
                       <Link
                         key={project.id}
                         to={`/projects/${project.id}`}
-                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors group animate-fade-in"
-                        style={{ animationDelay: `${index * 30}ms` }}
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors group"
                       >
                         <div className="w-9 h-9 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                           <FolderOpen className="w-4 h-4 text-primary" />
@@ -284,25 +282,12 @@ const DashboardPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            {/* Quick Tips Card */}
-            <Card variant="bordered" className="mt-6">
-              <CardContent className="p-4">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-info/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Sparkles className="w-4 h-4 text-info" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-sm text-foreground">{t('quickTip.title')}</p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {t('quickTip.content')}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </main>
+
+      {/* Mobile Navigation */}
+      <MobileNavigation onNewProject={() => setShowNewProjectDialog(true)} />
 
       {/* New Project Dialog */}
       <NewProjectDialog

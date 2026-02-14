@@ -761,6 +761,16 @@ export const threadsApi = {
   // Delete a message
   deleteMessage: (threadId: string, messageId: string) =>
     apiClient.delete<ApiResponse>(`/threads/${threadId}/messages/${messageId}`),
+
+  // Get token usage stats for a thread
+  getThreadStats: (threadId: string) =>
+    apiClient.get<ApiResponse<{
+      total_tokens: number;
+      prompt_tokens: number;
+      completion_tokens: number;
+      total_cost: number;
+      request_count: number;
+    }>>(`/threads/${threadId}/stats`),
 };
 
 // Settings API

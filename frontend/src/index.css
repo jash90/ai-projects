@@ -14,16 +14,10 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    overflow-x: hidden;
   }
 
-  /* Improve touch targets on mobile */
-  button,
-  [role="button"],
-  input[type="submit"],
-  input[type="button"] {
-    min-height: 44px;
-    min-width: 44px;
-  }
+  /* Touch targets are handled by .touch-target class where needed */
 
   /* Better scroll behavior */
   html {

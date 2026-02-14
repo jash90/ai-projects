@@ -138,6 +138,42 @@ export class AIServiceError extends AppError {
   }
 }
 
+export class AIModelUnavailableError extends AppError {
+  constructor(provider: string, model: string, originalError: string) {
+    super({
+      code: ErrorCode.AI_MODEL_UNAVAILABLE,
+      message: `Model unavailable (${provider}/${model}): ${originalError}`,
+      userMessage: `Model "${model}" is not available for provider ${provider}. Please select a different agent or model.`,
+      statusCode: 400,
+      metadata: { provider, model, originalError }
+    });
+  }
+}
+
+export class AIContentFilteredError extends AppError {
+  constructor(provider: string) {
+    super({
+      code: ErrorCode.AI_CONTENT_FILTERED,
+      message: `Content filtered by ${provider}`,
+      userMessage: 'Your message was blocked by the AI content policy. Please rephrase your message.',
+      statusCode: 400,
+      metadata: { provider }
+    });
+  }
+}
+
+export class AIApiKeyInvalidError extends AppError {
+  constructor(provider: string) {
+    super({
+      code: ErrorCode.AI_API_KEY_INVALID,
+      message: `Invalid API key for ${provider}`,
+      userMessage: `AI service configuration error for ${provider}. Please contact the administrator.`,
+      statusCode: 503,
+      metadata: { provider }
+    });
+  }
+}
+
 export class ResourceNotFoundError extends AppError {
   constructor(resource: string, id: string) {
     const resourceType = resource.toLowerCase();
@@ -187,6 +223,18 @@ export const createResourceNotFoundError = (resource: string, id: string): Resou
 
 export const createAIServiceError = (provider: string, originalError: string): AIServiceError => {
   return new AIServiceError(provider, originalError);
+};
+
+export const createAIModelUnavailableError = (provider: string, model: string, originalError: string): AIModelUnavailableError => {
+  return new AIModelUnavailableError(provider, model, originalError);
+};
+
+export const createAIContentFilteredError = (provider: string): AIContentFilteredError => {
+  return new AIContentFilteredError(provider);
+};
+
+export const createAIApiKeyInvalidError = (provider: string): AIApiKeyInvalidError => {
+  return new AIApiKeyInvalidError(provider);
 };
 
 export const createRateLimitError = (resetTime: Date): RateLimitExceededError => {
