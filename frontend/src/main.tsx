@@ -4,16 +4,37 @@ import { initializeSentry } from './analytics/sentry'
 // Initialize Sentry before anything else
 initializeSentry()
 
+import { captureException } from './analytics/sentry'
+
+window.addEventListener('error', (event) => {
+  captureException(event.error ?? event.message, {
+    mechanism: 'global_error_handler',
+    filename: event.filename,
+    lineno: event.lineno,
+    colno: event.colno,
+  })
+})
+
+window.addEventListener('unhandledrejection', (event) => {
+  captureException(event.reason ?? 'Unhandled promise rejection', {
+    mechanism: 'unhandled_rejection',
+  })
+})
+
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { I18nextProvider } from 'react-i18next'
+import { HelmetProvider } from 'react-helmet-async'
 import { PostHogProvider } from 'posthog-js/react'
 import { Toaster } from 'react-hot-toast'
 import App from './App.tsx'
+import CookieConsent from './components/CookieConsent.tsx'
+import { isAnalyticsAllowed } from './utils/consent'
 import './index.css'
 
 // Initialize i18n
-import './lib/i18n'
+import i18n from './lib/i18n'
 
 // Initialize PWA
 import './utils/pwa'
@@ -39,15 +60,18 @@ const posthogKey = import.meta.env.VITE_POSTHOG_KEY
 // Session recording controlled by env var (default: disabled)
 const enableSessionRecording = import.meta.env.VITE_POSTHOG_ENABLE_SESSION_RECORDING === 'true'
 
+// GDPR/RODO: opt out by default until user explicitly consents
+const hasAnalyticsConsent = isAnalyticsAllowed()
+
 const posthogOptions = {
   api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com',
-  defaults: '2025-11-30' as const,
   // Privacy-respecting configuration
-  // NOTE: Tracking should only be enabled after explicit user consent (GDPR/RODO)
+  // Tracking is gated on explicit user consent (GDPR/RODO)
+  opt_out_capturing_by_default: !hasAnalyticsConsent,
   autocapture: false, // Disabled - use manual event tracking instead
-  capture_pageview: true,
+  capture_pageview: false, // Handled manually in App.tsx for SPA route changes
   capture_pageleave: true,
-  disable_session_recording: !enableSessionRecording, // Controlled via VITE_POSTHOG_ENABLE_SESSION_RECORDING
+  disable_session_recording: !enableSessionRecording || !hasAnalyticsConsent,
   session_recording: {
     maskAllInputs: true,
     maskInputOptions: {
@@ -63,39 +87,71 @@ const posthogOptions = {
   persistence: 'localStorage' as const, // Avoid cookies where possible
 }
 
-// Initialize Web Vitals tracking before render so PerformanceObserver
-// is registered in time to capture FCP/LCP from the first paint
-initWebVitals()
+// Defer Web Vitals tracking to avoid blocking first paint.
+// PerformanceObserver will still capture buffered FCP/LCP entries.
+if (typeof requestIdleCallback === 'function') {
+  requestIdleCallback(() => initWebVitals())
+} else {
+  setTimeout(() => initWebVitals(), 0)
+}
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <PostHogProvider apiKey={posthogKey || ''} options={posthogOptions}>
+const toasterElement = (
+  <Toaster
+    position="top-right"
+    toastOptions={{
+      duration: 4000,
+      style: {
+        background: 'hsl(var(--card))',
+        color: 'hsl(var(--card-foreground))',
+        border: '1px solid hsl(var(--border))',
+      },
+      success: {
+        iconTheme: {
+          primary: 'hsl(var(--primary))',
+          secondary: 'hsl(var(--primary-foreground))',
+        },
+      },
+      error: {
+        iconTheme: {
+          primary: 'hsl(var(--destructive))',
+          secondary: 'hsl(var(--destructive-foreground))',
+        },
+      },
+    }}
+  />
+)
+
+const appContent = (
+  <HelmetProvider>
+    <I18nextProvider i18n={i18n}>
       <QueryClientProvider client={queryClient}>
         <App />
-        <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: 'hsl(var(--card))',
-            color: 'hsl(var(--card-foreground))',
-            border: '1px solid hsl(var(--border))',
-          },
-          success: {
-            iconTheme: {
-              primary: 'hsl(var(--primary))',
-              secondary: 'hsl(var(--primary-foreground))',
-            },
-          },
-          error: {
-            iconTheme: {
-              primary: 'hsl(var(--destructive))',
-              secondary: 'hsl(var(--destructive-foreground))',
-            },
-          },
-        }}
-      />
+        <CookieConsent />
+        {toasterElement}
       </QueryClientProvider>
-    </PostHogProvider>
-  </React.StrictMode>,
+    </I18nextProvider>
+  </HelmetProvider>
 )
+
+const root = ReactDOM.createRoot(document.getElementById('root')!)
+
+function renderApp() {
+  root.render(
+    <React.StrictMode>
+      {posthogKey && import.meta.env.VITE_POSTHOG_ENABLED !== 'false' ? (
+        <PostHogProvider apiKey={posthogKey} options={posthogOptions}>
+          {appContent}
+        </PostHogProvider>
+      ) : (
+        appContent
+      )}
+    </React.StrictMode>,
+  )
+}
+
+// Wait for i18n to load all translations before rendering to prevent flash
+if (i18n.isInitialized) {
+  renderApp()
+} else {
+  i18n.on('initialized', renderApp)
+}

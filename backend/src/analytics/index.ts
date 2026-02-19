@@ -4,12 +4,12 @@
  * Initializes Sentry, PostHog, and Prometheus metrics
  */
 
-import type { Express } from 'express';
 import logger from '../utils/logger';
 
 // Sentry
 import {
   initializeSentry,
+  setupSentryErrorHandler,
   flushSentry,
   setUserContext,
   clearUserContext,
@@ -38,6 +38,9 @@ import {
   recordAiRequest,
   recordError,
   setActiveConnections,
+  recordDbQuery,
+  setDbConnectionsActive,
+  recordRedisOperation,
   isMetricsEnabled,
 } from './metrics';
 
@@ -56,11 +59,11 @@ export type {
 /**
  * Initialize all analytics services
  */
-export function initializeAnalytics(app: Express): void {
+export function initializeAnalytics(): void {
   logger.info('Initializing analytics services...');
 
-  // Initialize Sentry first (for error tracking during startup)
-  initializeSentry(app);
+  // Log Sentry status (init happens in ../instrument.ts before Express is imported)
+  initializeSentry();
 
   // Initialize PostHog
   initializePostHog();
@@ -97,6 +100,7 @@ export async function shutdownAnalytics(): Promise<void> {
 // Re-export Sentry functions
 export {
   // Sentry
+  setupSentryErrorHandler,
   setUserContext,
   clearUserContext,
   captureException,
@@ -117,5 +121,8 @@ export {
   recordAiRequest,
   recordError,
   setActiveConnections,
+  recordDbQuery,
+  setDbConnectionsActive,
+  recordRedisOperation,
   isMetricsEnabled,
 };

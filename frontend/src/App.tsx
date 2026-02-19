@@ -1,5 +1,7 @@
-import { useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { lazy, Suspense, useEffect } from 'react'
+import { BrowserRouter as Router, Route, Navigate, useLocation } from 'react-router-dom'
+import { SentryRoutes as Routes } from '@/analytics/sentry'
+import { trackPageView } from '@/analytics/posthog'
 import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/stores/authStore'
 import { useTheme } from '@/stores/uiStore'
@@ -11,19 +13,30 @@ import { setTheme } from '@/lib/utils'
 import AuthLayout from '@/components/layouts/AuthLayout'
 import DashboardLayout from '@/components/layouts/DashboardLayout'
 
-// Page Components
+// Static import for LandingPage (first paint)
 import LandingPage from '@/pages/LandingPage'
-import LoginPage from '@/pages/LoginPage'
-import RegisterPage from '@/pages/RegisterPage'
-import DashboardPage from '@/pages/DashboardPage'
-import ProjectPage from '@/pages/ProjectPage'
-import SettingsPage from '@/pages/SettingsPage'
-import { UsagePage } from '@/pages/UsagePage'
-import AdminPage from '@/pages/AdminPage'
+
+// Lazy-loaded page components (code splitting)
+const LoginPage = lazy(() => import('@/pages/LoginPage'))
+const RegisterPage = lazy(() => import('@/pages/RegisterPage'))
+const DashboardPage = lazy(() => import('@/pages/DashboardPage'))
+const ProjectPage = lazy(() => import('@/pages/ProjectPage'))
+const SettingsPage = lazy(() => import('@/pages/SettingsPage'))
+const UsagePage = lazy(() => import('@/pages/UsagePage').then(m => ({ default: m.UsagePage })))
+const AdminPage = lazy(() => import('@/pages/AdminPage'))
 
 // UI Components
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import ErrorBoundary from '@/components/ErrorBoundary'
+
+/** Track SPA page views in PostHog on route changes */
+function PostHogPageTracker() {
+  const location = useLocation()
+  useEffect(() => {
+    trackPageView({ path: location.pathname })
+  }, [location.pathname])
+  return null
+}
 
 function App() {
   const { isAuthenticated, user, setUser, logout } = useAuth()
@@ -35,8 +48,9 @@ function App() {
     setTheme(theme)
   }, [theme])
 
-  // Verify authentication on app start
-  const { isLoading: isVerifyingAuth } = useQuery({
+  // Verify authentication in background — trust cached auth for initial render.
+  // If token is invalid, logout() is called and user is redirected.
+  useQuery({
     queryKey: ['auth', 'verify'],
     queryFn: async () => {
       try {
@@ -58,26 +72,15 @@ function App() {
     refetchOnWindowFocus: false,
   })
 
-  // Show loading spinner while verifying authentication
-  if (isAuthenticated && isVerifyingAuth) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center space-y-4">
-          <LoadingSpinner size="lg" />
-          <p className="text-muted-foreground">Loading your workspace...</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <ErrorBoundary>
       <Router>
+        <PostHogPageTracker />
         <div className="min-h-screen bg-background text-foreground">
           <Routes>
-            {/* Landing Page - Always accessible */}
+            {/* Landing Page - Always accessible (static import, no Suspense needed) */}
             <Route path="/" element={<LandingPage />} />
-            
+
             {/* Public Routes */}
             {!isAuthenticated ? (
               <>
@@ -85,7 +88,9 @@ function App() {
                   path="/login"
                   element={
                     <AuthLayout>
-                      <LoginPage />
+                      <Suspense fallback={<div className="flex-1 flex items-center justify-center py-20"><LoadingSpinner size="lg" /></div>}>
+                        <LoginPage />
+                      </Suspense>
                     </AuthLayout>
                   }
                 />
@@ -93,7 +98,9 @@ function App() {
                   path="/register"
                   element={
                     <AuthLayout>
-                      <RegisterPage />
+                      <Suspense fallback={<div className="flex-1 flex items-center justify-center py-20"><LoadingSpinner size="lg" /></div>}>
+                        <RegisterPage />
+                      </Suspense>
                     </AuthLayout>
                   }
                 />
@@ -106,7 +113,9 @@ function App() {
                   path="/dashboard"
                   element={
                     <DashboardLayout>
-                      <DashboardPage />
+                      <Suspense fallback={<div className="flex-1 flex items-center justify-center py-20"><LoadingSpinner size="lg" /></div>}>
+                        <DashboardPage />
+                      </Suspense>
                     </DashboardLayout>
                   }
                 />
@@ -114,7 +123,9 @@ function App() {
                   path="/projects/:projectId"
                   element={
                     <DashboardLayout>
-                      <ProjectPage />
+                      <Suspense fallback={<div className="flex-1 flex items-center justify-center py-20"><LoadingSpinner size="lg" /></div>}>
+                        <ProjectPage />
+                      </Suspense>
                     </DashboardLayout>
                   }
                 />
@@ -122,7 +133,9 @@ function App() {
                   path="/settings"
                   element={
                     <DashboardLayout>
-                      <SettingsPage />
+                      <Suspense fallback={<div className="flex-1 flex items-center justify-center py-20"><LoadingSpinner size="lg" /></div>}>
+                        <SettingsPage />
+                      </Suspense>
                     </DashboardLayout>
                   }
                 />
@@ -130,7 +143,9 @@ function App() {
                   path="/usage"
                   element={
                     <DashboardLayout>
-                      <UsagePage />
+                      <Suspense fallback={<div className="flex-1 flex items-center justify-center py-20"><LoadingSpinner size="lg" /></div>}>
+                        <UsagePage />
+                      </Suspense>
                     </DashboardLayout>
                   }
                 />
@@ -139,7 +154,9 @@ function App() {
                     path="/admin"
                     element={
                       <DashboardLayout>
-                        <AdminPage />
+                        <Suspense fallback={<div className="flex-1 flex items-center justify-center py-20"><LoadingSpinner size="lg" /></div>}>
+                          <AdminPage />
+                        </Suspense>
                       </DashboardLayout>
                     }
                   />
