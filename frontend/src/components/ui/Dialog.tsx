@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 
 interface DialogProps {
@@ -22,6 +22,7 @@ interface DialogHeaderProps {
 interface DialogTitleProps {
   children: React.ReactNode
   className?: string
+  id?: string
 }
 
 interface DialogDescriptionProps {
@@ -34,26 +35,61 @@ interface DialogFooterProps {
   className?: string
 }
 
+const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+
 const Dialog = ({ open, onClose, children, className, size = 'default' }: DialogProps) => {
   const dialogRef = useRef<HTMLDivElement>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
 
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose()
-      }
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      onClose()
+      return
     }
 
+    // Focus trap
+    if (e.key === 'Tab' && dialogRef.current) {
+      const focusableElements = dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+      if (focusableElements.length === 0) return
+
+      const firstElement = focusableElements[0]
+      const lastElement = focusableElements[focusableElements.length - 1]
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          e.preventDefault()
+          lastElement.focus()
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          e.preventDefault()
+          firstElement.focus()
+        }
+      }
+    }
+  }, [onClose])
+
+  useEffect(() => {
     if (open) {
-      document.addEventListener('keydown', handleEscape)
+      previousFocusRef.current = document.activeElement as HTMLElement
+      document.addEventListener('keydown', handleKeyDown)
       document.body.style.overflow = 'hidden'
+
+      // Focus first focusable element in dialog
+      requestAnimationFrame(() => {
+        const focusable = dialogRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)
+        focusable?.focus()
+      })
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape)
+      document.removeEventListener('keydown', handleKeyDown)
       document.body.style.overflow = 'unset'
+
+      // Restore focus to previously focused element
+      previousFocusRef.current?.focus()
     }
-  }, [open, onClose])
+  }, [open, handleKeyDown])
 
   if (!open) return null
 
@@ -63,11 +99,14 @@ const Dialog = ({ open, onClose, children, className, size = 'default' }: Dialog
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
+        aria-hidden="true"
       />
 
       {/* Dialog */}
       <div
         ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
         className={cn(
           'relative z-10 w-full bg-background border border-border rounded-t-xl sm:rounded-lg shadow-lg flex flex-col overflow-hidden',
           size === 'xl'
@@ -94,8 +133,8 @@ const DialogHeader = ({ children, className }: DialogHeaderProps) => (
   </div>
 )
 
-const DialogTitle = ({ children, className }: DialogTitleProps) => (
-  <h2 className={cn('text-lg font-semibold leading-none tracking-tight', className)}>
+const DialogTitle = ({ children, className, id }: DialogTitleProps) => (
+  <h2 id={id} className={cn('text-lg font-semibold leading-none tracking-tight', className)}>
     {children}
   </h2>
 )

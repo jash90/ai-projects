@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { TextFile, FileCreate } from '@/types'
 import { projectFilesApi } from '@/lib/api'
+import { events } from '@/analytics/posthog'
 
 interface FileState {
   // Files by project ID
@@ -14,6 +15,7 @@ interface FileState {
   
   // Actions
   fetchProjectFiles: (projectId: string) => Promise<void>
+  refreshProjectFiles: (projectId: string) => Promise<void>
   getProjectFiles: (projectId: string) => TextFile[]
   getFileById: (fileId: string) => TextFile | null
   createFile: (projectId: string, data: FileCreate) => Promise<TextFile>
@@ -77,6 +79,26 @@ export const useFiles = create<FileState>((set, get) => ({
     }
   },
 
+  refreshProjectFiles: async (projectId: string) => {
+    set({ isLoading: true, error: null })
+    try {
+      const response = await projectFilesApi.getFiles(projectId)
+      const files = response.success ? (response.data?.files || []) : []
+      set(state => ({
+        filesByProject: {
+          ...state.filesByProject,
+          [projectId]: files
+        },
+        isLoading: false
+      }))
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : 'Failed to fetch files',
+        isLoading: false
+      })
+    }
+  },
+
   getProjectFiles: (projectId: string) => {
     return get().filesByProject[projectId] || []
   },
@@ -103,6 +125,7 @@ export const useFiles = create<FileState>((set, get) => ({
           },
           currentFile: newFile
         }))
+        try { events.fileCreated(projectId, newFile.name) } catch {}
         return newFile
       } else {
         const error = response.error || 'Failed to create file'
@@ -154,8 +177,10 @@ export const useFiles = create<FileState>((set, get) => ({
     }))
 
     try {
+      // Read content right before the API call to avoid sending stale data
+      const currentFile = get().getFileById(fileId)
       const response = await projectFilesApi.updateFile(fileId, {
-        content: file.content
+        content: currentFile?.content ?? file.content
       })
       
       if (response.success) {
@@ -211,13 +236,15 @@ export const useFiles = create<FileState>((set, get) => ({
         set(state => {
           const newFilesByProject = { ...state.filesByProject }
           let updatedCurrentFile = state.currentFile
-          
+          let deletedFromProject: string | null = null
+
           // Remove from project files
           for (const [projectId, files] of Object.entries(newFilesByProject)) {
             const filteredFiles = files.filter(f => f.id !== fileId)
             if (filteredFiles.length !== files.length) {
               newFilesByProject[projectId] = filteredFiles
-              
+              deletedFromProject = projectId
+
               // Clear current file if it was deleted
               if (state.currentFile?.id === fileId) {
                 updatedCurrentFile = null
@@ -225,7 +252,11 @@ export const useFiles = create<FileState>((set, get) => ({
               break
             }
           }
-          
+
+          if (deletedFromProject) {
+            try { events.fileDeleted(deletedFromProject, fileId) } catch {}
+          }
+
           return {
             filesByProject: newFilesByProject,
             currentFile: updatedCurrentFile

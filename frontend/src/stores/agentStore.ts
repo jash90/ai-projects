@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { Agent, AgentCreate, AgentUpdate } from '@/types'
 import { agentsApi } from '@/lib/api'
+import { events } from '@/analytics/posthog'
 
 interface AgentState {
   agents: Agent[]
@@ -43,9 +44,10 @@ export const useAgents = create<AgentState>((set) => ({
       const response = await agentsApi.createAgent(data)
       if (response.success) {
         const newAgent = response.data?.agent
-        set(state => ({ 
+        set(state => ({
           agents: [...state.agents, newAgent]
         }))
+        try { events.agentCreated(newAgent.id, '', newAgent.provider, newAgent.model) } catch {}
         return newAgent
       } else {
         const error = response.error || 'Failed to create agent'
@@ -66,10 +68,11 @@ export const useAgents = create<AgentState>((set) => ({
       if (response.success) {
         const updatedAgent = response.data?.agent
         set(state => ({
-          agents: state.agents.map(agent => 
+          agents: state.agents.map(agent =>
             agent.id === id ? updatedAgent : agent
           )
         }))
+        try { events.agentUpdated(id, data as Record<string, unknown>) } catch {}
         return updatedAgent
       } else {
         const error = response.error || 'Failed to update agent'
@@ -88,9 +91,11 @@ export const useAgents = create<AgentState>((set) => ({
     try {
       const response = await agentsApi.deleteAgent(id)
       if (response.success) {
+        // Only remove from state after successful API confirmation
         set(state => ({
           agents: state.agents.filter(agent => agent.id !== id)
         }))
+        try { events.agentDeleted(id) } catch {}
       } else {
         const error = response.error || 'Failed to delete agent'
         set({ error })

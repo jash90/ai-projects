@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { projectsApi } from '@/lib/api'
 import { ProjectCreate } from '@/types'
+import { events } from '@/analytics/posthog'
 import {
   Dialog,
   DialogContent,
@@ -42,11 +43,13 @@ function NewProjectDialog({ open, onClose, onSuccess }: NewProjectDialogProps) {
       if (response.success && response.data) {
         // Invalidate projects queries to refresh the list
         queryClient.invalidateQueries({ queryKey: ['projects'] })
-        
+
+        try { events.projectCreated(response.data.project.id, response.data.project.name) } catch {}
+
         // Reset form
         resetForm()
         onClose()
-        
+
         // Callback with project ID
         onSuccess?.(response.data.project.id)
       }
@@ -71,13 +74,13 @@ function NewProjectDialog({ open, onClose, onSuccess }: NewProjectDialogProps) {
     },
   })
 
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     setFormData({
       name: '',
       description: '',
     })
     setErrors({})
-  }
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -117,7 +120,7 @@ function NewProjectDialog({ open, onClose, onSuccess }: NewProjectDialogProps) {
     if (open) {
       resetForm()
     }
-  }, [open])
+  }, [open, resetForm])
 
   return (
     <Dialog open={open} onClose={handleClose} className="max-w-lg">

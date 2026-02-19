@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Globe, Check, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { events } from '@/analytics/posthog'
 
 const LANGUAGES = [
   { code: 'pl', flag: '🇵🇱', name: 'Polski' },
@@ -40,6 +41,7 @@ export function LanguageSelector({ variant = 'grid', className }: LanguageSelect
 
   const handleLanguageChange = (code: string) => {
     i18n.changeLanguage(code)
+    try { events.languageChanged(code) } catch {}
     setIsOpen(false)
   }
 
