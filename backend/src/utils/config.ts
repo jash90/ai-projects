@@ -45,7 +45,7 @@ export const analyticsConfig: AnalyticsConfig = {
   },
   posthog: {
     apiKey: process.env.POSTHOG_API_KEY,
-    host: process.env.POSTHOG_HOST || 'https://app.posthog.com',
+    host: process.env.POSTHOG_HOST || 'https://us.i.posthog.com',
     enabled: process.env.POSTHOG_ENABLED !== 'false' && !!process.env.POSTHOG_API_KEY,
   },
   metrics: {

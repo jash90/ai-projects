@@ -5,12 +5,13 @@
 import { Registry, Counter, Histogram, Gauge, collectDefaultMetrics } from 'prom-client';
 import type { Request, Response } from 'express';
 import logger from '../utils/logger';
+import { analyticsConfig } from '../utils/config';
 
 // Create a custom registry
 const registry = new Registry();
 
 // Prefix for all metrics
-const PREFIX = process.env.METRICS_PREFIX || 'aiprojects_';
+const PREFIX = analyticsConfig.metrics.prefix;
 
 // Collect default Node.js metrics
 collectDefaultMetrics({
@@ -100,7 +101,7 @@ export const redisOperationsTotal = new Counter({
  * Initialize metrics collection
  */
 export function initializeMetrics(): void {
-  if (process.env.METRICS_ENABLED === 'false') {
+  if (!analyticsConfig.metrics.enabled) {
     logger.info('Metrics collection disabled');
     return;
   }
@@ -112,7 +113,7 @@ export function initializeMetrics(): void {
 
   logger.info('Prometheus metrics initialized', {
     prefix: PREFIX,
-    path: process.env.METRICS_PATH || '/metrics',
+    path: analyticsConfig.metrics.path,
   });
 }
 
@@ -209,6 +210,34 @@ export function setActiveConnections(type: 'websocket' | 'http', count: number):
 }
 
 /**
+ * Record database query duration
+ */
+export function recordDbQuery(
+  operation: string,
+  table: string,
+  durationSeconds: number
+): void {
+  dbQueryDuration.observe({ operation, table }, durationSeconds);
+}
+
+/**
+ * Update active database connections gauge
+ */
+export function setDbConnectionsActive(count: number): void {
+  dbConnectionsActive.set(count);
+}
+
+/**
+ * Record a Redis operation
+ */
+export function recordRedisOperation(
+  operation: string,
+  status: 'success' | 'error'
+): void {
+  redisOperationsTotal.inc({ operation, status });
+}
+
+/**
  * Get the registry for testing
  */
 export function getRegistry(): Registry {
@@ -219,5 +248,5 @@ export function getRegistry(): Registry {
  * Check if metrics are enabled
  */
 export function isMetricsEnabled(): boolean {
-  return process.env.METRICS_ENABLED !== 'false' && process.env.NODE_ENV !== 'test';
+  return analyticsConfig.metrics.enabled && process.env.NODE_ENV !== 'test';
 }

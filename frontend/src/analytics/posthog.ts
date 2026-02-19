@@ -10,11 +10,10 @@ import posthog from 'posthog-js';
 import type { UserContext, PageViewProperties, ChatEventProperties, ErrorEventProperties } from './types';
 
 /**
- * Check if PostHog is available
- * PostHog SDK handles queuing internally, so we only need to check if it's defined
+ * Check if PostHog is available and initialized
  */
 function isPostHogReady(): boolean {
-  return typeof posthog !== 'undefined';
+  return typeof posthog !== 'undefined' && posthog.__loaded === true;
 }
 
 /**
@@ -71,17 +70,6 @@ export function setUserProperty(key: string, value: unknown): void {
 }
 
 /**
- * Increment user property
- * Note: PostHog JS doesn't have increment, use set with calculated value
- */
-export function incrementUserProperty(_key: string, _amount: number = 1): void {
-  if (!isPostHogReady()) return;
-  // PostHog JS SDK doesn't support increment directly
-  // This would need to be done server-side or via a different approach
-  console.warn('[PostHog] incrementUserProperty not supported in JS SDK, use server-side tracking');
-}
-
-/**
  * Check if PostHog is enabled
  */
 export function isPostHogEnabled(): boolean {
@@ -128,6 +116,10 @@ export const events = {
     trackEvent('agent_updated', { agentId, ...changes });
   },
 
+  agentDeleted: (agentId: string) => {
+    trackEvent('agent_deleted', { agentId });
+  },
+
   // Chat Events
   chatMessageSent: (properties: ChatEventProperties) => {
     trackEvent('chat_message_sent', properties);
@@ -141,7 +133,15 @@ export const events = {
     trackEvent('chat_stream_completed', { agentId, projectId, durationMs });
   },
 
+  chatStreamFailed: (agentId: string, projectId: string, error: string, durationMs: number) => {
+    trackEvent('chat_stream_failed', { agentId, projectId, error, durationMs });
+  },
+
   // File Events
+  fileCreated: (projectId: string, fileName: string) => {
+    trackEvent('file_created', { projectId, fileName });
+  },
+
   fileUploaded: (projectId: string, fileType: string, sizeBytes: number) => {
     trackEvent('file_uploaded', { projectId, fileType, sizeBytes });
   },

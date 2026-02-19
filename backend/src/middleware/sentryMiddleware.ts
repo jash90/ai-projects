@@ -3,56 +3,39 @@
  */
 
 import type { Request, Response, NextFunction } from 'express';
-import { setUserContext, addBreadcrumb } from '../analytics';
+import { addBreadcrumb } from '../analytics';
 
-// Use type intersection instead of interface extension to avoid conflicts
-// with Express global type augmentation
-type AuthenticatedRequest = Request & {
-  user?: {
-    id: string;
-    email?: string;
-    username?: string;
-    role?: string;
-  };
-};
+/** Query parameter keys that must never appear in breadcrumbs */
+const SENSITIVE_QUERY_KEYS = new Set([
+  'token', 'access_token', 'refresh_token', 'api_key', 'apikey',
+  'password', 'secret', 'authorization', 'key', 'session',
+  'credential', 'auth', 'jwt', 'code', 'reset_token',
+]);
 
 /**
- * Middleware to set Sentry user context after authentication
+ * Strip sensitive keys from a query object.
+ * Returns undefined when the result would be empty.
  */
-export function sentryUserContextMiddleware(
-  req: AuthenticatedRequest,
-  _res: Response,
-  next: NextFunction
-): void {
-  if (req.user) {
-    setUserContext({
-      id: req.user.id,
-      email: req.user.email,
-      username: req.user.username,
-      role: req.user.role,
-    });
+function sanitizeQuery(
+  query: Record<string, unknown>
+): Record<string, unknown> | undefined {
+  const keys = Object.keys(query);
+  if (keys.length === 0) return undefined;
 
-    // Add breadcrumb for authenticated request
-    addBreadcrumb({
-      category: 'auth',
-      message: 'Authenticated request',
-      level: 'info',
-      data: {
-        userId: req.user.id,
-        path: req.path,
-        method: req.method,
-      },
-    });
+  const sanitized: Record<string, unknown> = {};
+  for (const key of keys) {
+    sanitized[key] = SENSITIVE_QUERY_KEYS.has(key.toLowerCase())
+      ? '[Filtered]'
+      : query[key];
   }
-
-  next();
+  return sanitized;
 }
 
 /**
  * Middleware to add request breadcrumbs
  */
 export function sentryBreadcrumbMiddleware(
-  req: AuthenticatedRequest,
+  req: Request,
   _res: Response,
   next: NextFunction
 ): void {
@@ -63,7 +46,7 @@ export function sentryBreadcrumbMiddleware(
     data: {
       url: req.url,
       method: req.method,
-      query: Object.keys(req.query).length > 0 ? req.query : undefined,
+      query: sanitizeQuery(req.query as Record<string, unknown>),
       // Don't log body for security reasons
     },
   });

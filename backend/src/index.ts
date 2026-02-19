@@ -1,11 +1,16 @@
-// Analytics must be imported first for proper Sentry instrumentation
-import { initializeAnalytics, shutdownAnalytics, getMetricsHandler, setActiveConnections } from './analytics';
+// Sentry instrumentation MUST be imported before any other modules (Express, http, etc.)
+// so that auto-instrumentation can patch them for performance monitoring.
+import './instrument';
+
+import { initializeAnalytics, shutdownAnalytics, getMetricsHandler, setActiveConnections, setupSentryErrorHandler, captureException } from './analytics';
+import { flushSentry } from './analytics/sentry';
 
 import express from 'express';
 import { createServer } from 'http';
 import { Server as SocketServer } from 'socket.io';
 import cors from 'cors';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 import { initializeDatabase, closeDatabase } from './database/connection';
 import { seedDatabase } from './database/seed';
 import { SocketHandler } from './services/socketHandler';
@@ -13,7 +18,7 @@ import { modelService } from './services/modelService';
 import { generalLimiter } from './middleware/rateLimiting';
 import { sanitizeInputs } from './middleware/validation';
 import { metricsMiddleware } from './middleware/metricsMiddleware';
-import { sentryUserContextMiddleware, sentryBreadcrumbMiddleware } from './middleware/sentryMiddleware';
+import { sentryBreadcrumbMiddleware } from './middleware/sentryMiddleware';
 import config from './utils/config';
 import logger from './utils/logger';
 
@@ -36,8 +41,8 @@ import { setupSwagger } from './swagger';
 
 const app: express.Express = express();
 
-// Initialize analytics (Sentry, PostHog, Prometheus) - must be early in the app lifecycle
-initializeAnalytics(app);
+// Initialize analytics (PostHog, Prometheus) - Sentry is already initialized via instrument.ts
+initializeAnalytics();
 
 const server = createServer(app);
 
@@ -127,6 +132,9 @@ let isDatabaseReady = false;
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Cookie parsing middleware for SSR auth
+app.use(cookieParser());
+
 // Request timeout middleware
 app.use((req, res, next) => {
   // Set longer timeout for AI chat endpoints
@@ -196,6 +204,9 @@ app.use('/api/settings', settingsRoutes);  // User settings routes
 app.use('/api/debug', debugRoutes);  // Debug routes (development/testing)
 app.use('/api/markdown', markdownRoutes); // Markdown routes
 app.use('/api/threads', threadRoutes);    // Thread-based chat routes
+
+// Sentry error handler - MUST be after all routes but before custom error handler
+setupSentryErrorHandler(app);
 
 // 404 handler
 app.use('*', (req, res) => {
@@ -351,11 +362,17 @@ process.on('SIGINT', async () => {
 
 process.on('uncaughtException', (error) => {
   logger.error('Uncaught exception:', error);
-  process.exit(1);
+  captureException(error, { type: 'uncaughtException' });
+  flushSentry(2000).finally(() => process.exit(1));
 });
 
 process.on('unhandledRejection', (reason, promise) => {
   logger.error('Unhandled rejection at:', { promise, reason });
+  if (reason instanceof Error) {
+    captureException(reason, { type: 'unhandledRejection' });
+  } else {
+    captureException(new Error(String(reason)), { type: 'unhandledRejection', originalReason: reason });
+  }
   // Don't call process.exit() - allow server to continue running
   // Background tasks like model sync may fail without crashing the server
 });
