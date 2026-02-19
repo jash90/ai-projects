@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { Conversation, ConversationMessage, ChatFileAttachment } from '@/types'
 import { conversationsApi, chatApi } from '@/lib/api'
 import { formatChatErrorMessage } from '@/utils/errorMessages'
+import { events } from '@/analytics/posthog'
 
 interface ConversationState {
   // Conversations by project-agent key (projectId-agentId)
@@ -69,7 +70,7 @@ export const conversationStore = create<ConversationState>((set, get) => ({
     try {
       // Add optimistic user message with attachment metadata
       const tempMessage: ConversationMessage = {
-        id: `temp-${Date.now()}`,
+        id: `temp-${crypto.randomUUID()}`,
         role: 'user',
         content,
         timestamp: new Date().toISOString(),
@@ -98,6 +99,8 @@ export const conversationStore = create<ConversationState>((set, get) => ({
         }
         return state
       })
+
+      try { events.chatMessageSent({ projectId, agentId, messageLength: content.length }) } catch {}
 
       // Send message to backend with files
       const files = attachments?.map(a => a.file)
@@ -201,7 +204,7 @@ export const conversationStore = create<ConversationState>((set, get) => ({
     try {
       // Add optimistic user message with attachment metadata
       const tempMessage: ConversationMessage = {
-        id: `temp-${Date.now()}`,
+        id: `temp-${crypto.randomUUID()}`,
         role: 'user',
         content,
         timestamp: new Date().toISOString(),
@@ -233,7 +236,7 @@ export const conversationStore = create<ConversationState>((set, get) => ({
 
       // Add temporary AI message for streaming
       const aiTempMessage: ConversationMessage = {
-        id: `ai-temp-${Date.now()}`,
+        id: `ai-temp-${crypto.randomUUID()}`,
         role: 'assistant',
         content: '',
         timestamp: new Date().toISOString(),
@@ -255,6 +258,10 @@ export const conversationStore = create<ConversationState>((set, get) => ({
         }
         return state
       })
+
+      try { events.chatMessageSent({ projectId, agentId, messageLength: content.length }) } catch {}
+      const streamStartTime = Date.now()
+      try { events.chatStreamStarted(agentId, projectId) } catch {}
 
       // Start streaming with files
       const files = attachments?.map(a => a.file)
@@ -292,11 +299,12 @@ export const conversationStore = create<ConversationState>((set, get) => ({
               [key]: response.conversation
             }
           }))
+          try { events.chatStreamCompleted(agentId, projectId, Date.now() - streamStartTime) } catch {}
         },
         (error: string | any) => {
           // Handle streaming error with better error messages
           const errorMessage = formatChatErrorMessage(error)
-          
+
           set(state => {
             const conversation = state.conversations[key]
             if (conversation) {
@@ -305,8 +313,8 @@ export const conversationStore = create<ConversationState>((set, get) => ({
                   ...state.conversations,
                   [key]: {
                     ...conversation,
-                    messages: conversation.messages.map(m => 
-                      m.id === aiTempMessage.id 
+                    messages: conversation.messages.map(m =>
+                      m.id === aiTempMessage.id
                         ? { ...m, error: errorMessage }
                         : m
                     )
@@ -316,6 +324,8 @@ export const conversationStore = create<ConversationState>((set, get) => ({
             }
             return state
           })
+
+          try { events.chatStreamFailed(agentId, projectId, typeof error === 'string' ? error : error?.message || 'unknown', Date.now() - streamStartTime) } catch {}
         }
       )
     } catch (error) {

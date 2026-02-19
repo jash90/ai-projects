@@ -1,0 +1,135 @@
+# ============================================
+# HashiCorp Vault Integration (Optional)
+# ============================================
+#
+# Integrates with HashiCorp Vault for advanced secret management
+#
+# Prerequisites:
+#   1. Vault server running (https://vaultproject.io)
+#   2. Vault Agent Injector installed in cluster:
+#      helm install vault hashicorp/vault --set "injector.enabled=true"
+#   3. Vault authentication configured
+#
+# Benefits:
+#   - Dynamic secret generation
+#   - Secret rotation without pod restart
+#   - Audit trail for secret access
+#   - Centralized secret management
+#
+# ============================================
+
+# Vault authentication configuration
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vault-auth
+  namespace: claude-projects
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vault-tokenreview-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+- kind: ServiceAccount
+  name: vault-auth
+  namespace: claude-projects
+
+---
+# Backend deployment with Vault injection
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-with-vault
+  namespace: claude-projects
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+      annotations:
+        # Enable Vault agent injection
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "backend"
+        vault.hashicorp.com/agent-pre-populate-only: "true"
+
+        # Inject database credentials
+        vault.hashicorp.com/agent-inject-secret-database: "secret/data/claude-projects/database"
+        vault.hashicorp.com/agent-inject-template-database: |
+          {{- with secret "secret/data/claude-projects/database" -}}
+          export DATABASE_URL="{{ .Data.data.url }}"
+          {{- end }}
+
+        # Inject Redis credentials
+        vault.hashicorp.com/agent-inject-secret-redis: "secret/data/claude-projects/redis"
+        vault.hashicorp.com/agent-inject-template-redis: |
+          {{- with secret "secret/data/claude-projects/redis" -}}
+          export REDIS_URL="{{ .Data.data.url }}"
+          {{- end }}
+
+        # Inject JWT secret
+        vault.hashicorp.com/agent-inject-secret-jwt: "secret/data/claude-projects/jwt"
+        vault.hashicorp.com/agent-inject-template-jwt: |
+          {{- with secret "secret/data/claude-projects/jwt" -}}
+          export JWT_SECRET="{{ .Data.data.secret }}"
+          {{- end }}
+
+        # Inject API keys
+        vault.hashicorp.com/agent-inject-secret-api-keys: "secret/data/claude-projects/api-keys"
+        vault.hashicorp.com/agent-inject-template-api-keys: |
+          {{- with secret "secret/data/claude-projects/api-keys" -}}
+          export OPENAI_API_KEY="{{ .Data.data.openai }}"
+          export ANTHROPIC_API_KEY="{{ .Data.data.anthropic }}"
+          export OPENROUTER_API_KEY="{{ .Data.data.openrouter }}"
+          export SENTRY_DSN="{{ .Data.data.sentry_dsn }}"
+          export POSTHOG_API_KEY="{{ .Data.data.posthog }}"
+          {{- end }}
+
+    spec:
+      serviceAccountName: backend-sa
+      containers:
+      - name: backend
+        image: ghcr.io/YOUR_ORG/YOUR_REPO/backend:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          # Source Vault-injected secrets
+          source /vault/secrets/database
+          source /vault/secrets/redis
+          source /vault/secrets/jwt
+          source /vault/secrets/api-keys
+
+          # Start application
+          node dist/index.js
+        ports:
+        - containerPort: 3001
+        # ... rest of container spec
+
+---
+# Vault Policy for backend role
+# This would be applied in Vault server, not Kubernetes
+# For reference only:
+#
+# vault policy write backend-policy - <<EOF
+# path "secret/data/claude-projects/*" {
+#   capabilities = ["read", "list"]
+# }
+#
+# path "secret/metadata/claude-projects/*" {
+#   capabilities = ["list"]
+# }
+# EOF
+#
+# vault write auth/kubernetes/role/backend \
+#   bound_service_account_names=backend-sa \
+#   bound_service_account_namespaces=claude-projects \
+#   policies=backend-policy \
+#   ttl=24h

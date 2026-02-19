@@ -24,8 +24,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+
+    /* Vike types */
+    "types": ["vike/types"]
   },
-  "include": ["src"],
+  "include": ["src", "pages", "server"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -35,17 +35,41 @@ export const chatStore = create<ChatStore>()((set) => ({
   // Actions
   addMessage: (projectId, agentId, message) => {
     const key = `${projectId}-${agentId}`
-    set((state) => ({
-      messages: {
-        ...state.messages,
-        [key]: [
-          ...(state.messages[key] || []),
-          { ...message, isLoading: false }
-        ].sort((a, b) => 
-          new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-        )
+    set((state) => {
+      const existing = state.messages[key] || []
+      const newMsg = { ...message, isLoading: false }
+      const newTimestamp = new Date(newMsg.timestamp).getTime()
+
+      // Fast path: append if message is newer or equal to last (most common case)
+      if (existing.length === 0 || new Date(existing[existing.length - 1].timestamp).getTime() <= newTimestamp) {
+        return {
+          messages: {
+            ...state.messages,
+            [key]: [...existing, newMsg]
+          }
+        }
       }
-    }))
+
+      // Slow path: binary insert for out-of-order messages
+      const updated = [...existing]
+      let lo = 0, hi = updated.length
+      while (lo < hi) {
+        const mid = (lo + hi) >>> 1
+        if (new Date(updated[mid].timestamp).getTime() < newTimestamp) {
+          lo = mid + 1
+        } else {
+          hi = mid
+        }
+      }
+      updated.splice(lo, 0, newMsg)
+
+      return {
+        messages: {
+          ...state.messages,
+          [key]: updated
+        }
+      }
+    })
   },
 
   updateMessage: (projectId, agentId, messageId, updates) => {

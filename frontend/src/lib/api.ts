@@ -1,9 +1,26 @@
 import axios, { AxiosInstance } from 'axios'
 import { ApiResponse, AuthTokens, PaginatedResponse, User, UserPreferences, AdminStats, UserManagement, UserUsageStats, TokenLimitUpdate, AdminActivity, Thread, ThreadMessage } from '@/types'
 import { authStore } from '@/stores/authStore'
+import { addBreadcrumb, captureException } from '@/analytics/sentry'
 
 class ApiClient {
   private client: AxiosInstance
+  private isRefreshing = false
+  private failedQueue: Array<{
+    resolve: (token: string) => void
+    reject: (error: any) => void
+  }> = []
+
+  private processQueue(error: any, token: string | null = null) {
+    this.failedQueue.forEach(({ resolve, reject }) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve(token!)
+      }
+    })
+    this.failedQueue = []
+  }
 
   constructor() {
     this.client = axios.create({
@@ -12,6 +29,7 @@ class ApiClient {
         'Content-Type': 'application/json',
       },
       timeout: 120000, // 2 minutes for AI processing
+      withCredentials: true, // Send cookies for SSR auth support
     })
 
     this.setupInterceptors()
@@ -25,6 +43,10 @@ class ApiClient {
         if (token) {
           config.headers.Authorization = `Bearer ${token}`
         }
+        addBreadcrumb('http', `${config.method?.toUpperCase()} ${config.url}`, {
+          method: config.method?.toUpperCase(),
+          url: config.url,
+        })
         return config
       },
       (error) => Promise.reject(error)
@@ -35,9 +57,26 @@ class ApiClient {
       (response) => response,
       async (error) => {
         const originalRequest = error.config
+        addBreadcrumb('http', `API Error: ${originalRequest?.method?.toUpperCase()} ${originalRequest?.url}`, {
+          method: originalRequest?.method?.toUpperCase(),
+          url: originalRequest?.url,
+          status: error.response?.status,
+        }, 'error')
 
         if (error.response?.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true
+
+          if (this.isRefreshing) {
+            // Queue this request — it will be replayed after the in-flight refresh completes
+            return new Promise<string>((resolve, reject) => {
+              this.failedQueue.push({ resolve, reject })
+            }).then(token => {
+              originalRequest.headers.Authorization = `Bearer ${token}`
+              return this.client(originalRequest)
+            })
+          }
+
+          this.isRefreshing = true
 
           try {
             const refreshToken = authStore.getState().tokens?.refresh_token
@@ -53,14 +92,18 @@ class ApiClient {
                   refresh_token: refreshToken,
                 })
 
+                this.processQueue(null, newToken)
+
                 originalRequest.headers.Authorization = `Bearer ${newToken}`
                 return this.client(originalRequest)
               }
             }
           } catch (refreshError) {
+            this.processQueue(refreshError)
             authStore.getState().logout()
-            window.location.href = '/login'
             return Promise.reject(refreshError)
+          } finally {
+            this.isRefreshing = false
           }
         }
 
@@ -379,7 +422,8 @@ export const chatApi = {
       const response = await fetch(`${baseURL}/projects/${projectId}/agents/${agentId}/chat`, {
         method: 'POST',
         headers,
-        body
+        body,
+        credentials: 'include', // Send cookies for SSR auth support
       });
 
       if (!response.ok) {
@@ -433,6 +477,7 @@ export const chatApi = {
         }
       }
     } catch (error) {
+      captureException(error, { source: 'chat_streaming', agentId, projectId })
       // Handle structured error data properly
       if (error instanceof Error && (error as any).errorData) {
         onError((error as any).errorData);
@@ -700,7 +745,8 @@ export const threadsApi = {
           ...data,
           agentId,
           stream: true
-        })
+        }),
+        credentials: 'include', // Send cookies for SSR auth support
       });
 
       if (!response.ok) {
@@ -750,6 +796,7 @@ export const threadsApi = {
         }
       }
     } catch (error) {
+      captureException(error, { source: 'thread_streaming', threadId })
       if (error instanceof Error && (error as any).errorData) {
         onError((error as any).errorData);
       } else {

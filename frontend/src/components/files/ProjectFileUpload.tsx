@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Upload, X, File, FileText, Image, Video, Music, Archive } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/Button'
 import { projectFilesApi } from '@/lib/api'
 import { getFileExtension } from '@/lib/utils'
+import { events } from '@/analytics/posthog'
 
 interface ProjectFileUploadProps {
   projectId: string
@@ -37,6 +38,14 @@ export function ProjectFileUpload({
   const [dragActive, setDragActive] = useState(false)
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([])
   const [error, setError] = useState<string | null>(null)
+  const timeoutIdsRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set())
+
+  // Cleanup all pending timeouts on unmount
+  useEffect(() => {
+    return () => {
+      timeoutIdsRef.current.forEach(id => clearTimeout(id))
+    }
+  }, [])
 
   const getFileIcon = (file: File) => {
     const type = file.type.toLowerCase()
@@ -87,7 +96,7 @@ export function ProjectFileUpload({
   }
 
   const uploadFile = async (file: File) => {
-    const fileId = Math.random().toString(36).substr(2, 9)
+    const fileId = crypto.randomUUID()
     
     // Add to uploading files list
     const uploadingFile: UploadingFile = {
@@ -151,12 +160,15 @@ export function ProjectFileUpload({
       // Call success callback
       if (onUploadComplete && response.success) {
         onUploadComplete(response.data?.file)
+        try { events.fileUploaded(projectId, getFileExtension(file.name) || 'text', file.size) } catch {}
       }
 
       // Remove from list after 2 seconds
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setUploadingFiles(prev => prev.filter(uf => uf.id !== fileId))
+        timeoutIdsRef.current.delete(timeoutId)
       }, 2000)
+      timeoutIdsRef.current.add(timeoutId)
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Upload failed'

@@ -34,6 +34,12 @@
     "tryAgain": "Try Again",
     "tryDifferentSearch": "Try a different search term"
   },
+  "consent": {
+    "title": "Cookie preferences",
+    "message": "We use cookies and analytics tools (PostHog, Sentry) to improve this application. Essential error tracking works without consent. Analytics and session recording require your permission.",
+    "accept": "Accept analytics",
+    "decline": "Decline"
+  },
   "files": "files",
   "messages": "messages",
   "navigation": {

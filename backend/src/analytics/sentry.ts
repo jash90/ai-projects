@@ -1,93 +1,56 @@
 /**
  * Sentry Integration - Error tracking and APM for backend
+ *
+ * IMPORTANT: Sentry.init() is called in ../instrument.ts which MUST be imported
+ * before any other modules (including Express/http) for auto-instrumentation to work.
+ * This module provides helper functions for error tracking, user context, etc.
  */
 
 import * as Sentry from '@sentry/node';
-import { nodeProfilingIntegration } from '@sentry/profiling-node';
 import type { Express } from 'express';
+// Note: nodeProfilingIntegration is configured in ../instrument.ts
 import logger from '../utils/logger';
 import type { UserContext, EventContext, BreadcrumbData } from './types';
 
-let isInitialized = false;
-
-// Parse SENTRY_SEND_DEFAULT_PII env var (default: false for privacy compliance)
-// WARNING: Enabling this sends user IP addresses to Sentry. Verify legal/privacy
-// requirements (GDPR, RODO, CCPA) before enabling in production.
-const sendDefaultPii = process.env.SENTRY_SEND_DEFAULT_PII === 'true';
+/**
+ * Check if Sentry was initialized (by instrument.ts).
+ * Uses Sentry's own client check rather than a local flag.
+ */
+function checkInitialized(): boolean {
+  return !!Sentry.getClient()?.getDsn();
+}
 
 /**
- * Initialize Sentry with Express integration
+ * Log Sentry initialization status. Called during app startup from initializeAnalytics().
  */
-export function initializeSentry(app: Express): void {
-  const dsn = process.env.SENTRY_DSN;
-
-  if (!dsn) {
-    logger.info('Sentry DSN not configured, skipping initialization');
-    return;
-  }
-
-  if (process.env.NODE_ENV === 'test') {
-    logger.info('Sentry disabled in test environment');
-    return;
-  }
-
-  try {
-    Sentry.init({
-      dsn,
-      environment: process.env.SENTRY_ENVIRONMENT || process.env.NODE_ENV || 'development',
-      tracesSampleRate: parseFloat(process.env.SENTRY_TRACES_SAMPLE_RATE || '0.1'),
-      profilesSampleRate: parseFloat(process.env.SENTRY_PROFILES_SAMPLE_RATE || '0.1'),
-      debug: process.env.SENTRY_DEBUG === 'true',
-
-      // Send default PII data (IP address) - controlled via SENTRY_SEND_DEFAULT_PII env var
-      sendDefaultPii,
-
-      integrations: [
-        nodeProfilingIntegration(),
-      ],
-
-      // Filter out health check transactions
-      beforeSendTransaction(event) {
-        if (event.transaction?.includes('/api/health')) {
-          return null;
-        }
-        return event;
-      },
-
-      // Filter out 4xx client errors and add context
-      beforeSend(event, hint) {
-        const error = hint.originalException;
-
-        // Skip 4xx client errors
-        if (error && typeof error === 'object' && 'statusCode' in error) {
-          const statusCode = (error as { statusCode: number }).statusCode;
-          if (statusCode >= 400 && statusCode < 500) {
-            return null;
-          }
-        }
-
-        return event;
-      },
-    });
-
-    // Setup Express instrumentation
-    Sentry.setupExpressErrorHandler(app);
-
-    isInitialized = true;
-    logger.info('Sentry initialized successfully', {
+export function initializeSentry(): void {
+  if (checkInitialized()) {
+    logger.info('Sentry initialized (via instrument.ts)', {
       environment: process.env.SENTRY_ENVIRONMENT || process.env.NODE_ENV,
       tracesSampleRate: process.env.SENTRY_TRACES_SAMPLE_RATE || '0.1',
     });
-  } catch (error) {
-    logger.error('Failed to initialize Sentry', { error });
+  } else if (process.env.SENTRY_DSN) {
+    logger.warn('Sentry DSN configured but client not initialized - check instrument.ts import order');
+  } else {
+    logger.info('Sentry DSN not configured, running without error tracking');
   }
+}
+
+/**
+ * Setup Express error handler - MUST be called after all routes are registered.
+ * Note: In @sentry/node v8+, HTTP request instrumentation is automatic via
+ * the built-in httpIntegration - no separate request handler is needed.
+ */
+export function setupSentryErrorHandler(app: Express): void {
+  if (!checkInitialized()) return;
+  Sentry.setupExpressErrorHandler(app);
 }
 
 /**
  * Set user context for error tracking
  */
 export function setUserContext(user: UserContext): void {
-  if (!isInitialized) return;
+  if (!checkInitialized()) return;
 
   Sentry.setUser({
     id: user.id,
@@ -101,7 +64,7 @@ export function setUserContext(user: UserContext): void {
  * Clear user context (on logout)
  */
 export function clearUserContext(): void {
-  if (!isInitialized) return;
+  if (!checkInitialized()) return;
   Sentry.setUser(null);
 }
 
@@ -112,7 +75,7 @@ export function captureException(
   error: Error | unknown,
   context?: EventContext
 ): string | undefined {
-  if (!isInitialized) {
+  if (!checkInitialized()) {
     logger.error('Exception captured (Sentry disabled)', { error, context });
     return undefined;
   }
@@ -136,7 +99,7 @@ export function captureMessage(
   level: Sentry.SeverityLevel = 'info',
   context?: EventContext
 ): string | undefined {
-  if (!isInitialized) return undefined;
+  if (!checkInitialized()) return undefined;
 
   return Sentry.captureMessage(message, {
     level,
@@ -148,7 +111,7 @@ export function captureMessage(
  * Add a breadcrumb for debugging
  */
 export function addBreadcrumb(data: BreadcrumbData): void {
-  if (!isInitialized) return;
+  if (!checkInitialized()) return;
 
   Sentry.addBreadcrumb({
     category: data.category,
@@ -167,7 +130,7 @@ export function startTransaction(
   name: string,
   op: string
 ): Sentry.Span {
-  if (!isInitialized) {
+  if (!checkInitialized()) {
     // Return a noop span that does nothing when not initialized
     return {
       end: () => {},
@@ -189,7 +152,7 @@ export function startTransaction(
  * Get current active span
  */
 export function getActiveSpan(): Sentry.Span | undefined {
-  if (!isInitialized) return undefined;
+  if (!checkInitialized()) return undefined;
   return Sentry.getActiveSpan();
 }
 
@@ -197,7 +160,7 @@ export function getActiveSpan(): Sentry.Span | undefined {
  * Flush all pending events before shutdown
  */
 export async function flushSentry(timeout = 2000): Promise<boolean> {
-  if (!isInitialized) return true;
+  if (!checkInitialized()) return true;
   return Sentry.flush(timeout);
 }
 
@@ -205,7 +168,7 @@ export async function flushSentry(timeout = 2000): Promise<boolean> {
  * Check if Sentry is initialized
  */
 export function isSentryInitialized(): boolean {
-  return isInitialized;
+  return checkInitialized();
 }
 
 // Re-export Sentry for direct access when needed
