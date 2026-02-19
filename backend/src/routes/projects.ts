@@ -5,6 +5,8 @@ import { authenticateToken, validateProjectAccess } from '../middleware/auth';
 import { validate, commonSchemas } from '../middleware/validation';
 import { generalLimiter, creationLimiter } from '../middleware/rateLimiting';
 import logger from '../utils/logger';
+import { events as posthogEvents } from '../analytics/posthog';
+import { captureException } from '../analytics';
 
 const router: Router = Router();
 
@@ -69,6 +71,7 @@ router.get('/',
       });
     } catch (error) {
       logger.error('Error fetching projects:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to fetch projects'
@@ -138,6 +141,7 @@ router.get('/recent',
       });
     } catch (error) {
       logger.error('Error fetching recent projects:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to fetch recent projects'
@@ -227,6 +231,7 @@ router.get('/search',
       });
     } catch (error) {
       logger.error('Error searching projects:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to search projects'
@@ -304,6 +309,7 @@ router.get('/:id',
       });
     } catch (error) {
       logger.error('Error fetching project:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to fetch project'
@@ -366,10 +372,11 @@ router.post('/',
         user_id: userId
       });
 
-      logger.info('Project created', { 
-        projectId: project.id, 
+      logger.info('Project created', {
+        projectId: project.id,
         userId
       });
+      try { posthogEvents.projectCreated(userId, project.id, project.name); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
 
       res.status(201).json({
         success: true,
@@ -379,6 +386,7 @@ router.post('/',
       });
     } catch (error) {
       logger.error('Error creating project:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to create project'
@@ -459,6 +467,7 @@ router.put('/:id',
       }
 
       logger.info('Project updated', { projectId: id, userId, updates: Object.keys(updates) });
+      try { posthogEvents.projectUpdated(userId, id); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
 
       res.json({
         success: true,
@@ -468,6 +477,7 @@ router.put('/:id',
       });
     } catch (error) {
       logger.error('Error updating project:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to update project'
@@ -536,6 +546,7 @@ router.delete('/:id',
       }
 
       logger.info('Project deleted', { projectId: id, userId });
+      try { posthogEvents.projectDeleted(userId, id); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
 
       res.json({
         success: true,
@@ -543,6 +554,7 @@ router.delete('/:id',
       });
     } catch (error) {
       logger.error('Error deleting project:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to delete project'

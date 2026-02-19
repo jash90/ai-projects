@@ -6,6 +6,8 @@ import { requireAdmin } from '../middleware/adminAuth';
 import { validate, commonSchemas } from '../middleware/validation';
 import { generalLimiter, creationLimiter } from '../middleware/rateLimiting';
 import logger from '../utils/logger';
+import { events as posthogEvents } from '../analytics/posthog';
+import { captureException } from '../analytics';
 
 const router: Router = Router();
 
@@ -58,6 +60,7 @@ router.get('/',
       });
     } catch (error) {
       logger.error('Error fetching agents:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to fetch agents'
@@ -134,6 +137,7 @@ router.get('/:id',
       });
     } catch (error) {
       logger.error('Error fetching agent:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to fetch agent'
@@ -194,6 +198,7 @@ router.post('/',
       const agent = await AgentModel.create(agentData);
 
       logger.info('Agent created', { agentId: agent.id, name: agent.name, createdBy: req.user!.id });
+      try { posthogEvents.agentCreated(req.user!.id, agent.id, agent.provider, agent.model); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
 
       res.status(201).json({
         success: true,
@@ -203,6 +208,7 @@ router.post('/',
       });
     } catch (error) {
       logger.error('Error creating agent:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to create agent'
@@ -283,6 +289,7 @@ router.put('/:id',
       }
 
       logger.info('Agent updated', { agentId: id, updates: Object.keys(updates), updatedBy: req.user!.id });
+      try { posthogEvents.agentUpdated(req.user!.id, id); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
 
       res.json({
         success: true,
@@ -292,6 +299,7 @@ router.put('/:id',
       });
     } catch (error) {
       logger.error('Error updating agent:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to update agent'
@@ -364,6 +372,7 @@ router.delete('/:id',
       }
 
       logger.info('Agent deleted', { agentId: id, deletedBy: req.user!.id });
+      try { posthogEvents.agentDeleted(req.user!.id, id); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
 
       res.json({
         success: true,
@@ -378,6 +387,7 @@ router.delete('/:id',
       }
 
       logger.error('Error deleting agent:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to delete agent'
@@ -465,6 +475,7 @@ router.get('/:id/stats',
       });
     } catch (error) {
       logger.error('Error fetching agent stats:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to fetch agent statistics'

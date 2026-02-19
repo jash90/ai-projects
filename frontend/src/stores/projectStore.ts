@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { Project } from '@/types'
 import { projectsApi } from '@/lib/api'
+import { events } from '@/analytics/posthog'
 
 interface ProjectState {
   projects: Project[]
@@ -46,10 +47,14 @@ export const useProjects = create<ProjectState>((set) => ({
     try {
       const response = await projectsApi.getProject(id)
       if (response.success) {
-        set({ 
-          currentProject: response.data?.project, 
-          isLoading: false 
+        const project = response.data?.project
+        set({
+          currentProject: project,
+          isLoading: false
         })
+        if (project) {
+          try { events.projectViewed(project.id, project.name) } catch {}
+        }
       } else {
         set({ error: response.error || 'Failed to fetch project', isLoading: false })
       }

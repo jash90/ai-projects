@@ -1,7 +1,8 @@
-import { Pool, Client } from 'pg';
+import { Pool, Client, type QueryArrayResult, type QueryResult } from 'pg';
 import { createClient, RedisClientType } from 'redis';
 import config from '../utils/config';
 import logger from '../utils/logger';
+import { trackEvent, recordDbQuery, setDbConnectionsActive, recordRedisOperation } from '../analytics';
 
 // PostgreSQL connection
 export const pool = new Pool({
@@ -13,14 +14,124 @@ export const pool = new Pool({
   statement_timeout: 120000, // 2 minutes for long statements
 });
 
+// Query logging - track all queries with execution time
+pool.on('connect', (client: any) => {
+  const originalQuery = client.query;
+
+  client.query = function (...args: any[]) {
+    const startTime = Date.now();
+
+    const result = originalQuery.apply(this, args);
+
+    // Handle promise-based queries
+    if (result && typeof result.then === 'function') {
+      return result
+        .then((res: QueryResult | QueryArrayResult) => {
+          const duration = Date.now() - startTime;
+
+          // Extract query text
+          const queryText = typeof args[0] === 'string' ? args[0] : args[0]?.text || 'unknown';
+          const statementType = queryText.trim().split(/\s+/)[0].toUpperCase();
+
+          // Record query duration metric for Prometheus
+          // Extract table name from common SQL patterns (SELECT FROM, INSERT INTO, UPDATE, DELETE FROM)
+          const tableMatch = queryText.match(/(?:FROM|INTO|UPDATE|JOIN)\s+["']?(\w+)["']?/i);
+          const tableName = tableMatch?.[1] || 'unknown';
+          recordDbQuery(statementType, tableName, duration / 1000);
+
+          // Log query execution
+          logger.debug('Query executed', {
+            query: queryText.slice(0, 200), // Truncate long queries
+            duration: `${duration}ms`,
+            rows: res.rowCount || 0,
+          });
+
+          // Track slow queries (>1000ms)
+          if (duration > 1000) {
+            logger.warn('Slow query detected', {
+              query: queryText.slice(0, 500),
+              duration: `${duration}ms`,
+              rowCount: res.rowCount || 0,
+            });
+
+            // Send to PostHog for monitoring — only statement type, no raw SQL (PII risk)
+            trackEvent('slow_query', 'system', {
+              statement_type: statementType,
+              duration,
+              threshold: 1000,
+              rowCount: res.rowCount || 0,
+            });
+          }
+
+          return res;
+        })
+        .catch((error: Error) => {
+          const duration = Date.now() - startTime;
+
+          logger.error('Query error', {
+            query: typeof args[0] === 'string' ? args[0].slice(0, 200) : 'unknown',
+            duration: `${duration}ms`,
+            error: error.message,
+          });
+
+          throw error;
+        });
+    }
+
+    return result;
+  };
+});
+
+// Track active pool connections via pool events
+pool.on('acquire', () => {
+  setDbConnectionsActive(pool.totalCount - pool.idleCount);
+});
+pool.on('release', () => {
+  setDbConnectionsActive(pool.totalCount - pool.idleCount);
+});
+pool.on('remove', () => {
+  setDbConnectionsActive(pool.totalCount - pool.idleCount);
+});
+
+logger.info('Database query logging initialized');
+
 // Redis connection
-export const redis: RedisClientType = createClient({
+const redisClient: RedisClientType = createClient({
   url: config.redis_url,
   socket: {
     connectTimeout: 30000, // 30 seconds - increased for Railway cold starts
     keepAlive: 30000, // 30 seconds
   },
 });
+
+/** Redis commands to track in Prometheus metrics */
+const TRACKED_REDIS_COMMANDS = new Set([
+  'get', 'set', 'setEx', 'del', 'incr', 'expire',
+  'hGet', 'hSet', 'keys', 'exists', 'ttl', 'mGet', 'mSet',
+]);
+
+/**
+ * Proxy-wrapped Redis client that records Prometheus metrics for tracked commands.
+ * Transparent to callers - all original RedisClientType methods work as-is.
+ */
+export const redis: RedisClientType = new Proxy(redisClient, {
+  get(target, prop, receiver) {
+    const value = Reflect.get(target, prop, receiver);
+    if (typeof prop === 'string' && TRACKED_REDIS_COMMANDS.has(prop) && typeof value === 'function') {
+      return async (...args: unknown[]) => {
+        try {
+          const result = await (value as Function).apply(target, args);
+          recordRedisOperation(prop, 'success');
+          return result;
+        } catch (error) {
+          recordRedisOperation(prop, 'error');
+          throw error;
+        }
+      };
+    }
+    return value;
+  },
+}) as RedisClientType;
 
 // Database initialization
 export async function initializeDatabase(): Promise<void> {
@@ -31,11 +142,19 @@ export async function initializeDatabase(): Promise<void> {
     client.release();
     logger.info('PostgreSQL connected successfully');
 
-    // Connect to Redis
-    if (!redis.isOpen) {
-      await redis.connect();
+    // Connect to Redis (use underlying client directly for lifecycle methods)
+    if (!redisClient.isOpen) {
+      await redisClient.connect();
     }
     logger.info('Redis connected successfully');
+
+    // Track Redis connection events in Prometheus
+    redisClient.on('error', () => {
+      recordRedisOperation('connection', 'error');
+    });
+    redisClient.on('reconnecting', () => {
+      recordRedisOperation('reconnect', 'success');
+    });
 
     // Run migrations
     await runMigrations();
@@ -225,7 +344,7 @@ async function runMigrations(): Promise<void> {
 export async function closeDatabase(): Promise<void> {
   try {
     await pool.end();
-    await redis.quit();
+    await redisClient.quit();
     logger.info('Database connections closed');
   } catch (error) {
     logger.error('Error closing database connections:', error);

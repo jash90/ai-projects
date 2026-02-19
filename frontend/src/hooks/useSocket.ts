@@ -30,6 +30,7 @@ export function useSocket(projectId?: string, options: UseSocketOptions = {}) {
 
     return () => {
       if (socketRef.current) {
+        ;(socketRef.current as any)._cleanupListeners?.()
         socketRef.current.disconnect()
         socketRef.current = null
         setConnected(false)
@@ -61,41 +62,38 @@ export function useSocket(projectId?: string, options: UseSocketOptions = {}) {
     const socket = socketRef.current
 
     // Connection events
-    socket.on('connect', () => {
+    const onConnect = () => {
       console.log('Socket connected:', socket.id)
       setConnected(true)
-    })
+    }
 
-    socket.on('disconnect', (reason) => {
+    const onDisconnect = (reason: string) => {
       console.log('Socket disconnected:', reason)
       setConnected(false)
-      
+
       if (reason === 'io server disconnect') {
-        // Server disconnected, try to reconnect
         setTimeout(() => {
           socket.connect()
         }, 2000)
       }
-    })
+    }
 
-    socket.on('connect_error', (error) => {
+    const onConnectError = (error: Error) => {
       console.error('Socket connection error:', error)
       setConnected(false)
-    })
+    }
 
-    // Message events
-            socket.on('new-message', (data: { projectId: string; agentId: string; message: ConversationMessage; sender: any }) => {
+    const onNewMessage = (data: { projectId: string; agentId: string; message: ConversationMessage; sender: any }) => {
       addMessage(data.projectId, data.agentId, data.message)
-    })
+    }
 
-    socket.on('message-history', (data: { projectId: string; agentId: string; messages: ConversationMessage[] }) => {
+    const onMessageHistory = (data: { projectId: string; agentId: string; messages: ConversationMessage[] }) => {
       chatStore.getState().setMessages(data.projectId, data.agentId, data.messages)
-    })
+    }
 
-    // Typing events
-    socket.on('typing-update', (data: { 
-      projectId: string; 
-      userId: string; 
+    const onTypingUpdate = (data: {
+      projectId: string;
+      userId: string;
       isTyping: boolean;
       typingUsers: string[];
     }) => {
@@ -108,30 +106,52 @@ export function useSocket(projectId?: string, options: UseSocketOptions = {}) {
       } else {
         removeTypingUser(data.projectId, data.userId)
       }
-    })
+    }
 
-    // Error handling
-    socket.on('error', (error: any) => {
+    const onError = (error: any) => {
       console.error('Socket error:', {
         message: error?.message || 'Unknown error',
         type: error?.type || error?.constructor?.name || 'Unknown type',
         description: error?.description || error,
         timestamp: new Date().toISOString()
       })
-    })
+    }
 
-    // Project events
-    socket.on('project-joined', (data: { projectId: string; project: any }) => {
+    const onProjectJoined = (data: { projectId: string; project: any }) => {
       console.log('Joined project:', data.projectId)
-    })
+    }
 
-    socket.on('project-left', (data: { projectId: string }) => {
+    const onProjectLeft = (data: { projectId: string }) => {
       console.log('Left project:', data.projectId)
-    })
+    }
+
+    socket.on('connect', onConnect)
+    socket.on('disconnect', onDisconnect)
+    socket.on('connect_error', onConnectError)
+    socket.on('new-message', onNewMessage)
+    socket.on('message-history', onMessageHistory)
+    socket.on('typing-update', onTypingUpdate)
+    socket.on('error', onError)
+    socket.on('project-joined', onProjectJoined)
+    socket.on('project-left', onProjectLeft)
+
+    // Store cleanup function on the socket for use in disconnect/effect cleanup
+    ;(socket as any)._cleanupListeners = () => {
+      socket.off('connect', onConnect)
+      socket.off('disconnect', onDisconnect)
+      socket.off('connect_error', onConnectError)
+      socket.off('new-message', onNewMessage)
+      socket.off('message-history', onMessageHistory)
+      socket.off('typing-update', onTypingUpdate)
+      socket.off('error', onError)
+      socket.off('project-joined', onProjectJoined)
+      socket.off('project-left', onProjectLeft)
+    }
   }
 
   const disconnect = () => {
     if (socketRef.current) {
+      ;(socketRef.current as any)._cleanupListeners?.()
       socketRef.current.disconnect()
       socketRef.current = null
       setConnected(false)

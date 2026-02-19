@@ -264,15 +264,8 @@ export const threadStore = create<ThreadState>()(
           })
 
           if (response.success && response.data) {
-            // Replace with actual messages from server
-            set(state => ({
-              messagesByThread: {
-                ...state.messagesByThread,
-                [threadId]: response.data!.messages
-              }
-            }))
-
-            // Update thread in list (for last_message, updated_at)
+            const messages = response.data!.messages
+            // Update messages and thread metadata in a single set() call
             set(state => {
               const newThreadsByProject = { ...state.threadsByProject }
               for (const projectId in newThreadsByProject) {
@@ -281,14 +274,20 @@ export const threadStore = create<ThreadState>()(
                     return {
                       ...t,
                       updated_at: new Date().toISOString(),
-                      message_count: response.data!.messages.length,
-                      last_message: response.data!.messages[response.data!.messages.length - 1]?.content
+                      message_count: messages.length,
+                      last_message: messages[messages.length - 1]?.content
                     }
                   }
                   return t
                 })
               }
-              return { threadsByProject: newThreadsByProject }
+              return {
+                messagesByThread: {
+                  ...state.messagesByThread,
+                  [threadId]: messages
+                },
+                threadsByProject: newThreadsByProject
+              }
             })
           } else {
             throw new Error(response.error || 'Failed to send message')
@@ -390,20 +389,12 @@ export const threadStore = create<ThreadState>()(
                 isLoading: false
               }))
 
-              set(state => ({
-                messagesByThread: {
-                  ...state.messagesByThread,
-                  [threadId]: messagesWithLoadingReset
-                }
-              }))
-
-              // Update thread metadata with defensive access
               const messageCount = messages.length
               const lastMessage = messageCount > 0
                 ? messages[messageCount - 1]?.content ?? ''
                 : ''
 
-              // Update thread in list
+              // Update messages and thread metadata in a single set() call
               set(state => {
                 const newThreadsByProject = { ...state.threadsByProject }
                 for (const projectId in newThreadsByProject) {
@@ -419,7 +410,13 @@ export const threadStore = create<ThreadState>()(
                     return t
                   })
                 }
-                return { threadsByProject: newThreadsByProject }
+                return {
+                  messagesByThread: {
+                    ...state.messagesByThread,
+                    [threadId]: messagesWithLoadingReset
+                  },
+                  threadsByProject: newThreadsByProject
+                }
               })
             },
             // onError

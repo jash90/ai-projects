@@ -4,8 +4,38 @@ import { generateTokens, revokeToken, refreshAccessToken, authenticateToken } fr
 import { validate, commonSchemas } from '../middleware/validation';
 import { authLimiter } from '../middleware/rateLimiting';
 import logger from '../utils/logger';
+import { events as posthogEvents, identifyUser } from '../analytics/posthog';
+import { setUserContext, clearUserContext, captureException } from '../analytics';
 
 const router: Router = Router();
+
+// Cookie configuration for SSR auth
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax' as const,
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  path: '/',
+};
+
+/**
+ * Helper to set auth cookies for SSR compatibility
+ */
+function setAuthCookies(res: Response, accessToken: string, refreshToken: string) {
+  res.cookie('auth_token', accessToken, {
+    ...COOKIE_OPTIONS,
+    maxAge: 15 * 60 * 1000, // 15 minutes for access token
+  });
+  res.cookie('refresh_token', refreshToken, COOKIE_OPTIONS);
+}
+
+/**
+ * Helper to clear auth cookies
+ */
+function clearAuthCookies(res: Response) {
+  res.clearCookie('auth_token', { path: '/' });
+  res.clearCookie('refresh_token', { path: '/' });
+}
 
 /**
  * @swagger
@@ -70,6 +100,11 @@ router.post('/register',
       });
 
       logger.info('User registered successfully', { userId: user.id, email: user.email });
+      try { posthogEvents.userRegistered(user.id); identifyUser({ id: user.id, email: user.email, username: user.username, role: user.role }); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
+      setUserContext({ id: user.id, email: user.email, username: user.username, role: user.role });
+
+      // Set auth cookies for SSR compatibility
+      setAuthCookies(res, accessToken, refreshToken);
 
       res.status(201).json({
         success: true,
@@ -93,6 +128,7 @@ router.post('/register',
       });
     } catch (error) {
       logger.error('Registration error:', error);
+      captureException(error, { route: 'POST /api/auth/register' });
       res.status(500).json({
         success: false,
         error: 'Registration failed'
@@ -161,6 +197,11 @@ router.post('/login',
       });
 
       logger.info('User logged in successfully', { userId: user.id, email: user.email });
+      try { posthogEvents.userLoggedIn(user.id); identifyUser({ id: user.id, email: user.email, username: user.username, role: user.role }); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
+      setUserContext({ id: user.id, email: user.email, username: user.username, role: user.role });
+
+      // Set auth cookies for SSR compatibility
+      setAuthCookies(res, accessToken, refreshToken);
 
       res.json({
         success: true,
@@ -184,6 +225,7 @@ router.post('/login',
       });
     } catch (error) {
       logger.error('Login error:', error);
+      captureException(error, { route: 'POST /api/auth/login' });
       res.status(500).json({
         success: false,
         error: 'Login failed'
@@ -236,7 +278,8 @@ router.post('/login',
  */
 router.post('/refresh', async (req: Request, res: Response) => {
   try {
-    const { refresh_token } = req.body;
+    // Support both body and cookie for refresh token (SSR compatibility)
+    const refresh_token = req.body.refresh_token || req.cookies?.refresh_token;
 
     if (!refresh_token) {
       return res.status(400).json({
@@ -247,6 +290,12 @@ router.post('/refresh', async (req: Request, res: Response) => {
 
     const accessToken = await refreshAccessToken(refresh_token);
 
+    // Update access token cookie for SSR
+    res.cookie('auth_token', accessToken, {
+      ...COOKIE_OPTIONS,
+      maxAge: 15 * 60 * 1000, // 15 minutes for access token
+    });
+
     res.json({
       success: true,
       data: {
@@ -255,6 +304,8 @@ router.post('/refresh', async (req: Request, res: Response) => {
     });
   } catch (error) {
     logger.error('Token refresh error:', error);
+    // Clear cookies on refresh failure
+    clearAuthCookies(res);
     res.status(401).json({
       success: false,
       error: 'Invalid refresh token'
@@ -308,13 +359,18 @@ router.post('/logout', authenticateToken, async (req: Request, res: Response) =>
       await revokeToken(token);
     }
 
-    // Also revoke refresh token if provided
-    const { refresh_token } = req.body;
+    // Also revoke refresh token if provided (from body or cookie)
+    const refresh_token = req.body.refresh_token || req.cookies?.refresh_token;
     if (refresh_token) {
       await revokeToken(refresh_token);
     }
 
     logger.info('User logged out successfully', { userId: req.user!.id });
+    try { posthogEvents.userLoggedOut(req.user!.id); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
+    clearUserContext();
+
+    // Clear auth cookies
+    clearAuthCookies(res);
 
     res.json({
       success: true,
@@ -322,6 +378,9 @@ router.post('/logout', authenticateToken, async (req: Request, res: Response) =>
     });
   } catch (error) {
     logger.error('Logout error:', error);
+    captureException(error, { userId: req.user?.id });
+    // Still clear cookies on error
+    clearAuthCookies(res);
     res.status(500).json({
       success: false,
       error: 'Logout failed'
@@ -399,6 +458,7 @@ router.get('/profile', authenticateToken, async (req: Request, res: Response) =>
     });
   } catch (error) {
     logger.error('Profile fetch error:', error);
+    captureException(error, { userId: req.user?.id });
     res.status(500).json({
       success: false,
       error: 'Failed to fetch profile'
@@ -501,6 +561,7 @@ router.put('/profile',
       });
     } catch (error) {
       logger.error('Profile update error:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to update profile'
@@ -573,6 +634,7 @@ router.get('/verify', authenticateToken, async (req: Request, res: Response) => 
     });
   } catch (error) {
     logger.error('Error verifying token:', error);
+    captureException(error, { userId: req.user?.id, route: 'GET /api/auth/verify' });
     res.status(500).json({
       success: false,
       error: 'Failed to verify token'
@@ -641,6 +703,7 @@ router.get('/me', authenticateToken, async (req: Request, res: Response) => {
     });
   } catch (error) {
     logger.error('Error getting current user:', error);
+    captureException(error, { userId: req.user?.id, route: 'GET /api/auth/me' });
     res.status(500).json({
       success: false,
       error: 'Failed to get user data'

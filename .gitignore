@@ -118,3 +118,21 @@ frontend/screenshots/
 .github/instructions/nx.instructions.md
 **/.claude-flow/
 ./claude-flow/
+
+# Auto Claude data directory
+.auto-claude/
+
+# Tool artifacts (local only)
+.swarm/
+.claude_settings.json
+
+# Kubernetes secrets (NEVER commit!)
+k8s/secrets.yaml
+
+# Local monitoring data
+monitoring/grafana/data/
+monitoring/prometheus/data/
+
+# Database backups (store in separate location)
+backups/
+*.sql.gz

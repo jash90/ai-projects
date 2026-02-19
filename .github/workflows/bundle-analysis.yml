@@ -1,0 +1,91 @@
+name: Bundle Size Analysis
+
+on:
+  pull_request:
+    branches: [master, main, develop]
+    paths:
+      - 'frontend/**'
+      - 'pnpm-lock.yaml'
+
+jobs:
+  analyze:
+    name: Analyze Bundle Size
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build and analyze bundle
+        working-directory: ./frontend
+        run: pnpm run build:analyze
+        env:
+          VITE_API_URL: http://localhost:3001
+          VITE_WS_URL: ws://localhost:3001
+
+      - name: Upload bundle stats
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-stats-${{ github.sha }}
+          path: frontend/dist/stats.html
+          retention-days: 30
+
+      - name: Comment bundle size
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // Get bundle stats (simplified - you can enhance this)
+            const distPath = path.join(process.cwd(), 'frontend', 'dist');
+            const assets = fs.readdirSync(path.join(distPath, 'assets'));
+
+            const jsFiles = assets.filter(f => f.endsWith('.js'));
+            const cssFiles = assets.filter(f => f.endsWith('.css'));
+
+            let totalSize = 0;
+            [...jsFiles, ...cssFiles].forEach(file => {
+              const stats = fs.statSync(path.join(distPath, 'assets', file));
+              totalSize += stats.size;
+            });
+
+            const totalSizeKB = (totalSize / 1024).toFixed(2);
+            const jsCount = jsFiles.length;
+            const cssCount = cssFiles.length;
+
+            const comment = `## 📦 Bundle Size Analysis
+
+            **Total Bundle Size:** ${totalSizeKB} KB
+
+            **Assets:**
+            - JavaScript files: ${jsCount}
+            - CSS files: ${cssCount}
+
+            **Detailed Stats:** Download the \`bundle-stats-${context.sha}\` artifact for interactive visualization.
+
+            ---
+            *Bundle analysis generated for commit ${context.sha.substring(0, 7)}*
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

@@ -5,6 +5,8 @@ import { authenticateToken } from '../middleware/auth';
 import { validate, commonSchemas } from '../middleware/validation';
 import { generalLimiter, creationLimiter } from '../middleware/rateLimiting';
 import logger from '../utils/logger';
+import { events as posthogEvents } from '../analytics/posthog';
+import { captureException } from '../analytics';
 
 const router: Router = Router();
 
@@ -92,6 +94,7 @@ router.get('/projects/:projectId/files',
       }
 
       logger.error('Error fetching project files:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to fetch files'
@@ -188,13 +191,15 @@ router.post('/projects/:projectId/files',
         type
       }, userId);
 
-      logger.info('File created', { 
-        fileId: file.id, 
-        projectId, 
-        userId, 
+      logger.info('File created', {
+        fileId: file.id,
+        projectId,
+        userId,
         fileName: file.name,
         fileType: file.type
       });
+
+      try { posthogEvents.fileUploaded(userId, projectId, type, content?.length || 0); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
 
       res.status(201).json({
         success: true,
@@ -211,6 +216,7 @@ router.post('/projects/:projectId/files',
       }
 
       logger.error('Error creating file:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to create file'
@@ -290,6 +296,7 @@ router.get('/files/:id',
       });
     } catch (error) {
       logger.error('Error fetching file:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to fetch file'
@@ -427,6 +434,7 @@ router.put('/files/:id',
       }
 
       logger.error('Error updating file:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to update file'
@@ -490,6 +498,7 @@ router.delete('/files/:id',
       }
 
       logger.info('File deleted', { fileId: id, userId });
+      try { posthogEvents.fileDeleted(userId, id, 'project_file'); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
 
       res.json({
         success: true,
@@ -497,6 +506,7 @@ router.delete('/files/:id',
       });
     } catch (error) {
       logger.error('Error deleting file:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to delete file'
@@ -582,6 +592,7 @@ router.get('/projects/:projectId/files/search',
       }
 
       logger.error('Error searching files:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to search files'
@@ -679,6 +690,7 @@ router.get('/projects/:projectId/files/type/:type',
       }
 
       logger.error('Error fetching files by type:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to fetch files by type'
@@ -757,6 +769,7 @@ router.get('/projects/:projectId/files/stats',
       }
 
       logger.error('Error fetching file stats:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to fetch file statistics'

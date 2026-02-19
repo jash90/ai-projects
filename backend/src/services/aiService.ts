@@ -4,6 +4,9 @@ import { Agent, ConversationMessage, MessageMetadata, ChatFileAttachment } from 
 import config from '../utils/config';
 import logger from '../utils/logger';
 import { TokenService } from './tokenService';
+import { recordAiRequest } from '../analytics/metrics';
+import { events as posthogEvents } from '../analytics/posthog';
+import { captureException, addBreadcrumb, Sentry } from '../analytics';
 import { UserModel } from '../models/User';
 import {
   AppError,
@@ -199,6 +202,7 @@ class AIService {
   async chat(request: ChatRequest): Promise<ChatResponse | StreamingChatResponse> {
     const { agent, messages, projectFiles, attachments, userId, projectId, conversationId, stream = false } = request;
     const startTime = Date.now();
+    addBreadcrumb({ category: 'ai', message: `AI request: ${agent.provider}/${agent.model}`, level: 'info', data: { provider: agent.provider, model: agent.model } });
 
     try {
       // Check token limits before processing (estimate tokens for the request)
@@ -254,6 +258,26 @@ class AIService {
           attachments: attachments?.length || 0
         });
 
+        try {
+          recordAiRequest(agent.provider, agent.model, 'success', processingTime / 1000, response.metadata.prompt_tokens, response.metadata.completion_tokens);
+        } catch (e) { logger.debug('Analytics tracking failed', { error: e }); }
+
+        if (userId) {
+          try {
+            posthogEvents.chatMessageSent(
+              userId,
+              projectId || '',
+              agent.id,
+              agent.provider,
+              agent.model,
+              response.metadata.tokens || 0,
+              response.metadata.prompt_tokens || 0,
+              response.metadata.completion_tokens || 0,
+              processingTime
+            );
+          } catch (e) { logger.debug('PostHog chat tracking failed', { error: e }); }
+        }
+
         return response;
       }
     } catch (error) {
@@ -263,6 +287,13 @@ class AIService {
         error: error instanceof Error ? error.message : 'Unknown error',
         processing_time: Date.now() - startTime
       });
+
+      try {
+        recordAiRequest(agent.provider, agent.model, 'error', (Date.now() - startTime) / 1000);
+        if (userId) posthogEvents.aiError(userId, agent.provider, error instanceof Error ? error.constructor.name : 'UnknownError', error instanceof Error ? error.message : 'Unknown error');
+        captureException(error, { userId, provider: agent.provider, model: agent.model, projectId });
+      } catch (e) { logger.debug('Analytics tracking failed', { error: e }); }
+
       throw error;
     }
   }
@@ -341,43 +372,48 @@ class AIService {
     }
     
     try {
-      const completion = await this.openai.chat.completions.create(requestParams);
+      return await Sentry.startSpan(
+        { name: `ai.chat openai/${agent.model}`, op: 'ai.chat', attributes: { 'ai.provider': 'openai', 'ai.model': agent.model } },
+        async () => {
+          const completion = await this.openai!.chat.completions.create(requestParams);
 
-      const choice = completion.choices[0];
-      if (!choice.message.content) {
-        throw new Error('No response content from OpenAI');
-      }
+          const choice = completion.choices[0];
+          if (!choice.message.content) {
+            throw new Error('No response content from OpenAI');
+          }
 
-      // Track token usage if user context is provided
-      if (userId && completion.usage) {
-        await TokenService.trackUsage({
-          userId,
-          projectId,
-          agentId: agent.id,
-          conversationId,
-          provider: 'openai',
-          model: agent.model,
-          promptTokens: completion.usage.prompt_tokens || 0,
-          completionTokens: completion.usage.completion_tokens || 0,
-          requestType: 'chat'
-        });
-      }
+          // Track token usage if user context is provided
+          if (userId && completion.usage) {
+            await TokenService.trackUsage({
+              userId,
+              projectId,
+              agentId: agent.id,
+              conversationId,
+              provider: 'openai',
+              model: agent.model,
+              promptTokens: completion.usage.prompt_tokens || 0,
+              completionTokens: completion.usage.completion_tokens || 0,
+              requestType: 'chat'
+            });
+          }
 
-      const pTokens = completion.usage?.prompt_tokens || 0;
-      const cTokens = completion.usage?.completion_tokens || 0;
-      const estimatedCost = TokenService.calculateCost('openai', agent.model, pTokens, cTokens);
+          const pTokens = completion.usage?.prompt_tokens || 0;
+          const cTokens = completion.usage?.completion_tokens || 0;
+          const estimatedCost = TokenService.calculateCost('openai', agent.model, pTokens, cTokens);
 
-      return {
-        content: choice.message.content,
-        metadata: {
-          model: agent.model,
-          tokens: completion.usage?.total_tokens,
-          prompt_tokens: pTokens,
-          completion_tokens: cTokens,
-          estimated_cost: estimatedCost,
-          files: projectFiles
+          return {
+            content: choice.message.content,
+            metadata: {
+              model: agent.model,
+              tokens: completion.usage?.total_tokens,
+              prompt_tokens: pTokens,
+              completion_tokens: cTokens,
+              estimated_cost: estimatedCost,
+              files: projectFiles
+            }
+          };
         }
-      };
+      );
     } catch (error: any) {
       logger.error('OpenAI API error details:', {
         error: error?.message, model: agent.model, status: error?.status
@@ -484,6 +520,7 @@ class AIService {
     conversationId?: string,
     projectFiles?: string[]
   ): AsyncGenerator<string | ChatResponse, void, unknown> {
+    const streamStartTime = Date.now();
     let fullContent = '';
     let totalTokens = 0;
     let promptTokens = 0;
@@ -537,6 +574,15 @@ class AIService {
       }
 
       const estimatedCost = TokenService.calculateCost('openai', agent.model, promptTokens, completionTokens);
+
+      const streamProcessingTime = Date.now() - streamStartTime;
+      try { recordAiRequest(agent.provider, agent.model, 'success', streamProcessingTime / 1000, promptTokens, completionTokens); } catch (e) { logger.debug('Analytics tracking failed', { error: e }); }
+
+      if (userId) {
+        try {
+          posthogEvents.chatMessageSent(userId, projectId || '', agent.id, agent.provider, agent.model, totalTokens, promptTokens, completionTokens, streamProcessingTime);
+        } catch (e) { logger.debug('PostHog chat tracking failed', { error: e }); }
+      }
 
       // Yield the final response (not return!) so the for-await-of loop can process it
       yield {
@@ -667,49 +713,54 @@ class AIService {
     }
 
     try {
-      const completion = await this.anthropic.messages.create({
-        model: actualModel,
-        max_tokens: agent.max_tokens,
-        temperature: agent.temperature,
-        system: systemContent,
-        messages: anthropicMessages,
-      });
+      return await Sentry.startSpan(
+        { name: `ai.chat anthropic/${actualModel}`, op: 'ai.chat', attributes: { 'ai.provider': 'anthropic', 'ai.model': actualModel } },
+        async () => {
+          const completion = await this.anthropic!.messages.create({
+            model: actualModel,
+            max_tokens: agent.max_tokens,
+            temperature: agent.temperature,
+            system: systemContent,
+            messages: anthropicMessages,
+          });
 
-      const content = completion.content[0];
-      if (content.type !== 'text') {
-        throw new Error('Unexpected response type from Anthropic');
-      }
+          const content = completion.content[0];
+          if (content.type !== 'text') {
+            throw new Error('Unexpected response type from Anthropic');
+          }
 
-      // Track token usage if user context is provided
-      if (userId && completion.usage) {
-        await TokenService.trackUsage({
-          userId,
-          projectId,
-          agentId: agent.id,
-          conversationId,
-          provider: 'anthropic',
-          model: agent.model,
-          promptTokens: completion.usage.input_tokens || 0,
-          completionTokens: completion.usage.output_tokens || 0,
-          requestType: 'chat'
-        });
-      }
+          // Track token usage if user context is provided
+          if (userId && completion.usage) {
+            await TokenService.trackUsage({
+              userId,
+              projectId,
+              agentId: agent.id,
+              conversationId,
+              provider: 'anthropic',
+              model: agent.model,
+              promptTokens: completion.usage.input_tokens || 0,
+              completionTokens: completion.usage.output_tokens || 0,
+              requestType: 'chat'
+            });
+          }
 
-      const pTokens = completion.usage?.input_tokens || 0;
-      const cTokens = completion.usage?.output_tokens || 0;
-      const estimatedCost = TokenService.calculateCost('anthropic', agent.model, pTokens, cTokens);
+          const pTokens = completion.usage?.input_tokens || 0;
+          const cTokens = completion.usage?.output_tokens || 0;
+          const estimatedCost = TokenService.calculateCost('anthropic', agent.model, pTokens, cTokens);
 
-      return {
-        content: content.text,
-        metadata: {
-          model: agent.model,
-          tokens: completion.usage ? pTokens + cTokens : 0,
-          prompt_tokens: pTokens,
-          completion_tokens: cTokens,
-          estimated_cost: estimatedCost,
-          files: projectFiles
+          return {
+            content: content.text,
+            metadata: {
+              model: agent.model,
+              tokens: completion.usage ? pTokens + cTokens : 0,
+              prompt_tokens: pTokens,
+              completion_tokens: cTokens,
+              estimated_cost: estimatedCost,
+              files: projectFiles
+            }
+          };
         }
-      };
+      );
     } catch (error: any) {
       logger.error('Anthropic API error details:', {
         error: error?.message, model: agent.model, status: error?.status
@@ -826,6 +877,7 @@ class AIService {
     conversationId?: string,
     projectFiles?: string[]
   ): AsyncGenerator<string | ChatResponse, void, unknown> {
+    const streamStartTime = Date.now();
     let fullContent = '';
     let totalInputTokens = 0;
     let totalOutputTokens = 0;
@@ -869,6 +921,15 @@ class AIService {
       }
 
       const estimatedCost = TokenService.calculateCost('anthropic', agent.model, totalInputTokens, totalOutputTokens);
+
+      const anthropicStreamProcessingTime = Date.now() - streamStartTime;
+      try { recordAiRequest(agent.provider, agent.model, 'success', anthropicStreamProcessingTime / 1000, totalInputTokens, totalOutputTokens); } catch (e) { logger.debug('Analytics tracking failed', { error: e }); }
+
+      if (userId) {
+        try {
+          posthogEvents.chatMessageSent(userId, projectId || '', agent.id, agent.provider, agent.model, totalTokens, totalInputTokens, totalOutputTokens, anthropicStreamProcessingTime);
+        } catch (e) { logger.debug('PostHog chat tracking failed', { error: e }); }
+      }
 
       // Yield the final response (not return!) so the for-await-of loop can process it
       yield {
@@ -993,53 +1054,58 @@ class AIService {
     }
 
     try {
-      const completion = await this.openrouter.chat.completions.create(requestParams);
+      return await Sentry.startSpan(
+        { name: `ai.chat openrouter/${agent.model}`, op: 'ai.chat', attributes: { 'ai.provider': 'openrouter', 'ai.model': agent.model } },
+        async () => {
+          const completion = await this.openrouter!.chat.completions.create(requestParams);
 
-      const choice = completion.choices[0];
-      if (!choice.message.content) {
-        throw new Error('No response content from OpenRouter');
-      }
+          const choice = completion.choices[0];
+          if (!choice.message.content) {
+            throw new Error('No response content from OpenRouter');
+          }
 
-      const promptTokens = completion.usage?.prompt_tokens || 0;
-      const completionTokens = completion.usage?.completion_tokens || 0;
-      const totalTokens = completion.usage?.total_tokens || 0;
+          const promptTokens = completion.usage?.prompt_tokens || 0;
+          const completionTokens = completion.usage?.completion_tokens || 0;
+          const totalTokens = completion.usage?.total_tokens || 0;
 
-      // Track token usage if user context is provided
-      if (userId && completion.usage) {
-        await TokenService.trackUsage({
-          userId,
-          projectId,
-          agentId: agent.id,
-          conversationId,
-          provider: 'openrouter',
-          model: agent.model,
-          promptTokens,
-          completionTokens,
-          requestType: 'chat'
-        });
-      }
+          // Track token usage if user context is provided
+          if (userId && completion.usage) {
+            await TokenService.trackUsage({
+              userId,
+              projectId,
+              agentId: agent.id,
+              conversationId,
+              provider: 'openrouter',
+              model: agent.model,
+              promptTokens,
+              completionTokens,
+              requestType: 'chat'
+            });
+          }
 
-      logger.info('OpenRouter chat completed', {
-        provider: 'openrouter',
-        model: agent.model,
-        promptTokens,
-        completionTokens,
-        totalTokens
-      });
+          logger.info('OpenRouter chat completed', {
+            provider: 'openrouter',
+            model: agent.model,
+            promptTokens,
+            completionTokens,
+            totalTokens
+          });
 
-      const estimatedCost = TokenService.calculateCost('openrouter', agent.model, promptTokens, completionTokens);
+          const estimatedCost = TokenService.calculateCost('openrouter', agent.model, promptTokens, completionTokens);
 
-      return {
-        content: choice.message.content,
-        metadata: {
-          model: agent.model,
-          tokens: totalTokens,
-          prompt_tokens: promptTokens,
-          completion_tokens: completionTokens,
-          estimated_cost: estimatedCost,
-          files: projectFiles
+          return {
+            content: choice.message.content,
+            metadata: {
+              model: agent.model,
+              tokens: totalTokens,
+              prompt_tokens: promptTokens,
+              completion_tokens: completionTokens,
+              estimated_cost: estimatedCost,
+              files: projectFiles
+            }
+          };
         }
-      };
+      );
     } catch (error: any) {
       logger.error('OpenRouter API error details:', {
         error: error?.message, model: agent.model, status: error?.status
@@ -1146,6 +1212,7 @@ class AIService {
     conversationId?: string,
     projectFiles?: string[]
   ): AsyncGenerator<string | ChatResponse, void, unknown> {
+    const streamStartTime = Date.now();
     let fullContent = '';
     let totalTokens = 0;
     let promptTokens = 0;
@@ -1198,6 +1265,15 @@ class AIService {
       }
 
       const estimatedCost = TokenService.calculateCost('openrouter', agent.model, promptTokens, completionTokens);
+
+      const openrouterStreamProcessingTime = Date.now() - streamStartTime;
+      try { recordAiRequest(agent.provider, agent.model, 'success', openrouterStreamProcessingTime / 1000, promptTokens, completionTokens); } catch (e) { logger.debug('Analytics tracking failed', { error: e }); }
+
+      if (userId) {
+        try {
+          posthogEvents.chatMessageSent(userId, projectId || '', agent.id, agent.provider, agent.model, totalTokens, promptTokens, completionTokens, openrouterStreamProcessingTime);
+        } catch (e) { logger.debug('PostHog chat tracking failed', { error: e }); }
+      }
 
       logger.info('OpenRouter streaming chat completed', {
         provider: 'openrouter',

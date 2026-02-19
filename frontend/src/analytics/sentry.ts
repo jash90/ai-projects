@@ -4,6 +4,17 @@
  */
 
 import * as Sentry from '@sentry/react';
+import {
+  useEffect,
+} from 'react';
+import {
+  useLocation,
+  useNavigationType,
+  createRoutesFromChildren,
+  matchRoutes,
+  Routes,
+} from 'react-router-dom';
+import { isAnalyticsAllowed } from '@/utils/consent';
 import type { UserContext } from './types';
 
 let isInitialized = false;
@@ -38,13 +49,24 @@ export function initializeSentry(): void {
       new RegExp(`^${import.meta.env.VITE_API_URL?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') || ''}`),
     ],
 
-    // Session Replay - Full tracking as requested
-    replaysSessionSampleRate: parseFloat(import.meta.env.VITE_SENTRY_REPLAY_SAMPLE_RATE || '0.1'),
-    replaysOnErrorSampleRate: 1.0, // Always capture replay on errors
+    // Session Replay - only active when user has granted analytics consent (GDPR/RODO)
+    replaysSessionSampleRate: isAnalyticsAllowed()
+      ? parseFloat(import.meta.env.VITE_SENTRY_REPLAY_SAMPLE_RATE || '0.1')
+      : 0,
+    replaysOnErrorSampleRate: isAnalyticsAllowed()
+      ? parseFloat(import.meta.env.VITE_SENTRY_REPLAY_ON_ERROR_SAMPLE_RATE || '1.0')
+      : 0,
 
     // Integrations
     integrations: [
-      Sentry.browserTracingIntegration(),
+      Sentry.reactRouterV6BrowserTracingIntegration({
+        useEffect,
+        useLocation,
+        useNavigationType,
+        createRoutesFromChildren,
+        matchRoutes,
+      }),
+      // Replay integration included but gated by sample rates above (0 = no recording)
       Sentry.replayIntegration({
         // Privacy-first configuration: mask all text and block media by default
         // Elements that must remain visible can use data-sentry-unmask attribute
@@ -58,16 +80,15 @@ export function initializeSentry(): void {
     beforeSend(event, hint) {
       const error = hint.originalException;
 
-      // Filter out network errors that are expected
       if (error instanceof Error) {
-        if (error.message.includes('Failed to fetch')) {
+        // AbortError = user navigated away or cancelled request — expected, drop it
+        if (error.name === 'AbortError' || error.message.includes('AbortError')) {
           return null;
         }
-        if (error.message.includes('NetworkError')) {
-          return null;
-        }
-        if (error.message.includes('AbortError')) {
-          return null;
+
+        // Tag network errors for filtering in Sentry dashboard instead of dropping
+        if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+          event.tags = { ...event.tags, error_type: 'network' };
         }
       }
 
@@ -187,6 +208,12 @@ export function setTag(key: string, value: string): void {
 export function isSentryEnabled(): boolean {
   return isInitialized;
 }
+
+/**
+ * Sentry-instrumented Routes component for React Router v6
+ * Use this instead of `Routes` from react-router-dom for automatic route tracking
+ */
+export const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
 
 // Export Sentry for advanced usage (ErrorBoundary, etc.)
 export { Sentry };

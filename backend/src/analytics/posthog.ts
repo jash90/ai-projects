@@ -4,6 +4,7 @@
 
 import { PostHog } from 'posthog-node';
 import logger from '../utils/logger';
+import { analyticsConfig } from '../utils/config';
 import type { UserContext, PostHogEventProperties } from './types';
 
 let client: PostHog | null = null;
@@ -12,10 +13,10 @@ let client: PostHog | null = null;
  * Initialize PostHog client
  */
 export function initializePostHog(): void {
-  const apiKey = process.env.POSTHOG_API_KEY;
+  const { apiKey, host, enabled } = analyticsConfig.posthog;
 
-  if (!apiKey) {
-    logger.info('PostHog API key not configured, skipping initialization');
+  if (!apiKey || !enabled) {
+    logger.info('PostHog not enabled, skipping initialization');
     return;
   }
 
@@ -26,14 +27,12 @@ export function initializePostHog(): void {
 
   try {
     client = new PostHog(apiKey, {
-      host: process.env.POSTHOG_HOST || 'https://us.i.posthog.com',
+      host,
       flushAt: 20, // Flush after 20 events
       flushInterval: 10000, // Or every 10 seconds
     });
 
-    logger.info('PostHog initialized successfully', {
-      host: process.env.POSTHOG_HOST || 'https://us.i.posthog.com',
-    });
+    logger.info('PostHog initialized successfully', { host });
   } catch (error) {
     logger.error('Failed to initialize PostHog', { error });
   }
@@ -65,15 +64,19 @@ export function trackEvent(
 ): void {
   if (!client) return;
 
-  client.capture({
-    distinctId: userId,
-    event: eventName,
-    properties: {
-      ...properties,
-      $lib: 'posthog-node',
-      environment: process.env.NODE_ENV,
-    },
-  });
+  try {
+    client.capture({
+      distinctId: userId,
+      event: eventName,
+      properties: {
+        ...properties,
+        $lib: 'posthog-node',
+        environment: process.env.NODE_ENV,
+      },
+    });
+  } catch (error) {
+    logger.debug('PostHog trackEvent failed', { eventName, error });
+  }
 }
 
 /**
@@ -202,11 +205,16 @@ export const events = {
 export async function shutdownPostHog(): Promise<void> {
   if (!client) return;
 
+  const shutdownTimeoutMs = parseInt(process.env.POSTHOG_SHUTDOWN_TIMEOUT_MS || '10000', 10);
+
   try {
-    await client.shutdown();
+    const timeout = new Promise<void>((_, reject) =>
+      setTimeout(() => reject(new Error('PostHog shutdown timed out')), shutdownTimeoutMs)
+    );
+    await Promise.race([client.shutdown(), timeout]);
     logger.info('PostHog shutdown complete');
   } catch (error) {
-    logger.error('Error shutting down PostHog', { error });
+    logger.warn('PostHog shutdown issue', { error });
   }
 }
 

@@ -45,15 +45,23 @@ function Chat({ project, agent, className }: ChatProps) {
 
   // Load conversation history on mount
   useEffect(() => {
+    let isCancelled = false
+
     const loadConversation = async () => {
       try {
         await conversationStore.getState().getConversation(project.id, agent.id)
       } catch (error) {
-        console.error('Failed to load conversation:', error)
+        if (!isCancelled) {
+          console.error('Failed to load conversation:', error)
+        }
       }
     }
 
     loadConversation()
+
+    return () => {
+      isCancelled = true
+    }
   }, [project.id, agent.id])
 
   const handleSendMessage = useCallback(async (content: string, attachments?: ChatFileAttachment[]) => {
