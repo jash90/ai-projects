@@ -1,20 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import mermaid from 'mermaid';
 import DOMPurify from 'dompurify';
 
 interface MermaidDiagramProps {
   chart: string;
   id?: string;
 }
-
-// Initialize mermaid with secure configuration
-mermaid.initialize({
-  startOnLoad: false,
-  theme: 'default',
-  securityLevel: 'strict', // Prevent XSS attacks
-  fontFamily: 'ui-sans-serif, system-ui, sans-serif',
-  darkMode: false, // Will be handled via CSS
-});
 
 export function MermaidDiagram({ chart, id }: MermaidDiagramProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -42,7 +32,10 @@ export function MermaidDiagram({ chart, id }: MermaidDiagramProps) {
       try {
         setError('');
 
-        // Update theme based on dark mode
+        // Dynamically import mermaid (~600KB) only when needed
+        const { default: mermaid } = await import('mermaid');
+
+        // Initialize with current theme
         mermaid.initialize({
           startOnLoad: false,
           theme: isDark ? 'dark' : 'default',

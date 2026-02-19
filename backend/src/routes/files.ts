@@ -12,6 +12,8 @@ import { validate, commonSchemas, validateFileUpload } from '../middleware/valid
 import { generalLimiter, uploadLimiter } from '../middleware/rateLimiting';
 import config from '../utils/config';
 import logger from '../utils/logger';
+import { events as posthogEvents } from '../analytics/posthog';
+import { captureException } from '../analytics';
 
 const router: Router = Router();
 
@@ -119,6 +121,7 @@ router.get('/projects/:projectId/uploads',
       }
 
       logger.error('Error fetching files:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to fetch files'
@@ -223,13 +226,14 @@ router.post('/projects/:projectId/uploads',
         uploaded_by: userId,
       });
 
-      logger.info('File uploaded', { 
-        fileId: file.id, 
-        projectId, 
-        userId, 
+      logger.info('File uploaded', {
+        fileId: file.id,
+        projectId,
+        userId,
         filename: file.original_name,
         size: file.size
       });
+      try { posthogEvents.fileUploaded(userId, projectId, uploadedFile.mimetype, uploadedFile.buffer.length); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
 
       res.status(201).json({
         success: true,
@@ -242,6 +246,7 @@ router.post('/projects/:projectId/uploads',
       });
     } catch (error) {
       logger.error('Error uploading file:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to upload file'
@@ -324,6 +329,7 @@ router.get('/files/:id',
       res.send(fileBuffer);
     } catch (error) {
       logger.error('Error serving file:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to serve file'
@@ -406,6 +412,7 @@ router.get('/files/:id/download',
       res.send(fileBuffer);
     } catch (error) {
       logger.error('Error downloading file:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to download file'
@@ -484,6 +491,7 @@ router.delete('/files/:id',
       }
 
       logger.info('File deleted', { fileId: id, userId });
+      try { posthogEvents.fileDeleted(userId, id, 'uploaded_file'); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
 
       res.json({
         success: true,
@@ -491,6 +499,7 @@ router.delete('/files/:id',
       });
     } catch (error) {
       logger.error('Error deleting file:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to delete file'
@@ -588,6 +597,7 @@ router.get('/projects/:projectId/uploads/type/:mimetype',
       }
 
       logger.error('Error fetching files by type:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to fetch files by type'
@@ -682,6 +692,7 @@ router.get('/projects/:projectId/uploads/search',
       }
 
       logger.error('Error searching files:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to search files'
@@ -758,6 +769,7 @@ router.get('/projects/:projectId/uploads/stats',
       }
 
       logger.error('Error fetching file stats:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to fetch file statistics'
@@ -834,6 +846,7 @@ router.post('/files/:id/migrate-markdown',
       });
     } catch (error) {
       logger.error('Error migrating file to Markdown:', error);
+      captureException(error, { userId: req.user?.id });
       res.status(500).json({
         success: false,
         error: 'Failed to migrate file to Markdown'

@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ConversationMessage, Agent } from '@/types'
 import { ChatMessage } from './ChatMessage'
@@ -15,6 +16,17 @@ function ChatMessages({ messages, agent, isLoading = false, className }: ChatMes
   const { t } = useTranslation('chat')
   // Ensure messages is always an array and agent exists
   const safeMessages = messages || []
+
+  // Assign stable fallback IDs to messages missing them
+  const stableIdMap = useMemo(() => {
+    const map = new Map<number, string>()
+    safeMessages.forEach((msg, idx) => {
+      if (!msg.id) {
+        map.set(idx, crypto.randomUUID())
+      }
+    })
+    return map
+  }, [safeMessages])
 
   // Return early if agent is not available
   if (!agent) {
@@ -53,7 +65,7 @@ function ChatMessages({ messages, agent, isLoading = false, className }: ChatMes
       <div className="min-h-full">
         {safeMessages.map((message, index) => (
           <ChatMessage
-            key={message.id || `message-${index}`}
+            key={message.id || stableIdMap.get(index)}
             message={message}
             agent={agent}
           />

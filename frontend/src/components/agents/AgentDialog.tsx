@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Agent, AgentCreate, AgentUpdate } from '@/types'
 import { modelsApi } from '@/lib/api'
@@ -73,13 +73,18 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
   const [error, setError] = useState<string | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [showModelPicker, setShowModelPicker] = useState(false)
+  const hasLoadedRef = useRef(false)
 
   // Load AI status when dialog opens
   useEffect(() => {
-    if (open && !aiStatus) {
+    if (open && !hasLoadedRef.current) {
+      hasLoadedRef.current = true
       loadAIStatus()
     }
-  }, [open, aiStatus])
+    if (!open) {
+      hasLoadedRef.current = false
+    }
+  }, [open])
 
   // Populate form when editing
   useEffect(() => {

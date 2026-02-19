@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { User, AuthTokens } from '@/types'
-import { settingsApi } from '@/lib/api'
+import { settingsApi, authApi } from '@/lib/api'
 import { uiStore } from './uiStore'
 import { setUser as setAnalyticsUser, clearUser as clearAnalyticsUser, events as posthogEvents } from '@/analytics'
 
@@ -69,14 +69,17 @@ export const authStore = create<AuthStore>()(
           username: user.username,
           role: user.role,
         })
-        posthogEvents.loginCompleted('credentials')
+        try { posthogEvents.loginCompleted('credentials') } catch {}
       },
 
       logout: () => {
         // Track logout before clearing
-        posthogEvents.logoutCompleted()
+        try { posthogEvents.logoutCompleted() } catch {}
         // Clear analytics user context
         clearAnalyticsUser()
+
+        // Invalidate refresh token on the server (fire-and-forget)
+        authApi.logout().catch(() => {})
 
         set({
           user: null,

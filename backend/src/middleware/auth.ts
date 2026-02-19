@@ -6,6 +6,7 @@ import { UserModel } from '../models/User';
 import { JwtPayload, AuthUser } from '../types';
 import config from '../utils/config';
 import logger from '../utils/logger';
+import { setUserContext, addBreadcrumb } from '../analytics/sentry';
 
 // Extend Express Request type to include user
 declare global {
@@ -18,8 +19,14 @@ declare global {
 
 export async function authenticateToken(req: Request, res: Response, next: NextFunction) {
   try {
+    // Support both Authorization header and cookie for SSR compatibility
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    let token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+
+    // Fall back to cookie if no Authorization header (SSR requests)
+    if (!token && req.cookies?.auth_token) {
+      token = req.cookies.auth_token;
+    }
 
     if (!token) {
       return res.status(401).json({
@@ -55,6 +62,13 @@ export async function authenticateToken(req: Request, res: Response, next: NextF
       email: user.email,
       username: user.username,
     };
+
+    try {
+      setUserContext({ id: user.id, email: user.email, username: user.username, role: user.role });
+      addBreadcrumb({ category: 'auth', message: `User authenticated: ${user.id}`, level: 'info' });
+    } catch (_) {
+      // Analytics should never break authentication
+    }
 
     next();
   } catch (error) {

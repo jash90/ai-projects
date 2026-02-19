@@ -3,6 +3,7 @@ import { User, UserCreate, UserProfileUpdate, UserPasswordUpdate, UserPreference
 import bcrypt from 'bcryptjs';
 import logger from '../utils/logger';
 import config from '../utils/config';
+import { events as posthogEvents } from '../analytics/posthog';
 
 export class UserModel {
   static async query(sql: string, params: any[] = []): Promise<any> {
@@ -437,12 +438,14 @@ export class UserModel {
 
       // Check global limit
       if (globalLimit > 0 && totalTokensNum + tokensToUse > globalLimit) {
+        try { posthogEvents.tokenLimitExceeded(userId, 'global', totalTokensNum, globalLimit); } catch {}
         const { createTokenLimitError } = await import('../utils/errors');
         throw createTokenLimitError('global', totalTokensNum, globalLimit, tokensToUse);
       }
 
       // Check monthly limit
       if (monthlyLimit > 0 && monthlyTokensNum + tokensToUse > monthlyLimit) {
+        try { posthogEvents.tokenLimitExceeded(userId, 'monthly', monthlyTokensNum, monthlyLimit); } catch {}
         const { createTokenLimitError } = await import('../utils/errors');
         throw createTokenLimitError('monthly', monthlyTokensNum, monthlyLimit, tokensToUse);
       }

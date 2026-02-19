@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import vike from 'vike/plugin'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
 import { resolve } from 'path'
 
@@ -7,6 +8,10 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react({
       jsxRuntime: 'automatic',
+    }),
+    vike({
+      // Enable prerendering for static pages (landing, login, register)
+      prerender: true,
     }),
     // Sentry plugin for source map upload (production only)
     mode === 'production' && process.env.SENTRY_AUTH_TOKEN && sentryVitePlugin({
@@ -42,6 +47,9 @@ export default defineConfig(({ mode }) => ({
       },
     },
   },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime'],
+  },
   build: {
     outDir: 'dist',
     sourcemap: true,
@@ -53,6 +61,8 @@ export default defineConfig(({ mode }) => ({
           ui: ['@headlessui/react', 'framer-motion'],
           utils: ['axios', 'zustand', '@tanstack/react-query'],
           analytics: ['@sentry/react', 'posthog-js'],
+          markdown: ['react-markdown', 'remark-gfm', 'remark-math', 'rehype-katex', 'rehype-highlight'],
+          mermaid: ['mermaid'],
         },
       },
     },
