@@ -199,7 +199,7 @@ router.post('/projects/:projectId/files',
         fileType: file.type
       });
 
-      try { posthogEvents.fileUploaded(userId, projectId, type, content?.length || 0); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
+      try { posthogEvents.fileUploaded(userId, { projectId, fileType: type, fileSize: content?.length || 0 }); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
 
       res.status(201).json({
         success: true,
@@ -498,7 +498,7 @@ router.delete('/files/:id',
       }
 
       logger.info('File deleted', { fileId: id, userId });
-      try { posthogEvents.fileDeleted(userId, id, 'project_file'); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
+      try { posthogEvents.fileDeleted(userId, { projectId: id }); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
 
       res.json({
         success: true,

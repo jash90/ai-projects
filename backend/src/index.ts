@@ -17,7 +17,6 @@ import { SocketHandler } from './services/socketHandler';
 import { modelService } from './services/modelService';
 import { generalLimiter } from './middleware/rateLimiting';
 import { sanitizeInputs } from './middleware/validation';
-import { metricsMiddleware } from './middleware/metricsMiddleware';
 import { sentryBreadcrumbMiddleware } from './middleware/sentryMiddleware';
 import config from './utils/config';
 import logger from './utils/logger';

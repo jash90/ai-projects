@@ -268,17 +268,14 @@ class AIService {
 
         if (userId) {
           try {
-            posthogEvents.chatMessageSent(
-              userId,
-              projectId || '',
-              agent.id,
-              agent.provider,
-              agent.model,
-              response.metadata.tokens || 0,
-              response.metadata.prompt_tokens || 0,
-              response.metadata.completion_tokens || 0,
-              processingTime
-            );
+            posthogEvents.chatMessageSent(userId, {
+              provider: agent.provider,
+              model: agent.model,
+              tokensUsed: response.metadata.tokens || 0,
+              promptTokens: response.metadata.prompt_tokens || 0,
+              completionTokens: response.metadata.completion_tokens || 0,
+              responseTimeMs: processingTime,
+            });
           } catch (e) { logger.debug('PostHog chat tracking failed', { error: e }); }
         }
 
@@ -294,7 +291,7 @@ class AIService {
 
       try {
         recordAiRequest(agent.provider, agent.model, 'error', (Date.now() - startTime) / 1000);
-        if (userId) posthogEvents.aiError(userId, agent.provider, error instanceof Error ? error.constructor.name : 'UnknownError', error instanceof Error ? error.message : 'Unknown error');
+        if (userId) posthogEvents.aiError(userId, { provider: agent.provider, model: agent.model, error: error instanceof Error ? error.message : 'Unknown error' });
         captureException(error, { userId, provider: agent.provider, model: agent.model, projectId });
       } catch (e) { logger.debug('Analytics tracking failed', { error: e }); }
 
@@ -584,7 +581,7 @@ class AIService {
 
       if (userId) {
         try {
-          posthogEvents.chatMessageSent(userId, projectId || '', agent.id, agent.provider, agent.model, totalTokens, promptTokens, completionTokens, streamProcessingTime);
+          posthogEvents.chatMessageSent(userId, { provider: agent.provider, model: agent.model, tokensUsed: totalTokens, promptTokens, completionTokens, responseTimeMs: streamProcessingTime });
         } catch (e) { logger.debug('PostHog chat tracking failed', { error: e }); }
       }
 
@@ -931,7 +928,7 @@ class AIService {
 
       if (userId) {
         try {
-          posthogEvents.chatMessageSent(userId, projectId || '', agent.id, agent.provider, agent.model, totalTokens, totalInputTokens, totalOutputTokens, anthropicStreamProcessingTime);
+          posthogEvents.chatMessageSent(userId, { provider: agent.provider, model: agent.model, tokensUsed: totalTokens, promptTokens: totalInputTokens, completionTokens: totalOutputTokens, responseTimeMs: anthropicStreamProcessingTime });
         } catch (e) { logger.debug('PostHog chat tracking failed', { error: e }); }
       }
 
@@ -1275,7 +1272,7 @@ class AIService {
 
       if (userId) {
         try {
-          posthogEvents.chatMessageSent(userId, projectId || '', agent.id, agent.provider, agent.model, totalTokens, promptTokens, completionTokens, openrouterStreamProcessingTime);
+          posthogEvents.chatMessageSent(userId, { provider: agent.provider, model: agent.model, tokensUsed: totalTokens, promptTokens, completionTokens, responseTimeMs: openrouterStreamProcessingTime });
         } catch (e) { logger.debug('PostHog chat tracking failed', { error: e }); }
       }
 
