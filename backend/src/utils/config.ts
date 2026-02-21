@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import { Config } from '../types';
-import type { AnalyticsConfig } from '../analytics/types';
 
 dotenv.config();
 
@@ -29,30 +28,6 @@ const config: Config = {
     default_token_limit_monthly: parseInt(process.env.DEFAULT_TOKEN_LIMIT_MONTHLY || '100000', 10), // 100K tokens/month
   },
   log_level: process.env.LOG_LEVEL || 'info',
-};
-
-/**
- * Analytics configuration for Sentry, PostHog, and Prometheus metrics
- */
-export const analyticsConfig: AnalyticsConfig = {
-  sentry: {
-    dsn: process.env.SENTRY_DSN,
-    environment: process.env.SENTRY_ENVIRONMENT || process.env.NODE_ENV || 'development',
-    tracesSampleRate: parseFloat(process.env.SENTRY_TRACES_SAMPLE_RATE || '0.1'),
-    profilesSampleRate: parseFloat(process.env.SENTRY_PROFILES_SAMPLE_RATE || '0.1'),
-    debug: process.env.SENTRY_DEBUG === 'true',
-    enabled: !!process.env.SENTRY_DSN,
-  },
-  posthog: {
-    apiKey: process.env.POSTHOG_API_KEY,
-    host: process.env.POSTHOG_HOST || 'https://app.posthog.com',
-    enabled: process.env.POSTHOG_ENABLED !== 'false' && !!process.env.POSTHOG_API_KEY,
-  },
-  metrics: {
-    enabled: process.env.METRICS_ENABLED !== 'false',
-    path: process.env.METRICS_PATH || '/metrics',
-    prefix: process.env.METRICS_PREFIX || 'aiprojects_',
-  },
 };
 
 export default config;
