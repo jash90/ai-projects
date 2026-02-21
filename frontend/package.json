@@ -71,8 +71,6 @@
     "sirv": "^3.0.2",
     "socket.io-client": "^4.7.3",
     "tailwind-merge": "^1.14.0",
-    "vike": "^0.4.253",
-    "vike-react": "^0.6.20",
     "web-vitals": "^5.1.0",
     "zod": "^3.22.4",
     "zustand": "^4.4.4"
