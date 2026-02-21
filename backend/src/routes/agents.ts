@@ -6,6 +6,7 @@ import { requireAdmin } from '../middleware/adminAuth';
 import { validate, commonSchemas } from '../middleware/validation';
 import { generalLimiter, creationLimiter } from '../middleware/rateLimiting';
 import logger from '../utils/logger';
+import { events as posthogEvents } from '../analytics/posthog';
 
 const router: Router = Router();
 
@@ -195,6 +196,8 @@ router.post('/',
 
       logger.info('Agent created', { agentId: agent.id, name: agent.name, createdBy: req.user!.id });
 
+      try { posthogEvents.agentCreated(req.user!.id, { agentId: agent.id, provider: agent.provider, model: agent.model }); } catch {}
+
       res.status(201).json({
         success: true,
         data: {
@@ -284,6 +287,8 @@ router.put('/:id',
 
       logger.info('Agent updated', { agentId: id, updates: Object.keys(updates), updatedBy: req.user!.id });
 
+      try { posthogEvents.agentUpdated(req.user!.id, { agentId: id, provider: agent.provider, model: agent.model }); } catch {}
+
       res.json({
         success: true,
         data: {
@@ -364,6 +369,8 @@ router.delete('/:id',
       }
 
       logger.info('Agent deleted', { agentId: id, deletedBy: req.user!.id });
+
+      try { posthogEvents.agentDeleted(req.user!.id, { agentId: id }); } catch {}
 
       res.json({
         success: true,

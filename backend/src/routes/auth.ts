@@ -4,6 +4,8 @@ import { generateTokens, revokeToken, refreshAccessToken, authenticateToken } fr
 import { validate, commonSchemas } from '../middleware/validation';
 import { authLimiter } from '../middleware/rateLimiting';
 import logger from '../utils/logger';
+import { events as posthogEvents, identifyUser } from '../analytics/posthog';
+import { setUserContext, clearUserContext } from '../analytics/sentry';
 
 const router: Router = Router();
 
@@ -70,6 +72,8 @@ router.post('/register',
       });
 
       logger.info('User registered successfully', { userId: user.id, email: user.email });
+
+      try { posthogEvents.userRegistered(user.id, { email: user.email, username: user.username }); } catch {}
 
       res.status(201).json({
         success: true,
@@ -161,6 +165,12 @@ router.post('/login',
       });
 
       logger.info('User logged in successfully', { userId: user.id, email: user.email });
+
+      try {
+        identifyUser({ id: user.id, email: user.email, username: user.username, role: user.role });
+        setUserContext({ id: user.id, email: user.email, username: user.username, role: user.role });
+        posthogEvents.userLoggedIn(user.id, { provider: 'email' });
+      } catch {}
 
       res.json({
         success: true,
@@ -315,6 +325,11 @@ router.post('/logout', authenticateToken, async (req: Request, res: Response) =>
     }
 
     logger.info('User logged out successfully', { userId: req.user!.id });
+
+    try {
+      clearUserContext();
+      posthogEvents.userLoggedOut(req.user!.id);
+    } catch {}
 
     res.json({
       success: true,

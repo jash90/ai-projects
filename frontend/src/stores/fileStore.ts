@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { TextFile, FileCreate } from '@/types'
 import { projectFilesApi } from '@/lib/api'
+import { events } from '@/analytics/posthog'
 
 interface FileState {
   // Files by project ID
@@ -103,6 +104,7 @@ export const useFiles = create<FileState>((set, get) => ({
           },
           currentFile: newFile
         }))
+        try { events.fileCreated({ projectId, name: newFile?.name }); } catch {}
         return newFile
       } else {
         const error = response.error || 'Failed to create file'
@@ -231,6 +233,7 @@ export const useFiles = create<FileState>((set, get) => ({
             currentFile: updatedCurrentFile
           }
         })
+        try { events.fileDeleted(); } catch {}
       } else {
         const error = response.error || 'Failed to delete file'
         set({ error })

@@ -1,16 +1,49 @@
-import React from 'react'
+// Sentry MUST be initialized before React imports
+import { initializeSentry, captureException } from '@/analytics/sentry'
+initializeSentry()
 
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'react-hot-toast'
+import { PostHogProvider } from 'posthog-js/react'
+import posthog from 'posthog-js'
 import App from './App.tsx'
 import './index.css'
+import CookieConsent from '@/components/CookieConsent'
+import { isAnalyticsAllowed } from '@/utils/consent'
+import { initWebVitals } from '@/utils/webVitals'
 
 // Initialize i18n
 import './lib/i18n'
 
 // Initialize PWA
 import './utils/pwa'
+
+// Initialize PostHog if key is configured
+const posthogKey = import.meta.env.VITE_POSTHOG_KEY
+if (posthogKey && import.meta.env.VITE_POSTHOG_ENABLED !== 'false') {
+  posthog.init(posthogKey, {
+    api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com',
+    opt_out_capturing_by_default: !isAnalyticsAllowed(),
+    autocapture: false,
+    capture_pageview: false,
+    capture_pageleave: true,
+    respect_dnt: true,
+    persistence: 'localStorage',
+    session_recording: {
+      maskAllInputs: true,
+    },
+  })
+}
+
+// Global error handlers for unhandled errors
+window.addEventListener('error', (event) => {
+  captureException(event.error || new Error(event.message), { source: 'window.onerror' })
+})
+window.addEventListener('unhandledrejection', (event) => {
+  captureException(event.reason, { source: 'unhandledrejection' })
+})
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,10 +58,11 @@ const queryClient = new QueryClient({
   },
 })
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const AppContent = (
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <App />
+      <CookieConsent />
       <Toaster
         position="top-right"
         toastOptions={{
@@ -53,5 +87,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         }}
       />
     </QueryClientProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 )
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  posthogKey
+    ? <PostHogProvider client={posthog}>{AppContent}</PostHogProvider>
+    : AppContent
+)
+
+// Init web vitals after render (non-blocking)
+initWebVitals()
