@@ -1,10 +1,6 @@
-/**
- * Analytics Types - TypeScript interfaces for Sentry, PostHog, and Prometheus
- */
-
 export interface AnalyticsConfig {
   sentry: {
-    dsn: string | undefined;
+    dsn?: string;
     environment: string;
     tracesSampleRate: number;
     profilesSampleRate: number;
@@ -12,14 +8,9 @@ export interface AnalyticsConfig {
     enabled: boolean;
   };
   posthog: {
-    apiKey: string | undefined;
+    apiKey?: string;
     host: string;
     enabled: boolean;
-  };
-  metrics: {
-    enabled: boolean;
-    path: string;
-    prefix: string;
   };
 }
 
@@ -39,54 +30,16 @@ export interface EventContext {
   [key: string]: unknown;
 }
 
-export interface PostHogEventProperties {
-  userId?: string;
-  projectId?: string;
-  agentId?: string;
-  provider?: string;
-  model?: string;
-  tokensUsed?: number;
-  promptTokens?: number;
-  completionTokens?: number;
-  responseTimeMs?: number;
-  fileType?: string;
-  fileSize?: number;
-  errorType?: string;
-  errorMessage?: string;
-  limitType?: string;
-  currentUsage?: number;
-  limit?: number;
-  method?: string;
-  [key: string]: unknown;
-}
-
-export interface MetricLabels {
-  method?: string;
-  path?: string;
-  status_code?: string;
-  provider?: string;
-  model?: string;
-  type?: string;
-  error_type?: string;
-  error_code?: string;
-}
-
-export type BreadcrumbCategory =
-  | 'http'
-  | 'auth'
-  | 'navigation'
-  | 'ui.click'
-  | 'console'
-  | 'database'
-  | 'ai'
-  | 'file'
-  | 'socket';
-
-export type BreadcrumbLevel = 'fatal' | 'error' | 'warning' | 'info' | 'debug';
+export type BreadcrumbCategory = 'auth' | 'http' | 'ai' | 'db' | 'navigation' | 'ui';
+export type BreadcrumbLevel = 'debug' | 'info' | 'warning' | 'error' | 'fatal';
 
 export interface BreadcrumbData {
   category: BreadcrumbCategory;
   message: string;
   level?: BreadcrumbLevel;
   data?: Record<string, unknown>;
+}
+
+export interface PostHogEventProperties {
+  [key: string]: string | number | boolean | null | undefined;
 }

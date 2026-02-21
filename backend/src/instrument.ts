@@ -7,6 +7,10 @@
  * @see https://docs.sentry.io/platforms/javascript/guides/express/install/esm/
  */
 
+// dotenv must be loaded here — instrument.ts runs before config.ts loads dotenv
+import { config as dotenvConfig } from 'dotenv';
+dotenvConfig();
+
 import * as Sentry from '@sentry/node';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
 

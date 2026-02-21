@@ -73,7 +73,7 @@ export async function authenticateToken(req: Request, res: Response, next: NextF
     next();
   } catch (error) {
     logger.error('Authentication error:', error);
-    
+
     // Note: TokenExpiredError is a subclass of JsonWebTokenError, so check it first
     if (error instanceof jwt.TokenExpiredError) {
       return res.status(401).json({
@@ -105,7 +105,7 @@ export function generateTokens(user: AuthUser): { accessToken: string; refreshTo
   const accessTokenOptions: SignOptions = {
     expiresIn: config.jwt_expires_in as StringValue | number,
   };
-  
+
   const refreshTokenOptions: SignOptions = {
     expiresIn: '30d', // Refresh tokens last longer
   };
@@ -157,7 +157,7 @@ export async function refreshAccessToken(refreshToken: string): Promise<string> 
     const tokenOptions: SignOptions = {
       expiresIn: config.jwt_expires_in as StringValue | number,
     };
-    
+
     return jwt.sign(payload, config.jwt_secret, tokenOptions);
   } catch (error) {
     logger.error('Token refresh error:', error);

@@ -45,9 +45,9 @@ const router: Router = Router();
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
-router.get('/', 
+router.get('/',
   generalLimiter,
-  authenticateToken, 
+  authenticateToken,
   async (req: Request, res: Response) => {
     try {
       const agents = await AgentModel.findAll();
@@ -113,14 +113,14 @@ router.get('/',
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
-router.get('/:id', 
+router.get('/:id',
   generalLimiter,
   authenticateToken,
   validate({ params: Joi.object({ id: commonSchemas.uuid }) }),
   async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      
+
       const agent = await AgentModel.findById(id);
       if (!agent) {
         return res.status(404).json({
@@ -194,11 +194,11 @@ router.post('/',
   async (req: Request, res: Response) => {
     try {
       const agentData = req.body;
-      
+
       const agent = await AgentModel.create(agentData);
 
       logger.info('Agent created', { agentId: agent.id, name: agent.name, createdBy: req.user!.id });
-      try { posthogEvents.agentCreated(req.user!.id, agent.id, agent.provider, agent.model); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
+      try { posthogEvents.agentCreated(req.user!.id, { agentId: agent.id, provider: agent.provider, model: agent.model }); } catch {}
 
       res.status(201).json({
         success: true,
@@ -289,7 +289,7 @@ router.put('/:id',
       }
 
       logger.info('Agent updated', { agentId: id, updates: Object.keys(updates), updatedBy: req.user!.id });
-      try { posthogEvents.agentUpdated(req.user!.id, id); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
+      try { posthogEvents.agentUpdated(req.user!.id, { agentId: id, provider: agent.provider, model: agent.model }); } catch {}
 
       res.json({
         success: true,
@@ -372,7 +372,7 @@ router.delete('/:id',
       }
 
       logger.info('Agent deleted', { agentId: id, deletedBy: req.user!.id });
-      try { posthogEvents.agentDeleted(req.user!.id, id); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
+      try { posthogEvents.agentDeleted(req.user!.id, { agentId: id }); } catch {}
 
       res.json({
         success: true,
@@ -447,7 +447,7 @@ router.delete('/:id',
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
-router.get('/:id/stats', 
+router.get('/:id/stats',
   generalLimiter,
   authenticateToken,
   validate({ params: Joi.object({ id: commonSchemas.uuid }) }),

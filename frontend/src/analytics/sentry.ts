@@ -1,6 +1,6 @@
 /**
  * Sentry Frontend Integration
- * React error tracking with browser tracing and session replay
+ * Error tracking and performance monitoring
  */
 
 import * as Sentry from '@sentry/react';
@@ -17,29 +17,13 @@ import {
 import { isAnalyticsAllowed } from '@/utils/consent';
 import type { UserContext } from './types';
 
-let isInitialized = false;
-
-/**
- * Initialize Sentry for React application
- */
 export function initializeSentry(): void {
   const dsn = import.meta.env.VITE_SENTRY_DSN;
-
-  if (!dsn) {
-    console.log('[Sentry] No DSN configured, skipping initialization');
-    return;
-  }
-
-  if (isInitialized) {
-    console.log('[Sentry] Already initialized');
-    return;
-  }
+  if (!dsn) return;
 
   Sentry.init({
     dsn,
     environment: import.meta.env.VITE_SENTRY_ENVIRONMENT || import.meta.env.MODE || 'development',
-
-    // Performance Monitoring
     tracesSampleRate: parseFloat(import.meta.env.VITE_SENTRY_TRACES_SAMPLE_RATE || '0.1'),
 
     // Distributed tracing - propagate trace context to these URLs
@@ -50,9 +34,7 @@ export function initializeSentry(): void {
     ],
 
     // Session Replay - only active when user has granted analytics consent (GDPR/RODO)
-    replaysSessionSampleRate: isAnalyticsAllowed()
-      ? parseFloat(import.meta.env.VITE_SENTRY_REPLAY_SAMPLE_RATE || '0.1')
-      : 0,
+    replaysSessionSampleRate: import.meta.env.VITE_POSTHOG_ENABLE_SESSION_RECORDING !== 'false' ? 0.1 : 0,
     replaysOnErrorSampleRate: isAnalyticsAllowed()
       ? parseFloat(import.meta.env.VITE_SENTRY_REPLAY_ON_ERROR_SAMPLE_RATE || '1.0')
       : 0,
@@ -68,9 +50,6 @@ export function initializeSentry(): void {
       }),
       // Replay integration included but gated by sample rates above (0 = no recording)
       Sentry.replayIntegration({
-        // Privacy-first configuration: mask all text and block media by default
-        // Elements that must remain visible can use data-sentry-unmask attribute
-        // Example: <h1 data-sentry-unmask>Page Title</h1>
         maskAllText: true,
         blockAllMedia: true,
       }),
@@ -94,124 +73,39 @@ export function initializeSentry(): void {
 
       return event;
     },
-
-    // Debug mode for development
-    debug: import.meta.env.VITE_SENTRY_DEBUG === 'true',
   });
-
-  isInitialized = true;
-  console.log('[Sentry] Initialized successfully');
 }
 
-/**
- * Set user context after authentication
- */
-export function setUser(user: UserContext | null): void {
-  if (!isInitialized) return;
-
-  if (user) {
-    Sentry.setUser({
-      id: user.id,
-      email: user.email,
-      username: user.username,
-    });
-
-    // Set additional context
-    Sentry.setContext('user_info', {
-      role: user.role,
-    });
-  } else {
-    Sentry.setUser(null);
-  }
+export function setUser(user: { id: string; email?: string; username?: string }): void {
+  try {
+    Sentry.setUser({ id: user.id, email: user.email, username: user.username });
+  } catch {}
 }
 
-/**
- * Clear user context on logout
- */
 export function clearUser(): void {
-  if (!isInitialized) return;
-  Sentry.setUser(null);
+  try { Sentry.setUser(null); } catch {}
 }
 
-/**
- * Capture exception with additional context
- */
-export function captureException(
-  error: Error | unknown,
-  context?: Record<string, unknown>
-): string | undefined {
-  if (!isInitialized) {
-    console.error('[Sentry] Not initialized, error not captured:', error);
-    return undefined;
-  }
-
-  return Sentry.captureException(error, {
-    extra: context,
-  });
+export function captureException(error: Error | unknown, context?: Record<string, unknown>): void {
+  try { Sentry.captureException(error, { extra: context }); } catch {}
 }
 
-/**
- * Capture message for non-error events
- */
-export function captureMessage(
-  message: string,
-  level: 'info' | 'warning' | 'error' = 'info',
-  context?: Record<string, unknown>
-): void {
-  if (!isInitialized) return;
-
-  Sentry.captureMessage(message, {
-    level,
-    extra: context,
-  });
+export function captureMessage(message: string, level: Sentry.SeverityLevel = 'info'): void {
+  try { Sentry.captureMessage(message, level); } catch {}
 }
 
-/**
- * Add breadcrumb for action tracking
- */
 export function addBreadcrumb(
-  category: string,
+  type: string,
   message: string,
-  data?: Record<string, unknown>,
-  level: 'debug' | 'info' | 'warning' | 'error' = 'info'
+  data?: Record<string, unknown>
 ): void {
-  if (!isInitialized) return;
-
-  Sentry.addBreadcrumb({
-    category,
-    message,
-    data,
-    level,
-    timestamp: Date.now() / 1000,
-  });
+  try {
+    Sentry.addBreadcrumb({ type, message, data, level: 'info' });
+  } catch {}
 }
 
 /**
- * Set additional context for debugging
- */
-export function setContext(name: string, context: Record<string, unknown>): void {
-  if (!isInitialized) return;
-  Sentry.setContext(name, context);
-}
-
-/**
- * Set tag for filtering in Sentry
- */
-export function setTag(key: string, value: string): void {
-  if (!isInitialized) return;
-  Sentry.setTag(key, value);
-}
-
-/**
- * Check if Sentry is enabled
- */
-export function isSentryEnabled(): boolean {
-  return isInitialized;
-}
-
-/**
- * Sentry-instrumented Routes component for React Router v6
- * Use this instead of `Routes` from react-router-dom for automatic route tracking
+ * Routes component wrapped with Sentry for automatic route instrumentation
  */
 export const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
 

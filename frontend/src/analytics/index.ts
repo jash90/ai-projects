@@ -1,36 +1,42 @@
 /**
- * Frontend Analytics Module
- * Unified initialization and export for Sentry and PostHog
- *
- * Note: PostHog is initialized via PostHogProvider in main.tsx
- * Sentry is initialized directly before React renders
+ * Analytics barrel — Sentry + PostHog
  */
 
-// Import Sentry functions
-import { setUser as setSentryUser, clearUser as clearSentryUser } from './sentry';
-// Import PostHog functions (init handled by PostHogProvider in main.tsx)
-import { identifyUser as identifyPostHogUser, resetUser as resetPostHogUser } from './posthog';
-import type { UserContext } from './types';
+export {
+  initializeSentry,
+  setUser as setSentryUser,
+  clearUser as clearSentryUser,
+  captureException,
+  captureMessage,
+  addBreadcrumb,
+  SentryRoutes,
+  Sentry,
+} from './sentry';
+
+export {
+  identifyUser,
+  resetUser,
+  trackEvent,
+  trackPageView,
+  events,
+  posthog,
+} from './posthog';
+
+import { setUser as setSentryUserFn, clearUser as clearSentryUserFn } from './sentry';
+import { identifyUser as identifyPostHog, resetUser as resetPostHog } from './posthog';
 
 /**
- * Set user context across all analytics services
- * Call this after successful authentication
+ * Set user in both Sentry and PostHog
  */
-export function setUser(user: UserContext): void {
-  setSentryUser(user);
-  identifyPostHogUser(user);
+export function setUser(user: { id: string; email?: string; username?: string; role?: string }): void {
+  try { setSentryUserFn(user); } catch {}
+  try { identifyPostHog(user); } catch {}
 }
 
 /**
- * Clear user context from all analytics services
- * Call this on logout
+ * Clear user from both Sentry and PostHog
  */
 export function clearUser(): void {
-  clearSentryUser();
-  resetPostHogUser();
+  try { clearSentryUserFn(); } catch {}
+  try { resetPostHog(); } catch {}
 }
-
-// Re-export everything for convenience
-export * from './sentry';
-export * from './posthog';
-export * from './types';

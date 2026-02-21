@@ -29,7 +29,7 @@ export const conversationStore = create<ConversationState>((set, get) => ({
   getConversation: async (projectId: string, agentId: string) => {
     const key = getConversationKey(projectId, agentId)
     const existing = get().conversations[key]
-    
+
     // Return existing if we have it
     if (existing) {
       return existing
@@ -100,8 +100,6 @@ export const conversationStore = create<ConversationState>((set, get) => ({
         return state
       })
 
-      try { events.chatMessageSent({ projectId, agentId, messageLength: content.length }) } catch {}
-
       // Send message to backend with files
       const files = attachments?.map(a => a.file)
       const response = await chatApi.sendMessage(projectId, agentId, {
@@ -112,7 +110,9 @@ export const conversationStore = create<ConversationState>((set, get) => ({
 
       if (response.success) {
         const conversation = response.data?.conversation
-        
+
+        try { events.chatMessageSent(); } catch {}
+
         // Replace optimistic message with updated conversation
         set(state => ({
           conversations: {
@@ -130,8 +130,8 @@ export const conversationStore = create<ConversationState>((set, get) => ({
                 ...state.conversations,
                 [key]: {
                   ...conversation,
-                  messages: conversation.messages.map(m => 
-                    m.id === tempMessage.id 
+                  messages: conversation.messages.map(m =>
+                    m.id === tempMessage.id
                       ? { ...m, error: response.error || 'Failed to send message' }
                       : m
                   )
@@ -141,14 +141,14 @@ export const conversationStore = create<ConversationState>((set, get) => ({
           }
           return state
         })
-        
+
         const error = response.error || 'Failed to send message'
         set({ error })
         throw new Error(error)
       }
     } catch (error) {
       let errorMessage = 'Failed to send message'
-      
+
       // Extract and format error messages for better UX
       if (error instanceof Error) {
         // Check if this is a structured API error
@@ -159,7 +159,7 @@ export const conversationStore = create<ConversationState>((set, get) => ({
           errorMessage = formatChatErrorMessage(error.message);
         }
       }
-      
+
       // Update last message with specific error
       set(state => {
         const conversation = state.conversations[key]
@@ -171,8 +171,8 @@ export const conversationStore = create<ConversationState>((set, get) => ({
                 ...state.conversations,
                 [key]: {
                   ...conversation,
-                  messages: conversation.messages.map(m => 
-                    m.id === lastMessage.id 
+                  messages: conversation.messages.map(m =>
+                    m.id === lastMessage.id
                       ? { ...m, error: errorMessage }
                       : m
                   )
@@ -183,7 +183,7 @@ export const conversationStore = create<ConversationState>((set, get) => ({
         }
         return state
       })
-      
+
       set({ error: errorMessage })
       throw error
     } finally {
@@ -259,10 +259,9 @@ export const conversationStore = create<ConversationState>((set, get) => ({
         return state
       })
 
-      try { events.chatMessageSent({ projectId, agentId, messageLength: content.length }) } catch {}
-      const streamStartTime = Date.now()
-      try { events.chatStreamStarted(agentId, projectId) } catch {}
+      try { events.chatStreamStarted(); } catch {}
 
+      const streamStartTime = Date.now()
       // Start streaming with files
       const files = attachments?.map(a => a.file)
       await chatApi.sendStreamingMessage(
@@ -279,8 +278,8 @@ export const conversationStore = create<ConversationState>((set, get) => ({
                   ...state.conversations,
                   [key]: {
                     ...conversation,
-                    messages: conversation.messages.map(m => 
-                      m.id === aiTempMessage.id 
+                    messages: conversation.messages.map(m =>
+                      m.id === aiTempMessage.id
                         ? { ...m, content: m.content + chunk }
                         : m
                     )
@@ -292,6 +291,7 @@ export const conversationStore = create<ConversationState>((set, get) => ({
           })
         },
         (response: any) => {
+          try { events.chatStreamCompleted({ durationMs: Date.now() - streamStartTime }); } catch {}
           // Replace with final conversation
           set(state => ({
             conversations: {
@@ -299,9 +299,9 @@ export const conversationStore = create<ConversationState>((set, get) => ({
               [key]: response.conversation
             }
           }))
-          try { events.chatStreamCompleted(agentId, projectId, Date.now() - streamStartTime) } catch {}
         },
         (error: string | any) => {
+          try { events.chatStreamFailed({ error: String(error) }); } catch {}
           // Handle streaming error with better error messages
           const errorMessage = formatChatErrorMessage(error)
 
@@ -324,8 +324,6 @@ export const conversationStore = create<ConversationState>((set, get) => ({
             }
             return state
           })
-
-          try { events.chatStreamFailed(agentId, projectId, typeof error === 'string' ? error : error?.message || 'unknown', Date.now() - streamStartTime) } catch {}
         }
       )
     } catch (error) {
@@ -341,7 +339,7 @@ export const conversationStore = create<ConversationState>((set, get) => ({
 
   clearConversation: async (projectId: string, agentId: string) => {
     const key = getConversationKey(projectId, agentId)
-    
+
     set({ error: null })
     try {
       const response = await conversationsApi.clearConversation(projectId, agentId)

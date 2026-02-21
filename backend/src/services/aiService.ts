@@ -205,6 +205,10 @@ class AIService {
     addBreadcrumb({ category: 'ai', message: `AI request: ${agent.provider}/${agent.model}`, level: 'info', data: { provider: agent.provider, model: agent.model } });
 
     try {
+      try {
+        addBreadcrumb({ category: 'ai', message: 'AI request started', level: 'info', data: { provider: agent.provider, model: agent.model } });
+      } catch {}
+
       // Check token limits before processing (estimate tokens for the request)
       if (userId) {
         const estimatedTokens = this.estimateTokens(messages, projectFiles, agent.system_prompt);

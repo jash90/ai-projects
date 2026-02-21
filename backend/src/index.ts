@@ -154,9 +154,6 @@ app.use(sanitizeInputs);
 // Rate limiting
 app.use(generalLimiter);
 
-// Metrics middleware - collect request metrics
-app.use(metricsMiddleware);
-
 // Sentry breadcrumb middleware - track request flow
 app.use(sentryBreadcrumbMiddleware);
 
@@ -182,9 +179,6 @@ app.get('/api/health/detailed', (req, res) => {
     database: isDatabaseReady ? 'connected' : 'initializing'
   });
 });
-
-// Prometheus metrics endpoint for Grafana Cloud scraping
-app.get('/metrics', getMetricsHandler());
 
 // Setup Swagger documentation
 setupSwagger(app);
@@ -229,16 +223,16 @@ if (process.env.NODE_ENV === 'production') {
   // In development, serve static files directly
   const path = require('path');
   const fs = require('fs');
-  
+
   const frontendDistPath = path.join(__dirname, '../../frontend/dist');
   const indexPath = path.join(frontendDistPath, 'index.html');
-  
+
   if (fs.existsSync(frontendDistPath)) {
     console.log('✅ Development mode: serving static files directly');
-    
+
     // Serwuj statyczne pliki z frontend build
     app.use(express.static(frontendDistPath));
-    
+
     // Catch-all route dla React Router
     app.get('*', (req, res, next) => {
       if (req.path.startsWith('/api') || req.path.startsWith('/socket.io')) {
@@ -247,7 +241,7 @@ if (process.env.NODE_ENV === 'production') {
       res.sendFile(indexPath);
     });
   }
-  
+
   // 404 handler for unknown routes (in development)
   app.use(notFoundHandler);
 }
@@ -288,16 +282,12 @@ async function startServer(): Promise<void> {
 
   io.on('connection', (socket) => {
     logger.debug('Socket.IO client connected', { socketId: socket.id });
-    // Update WebSocket connection metrics
-    setActiveConnections('websocket', io.engine.clientsCount);
 
     socket.on('disconnect', (reason) => {
       logger.debug('Socket.IO client disconnected', {
         socketId: socket.id,
         reason
       });
-      // Update WebSocket connection metrics
-      setActiveConnections('websocket', io.engine.clientsCount);
     });
   });
 
@@ -331,7 +321,6 @@ process.on('SIGTERM', async () => {
 
   server.close(async () => {
     try {
-      // Flush analytics events before shutdown
       await shutdownAnalytics();
       await closeDatabase();
       logger.info('Server shut down successfully');
@@ -348,7 +337,6 @@ process.on('SIGINT', async () => {
 
   server.close(async () => {
     try {
-      // Flush analytics events before shutdown
       await shutdownAnalytics();
       await closeDatabase();
       logger.info('Server shut down successfully');
@@ -374,7 +362,6 @@ process.on('unhandledRejection', (reason, promise) => {
     captureException(new Error(String(reason)), { type: 'unhandledRejection', originalReason: reason });
   }
   // Don't call process.exit() - allow server to continue running
-  // Background tasks like model sync may fail without crashing the server
 });
 
 // Start the server

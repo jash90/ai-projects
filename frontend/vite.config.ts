@@ -34,7 +34,7 @@ export default defineConfig(({ mode }) => ({
     port: 3000,
     host: true,
     hmr: {
-      port: 3010,
+      port: 24678,
     },
     proxy: {
       '/api': {
@@ -60,9 +60,9 @@ export default defineConfig(({ mode }) => ({
           router: ['react-router-dom'],
           ui: ['@headlessui/react', 'framer-motion'],
           utils: ['axios', 'zustand', '@tanstack/react-query'],
-          analytics: ['@sentry/react', 'posthog-js'],
           markdown: ['react-markdown', 'remark-gfm', 'remark-math', 'rehype-katex', 'rehype-highlight'],
           mermaid: ['mermaid'],
+          analytics: ['@sentry/react', 'posthog-js'],
         },
       },
     },

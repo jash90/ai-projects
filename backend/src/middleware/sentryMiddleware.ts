@@ -1,9 +1,5 @@
-/**
- * Sentry Middleware - Request context and error handling
- */
-
-import type { Request, Response, NextFunction } from 'express';
-import { addBreadcrumb } from '../analytics';
+import { Request, Response, NextFunction } from 'express';
+import { addBreadcrumb } from '../analytics/sentry';
 
 /** Query parameter keys that must never appear in breadcrumbs */
 const SENSITIVE_QUERY_KEYS = new Set([
@@ -32,7 +28,8 @@ function sanitizeQuery(
 }
 
 /**
- * Middleware to add request breadcrumbs
+ * Adds an HTTP breadcrumb to Sentry for each request.
+ * Sanitizes query parameters to avoid leaking secrets.
  */
 export function sentryBreadcrumbMiddleware(
   req: Request,
