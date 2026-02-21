@@ -5,6 +5,7 @@ import { authenticateToken, validateProjectAccess } from '../middleware/auth';
 import { validate, commonSchemas } from '../middleware/validation';
 import { generalLimiter, creationLimiter } from '../middleware/rateLimiting';
 import logger from '../utils/logger';
+import { events as posthogEvents } from '../analytics/posthog';
 
 const router: Router = Router();
 
@@ -366,10 +367,9 @@ router.post('/',
         user_id: userId
       });
 
-      logger.info('Project created', { 
-        projectId: project.id, 
-        userId
-      });
+      logger.info('Project created', { projectId: project.id, userId });
+
+      try { posthogEvents.projectCreated(userId, { projectId: project.id, name: project.name }); } catch {}
 
       res.status(201).json({
         success: true,
@@ -460,6 +460,8 @@ router.put('/:id',
 
       logger.info('Project updated', { projectId: id, userId, updates: Object.keys(updates) });
 
+      try { posthogEvents.projectUpdated(userId, { projectId: id }); } catch {}
+
       res.json({
         success: true,
         data: {
@@ -536,6 +538,8 @@ router.delete('/:id',
       }
 
       logger.info('Project deleted', { projectId: id, userId });
+
+      try { posthogEvents.projectDeleted(userId, { projectId: id }); } catch {}
 
       res.json({
         success: true,

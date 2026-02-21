@@ -12,6 +12,7 @@ import { validate, commonSchemas, validateFileUpload } from '../middleware/valid
 import { generalLimiter, uploadLimiter } from '../middleware/rateLimiting';
 import config from '../utils/config';
 import logger from '../utils/logger';
+import { events as posthogEvents } from '../analytics/posthog';
 
 const router: Router = Router();
 
@@ -223,13 +224,9 @@ router.post('/projects/:projectId/uploads',
         uploaded_by: userId,
       });
 
-      logger.info('File uploaded', { 
-        fileId: file.id, 
-        projectId, 
-        userId, 
-        filename: file.original_name,
-        size: file.size
-      });
+      logger.info('File uploaded', { fileId: file.id, projectId, userId, filename: file.original_name, size: file.size });
+
+      try { posthogEvents.fileUploaded(userId, { projectId, fileType: uploadedFile.mimetype, fileSize: uploadedFile.buffer.length }); } catch {}
 
       res.status(201).json({
         success: true,
@@ -484,6 +481,8 @@ router.delete('/files/:id',
       }
 
       logger.info('File deleted', { fileId: id, userId });
+
+      try { posthogEvents.fileDeleted(userId); } catch {}
 
       res.json({
         success: true,

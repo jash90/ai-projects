@@ -3,6 +3,8 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 import { User, AuthTokens } from '@/types'
 import { settingsApi } from '@/lib/api'
 import { uiStore } from './uiStore'
+import { setUser, clearUser } from '@/analytics'
+import { events } from '@/analytics/posthog'
 
 interface AuthState {
   user: User | null
@@ -52,6 +54,8 @@ export const authStore = create<AuthStore>()(
           isAuthenticated: true,
           isLoading: false,
         })
+        try { setUser({ id: user.id, email: user.email, username: user.username, role: user.role }); } catch {}
+        try { events.loginCompleted({ provider: 'email' }); } catch {}
       },
 
       logout: () => {
@@ -61,6 +65,8 @@ export const authStore = create<AuthStore>()(
           isAuthenticated: false,
           isLoading: false,
         })
+        try { clearUser(); } catch {}
+        try { events.logoutCompleted(); } catch {}
       },
 
       updateUser: (updates) => {

@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { Project } from '@/types'
 import { projectsApi } from '@/lib/api'
+import { events } from '@/analytics/posthog'
 
 interface ProjectState {
   projects: Project[]
@@ -63,6 +64,9 @@ export const useProjects = create<ProjectState>((set) => ({
 
   setCurrentProject: (project: Project | null) => {
     set({ currentProject: project })
+    if (project) {
+      try { events.projectViewed({ projectId: project.id }); } catch {}
+    }
   },
 
   clearError: () => {

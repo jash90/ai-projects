@@ -6,6 +6,7 @@ import { UserModel } from '../models/User';
 import { JwtPayload, AuthUser } from '../types';
 import config from '../utils/config';
 import logger from '../utils/logger';
+import { setUserContext, addBreadcrumb } from '../analytics/sentry';
 
 // Extend Express Request type to include user
 declare global {
@@ -55,6 +56,13 @@ export async function authenticateToken(req: Request, res: Response, next: NextF
       email: user.email,
       username: user.username,
     };
+
+    try {
+      setUserContext({ id: user.id, email: user.email, username: user.username });
+      addBreadcrumb({ category: 'auth', message: `User authenticated: ${user.id}`, level: 'info' });
+    } catch {
+      // Analytics must never break authentication
+    }
 
     next();
   } catch (error) {

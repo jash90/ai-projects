@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from 'axios'
 import { ApiResponse, AuthTokens, PaginatedResponse, User, UserPreferences, AdminStats, UserManagement, UserUsageStats, TokenLimitUpdate, AdminActivity, Thread, ThreadMessage } from '@/types'
 import { authStore } from '@/stores/authStore'
+import { addBreadcrumb, captureException } from '@/analytics/sentry'
 
 class ApiClient {
   private client: AxiosInstance
@@ -18,13 +19,14 @@ class ApiClient {
   }
 
   private setupInterceptors() {
-    // Request interceptor to add auth token
+    // Request interceptor to add auth token + Sentry breadcrumb
     this.client.interceptors.request.use(
       (config) => {
         const token = authStore.getState().tokens?.access_token
         if (token) {
           config.headers.Authorization = `Bearer ${token}`
         }
+        try { addBreadcrumb('http', `API Request: ${config.method?.toUpperCase()} ${config.url}`, { url: config.url, method: config.method }); } catch {}
         return config
       },
       (error) => Promise.reject(error)
@@ -64,20 +66,31 @@ class ApiClient {
           }
         }
 
+        // Add error breadcrumb to Sentry
+        try {
+          addBreadcrumb('http', `API Error: ${error.config?.method?.toUpperCase()} ${error.config?.url}`, {
+            url: error.config?.url,
+            status: error.response?.status,
+          });
+          if (error.response?.status >= 500) {
+            captureException(error, { url: error.config?.url, status: error.response?.status });
+          }
+        } catch {}
+
         // Extract meaningful error messages from API responses
         if (error.response?.data) {
           const errorData = error.response.data;
-          
+
           // Create a structured error object that preserves all error information
           const structuredError = new Error(errorData.error || errorData.message || 'API Error');
           structuredError.name = 'APIError';
-          
+
           // Attach the full error data for better error handling
           (structuredError as any).errorData = errorData;
-          
+
           return Promise.reject(structuredError);
         }
-        
+
         return Promise.reject(error)
       }
     )

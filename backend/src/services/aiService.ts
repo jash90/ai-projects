@@ -15,6 +15,8 @@ import {
   createAIApiKeyInvalidError,
   createRateLimitError
 } from '../utils/errors';
+import { captureException, addBreadcrumb } from '../analytics/sentry';
+import { events as posthogEvents } from '../analytics/posthog';
 
 export interface ChatRequest {
   agent: Agent;
@@ -201,6 +203,10 @@ class AIService {
     const startTime = Date.now();
 
     try {
+      try {
+        addBreadcrumb({ category: 'ai', message: 'AI request started', level: 'info', data: { provider: agent.provider, model: agent.model } });
+      } catch {}
+
       // Check token limits before processing (estimate tokens for the request)
       if (userId) {
         const estimatedTokens = this.estimateTokens(messages, projectFiles, agent.system_prompt);
@@ -254,6 +260,19 @@ class AIService {
           attachments: attachments?.length || 0
         });
 
+        if (userId) {
+          try {
+            posthogEvents.chatMessageSent(userId, {
+              provider: agent.provider,
+              model: agent.model,
+              tokensUsed: response.metadata.tokens?.total,
+              promptTokens: response.metadata.tokens?.input,
+              completionTokens: response.metadata.tokens?.output,
+              responseTimeMs: processingTime,
+            });
+          } catch {}
+        }
+
         return response;
       }
     } catch (error) {
@@ -263,6 +282,12 @@ class AIService {
         error: error instanceof Error ? error.message : 'Unknown error',
         processing_time: Date.now() - startTime
       });
+
+      try {
+        captureException(error, { provider: agent.provider, model: agent.model, userId });
+        if (userId) posthogEvents.aiError(userId, { provider: agent.provider, model: agent.model, error: error instanceof Error ? error.message : 'Unknown error' });
+      } catch {}
+
       throw error;
     }
   }

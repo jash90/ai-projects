@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError, isAppError, ErrorCode } from '../utils/errors';
 import logger from '../utils/logger';
+import { captureException } from '../analytics';
+
 export interface ErrorResponse {
   success: false;
   error: string;
@@ -48,6 +50,8 @@ export const errorHandler = (
         ...requestInfo,
         error: error.toJSON(),
       });
+
+      captureException(error, { userId, path: req.path, method: req.method, errorCode: error.code });
 
     } else if (error.statusCode >= 400) {
       logger.warn('Client error:', {
@@ -172,6 +176,8 @@ export const errorHandler = (
       stack: error.stack,
     },
   });
+
+  captureException(error, { userId, path: req.path, method: req.method, errorType: 'unhandled' });
 
   // Don't expose internal error details in production
   const isDevelopment = process.env.NODE_ENV !== 'production';

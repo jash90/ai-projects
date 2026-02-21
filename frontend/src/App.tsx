@@ -1,11 +1,13 @@
 import { useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Navigate, useLocation } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/stores/authStore'
 import { useTheme } from '@/stores/uiStore'
 import { useSocket } from '@/hooks/useSocket'
 import { authApi } from '@/lib/api'
 import { setTheme } from '@/lib/utils'
+import { SentryRoutes as Routes } from '@/analytics/sentry'
+import { trackPageView } from '@/analytics/posthog'
 
 // Layout Components
 import AuthLayout from '@/components/layouts/AuthLayout'
@@ -24,6 +26,14 @@ import AdminPage from '@/pages/AdminPage'
 // UI Components
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import ErrorBoundary from '@/components/ErrorBoundary'
+
+function PostHogPageTracker() {
+  const location = useLocation()
+  useEffect(() => {
+    trackPageView({ path: location.pathname })
+  }, [location.pathname])
+  return null
+}
 
 function App() {
   const { isAuthenticated, user, setUser, logout } = useAuth()
@@ -73,6 +83,7 @@ function App() {
   return (
     <ErrorBoundary>
       <Router>
+        <PostHogPageTracker />
         <div className="min-h-screen bg-background text-foreground">
           <Routes>
             {/* Landing Page - Always accessible */}

@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { Conversation, ConversationMessage, ChatFileAttachment } from '@/types'
 import { conversationsApi, chatApi } from '@/lib/api'
 import { formatChatErrorMessage } from '@/utils/errorMessages'
+import { events } from '@/analytics/posthog'
 
 interface ConversationState {
   // Conversations by project-agent key (projectId-agentId)
@@ -109,7 +110,9 @@ export const conversationStore = create<ConversationState>((set, get) => ({
 
       if (response.success) {
         const conversation = response.data?.conversation
-        
+
+        try { events.chatMessageSent(); } catch {}
+
         // Replace optimistic message with updated conversation
         set(state => ({
           conversations: {
@@ -256,6 +259,9 @@ export const conversationStore = create<ConversationState>((set, get) => ({
         return state
       })
 
+      try { events.chatStreamStarted(); } catch {}
+
+      const streamStartTime = Date.now()
       // Start streaming with files
       const files = attachments?.map(a => a.file)
       await chatApi.sendStreamingMessage(
@@ -285,6 +291,7 @@ export const conversationStore = create<ConversationState>((set, get) => ({
           })
         },
         (response: any) => {
+          try { events.chatStreamCompleted({ durationMs: Date.now() - streamStartTime }); } catch {}
           // Replace with final conversation
           set(state => ({
             conversations: {
@@ -294,9 +301,10 @@ export const conversationStore = create<ConversationState>((set, get) => ({
           }))
         },
         (error: string | any) => {
+          try { events.chatStreamFailed({ error: String(error) }); } catch {}
           // Handle streaming error with better error messages
           const errorMessage = formatChatErrorMessage(error)
-          
+
           set(state => {
             const conversation = state.conversations[key]
             if (conversation) {

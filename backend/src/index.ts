@@ -1,3 +1,10 @@
+// Sentry instrumentation MUST be imported before any other modules (Express, http, etc.)
+// so that auto-instrumentation can patch them for performance monitoring.
+import './instrument';
+
+import { initializeAnalytics, shutdownAnalytics, setupSentryErrorHandler, captureException, flushSentry } from './analytics';
+import { sentryBreadcrumbMiddleware } from './middleware/sentryMiddleware';
+
 import express from 'express';
 import { createServer } from 'http';
 import { Server as SocketServer } from 'socket.io';
@@ -30,6 +37,9 @@ import threadRoutes from './routes/threads';
 import { setupSwagger } from './swagger';
 
 const app: express.Express = express();
+
+// Initialize analytics (Sentry already initialized via instrument.ts)
+initializeAnalytics();
 
 const server = createServer(app);
 
@@ -138,6 +148,9 @@ app.use(sanitizeInputs);
 // Rate limiting
 app.use(generalLimiter);
 
+// Sentry breadcrumb middleware - track request flow
+app.use(sentryBreadcrumbMiddleware);
+
 // Request logging
 app.use((req, res, next) => {
   logger.info(`${req.method} ${req.path}`, {
@@ -179,6 +192,9 @@ app.use('/api/settings', settingsRoutes);  // User settings routes
 app.use('/api/debug', debugRoutes);  // Debug routes (development/testing)
 app.use('/api/markdown', markdownRoutes); // Markdown routes
 app.use('/api/threads', threadRoutes);    // Thread-based chat routes
+
+// Sentry error handler - MUST be after all routes but before custom error handler
+setupSentryErrorHandler(app);
 
 // 404 handler
 app.use('*', (req, res) => {
@@ -299,6 +315,7 @@ process.on('SIGTERM', async () => {
 
   server.close(async () => {
     try {
+      await shutdownAnalytics();
       await closeDatabase();
       logger.info('Server shut down successfully');
       process.exit(0);
@@ -314,6 +331,7 @@ process.on('SIGINT', async () => {
 
   server.close(async () => {
     try {
+      await shutdownAnalytics();
       await closeDatabase();
       logger.info('Server shut down successfully');
       process.exit(0);
@@ -326,13 +344,18 @@ process.on('SIGINT', async () => {
 
 process.on('uncaughtException', (error) => {
   logger.error('Uncaught exception:', error);
-  process.exit(1);
+  captureException(error, { type: 'uncaughtException' });
+  flushSentry(2000).finally(() => process.exit(1));
 });
 
-process.on('unhandledRejection', (reason, promise) => {
-  logger.error('Unhandled rejection at:', { promise, reason });
+process.on('unhandledRejection', (reason, _promise) => {
+  logger.error('Unhandled rejection at:', { reason });
+  if (reason instanceof Error) {
+    captureException(reason, { type: 'unhandledRejection' });
+  } else {
+    captureException(new Error(String(reason)), { type: 'unhandledRejection' });
+  }
   // Don't call process.exit() - allow server to continue running
-  // Background tasks like model sync may fail without crashing the server
 });
 
 // Start the server

@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { Theme } from '@/types'
 import { setTheme } from '@/lib/utils'
+import { events } from '@/analytics/posthog'
 
 interface UIState {
   theme: Theme
@@ -42,6 +43,7 @@ export const uiStore = create<UIStore>()(
       setTheme: (theme) => {
         set({ theme })
         setTheme(theme)
+        try { events.themeChanged(theme); } catch {}
       },
 
       toggleSidebar: () => {
