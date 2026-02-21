@@ -31,6 +31,7 @@ if (posthogKey && import.meta.env.VITE_POSTHOG_ENABLED !== 'false') {
     capture_pageleave: true,
     respect_dnt: true,
     persistence: 'localStorage',
+    disable_session_recording: import.meta.env.VITE_POSTHOG_ENABLE_SESSION_RECORDING === 'false',
     session_recording: {
       maskAllInputs: true,
     },

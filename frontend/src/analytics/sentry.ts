@@ -36,7 +36,7 @@ export function initializeSentry(): void {
         blockAllMedia: true,
       }),
     ],
-    replaysSessionSampleRate: import.meta.env.VITE_POSTHOG_ENABLE_SESSION_RECORDING === 'true' ? 0.1 : 0,
+    replaysSessionSampleRate: import.meta.env.VITE_POSTHOG_ENABLE_SESSION_RECORDING !== 'false' ? 0.1 : 0,
     replaysOnErrorSampleRate: 1.0,
     tracePropagationTargets: [/localhost/, /\/api\//, import.meta.env.VITE_API_URL].filter(Boolean) as (string | RegExp)[],
     beforeSend(event) {
