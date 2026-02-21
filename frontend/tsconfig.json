@@ -26,9 +26,8 @@
       "@/*": ["./src/*"]
     },
 
-    /* Vike types */
-    "types": ["vike/types"]
+    "types": []
   },
-  "include": ["src", "pages", "server"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
