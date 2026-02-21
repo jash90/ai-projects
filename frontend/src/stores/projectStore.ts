@@ -68,6 +68,9 @@ export const useProjects = create<ProjectState>((set) => ({
 
   setCurrentProject: (project: Project | null) => {
     set({ currentProject: project })
+    if (project) {
+      try { events.projectViewed({ projectId: project.id }); } catch {}
+    }
   },
 
   clearError: () => {

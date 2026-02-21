@@ -1,10 +1,6 @@
-// Sentry must be imported and initialized first for proper instrumentation
-import { initializeSentry } from './analytics/sentry'
-
-// Initialize Sentry before anything else
+// Sentry MUST be initialized before React imports
+import { initializeSentry, captureException } from '@/analytics/sentry'
 initializeSentry()
-
-import { captureException } from './analytics/sentry'
 
 window.addEventListener('error', (event) => {
   captureException(event.error ?? event.message, {
@@ -28,9 +24,11 @@ import { I18nextProvider } from 'react-i18next'
 import { HelmetProvider } from 'react-helmet-async'
 import { PostHogProvider } from 'posthog-js/react'
 import { Toaster } from 'react-hot-toast'
+import posthog from 'posthog-js'
 import App from './App.tsx'
-import CookieConsent from './components/CookieConsent.tsx'
-import { isAnalyticsAllowed } from './utils/consent'
+import CookieConsent from '@/components/CookieConsent'
+import { isAnalyticsAllowed } from '@/utils/consent'
+import { initWebVitals } from '@/utils/webVitals'
 import './index.css'
 
 // Initialize i18n
@@ -40,8 +38,6 @@ import i18n from './lib/i18n'
 import './utils/pwa'
 
 // Initialize Web Vitals tracking
-import { initWebVitals } from './utils/webVitals'
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -71,7 +67,7 @@ const posthogOptions = {
   autocapture: false, // Disabled - use manual event tracking instead
   capture_pageview: false, // Handled manually in App.tsx for SPA route changes
   capture_pageleave: true,
-  disable_session_recording: !enableSessionRecording || !hasAnalyticsConsent,
+  disable_session_recording: import.meta.env.VITE_POSTHOG_ENABLE_SESSION_RECORDING === 'false',
   session_recording: {
     maskAllInputs: true,
     maskInputOptions: {

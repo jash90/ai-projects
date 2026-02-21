@@ -3,7 +3,8 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 import { User, AuthTokens } from '@/types'
 import { settingsApi, authApi } from '@/lib/api'
 import { uiStore } from './uiStore'
-import { setUser as setAnalyticsUser, clearUser as clearAnalyticsUser, events as posthogEvents } from '@/analytics'
+import { setUser, clearUser } from '@/analytics'
+import { events } from '@/analytics/posthog'
 
 interface AuthState {
   user: User | null
@@ -36,15 +37,6 @@ export const authStore = create<AuthStore>()(
       // Actions
       setUser: (user) => {
         set({ user, isAuthenticated: !!user })
-        // Set analytics user context
-        if (user) {
-          setAnalyticsUser({
-            id: user.id,
-            email: user.email,
-            username: user.username,
-            role: user.role,
-          })
-        }
       },
 
       setTokens: (tokens) => {
@@ -63,43 +55,26 @@ export const authStore = create<AuthStore>()(
           isLoading: false,
         })
         // Set analytics user context and track login
-        setAnalyticsUser({
-          id: user.id,
-          email: user.email,
-          username: user.username,
-          role: user.role,
-        })
-        try { posthogEvents.loginCompleted('credentials') } catch {}
+        try { setUser({ id: user.id, email: user.email, username: user.username, role: user.role }); } catch {}
+        try { events.loginCompleted({ provider: 'email' }); } catch {}
       },
 
       logout: () => {
-        // Track logout before clearing
-        try { posthogEvents.logoutCompleted() } catch {}
-        // Clear analytics user context
-        clearAnalyticsUser()
-
-        // Invalidate refresh token on the server (fire-and-forget)
-        authApi.logout().catch(() => {})
-
         set({
           user: null,
           tokens: null,
           isAuthenticated: false,
           isLoading: false,
         })
+        try { clearUser(); } catch {}
+        try { events.logoutCompleted(); } catch {}
       },
 
       updateUser: (updates) => {
         const currentUser = get().user
         if (currentUser) {
-          const updatedUser = { ...currentUser, ...updates }
-          set({ user: updatedUser })
-          // Update analytics user context
-          setAnalyticsUser({
-            id: updatedUser.id,
-            email: updatedUser.email,
-            username: updatedUser.username,
-            role: updatedUser.role,
+          set({
+            user: { ...currentUser, ...updates }
           })
         }
       },
@@ -126,17 +101,6 @@ export const authStore = create<AuthStore>()(
         tokens: state.tokens,
         isAuthenticated: state.isAuthenticated,
       }),
-      // Restore analytics user context on rehydration
-      onRehydrateStorage: () => (state) => {
-        if (state?.user && state.isAuthenticated) {
-          setAnalyticsUser({
-            id: state.user.id,
-            email: state.user.email,
-            username: state.user.username,
-            role: state.user.role,
-          })
-        }
-      },
     }
   )
 )

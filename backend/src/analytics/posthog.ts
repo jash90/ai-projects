@@ -1,5 +1,6 @@
 /**
- * PostHog Integration - Product analytics for backend
+ * PostHog Server-side Analytics
+ * Tracks product events and user behavior on the backend
  */
 
 import { PostHog } from 'posthog-node';
@@ -7,7 +8,7 @@ import logger from '../utils/logger';
 import { analyticsConfig } from '../utils/config';
 import type { UserContext, PostHogEventProperties } from './types';
 
-let client: PostHog | null = null;
+let posthogClient: PostHog | null = null;
 
 /**
  * Initialize PostHog client
@@ -20,207 +21,142 @@ export function initializePostHog(): void {
     return;
   }
 
-  if (process.env.NODE_ENV === 'test') {
-    logger.info('PostHog disabled in test environment');
-    return;
-  }
+  posthogClient = new PostHog(apiKey, {
+    host: process.env.POSTHOG_HOST || 'https://us.i.posthog.com',
+    flushAt: 20,
+    flushInterval: 10000,
+  });
 
   try {
-    client = new PostHog(apiKey, {
-      host,
-      flushAt: 20, // Flush after 20 events
-      flushInterval: 10000, // Or every 10 seconds
-    });
-
     logger.info('PostHog initialized successfully', { host });
   } catch (error) {
     logger.error('Failed to initialize PostHog', { error });
   }
 }
 
-/**
- * Identify a user
- */
-export function identifyUser(user: UserContext): void {
-  if (!client) return;
-
-  client.identify({
-    distinctId: user.id,
-    properties: {
-      email: user.email,
-      username: user.username,
-      role: user.role,
-    },
-  });
+export function isPostHogInitialized(): boolean {
+  return posthogClient !== null;
 }
 
 /**
- * Track an event
+ * Identify a user in PostHog
+ */
+export function identifyUser(user: UserContext): void {
+  if (!posthogClient) return;
+  try {
+    posthogClient.identify({
+      distinctId: user.id,
+      properties: {
+        email: user.email,
+        username: user.username,
+        role: user.role,
+      },
+    });
+  } catch (e) {
+    logger.debug('PostHog identify failed', e);
+  }
+}
+
+/**
+ * Track a generic event
  */
 export function trackEvent(
   eventName: string,
   userId: string,
   properties?: PostHogEventProperties
 ): void {
-  if (!client) return;
-
+  if (!posthogClient) return;
   try {
-    client.capture({
+    posthogClient.capture({
       distinctId: userId,
       event: eventName,
-      properties: {
-        ...properties,
-        $lib: 'posthog-node',
-        environment: process.env.NODE_ENV,
-      },
+      properties,
     });
-  } catch (error) {
-    logger.debug('PostHog trackEvent failed', { eventName, error });
+  } catch (e) {
+    logger.debug('PostHog trackEvent failed', e);
   }
 }
 
 /**
- * Predefined events for consistent tracking
+ * Typed event helpers
  */
 export const events = {
-  // User events
-  userLoggedIn: (userId: string, method: string = 'email') => {
-    trackEvent('user_logged_in', userId, { method });
+  userLoggedIn(userId: string, props?: { provider?: string }): void {
+    try { trackEvent('user_logged_in', userId, props); } catch {}
   },
 
-  userLoggedOut: (userId: string) => {
-    trackEvent('user_logged_out', userId);
+  userLoggedOut(userId: string): void {
+    try { trackEvent('user_logged_out', userId); } catch {}
   },
 
-  userRegistered: (userId: string, method: string = 'email') => {
-    trackEvent('user_registered', userId, { method });
+  userRegistered(userId: string, props?: { email?: string; username?: string }): void {
+    try { trackEvent('user_registered', userId, props); } catch {}
   },
 
-  // Project events
-  projectCreated: (userId: string, projectId: string, projectName: string) => {
-    trackEvent('project_created', userId, { projectId, projectName });
+  projectCreated(userId: string, props?: { projectId?: string; name?: string }): void {
+    try { trackEvent('project_created', userId, props); } catch {}
   },
 
-  projectDeleted: (userId: string, projectId: string) => {
-    trackEvent('project_deleted', userId, { projectId });
+  projectDeleted(userId: string, props?: { projectId?: string }): void {
+    try { trackEvent('project_deleted', userId, props); } catch {}
   },
 
-  projectUpdated: (userId: string, projectId: string) => {
-    trackEvent('project_updated', userId, { projectId });
+  projectUpdated(userId: string, props?: { projectId?: string }): void {
+    try { trackEvent('project_updated', userId, props); } catch {}
   },
 
-  // Agent events
-  agentCreated: (
+  agentCreated(userId: string, props?: { agentId?: string; provider?: string; model?: string }): void {
+    try { trackEvent('agent_created', userId, props); } catch {}
+  },
+
+  agentUpdated(userId: string, props?: { agentId?: string; provider?: string; model?: string }): void {
+    try { trackEvent('agent_updated', userId, props); } catch {}
+  },
+
+  agentDeleted(userId: string, props?: { agentId?: string }): void {
+    try { trackEvent('agent_deleted', userId, props); } catch {}
+  },
+
+  chatMessageSent(
     userId: string,
-    agentId: string,
-    provider: string,
-    model: string
-  ) => {
-    trackEvent('agent_created', userId, { agentId, provider, model });
+    props?: {
+      tokensUsed?: number;
+      promptTokens?: number;
+      completionTokens?: number;
+      responseTimeMs?: number;
+      provider?: string;
+      model?: string;
+    }
+  ): void {
+    try { trackEvent('chat_message_sent', userId, props); } catch {}
   },
 
-  agentUpdated: (userId: string, agentId: string) => {
-    trackEvent('agent_updated', userId, { agentId });
+  fileUploaded(userId: string, props?: { projectId?: string; fileType?: string; fileSize?: number }): void {
+    try { trackEvent('file_uploaded', userId, props); } catch {}
   },
 
-  agentDeleted: (userId: string, agentId: string) => {
-    trackEvent('agent_deleted', userId, { agentId });
+  fileDeleted(userId: string, props?: { projectId?: string }): void {
+    try { trackEvent('file_deleted', userId, props); } catch {}
   },
 
-  // Chat events
-  chatMessageSent: (
-    userId: string,
-    projectId: string,
-    agentId: string,
-    provider: string,
-    model: string,
-    tokensUsed: number,
-    promptTokens: number,
-    completionTokens: number,
-    responseTimeMs: number
-  ) => {
-    trackEvent('chat_message_sent', userId, {
-      projectId,
-      agentId,
-      provider,
-      model,
-      tokensUsed,
-      promptTokens,
-      completionTokens,
-      responseTimeMs,
-    });
+  tokenLimitExceeded(userId: string, props?: { limitType?: string }): void {
+    try { trackEvent('token_limit_exceeded', userId, props); } catch {}
   },
 
-  // File events
-  fileUploaded: (
-    userId: string,
-    projectId: string,
-    fileType: string,
-    fileSize: number
-  ) => {
-    trackEvent('file_uploaded', userId, { projectId, fileType, fileSize });
-  },
-
-  fileDeleted: (userId: string, projectId: string, fileType: string) => {
-    trackEvent('file_deleted', userId, { projectId, fileType });
-  },
-
-  // Token limit events
-  tokenLimitExceeded: (
-    userId: string,
-    limitType: 'global' | 'monthly',
-    currentUsage: number,
-    limit: number
-  ) => {
-    trackEvent('token_limit_exceeded', userId, {
-      limitType,
-      currentUsage,
-      limit,
-    });
-  },
-
-  // AI error events
-  aiError: (
-    userId: string,
-    provider: string,
-    errorType: string,
-    errorMessage: string
-  ) => {
-    trackEvent('ai_error', userId, { provider, errorType, errorMessage });
-  },
-
-  // Subscription events
-  subscriptionCreated: (userId: string, planId: string, planName: string) => {
-    trackEvent('subscription_created', userId, { planId, planName });
-  },
-
-  subscriptionCancelled: (userId: string, planId: string) => {
-    trackEvent('subscription_cancelled', userId, { planId });
+  aiError(userId: string, props?: { provider?: string; model?: string; error?: string }): void {
+    try { trackEvent('ai_error', userId, props); } catch {}
   },
 };
 
 /**
- * Shutdown PostHog - flush pending events
+ * Graceful shutdown - flush pending events
  */
 export async function shutdownPostHog(): Promise<void> {
-  if (!client) return;
-
-  const shutdownTimeoutMs = parseInt(process.env.POSTHOG_SHUTDOWN_TIMEOUT_MS || '10000', 10);
-
+  if (!posthogClient) return;
   try {
-    const timeout = new Promise<void>((_, reject) =>
-      setTimeout(() => reject(new Error('PostHog shutdown timed out')), shutdownTimeoutMs)
-    );
-    await Promise.race([client.shutdown(), timeout]);
+    await posthogClient.shutdown();
     logger.info('PostHog shutdown complete');
-  } catch (error) {
-    logger.warn('PostHog shutdown issue', { error });
+  } catch (e) {
+    logger.error('PostHog shutdown error', e);
   }
-}
-
-/**
- * Check if PostHog is initialized
- */
-export function isPostHogInitialized(): boolean {
-  return client !== null;
 }

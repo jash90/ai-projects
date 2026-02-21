@@ -1,12 +1,9 @@
 /**
- * Analytics Module - Main entry point
- *
- * Initializes Sentry, PostHog, and Prometheus metrics
+ * Analytics Module — Sentry + PostHog
  */
 
 import logger from '../utils/logger';
 
-// Sentry
 import {
   initializeSentry,
   setupSentryErrorHandler,
@@ -20,7 +17,6 @@ import {
   Sentry,
 } from './sentry';
 
-// PostHog
 import {
   initializePostHog,
   shutdownPostHog,
@@ -50,7 +46,6 @@ export type {
   UserContext,
   EventContext,
   PostHogEventProperties,
-  MetricLabels,
   BreadcrumbCategory,
   BreadcrumbLevel,
   BreadcrumbData,
@@ -67,37 +62,23 @@ export function initializeAnalytics(): void {
 
   // Initialize PostHog
   initializePostHog();
-
-  // Initialize Prometheus metrics
-  initializeMetrics();
-
   logger.info('Analytics services initialized', {
     sentry: isSentryInitialized(),
     posthog: isPostHogInitialized(),
-    metrics: isMetricsEnabled(),
   });
 }
 
-/**
- * Graceful shutdown of all analytics services
- */
 export async function shutdownAnalytics(): Promise<void> {
   logger.info('Shutting down analytics services...');
-
   try {
-    // Flush Sentry events
     await flushSentry(2000);
-
-    // Shutdown PostHog
     await shutdownPostHog();
-
     logger.info('Analytics services shutdown complete');
   } catch (error) {
     logger.error('Error during analytics shutdown', { error });
   }
 }
 
-// Re-export Sentry functions
 export {
   // Sentry
   setupSentryErrorHandler,
@@ -107,9 +88,8 @@ export {
   captureMessage,
   addBreadcrumb,
   isSentryInitialized,
+  flushSentry,
   Sentry,
-
-  // PostHog
   identifyUser,
   trackEvent,
   events,

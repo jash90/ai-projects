@@ -32,7 +32,7 @@ const config: Config = {
 };
 
 /**
- * Analytics configuration for Sentry, PostHog, and Prometheus metrics
+ * Analytics configuration for Sentry and PostHog
  */
 export const analyticsConfig: AnalyticsConfig = {
   sentry: {
@@ -47,11 +47,6 @@ export const analyticsConfig: AnalyticsConfig = {
     apiKey: process.env.POSTHOG_API_KEY,
     host: process.env.POSTHOG_HOST || 'https://us.i.posthog.com',
     enabled: process.env.POSTHOG_ENABLED !== 'false' && !!process.env.POSTHOG_API_KEY,
-  },
-  metrics: {
-    enabled: process.env.METRICS_ENABLED !== 'false',
-    path: process.env.METRICS_PATH || '/metrics',
-    prefix: process.env.METRICS_PREFIX || 'aiprojects_',
   },
 };
 

@@ -149,18 +149,16 @@ function App() {
                     </DashboardLayout>
                   }
                 />
-                {user?.role === 'admin' && (
-                  <Route
-                    path="/admin"
-                    element={
-                      <DashboardLayout>
-                        <Suspense fallback={<div className="flex-1 flex items-center justify-center py-20"><LoadingSpinner size="lg" /></div>}>
-                          <AdminPage />
-                        </Suspense>
-                      </DashboardLayout>
-                    }
-                  />
-                )}
+                <Route
+                  path="/admin"
+                  element={
+                    <DashboardLayout>
+                      <Suspense fallback={<div className="flex-1 flex items-center justify-center py-20"><LoadingSpinner size="lg" /></div>}>
+                        <AdminPage />
+                      </Suspense>
+                    </DashboardLayout>
+                  }
+                />
                 <Route path="*" element={<Navigate to="/dashboard" replace />} />
               </>
             )}

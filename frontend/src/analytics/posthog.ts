@@ -1,13 +1,9 @@
 /**
- * PostHog Frontend Integration
- * Product analytics with user identification and event tracking
- *
- * Note: PostHog is initialized via PostHogProvider in main.tsx
- * These functions work with the provider-initialized instance
+ * PostHog Frontend Analytics
+ * Product event tracking with GDPR consent
  */
 
 import posthog from 'posthog-js';
-import type { UserContext, PageViewProperties, ChatEventProperties, ErrorEventProperties } from './types';
 
 /**
  * Check if PostHog is available and initialized
@@ -16,49 +12,30 @@ function isPostHogReady(): boolean {
   return typeof posthog !== 'undefined' && posthog.__loaded === true;
 }
 
-/**
- * Identify user after authentication
- */
-export function identifyUser(user: UserContext): void {
+export function identifyUser(user: { id: string; email?: string; username?: string; role?: string }): void {
   if (!isPostHogReady()) return;
-
-  posthog.identify(user.id, {
-    email: user.email,
-    username: user.username,
-    role: user.role,
-  });
-
-  // Set super properties that will be sent with every event
-  posthog.register({
-    user_role: user.role,
-  });
+  try {
+    posthog.identify(user.id, {
+      email: user.email,
+      username: user.username,
+      role: user.role,
+    });
+  } catch {}
 }
 
-/**
- * Reset user on logout
- */
 export function resetUser(): void {
   if (!isPostHogReady()) return;
-  posthog.reset();
+  try { posthog.reset(); } catch {}
 }
 
-/**
- * Track custom event
- */
-export function trackEvent(
-  eventName: string,
-  properties?: Record<string, unknown>
-): void {
+export function trackEvent(eventName: string, properties?: Record<string, unknown>): void {
   if (!isPostHogReady()) return;
-  posthog.capture(eventName, properties);
+  try { posthog.capture(eventName, properties); } catch {}
 }
 
-/**
- * Track page view manually
- */
-export function trackPageView(properties?: PageViewProperties): void {
+export function trackPageView(properties?: Record<string, unknown>): void {
   if (!isPostHogReady()) return;
-  posthog.capture('$pageview', properties);
+  try { posthog.capture('$pageview', properties); } catch {}
 }
 
 /**
@@ -89,101 +66,64 @@ export function getDistinctId(): string | undefined {
 // ============================================
 
 export const events = {
-  // Page Views
-  pageViewed: (path: string, title?: string, projectId?: string) => {
-    trackEvent('page_viewed', { path, title, projectId });
+  pageViewed(path: string): void { try { trackEvent('page_viewed', { path }); } catch {} },
+
+  projectCreated(props?: { projectId?: string; name?: string }): void {
+    try { trackEvent('project_created', props); } catch {}
+  },
+  projectViewed(props?: { projectId?: string }): void {
+    try { trackEvent('project_viewed', props); } catch {}
+  },
+  projectDeleted(props?: { projectId?: string }): void {
+    try { trackEvent('project_deleted', props); } catch {}
   },
 
-  // Project Events
-  projectCreated: (projectId: string, name: string) => {
-    trackEvent('project_created', { projectId, name });
+  agentCreated(props?: { agentId?: string; provider?: string; model?: string }): void {
+    try { trackEvent('agent_created', props); } catch {}
+  },
+  agentUpdated(props?: { agentId?: string }): void {
+    try { trackEvent('agent_updated', props); } catch {}
+  },
+  agentDeleted(props?: { agentId?: string }): void {
+    try { trackEvent('agent_deleted', props); } catch {}
   },
 
-  projectViewed: (projectId: string, name: string) => {
-    trackEvent('project_viewed', { projectId, name });
+  chatMessageSent(props?: { provider?: string; model?: string }): void {
+    try { trackEvent('chat_message_sent', props); } catch {}
+  },
+  chatStreamStarted(props?: { provider?: string; model?: string }): void {
+    try { trackEvent('chat_stream_started', props); } catch {}
+  },
+  chatStreamCompleted(props?: { provider?: string; model?: string; durationMs?: number }): void {
+    try { trackEvent('chat_stream_completed', props); } catch {}
+  },
+  chatStreamFailed(props?: { error?: string }): void {
+    try { trackEvent('chat_stream_failed', props); } catch {}
   },
 
-  projectDeleted: (projectId: string) => {
-    trackEvent('project_deleted', { projectId });
+  fileCreated(props?: { projectId?: string; name?: string }): void {
+    try { trackEvent('file_created', props); } catch {}
+  },
+  fileUploaded(props?: { projectId?: string; fileType?: string }): void {
+    try { trackEvent('file_uploaded', props); } catch {}
+  },
+  fileDeleted(props?: { projectId?: string }): void {
+    try { trackEvent('file_deleted', props); } catch {}
   },
 
-  // Agent Events
-  agentCreated: (agentId: string, projectId: string, provider: string, model: string) => {
-    trackEvent('agent_created', { agentId, projectId, provider, model });
+  themeChanged(theme: string): void { try { trackEvent('theme_changed', { theme }); } catch {} },
+
+  loginCompleted(props?: { provider?: string }): void {
+    try { trackEvent('login_completed', props); } catch {}
+  },
+  logoutCompleted(): void { try { trackEvent('logout_completed'); } catch {} },
+  registrationCompleted(props?: { email?: string }): void {
+    try { trackEvent('registration_completed', props); } catch {}
   },
 
-  agentUpdated: (agentId: string, changes: Record<string, unknown>) => {
-    trackEvent('agent_updated', { agentId, ...changes });
-  },
-
-  agentDeleted: (agentId: string) => {
-    trackEvent('agent_deleted', { agentId });
-  },
-
-  // Chat Events
-  chatMessageSent: (properties: ChatEventProperties) => {
-    trackEvent('chat_message_sent', properties);
-  },
-
-  chatStreamStarted: (agentId: string, projectId: string) => {
-    trackEvent('chat_stream_started', { agentId, projectId });
-  },
-
-  chatStreamCompleted: (agentId: string, projectId: string, durationMs: number) => {
-    trackEvent('chat_stream_completed', { agentId, projectId, durationMs });
-  },
-
-  chatStreamFailed: (agentId: string, projectId: string, error: string, durationMs: number) => {
-    trackEvent('chat_stream_failed', { agentId, projectId, error, durationMs });
-  },
-
-  // File Events
-  fileCreated: (projectId: string, fileName: string) => {
-    trackEvent('file_created', { projectId, fileName });
-  },
-
-  fileUploaded: (projectId: string, fileType: string, sizeBytes: number) => {
-    trackEvent('file_uploaded', { projectId, fileType, sizeBytes });
-  },
-
-  fileDeleted: (projectId: string, fileId: string) => {
-    trackEvent('file_deleted', { projectId, fileId });
-  },
-
-  // Settings Events
-  themeChanged: (theme: string) => {
-    trackEvent('theme_changed', { theme });
-    setUserProperty('preferred_theme', theme);
-  },
-
-  languageChanged: (language: string) => {
-    trackEvent('language_changed', { language });
-    setUserProperty('preferred_language', language);
-  },
-
-  // Auth Events
-  loginCompleted: (method: string) => {
-    trackEvent('login_completed', { method });
-  },
-
-  logoutCompleted: () => {
-    trackEvent('logout_completed');
-  },
-
-  registrationCompleted: () => {
-    trackEvent('registration_completed');
-  },
-
-  // Error Events
-  errorDisplayed: (properties: ErrorEventProperties) => {
-    trackEvent('error_displayed', properties);
-  },
-
-  // Feature Usage
-  featureUsed: (featureName: string, context?: Record<string, unknown>) => {
-    trackEvent('feature_used', { featureName, ...context });
+  errorDisplayed(props?: { error?: string; componentStack?: string }): void {
+    try { trackEvent('error_displayed', props); } catch {}
   },
 };
 
-// Export posthog for advanced usage
 export { posthog };

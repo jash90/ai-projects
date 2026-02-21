@@ -171,5 +171,4 @@ export function isSentryInitialized(): boolean {
   return checkInitialized();
 }
 
-// Re-export Sentry for direct access when needed
 export { Sentry };

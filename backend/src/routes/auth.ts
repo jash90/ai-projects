@@ -64,7 +64,7 @@ function clearAuthCookies(res: Response) {
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
-router.post('/register', 
+router.post('/register',
   authLimiter,
   validate({ body: commonSchemas.user.register }),
   async (req: Request, res: Response) => {
@@ -91,7 +91,7 @@ router.post('/register',
 
       // Create user
       const user = await UserModel.create({ email, username, password });
-      
+
       // Generate tokens
       const { accessToken, refreshToken } = generateTokens({
         id: user.id,
@@ -100,7 +100,7 @@ router.post('/register',
       });
 
       logger.info('User registered successfully', { userId: user.id, email: user.email });
-      try { posthogEvents.userRegistered(user.id); identifyUser({ id: user.id, email: user.email, username: user.username, role: user.role }); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
+      try { posthogEvents.userRegistered(user.id, { email: user.email, username: user.username }); identifyUser({ id: user.id, email: user.email, username: user.username, role: user.role }); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
       setUserContext({ id: user.id, email: user.email, username: user.username, role: user.role });
 
       // Set auth cookies for SSR compatibility
@@ -197,11 +197,15 @@ router.post('/login',
       });
 
       logger.info('User logged in successfully', { userId: user.id, email: user.email });
-      try { posthogEvents.userLoggedIn(user.id); identifyUser({ id: user.id, email: user.email, username: user.username, role: user.role }); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
-      setUserContext({ id: user.id, email: user.email, username: user.username, role: user.role });
 
       // Set auth cookies for SSR compatibility
       setAuthCookies(res, accessToken, refreshToken);
+
+      try {
+        identifyUser({ id: user.id, email: user.email, username: user.username, role: user.role });
+        setUserContext({ id: user.id, email: user.email, username: user.username, role: user.role });
+        posthogEvents.userLoggedIn(user.id, { provider: 'email' });
+      } catch {}
 
       res.json({
         success: true,
@@ -366,11 +370,14 @@ router.post('/logout', authenticateToken, async (req: Request, res: Response) =>
     }
 
     logger.info('User logged out successfully', { userId: req.user!.id });
-    try { posthogEvents.userLoggedOut(req.user!.id); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
-    clearUserContext();
 
     // Clear auth cookies
     clearAuthCookies(res);
+
+    try {
+      clearUserContext();
+      posthogEvents.userLoggedOut(req.user!.id);
+    } catch {}
 
     res.json({
       success: true,
@@ -516,7 +523,7 @@ router.get('/profile', authenticateToken, async (req: Request, res: Response) =>
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
-router.put('/profile', 
+router.put('/profile',
   authenticateToken,
   validate({ body: commonSchemas.user.update }),
   async (req: Request, res: Response) => {
@@ -607,7 +614,7 @@ router.get('/verify', authenticateToken, async (req: Request, res: Response) => 
   try {
     // Get fresh user data from database to include role and other fields
     const user = await UserModel.findById(req.user!.id);
-    
+
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -677,7 +684,7 @@ router.get('/verify', authenticateToken, async (req: Request, res: Response) => 
 router.get('/me', authenticateToken, async (req: Request, res: Response) => {
   try {
     const user = await UserModel.findById(req.user!.id);
-    
+
     if (!user) {
       return res.status(404).json({
         success: false,

@@ -7,7 +7,7 @@ interface AgentState {
   agents: Agent[]
   isLoading: boolean
   error: string | null
-  
+
   // Actions
   fetchAgents: () => Promise<void>
   createAgent: (data: AgentCreate) => Promise<Agent>
@@ -31,9 +31,9 @@ export const useAgents = create<AgentState>((set) => ({
         set({ error: response.error || 'Failed to fetch agents', isLoading: false })
       }
     } catch (error) {
-      set({ 
-        error: error instanceof Error ? error.message : 'Failed to fetch agents', 
-        isLoading: false 
+      set({
+        error: error instanceof Error ? error.message : 'Failed to fetch agents',
+        isLoading: false
       })
     }
   },
@@ -44,10 +44,8 @@ export const useAgents = create<AgentState>((set) => ({
       const response = await agentsApi.createAgent(data)
       if (response.success) {
         const newAgent = response.data?.agent
-        set(state => ({
-          agents: [...state.agents, newAgent]
-        }))
-        try { events.agentCreated(newAgent.id, '', newAgent.provider, newAgent.model) } catch {}
+        set(state => ({ agents: [...state.agents, newAgent] }))
+        try { events.agentCreated({ agentId: newAgent?.id, provider: newAgent?.provider, model: newAgent?.model }); } catch {}
         return newAgent
       } else {
         const error = response.error || 'Failed to create agent'
@@ -67,12 +65,8 @@ export const useAgents = create<AgentState>((set) => ({
       const response = await agentsApi.updateAgent(id, data)
       if (response.success) {
         const updatedAgent = response.data?.agent
-        set(state => ({
-          agents: state.agents.map(agent =>
-            agent.id === id ? updatedAgent : agent
-          )
-        }))
-        try { events.agentUpdated(id, data as Record<string, unknown>) } catch {}
+        set(state => ({ agents: state.agents.map(agent => agent.id === id ? updatedAgent : agent) }))
+        try { events.agentUpdated({ agentId: id }); } catch {}
         return updatedAgent
       } else {
         const error = response.error || 'Failed to update agent'
@@ -91,11 +85,8 @@ export const useAgents = create<AgentState>((set) => ({
     try {
       const response = await agentsApi.deleteAgent(id)
       if (response.success) {
-        // Only remove from state after successful API confirmation
-        set(state => ({
-          agents: state.agents.filter(agent => agent.id !== id)
-        }))
-        try { events.agentDeleted(id) } catch {}
+        set(state => ({ agents: state.agents.filter(agent => agent.id !== id) }))
+        try { events.agentDeleted({ agentId: id }); } catch {}
       } else {
         const error = response.error || 'Failed to delete agent'
         set({ error })

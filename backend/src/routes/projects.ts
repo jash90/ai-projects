@@ -376,7 +376,7 @@ router.post('/',
         projectId: project.id,
         userId
       });
-      try { posthogEvents.projectCreated(userId, project.id, project.name); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
+      try { posthogEvents.projectCreated(userId, { projectId: project.id, name: project.name }); } catch {}
 
       res.status(201).json({
         success: true,
@@ -467,7 +467,7 @@ router.put('/:id',
       }
 
       logger.info('Project updated', { projectId: id, userId, updates: Object.keys(updates) });
-      try { posthogEvents.projectUpdated(userId, id); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
+      try { posthogEvents.projectUpdated(userId, { projectId: id }); } catch {}
 
       res.json({
         success: true,
@@ -546,7 +546,7 @@ router.delete('/:id',
       }
 
       logger.info('Project deleted', { projectId: id, userId });
-      try { posthogEvents.projectDeleted(userId, id); } catch (e) { logger.debug('PostHog tracking failed', { error: e }); }
+      try { posthogEvents.projectDeleted(userId, { projectId: id }); } catch {}
 
       res.json({
         success: true,

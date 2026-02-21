@@ -36,7 +36,7 @@ class ApiClient {
   }
 
   private setupInterceptors() {
-    // Request interceptor to add auth token
+    // Request interceptor to add auth token + Sentry breadcrumb
     this.client.interceptors.request.use(
       (config) => {
         const token = authStore.getState().tokens?.access_token
@@ -107,20 +107,31 @@ class ApiClient {
           }
         }
 
+        // Add error breadcrumb to Sentry
+        try {
+          addBreadcrumb('http', `API Error: ${error.config?.method?.toUpperCase()} ${error.config?.url}`, {
+            url: error.config?.url,
+            status: error.response?.status,
+          });
+          if (error.response?.status >= 500) {
+            captureException(error, { url: error.config?.url, status: error.response?.status });
+          }
+        } catch {}
+
         // Extract meaningful error messages from API responses
         if (error.response?.data) {
           const errorData = error.response.data;
-          
+
           // Create a structured error object that preserves all error information
           const structuredError = new Error(errorData.error || errorData.message || 'API Error');
           structuredError.name = 'APIError';
-          
+
           // Attach the full error data for better error handling
           (structuredError as any).errorData = errorData;
-          
+
           return Promise.reject(structuredError);
         }
-        
+
         return Promise.reject(error)
       }
     )

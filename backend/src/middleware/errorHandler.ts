@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError, isAppError, ErrorCode } from '../utils/errors';
 import logger from '../utils/logger';
-import { captureException, recordError } from '../analytics';
+import { captureException } from '../analytics';
 
 export interface ErrorResponse {
   success: false;
@@ -51,16 +51,8 @@ export const errorHandler = (
         error: error.toJSON(),
       });
 
-      // Capture 5xx errors to Sentry
-      captureException(error, {
-        userId,
-        path: req.path,
-        method: req.method,
-        errorCode: error.code,
-      });
+      captureException(error, { userId, path: req.path, method: req.method, errorCode: error.code });
 
-      // Record error metrics
-      recordError('app_error', error.code);
     } else if (error.statusCode >= 400) {
       logger.warn('Client error:', {
         ...requestInfo,
@@ -185,16 +177,7 @@ export const errorHandler = (
     },
   });
 
-  // Capture unhandled errors to Sentry
-  captureException(error, {
-    userId,
-    path: req.path,
-    method: req.method,
-    errorType: 'unhandled',
-  });
-
-  // Record error metrics
-  recordError('unhandled_error', error.name || 'unknown');
+  captureException(error, { userId, path: req.path, method: req.method, errorType: 'unhandled' });
 
   // Don't expose internal error details in production
   const isDevelopment = process.env.NODE_ENV !== 'production';
