@@ -2,6 +2,11 @@
  * Sentry Pre-Init — MUST be imported before any other modules (Express, http, etc.)
  * so that auto-instrumentation can patch them for performance monitoring.
  */
+
+// dotenv must be loaded here — instrument.ts runs before config.ts loads dotenv
+import { config as dotenvConfig } from 'dotenv';
+dotenvConfig();
+
 import * as Sentry from '@sentry/node';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
 

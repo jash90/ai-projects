@@ -5,6 +5,8 @@ import { UserModel } from '../models/User';
 import { TokenUsageModel } from '../models/TokenUsage';
 import { asyncHandler } from '../middleware/errorHandler';
 import logger from '../utils/logger';
+import { captureException, captureMessage, isSentryInitialized } from '../analytics';
+import { trackEvent, isPostHogInitialized } from '../analytics/posthog';
 
 const router: Router = Router();
 
@@ -362,6 +364,28 @@ router.post('/reset-user-usage/:userId',
         error: 'Failed to reset user token usage'
       });
     }
+  })
+);
+
+router.get('/test-sentry',
+  generalLimiter,
+  asyncHandler(async (_req: Request, res: Response) => {
+    const sentryInitialized = isSentryInitialized();
+    const testError = new Error('Sentry test error from /api/debug/test-sentry');
+    const eventId = captureException(testError);
+    captureMessage('Sentry test message', 'info');
+    logger.info('Sentry test triggered', { sentryInitialized, eventId });
+    res.json({ success: true, sentryInitialized, eventId });
+  })
+);
+
+router.get('/test-posthog',
+  generalLimiter,
+  asyncHandler(async (_req: Request, res: Response) => {
+    const posthogInitialized = isPostHogInitialized();
+    trackEvent('test_event', 'debug-user', { source: 'debug-endpoint', timestamp: new Date().toISOString() });
+    logger.info('PostHog test triggered', { posthogInitialized });
+    res.json({ success: true, posthogInitialized });
   })
 );
 
