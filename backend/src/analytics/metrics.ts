@@ -5,13 +5,18 @@
 import { Registry, Counter, Histogram, Gauge, collectDefaultMetrics } from 'prom-client';
 import type { Request, Response } from 'express';
 import logger from '../utils/logger';
-import { analyticsConfig } from '../utils/config';
 
 // Create a custom registry
 const registry = new Registry();
 
 // Prefix for all metrics
-const PREFIX = analyticsConfig.metrics.prefix;
+const PREFIX = process.env.METRICS_PREFIX || 'claude_projects_';
+
+// Metrics config derived from env vars
+const metricsConfig = {
+  enabled: process.env.METRICS_ENABLED === 'true',
+  path: process.env.METRICS_PATH || '/metrics',
+};
 
 // Collect default Node.js metrics
 collectDefaultMetrics({
@@ -101,7 +106,7 @@ export const redisOperationsTotal = new Counter({
  * Initialize metrics collection
  */
 export function initializeMetrics(): void {
-  if (!analyticsConfig.metrics.enabled) {
+  if (!metricsConfig.enabled) {
     logger.info('Metrics collection disabled');
     return;
   }
@@ -113,7 +118,7 @@ export function initializeMetrics(): void {
 
   logger.info('Prometheus metrics initialized', {
     prefix: PREFIX,
-    path: analyticsConfig.metrics.path,
+    path: metricsConfig.path,
   });
 }
 
@@ -248,5 +253,5 @@ export function getRegistry(): Registry {
  * Check if metrics are enabled
  */
 export function isMetricsEnabled(): boolean {
-  return analyticsConfig.metrics.enabled && process.env.NODE_ENV !== 'test';
+  return metricsConfig.enabled && process.env.NODE_ENV !== 'test';
 }
