@@ -59,7 +59,7 @@ function ThreadChatMessage({ message, agent }: { message: ThreadMessage; agent?:
 
         {/* Message content */}
         <div className="prose prose-sm dark:prose-invert max-w-none">
-          {message.isLoading ? (
+          {message.isLoading && !message.content ? (
             <div className="flex items-center gap-2">
               <div className="animate-pulse">Thinking...</div>
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
@@ -70,9 +70,14 @@ function ThreadChatMessage({ message, agent }: { message: ThreadMessage; agent?:
               <p>{message.error}</p>
             </div>
           ) : (
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {message.content}
-            </ReactMarkdown>
+            <>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {message.content}
+              </ReactMarkdown>
+              {message.isLoading && (
+                <span className="inline-block w-2 h-4 bg-primary animate-pulse ml-0.5" />
+              )}
+            </>
           )}
         </div>
 
