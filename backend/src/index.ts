@@ -1,6 +1,3 @@
-// Analytics must be imported first for proper Sentry instrumentation
-import { initializeAnalytics, shutdownAnalytics, getMetricsHandler, setActiveConnections } from './analytics';
-
 import express from 'express';
 import { createServer } from 'http';
 import { Server as SocketServer } from 'socket.io';
@@ -12,8 +9,6 @@ import { SocketHandler } from './services/socketHandler';
 import { modelService } from './services/modelService';
 import { generalLimiter } from './middleware/rateLimiting';
 import { sanitizeInputs } from './middleware/validation';
-import { metricsMiddleware } from './middleware/metricsMiddleware';
-import { sentryUserContextMiddleware, sentryBreadcrumbMiddleware } from './middleware/sentryMiddleware';
 import config from './utils/config';
 import logger from './utils/logger';
 
@@ -35,9 +30,6 @@ import threadRoutes from './routes/threads';
 import { setupSwagger } from './swagger';
 
 const app: express.Express = express();
-
-// Initialize analytics (Sentry, PostHog, Prometheus) - must be early in the app lifecycle
-initializeAnalytics(app);
 
 const server = createServer(app);
 
@@ -146,12 +138,6 @@ app.use(sanitizeInputs);
 // Rate limiting
 app.use(generalLimiter);
 
-// Metrics middleware - collect request metrics
-app.use(metricsMiddleware);
-
-// Sentry breadcrumb middleware - track request flow
-app.use(sentryBreadcrumbMiddleware);
-
 // Request logging
 app.use((req, res, next) => {
   logger.info(`${req.method} ${req.path}`, {
@@ -174,9 +160,6 @@ app.get('/api/health/detailed', (req, res) => {
     database: isDatabaseReady ? 'connected' : 'initializing'
   });
 });
-
-// Prometheus metrics endpoint for Grafana Cloud scraping
-app.get('/metrics', getMetricsHandler());
 
 // Setup Swagger documentation
 setupSwagger(app);
@@ -277,16 +260,12 @@ async function startServer(): Promise<void> {
 
   io.on('connection', (socket) => {
     logger.debug('Socket.IO client connected', { socketId: socket.id });
-    // Update WebSocket connection metrics
-    setActiveConnections('websocket', io.engine.clientsCount);
 
     socket.on('disconnect', (reason) => {
       logger.debug('Socket.IO client disconnected', {
         socketId: socket.id,
         reason
       });
-      // Update WebSocket connection metrics
-      setActiveConnections('websocket', io.engine.clientsCount);
     });
   });
 
@@ -320,8 +299,6 @@ process.on('SIGTERM', async () => {
 
   server.close(async () => {
     try {
-      // Flush analytics events before shutdown
-      await shutdownAnalytics();
       await closeDatabase();
       logger.info('Server shut down successfully');
       process.exit(0);
@@ -337,8 +314,6 @@ process.on('SIGINT', async () => {
 
   server.close(async () => {
     try {
-      // Flush analytics events before shutdown
-      await shutdownAnalytics();
       await closeDatabase();
       logger.info('Server shut down successfully');
       process.exit(0);
