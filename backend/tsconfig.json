@@ -9,6 +9,7 @@
     "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "types": ["node", "express", "cors", "multer", "bcryptjs", "jsonwebtoken", "pg", "jest", "supertest", "uuid", "mime-types", "ms", "cookie-parser", "swagger-jsdoc", "swagger-ui-express"],
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "declaration": true,

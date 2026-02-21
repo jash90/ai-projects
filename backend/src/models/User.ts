@@ -438,14 +438,14 @@ export class UserModel {
 
       // Check global limit
       if (globalLimit > 0 && totalTokensNum + tokensToUse > globalLimit) {
-        try { posthogEvents.tokenLimitExceeded(userId, 'global', totalTokensNum, globalLimit); } catch {}
+        try { posthogEvents.tokenLimitExceeded(userId, { limitType: 'global' }); } catch {}
         const { createTokenLimitError } = await import('../utils/errors');
         throw createTokenLimitError('global', totalTokensNum, globalLimit, tokensToUse);
       }
 
       // Check monthly limit
       if (monthlyLimit > 0 && monthlyTokensNum + tokensToUse > monthlyLimit) {
-        try { posthogEvents.tokenLimitExceeded(userId, 'monthly', monthlyTokensNum, monthlyLimit); } catch {}
+        try { posthogEvents.tokenLimitExceeded(userId, { limitType: 'monthly' }); } catch {}
         const { createTokenLimitError } = await import('../utils/errors');
         throw createTokenLimitError('monthly', monthlyTokensNum, monthlyLimit, tokensToUse);
       }
