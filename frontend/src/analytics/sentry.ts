@@ -15,7 +15,6 @@ import {
   Routes,
 } from 'react-router-dom';
 import { isAnalyticsAllowed } from '@/utils/consent';
-import type { UserContext } from './types';
 
 export function initializeSentry(): void {
   const dsn = import.meta.env.VITE_SENTRY_DSN;
