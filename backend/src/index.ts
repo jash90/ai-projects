@@ -93,7 +93,9 @@ app.use(cors({
     'Accept',
     'Origin',
     'Access-Control-Request-Method',
-    'Access-Control-Request-Headers'
+    'Access-Control-Request-Headers',
+    'sentry-trace',
+    'baggage',
   ],
   exposedHeaders: ['X-Total-Count', 'X-Page-Count'],
   optionsSuccessStatus: 200, // For legacy browser support
