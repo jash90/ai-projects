@@ -28,9 +28,6 @@ export default defineConfig(({ mode }) => ({
   server: {
     port: 3000,
     host: true,
-    hmr: {
-      port: 24678,
-    },
     proxy: {
       '/api': {
         target: 'http://localhost:3001',
@@ -43,7 +40,40 @@ export default defineConfig(({ mode }) => ({
     },
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime'],
+    include: [
+      'react',
+      'react-dom',
+      'react/jsx-runtime',
+      'react/jsx-dev-runtime',
+      // React ecosystem
+      'react-router-dom',
+      'react-i18next',
+      'react-helmet-async',
+      'react-hot-toast',
+      'react-hook-form',
+      'react-dropzone',
+      'react-markdown',
+      '@tanstack/react-query',
+      '@headlessui/react',
+      'framer-motion',
+      // Analytics
+      '@sentry/react',
+      'posthog-js',
+      'posthog-js/react',
+      // i18n
+      'i18next',
+      'i18next-browser-languagedetector',
+      'i18next-http-backend',
+      // Utilities
+      'axios',
+      'zustand',
+      'zod',
+      'clsx',
+      'date-fns',
+      'socket.io-client',
+      'lucide-react',
+      'dompurify',
+    ],
   },
   build: {
     outDir: 'dist',
