@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx server/index.ts",
-    "dev:spa": "vite",
+    "dev": "vite",
+    "dev:ssr": "tsx server/index.ts",
     "build": "vite build",
     "build:analyze": "vite build && vite-bundle-visualizer --open=false --filename=dist/stats.html",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
