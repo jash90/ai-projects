@@ -250,10 +250,21 @@ export const threadStore = create<ThreadState>()(
           created_at: new Date().toISOString()
         }
 
+        const tempAiMessage: ThreadMessage = {
+          id: `temp-ai-${Date.now()}`,
+          thread_id: threadId,
+          agent_id: agentId,
+          role: 'assistant',
+          content: '',
+          metadata: {},
+          created_at: new Date().toISOString(),
+          isLoading: true
+        }
+
         set(state => ({
           messagesByThread: {
             ...state.messagesByThread,
-            [threadId]: [...(state.messagesByThread[threadId] || []), tempUserMessage]
+            [threadId]: [...(state.messagesByThread[threadId] || []), tempUserMessage, tempAiMessage]
           }
         }))
 
