@@ -1,4 +1,5 @@
 // PWA utilities for service worker registration and management
+import React from 'react';
 
 export interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
@@ -59,6 +60,20 @@ class PWAManager {
   }
 
   private async registerServiceWorker() {
+    // Never register the Service Worker in development — it caches Vite-transformed
+    // source files with baked-in dep hashes, which causes stale deps and duplicate
+    // React instances when Vite re-optimizes its deps.
+    if (import.meta.env.DEV) {
+      // Unregister any existing SW left over from production testing
+      if ('serviceWorker' in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (const registration of registrations) {
+          registration.unregister();
+        }
+      }
+      return;
+    }
+
     if ('serviceWorker' in navigator) {
       try {
         const registration = await navigator.serviceWorker.register('/sw.js', {
@@ -274,5 +289,3 @@ export const useNetworkStatus = () => {
   return isOnline;
 };
 
-// Import React for hooks (this will be handled by the bundler)
-import React from 'react';
