@@ -158,6 +158,10 @@ export default {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-5px)" },
         },
+        "typing-dot-bounce": {
+          "0%, 40%": { transform: "translateY(0)" },
+          "20%": { transform: "translateY(-0.25rem)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -175,6 +179,7 @@ export default {
         "shimmer": "shimmer 1.5s infinite",
         "pulse-soft": "pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "bounce-soft": "bounce-soft 1s infinite",
+        "typing-dot-bounce": "typing-dot-bounce 1.25s ease-out infinite",
       },
       typography: {
         DEFAULT: {
@@ -205,5 +210,7 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require("tailwindcss-animate"),
+  ],
 }
