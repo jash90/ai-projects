@@ -1,23 +1,22 @@
-import { useEffect, useCallback, useState, useRef } from 'react'
-import { Project, Agent, ThreadMessage } from '@/types'
+import { useEffect, useCallback, useState, useRef, useMemo } from 'react'
+import { Project, Agent } from '@/types'
 import { ChatHeader } from './ChatHeader'
-import { ChatInput } from './ChatInput'
 import { TokenLimitBanner } from './TokenLimitBanner'
+import { TokenMetaBadge } from './TokenMetaBadge'
 import { ThreadList } from './ThreadList'
+import { threadMessageToKitMessage } from './adapters'
+import { useFileAttachments } from './useFileAttachments'
 import { Drawer } from '@/components/ui/Drawer'
+import { MessageList } from '@/components/ui/message-list'
+import { MessageInput } from '@/components/ui/message-input'
+import { PromptSuggestions } from '@/components/ui/prompt-suggestions'
+import { CopyButton } from '@/components/ui/copy-button'
+import type { Message } from '@/components/ui/chat-message'
 import { MessageIcon } from '@/components/icons'
 import { threadStore, useActiveThread, useThreadMessages, useThreadSending, useMessagesLoading } from '@/stores/threadStore'
 import { useTokenLimits } from '@/hooks/useTokenLimits'
 import { cn } from '@/lib/utils'
 import toast from 'react-hot-toast'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-
-function formatTokenCount(tokens: number): string {
-  if (tokens >= 1_000_000) return `${(tokens / 1_000_000).toFixed(1)}M`
-  if (tokens >= 1_000) return `${(tokens / 1_000).toFixed(1)}K`
-  return tokens.toString()
-}
 
 interface ThreadChatProps {
   project: Project
@@ -25,101 +24,11 @@ interface ThreadChatProps {
   className?: string
 }
 
-function ThreadChatMessage({ message, agent }: { message: ThreadMessage; agent?: Agent }) {
-  const isUser = message.role === 'user'
-
-  return (
-    <div className={cn(
-      'flex gap-3 px-3 py-2.5',
-      'bg-background'
-    )}>
-      {/* Avatar */}
-      <div className={cn(
-        'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium',
-        isUser ? 'bg-primary text-primary-foreground' : 'bg-accent text-accent-foreground'
-      )}>
-        {isUser ? 'U' : (message.agent_name?.[0] || 'A')}
-      </div>
-
-      {/* Content */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="font-medium text-sm">
-            {isUser ? 'You' : (message.agent_name || agent?.name || 'Assistant')}
-          </span>
-          {!isUser && message.agent_name && (
-            <span className="text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
-              {message.agent_name}
-            </span>
-          )}
-          <span className="text-xs text-muted-foreground">
-            {new Date(message.created_at).toLocaleTimeString()}
-          </span>
-        </div>
-
-        {/* Message content */}
-        <div className="prose prose-sm dark:prose-invert max-w-none">
-          {message.isLoading && !message.content ? (
-            <div className="flex items-center gap-2">
-              <div className="animate-pulse">Thinking...</div>
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
-            </div>
-          ) : message.error ? (
-            <div className="text-destructive">
-              <p className="font-medium">Error:</p>
-              <p>{message.error}</p>
-            </div>
-          ) : (
-            <>
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {message.content}
-              </ReactMarkdown>
-              {message.isLoading && (
-                <span className="inline-block w-2 h-4 bg-primary animate-pulse ml-0.5" />
-              )}
-            </>
-          )}
-        </div>
-
-        {/* Metadata */}
-        {message.metadata && Object.keys(message.metadata).length > 0 && !isUser && (
-          <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground flex-wrap">
-            {message.metadata.model && (
-              <span className="bg-muted px-1.5 py-0.5 rounded">{message.metadata.model}</span>
-            )}
-            {(message.metadata.prompt_tokens != null || message.metadata.completion_tokens != null) ? (
-              <span className="flex items-center gap-1">
-                {message.metadata.prompt_tokens != null && (
-                  <span title="Input tokens">{formatTokenCount(message.metadata.prompt_tokens)} in</span>
-                )}
-                {message.metadata.prompt_tokens != null && message.metadata.completion_tokens != null && (
-                  <span>/</span>
-                )}
-                {message.metadata.completion_tokens != null && (
-                  <span title="Output tokens">{formatTokenCount(message.metadata.completion_tokens)} out</span>
-                )}
-              </span>
-            ) : message.metadata.tokens != null && message.metadata.tokens > 0 && (
-              <span>{formatTokenCount(message.metadata.tokens)} tokens</span>
-            )}
-            {message.metadata.estimated_cost != null && Number(message.metadata.estimated_cost) > 0 && (
-              <span className="bg-muted px-1.5 py-0.5 rounded" title="Estimated cost">
-                ${Number(message.metadata.estimated_cost) < 0.01
-                  ? Number(message.metadata.estimated_cost).toFixed(4)
-                  : Number(message.metadata.estimated_cost).toFixed(2)}
-              </span>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
-
 export function ThreadChat({ project, agent, className }: ThreadChatProps) {
   const [includeFiles, setIncludeFiles] = useState(true)
   const [streaming, setStreaming] = useState(true)
   const [showThreadList, setShowThreadList] = useState(false)
+  const [inputValue, setInputValue] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const activeThread = useActiveThread(project.id)
@@ -127,7 +36,34 @@ export function ThreadChat({ project, agent, className }: ThreadChatProps) {
   const isSending = useThreadSending(activeThread?.id || '')
   const isLoadingMessages = useMessagesLoading(activeThread?.id || '')
 
+  const { files, setFiles, clearFiles, fileError } = useFileAttachments()
   const { canSendMessage, getLimitStatusMessage, refreshUsage, isGlobalLimitExceeded, isMonthlyLimitExceeded } = useTokenLimits()
+
+  // Convert ThreadMessage[] to kit Message[] with streaming cursor
+  const kitMessages: Message[] = useMemo(() => {
+    return messages.map((msg) => {
+      const kitMsg = threadMessageToKitMessage(msg)
+      // Append blinking cursor for streaming messages
+      if (msg.isLoading && msg.content) {
+        kitMsg.content = msg.content + ' \u258C' // Unicode block cursor
+      }
+      return kitMsg
+    })
+  }, [messages])
+
+  // Track which messages are loading (for typing indicator)
+  const isTyping = messages.some((m) => m.isLoading && !m.content)
+
+  // Build metadata map for TokenMetaBadge
+  const metadataByMessageId = useMemo(() => {
+    const map = new Map<string, Record<string, any>>()
+    for (const msg of messages) {
+      if (msg.role !== 'user' && msg.metadata && Object.keys(msg.metadata).length > 0) {
+        map.set(msg.id, msg.metadata)
+      }
+    }
+    return map
+  }, [messages])
 
   // Load threads on mount
   useEffect(() => {
@@ -157,8 +93,7 @@ export function ThreadChat({ project, agent, className }: ThreadChatProps) {
       try {
         const newThread = await threadStore.getState().createThread(project.id)
         threadId = newThread.id
-      } catch (error) {
-        console.error('Failed to create thread:', error)
+      } catch {
         toast.error('Failed to create conversation')
         return
       }
@@ -193,20 +128,22 @@ export function ThreadChat({ project, agent, className }: ThreadChatProps) {
           includeFiles
         )
       }
-
       refreshUsage()
-    } catch (error) {
-      console.error('Failed to send message:', error)
+    } catch {
       refreshUsage()
-
       const storeError = threadStore.getState().error
-      if (storeError) {
-        toast.error(storeError)
-      } else {
-        toast.error('Failed to send message. Please try again.')
-      }
+      toast.error(storeError || 'Failed to send message. Please try again.')
     }
   }, [project.id, agent.id, activeThread?.id, includeFiles, streaming, isSending, canSendMessage, getLimitStatusMessage, refreshUsage, isGlobalLimitExceeded, isMonthlyLimitExceeded])
+
+  const handleFormSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault()
+    if (inputValue.trim()) {
+      handleSendMessage(inputValue.trim())
+      setInputValue('')
+      clearFiles()
+    }
+  }, [inputValue, handleSendMessage, clearFiles])
 
   const handleClearConversation = useCallback(async () => {
     if (!activeThread) return
@@ -214,8 +151,7 @@ export function ThreadChat({ project, agent, className }: ThreadChatProps) {
     if (confirm('Are you sure you want to delete this conversation? This action cannot be undone.')) {
       try {
         await threadStore.getState().deleteThread(activeThread.id, project.id)
-      } catch (error) {
-        console.error('Failed to delete conversation:', error)
+      } catch {
         toast.error('Failed to delete conversation')
       }
     }
@@ -271,16 +207,18 @@ export function ThreadChat({ project, agent, className }: ThreadChatProps) {
         />
 
         {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto p-4">
           {!activeThread ? (
             <div className="flex flex-col items-center justify-center h-full text-center p-8">
-              <div className="text-4xl mb-4">Start a conversation</div>
-              <p className="text-muted-foreground text-sm max-w-md mb-4">
-                Select a conversation from the list or start a new one by sending a message.
-              </p>
-              <p className="text-muted-foreground text-xs">
-                Current agent: <span className="font-medium">{agent.name}</span>
-              </p>
+              <PromptSuggestions
+                label={`Start a conversation with ${agent.name}`}
+                append={({ content }) => handleSendMessage(content)}
+                suggestions={[
+                  "What can you help me with?",
+                  "Summarize this project",
+                  "Help me write code",
+                ]}
+              />
             </div>
           ) : isLoadingMessages ? (
             <div className="flex items-center justify-center h-full">
@@ -288,36 +226,63 @@ export function ThreadChat({ project, agent, className }: ThreadChatProps) {
             </div>
           ) : messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center p-8">
-              <div className="text-4xl mb-4">New conversation</div>
-              <p className="text-muted-foreground text-sm max-w-md">
-                Send a message to start chatting with {agent.name}.
-              </p>
+              <PromptSuggestions
+                label={`New conversation with ${agent.name}`}
+                append={({ content }) => handleSendMessage(content)}
+                suggestions={[
+                  "What can you help me with?",
+                  "Explain your capabilities",
+                  "Help me get started",
+                ]}
+              />
             </div>
           ) : (
-            <div className="divide-y divide-border">
-              {messages.map((message, index) => (
-                <ThreadChatMessage
-                  key={message.id || index}
-                  message={message}
-                  agent={agent}
-                />
-              ))}
+            <>
+              <MessageList
+                messages={kitMessages}
+                showTimeStamps={true}
+                isTyping={isTyping}
+                messageOptions={(message) => ({
+                  animation: "fade" as const,
+                  actions: message.role === 'assistant' ? (
+                    <div className="flex items-center gap-1">
+                      <CopyButton content={message.content} copyMessage="Message copied" />
+                      <TokenMetaBadge metadata={metadataByMessageId.get(message.id) || undefined} />
+                    </div>
+                  ) : undefined,
+                })}
+              />
               <div ref={messagesEndRef} />
-            </div>
+            </>
           )}
         </div>
 
         <TokenLimitBanner className="mx-4 mb-2" />
 
-        <ChatInput
-          onSendMessage={handleSendMessage}
-          disabled={isSending || !canSendMessage}
-          placeholder={
-            !canSendMessage
-              ? (getLimitStatusMessage() || 'Token limit exceeded')
-              : `Message ${agent.name}...`
-          }
-        />
+        {/* File error */}
+        {fileError && (
+          <div className="mx-4 mb-2 text-sm text-destructive">{fileError}</div>
+        )}
+
+        {/* Message Input */}
+        <div className="p-4 pt-0">
+          <form onSubmit={handleFormSubmit}>
+            <MessageInput
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              isGenerating={isSending}
+              allowAttachments={true}
+              files={files}
+              setFiles={setFiles}
+              disabled={!canSendMessage}
+              placeholder={
+                !canSendMessage
+                  ? (getLimitStatusMessage() || 'Token limit exceeded')
+                  : `Message ${agent.name}...`
+              }
+            />
+          </form>
+        </div>
       </div>
     </div>
   )
