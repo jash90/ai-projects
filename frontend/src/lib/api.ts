@@ -1,7 +1,12 @@
 import axios, { AxiosInstance } from 'axios'
 import { ApiResponse, AuthTokens, PaginatedResponse, User, UserPreferences, AdminStats, UserManagement, UserUsageStats, TokenLimitUpdate, AdminActivity, Thread, ThreadMessage } from '@/types'
 import { authStore } from '@/stores/authStore'
-import { addBreadcrumb, captureException } from '@/analytics/sentry'
+function lazyBreadcrumb(type: string, message: string, data?: Record<string, unknown>, _level?: string) {
+  import('@/analytics/sentry').then(({ addBreadcrumb: ab }) => { try { ab(type, message, data); } catch {} })
+}
+function lazyCapture(err: unknown, ctx?: Record<string, unknown>) {
+  import('@/analytics/sentry').then(({ captureException: ce }) => { try { ce(err, ctx); } catch {} })
+}
 
 class ApiClient {
   private client: AxiosInstance
@@ -43,7 +48,7 @@ class ApiClient {
         if (token) {
           config.headers.Authorization = `Bearer ${token}`
         }
-        addBreadcrumb('http', `${config.method?.toUpperCase()} ${config.url}`, {
+        lazyBreadcrumb('http', `${config.method?.toUpperCase()} ${config.url}`, {
           method: config.method?.toUpperCase(),
           url: config.url,
         })
@@ -57,7 +62,7 @@ class ApiClient {
       (response) => response,
       async (error) => {
         const originalRequest = error.config
-        addBreadcrumb('http', `API Error: ${originalRequest?.method?.toUpperCase()} ${originalRequest?.url}`, {
+        lazyBreadcrumb('http', `API Error: ${originalRequest?.method?.toUpperCase()} ${originalRequest?.url}`, {
           method: originalRequest?.method?.toUpperCase(),
           url: originalRequest?.url,
           status: error.response?.status,
@@ -109,12 +114,12 @@ class ApiClient {
 
         // Add error breadcrumb to Sentry
         try {
-          addBreadcrumb('http', `API Error: ${error.config?.method?.toUpperCase()} ${error.config?.url}`, {
+          lazyBreadcrumb('http', `API Error: ${error.config?.method?.toUpperCase()} ${error.config?.url}`, {
             url: error.config?.url,
             status: error.response?.status,
           });
           if (error.response?.status >= 500) {
-            captureException(error, { url: error.config?.url, status: error.response?.status });
+            lazyCapture(error, { url: error.config?.url, status: error.response?.status });
           }
         } catch {}
 
@@ -488,7 +493,7 @@ export const chatApi = {
         }
       }
     } catch (error) {
-      captureException(error, { source: 'chat_streaming', agentId, projectId })
+      lazyCapture(error, { source: 'chat_streaming', agentId, projectId })
       // Handle structured error data properly
       if (error instanceof Error && (error as any).errorData) {
         onError((error as any).errorData);
@@ -807,7 +812,7 @@ export const threadsApi = {
         }
       }
     } catch (error) {
-      captureException(error, { source: 'thread_streaming', threadId })
+      lazyCapture(error, { source: 'thread_streaming', threadId })
       if (error instanceof Error && (error as any).errorData) {
         onError((error as any).errorData);
       } else {

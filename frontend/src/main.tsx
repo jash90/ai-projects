@@ -1,32 +1,10 @@
-// Sentry MUST be initialized before React imports
-import { initializeSentry, captureException } from '@/analytics/sentry'
-initializeSentry()
-
-window.addEventListener('error', (event) => {
-  captureException(event.error ?? event.message, {
-    mechanism: 'global_error_handler',
-    filename: event.filename,
-    lineno: event.lineno,
-    colno: event.colno,
-  })
-})
-
-window.addEventListener('unhandledrejection', (event) => {
-  captureException(event.reason ?? 'Unhandled promise rejection', {
-    mechanism: 'unhandled_rejection',
-  })
-})
-
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { I18nextProvider } from 'react-i18next'
 import { HelmetProvider } from 'react-helmet-async'
-import { PostHogProvider } from 'posthog-js/react'
 import { Toaster } from 'react-hot-toast'
-import posthog from 'posthog-js'
 import App from './App.tsx'
-import CookieConsent from '@/components/CookieConsent'
 import { isAnalyticsAllowed } from '@/utils/consent'
 import { initWebVitals } from '@/utils/webVitals'
 import './index.css'
@@ -34,10 +12,16 @@ import './index.css'
 // Initialize i18n
 import i18n from './lib/i18n'
 
-// Initialize PWA
-import './utils/pwa'
+// Initialize PWA — deferred to avoid blocking first paint
+if (typeof requestIdleCallback === 'function') {
+  requestIdleCallback(() => import('./utils/pwa'))
+} else {
+  setTimeout(() => import('./utils/pwa'), 0)
+}
 
-// Initialize Web Vitals tracking
+// Lazy-load CookieConsent — consent banner can appear after first paint
+const CookieConsent = lazy(() => import('@/components/CookieConsent'))
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -51,36 +35,61 @@ const queryClient = new QueryClient({
   },
 })
 
-// PostHog configuration
-const posthogKey = import.meta.env.VITE_POSTHOG_KEY
-// Session recording controlled by env var (default: disabled)
-const enableSessionRecording = import.meta.env.VITE_POSTHOG_ENABLE_SESSION_RECORDING === 'true'
+// Defer analytics initialization to after first paint
+function initAnalytics() {
+  // Sentry — deferred init (Sentry.init() has non-trivial setup cost)
+  import('@/analytics/sentry').then(({ initializeSentry, captureException }) => {
+    initializeSentry()
+    window.addEventListener('error', (event) => {
+      captureException(event.error ?? event.message, {
+        mechanism: 'global_error_handler',
+        filename: event.filename,
+        lineno: event.lineno,
+        colno: event.colno,
+      })
+    })
+    window.addEventListener('unhandledrejection', (event) => {
+      captureException(event.reason ?? 'Unhandled promise rejection', {
+        mechanism: 'unhandled_rejection',
+      })
+    })
+  })
 
-// GDPR/RODO: opt out by default until user explicitly consents
-const hasAnalyticsConsent = isAnalyticsAllowed()
+  // PostHog — fully deferred; GDPR opt-out by default
+  const posthogKey = import.meta.env.VITE_POSTHOG_KEY
+  if (posthogKey && import.meta.env.VITE_POSTHOG_ENABLED !== 'false') {
+    const hasAnalyticsConsent = isAnalyticsAllowed()
+    import('@/analytics/posthog').then(({ initPostHog }) => {
+      initPostHog(posthogKey, {
+        api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com',
+        opt_out_capturing_by_default: !hasAnalyticsConsent,
+        autocapture: false,
+        capture_pageview: false,
+        capture_pageleave: true,
+        disable_session_recording: import.meta.env.VITE_POSTHOG_ENABLE_SESSION_RECORDING === 'false',
+        session_recording: {
+          maskAllInputs: true,
+          maskInputOptions: {
+            password: true,
+            email: true,
+            tel: true,
+            creditCard: true,
+            ssn: true,
+          },
+        },
+        respect_dnt: true,
+        cross_subdomain_cookie: false,
+        persistence: 'localStorage',
+      })
+    })
+  }
+}
 
-const posthogOptions = {
-  api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com',
-  // Privacy-respecting configuration
-  // Tracking is gated on explicit user consent (GDPR/RODO)
-  opt_out_capturing_by_default: !hasAnalyticsConsent,
-  autocapture: false, // Disabled - use manual event tracking instead
-  capture_pageview: false, // Handled manually in App.tsx for SPA route changes
-  capture_pageleave: true,
-  disable_session_recording: import.meta.env.VITE_POSTHOG_ENABLE_SESSION_RECORDING === 'false',
-  session_recording: {
-    maskAllInputs: true,
-    maskInputOptions: {
-      password: true,
-      email: true,
-      tel: true,
-      creditCard: true,
-      ssn: true,
-    },
-  },
-  respect_dnt: true, // Respect browser Do Not Track setting
-  cross_subdomain_cookie: false, // Limit cookie scope
-  persistence: 'localStorage' as const, // Avoid cookies where possible
+// Run analytics init after first paint — doesn't block rendering
+if (typeof requestIdleCallback === 'function') {
+  requestIdleCallback(initAnalytics)
+} else {
+  setTimeout(initAnalytics, 0)
 }
 
 // Defer Web Vitals tracking to avoid blocking first paint.
@@ -122,7 +131,9 @@ const appContent = (
     <I18nextProvider i18n={i18n}>
       <QueryClientProvider client={queryClient}>
         <App />
-        <CookieConsent />
+        <Suspense fallback={null}>
+          <CookieConsent />
+        </Suspense>
         {toasterElement}
       </QueryClientProvider>
     </I18nextProvider>
@@ -131,23 +142,6 @@ const appContent = (
 
 const root = ReactDOM.createRoot(document.getElementById('root')!)
 
-function renderApp() {
-  root.render(
-    <React.StrictMode>
-      {posthogKey && import.meta.env.VITE_POSTHOG_ENABLED !== 'false' ? (
-        <PostHogProvider apiKey={posthogKey} options={posthogOptions}>
-          {appContent}
-        </PostHogProvider>
-      ) : (
-        appContent
-      )}
-    </React.StrictMode>,
-  )
-}
-
-// Wait for i18n to load all translations before rendering to prevent flash
-if (i18n.isInitialized) {
-  renderApp()
-} else {
-  i18n.on('initialized', renderApp)
-}
+// Render immediately — i18n loads only 'common' namespace (1 fetch, fast)
+// useSuspense: false means components render with keys as fallback if not yet loaded
+root.render(<React.StrictMode>{appContent}</React.StrictMode>)

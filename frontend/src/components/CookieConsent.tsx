@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import posthog from 'posthog-js'
 import { getAnalyticsConsent, setAnalyticsConsent, type ConsentStatus } from '@/utils/consent'
 
 /**
@@ -27,14 +26,10 @@ export default function CookieConsent() {
 
     if (status === 'granted') {
       // Opt in to PostHog tracking
-      if (typeof posthog !== 'undefined' && posthog.__loaded) {
-        posthog.opt_in_capturing()
-      }
+      import('posthog-js').then(({ default: ph }) => { if (ph.__loaded) { ph.opt_in_capturing() } })
     } else {
       // Opt out of PostHog tracking
-      if (typeof posthog !== 'undefined' && posthog.__loaded) {
-        posthog.opt_out_capturing()
-      }
+      import('posthog-js').then(({ default: ph }) => { if (ph.__loaded) { ph.opt_out_capturing() } })
     }
   }
 

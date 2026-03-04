@@ -1,7 +1,5 @@
 import React, { Component, ReactNode } from 'react'
 import { RefreshCw, AlertTriangle } from 'lucide-react'
-import { captureException } from '@/analytics/sentry'
-import { events } from '@/analytics/posthog'
 
 interface Props {
   children: ReactNode
@@ -27,8 +25,8 @@ class ErrorBoundary extends Component<Props, State> {
     console.error('Error caught by boundary:', error)
     console.error('Error info:', errorInfo)
 
-    try { captureException(error, { componentStack: errorInfo.componentStack }); } catch {}
-    try { events.errorDisplayed({ error: error.message, componentStack: errorInfo.componentStack || undefined }); } catch {}
+    import('@/analytics/sentry').then(({ captureException: c }) => { try { c(error, { componentStack: errorInfo.componentStack }); } catch {} })
+    import('@/analytics/posthog').then(({ events: e }) => { try { e.errorDisplayed({ error: error.message, componentStack: errorInfo.componentStack || undefined }); } catch {} })
 
     this.setState({
       error,

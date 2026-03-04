@@ -1,21 +1,34 @@
 /**
  * PostHog Frontend Analytics
  * Product event tracking with GDPR consent
+ * PostHog is loaded lazily to keep it off the critical path.
  */
 
-import posthog from 'posthog-js';
+import type { PostHog } from 'posthog-js';
+
+let _posthog: PostHog | null = null;
+
+/**
+ * Initialize PostHog with dynamic import (called after first paint via requestIdleCallback)
+ */
+export async function initPostHog(apiKey: string, options: Record<string, unknown>): Promise<void> {
+  if (!apiKey) return;
+  const { default: posthog } = await import('posthog-js');
+  posthog.init(apiKey, options as any);
+  _posthog = posthog;
+}
 
 /**
  * Check if PostHog is available and initialized
  */
 function isPostHogReady(): boolean {
-  return typeof posthog !== 'undefined' && posthog.__loaded === true;
+  return _posthog !== null && (_posthog as any).__loaded === true;
 }
 
 export function identifyUser(user: { id: string; email?: string; username?: string; role?: string }): void {
   if (!isPostHogReady()) return;
   try {
-    posthog.identify(user.id, {
+    _posthog!.identify(user.id, {
       email: user.email,
       username: user.username,
       role: user.role,
@@ -25,17 +38,17 @@ export function identifyUser(user: { id: string; email?: string; username?: stri
 
 export function resetUser(): void {
   if (!isPostHogReady()) return;
-  try { posthog.reset(); } catch {}
+  try { _posthog!.reset(); } catch {}
 }
 
 export function trackEvent(eventName: string, properties?: Record<string, unknown>): void {
   if (!isPostHogReady()) return;
-  try { posthog.capture(eventName, properties); } catch {}
+  try { _posthog!.capture(eventName, properties); } catch {}
 }
 
 export function trackPageView(properties?: Record<string, unknown>): void {
   if (!isPostHogReady()) return;
-  try { posthog.capture('$pageview', properties); } catch {}
+  try { _posthog!.capture('$pageview', properties); } catch {}
 }
 
 /**
@@ -43,7 +56,7 @@ export function trackPageView(properties?: Record<string, unknown>): void {
  */
 export function setUserProperty(key: string, value: unknown): void {
   if (!isPostHogReady()) return;
-  posthog.setPersonProperties({ [key]: value });
+  _posthog!.setPersonProperties({ [key]: value });
 }
 
 /**
@@ -58,7 +71,7 @@ export function isPostHogEnabled(): boolean {
  */
 export function getDistinctId(): string | undefined {
   if (!isPostHogReady()) return undefined;
-  return posthog.get_distinct_id();
+  return _posthog!.get_distinct_id();
 }
 
 // ============================================
@@ -125,5 +138,3 @@ export const events = {
     try { trackEvent('error_displayed', props); } catch {}
   },
 };
-
-export { posthog };
