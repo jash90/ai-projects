@@ -38,6 +38,7 @@ function ProjectPage() {
   const { t } = useTranslation('project')
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
+
   const isMobile = useIsMobile()
 
   const { currentProject, fetchProject, isLoading: isLoadingProject } = useProjects()
@@ -152,7 +153,7 @@ function ProjectPage() {
             <p className="text-muted-foreground mb-6">
               {t('notFound.description')}
             </p>
-            <Button onClick={() => navigate('/dashboard')} variant="gradient" leftIcon={<ArrowLeft className="w-4 h-4" />}>
+            <Button onClick={() => navigate("/dashboard")} variant="gradient" leftIcon={<ArrowLeft className="w-4 h-4" />}>
               {t('backToDashboard')}
             </Button>
           </CardContent>
@@ -173,7 +174,7 @@ function ProjectPage() {
             <p className="text-muted-foreground mb-6">
               {t('noAgents.description')}
             </p>
-            <Button onClick={() => navigate('/dashboard')} variant="gradient" leftIcon={<ArrowLeft className="w-4 h-4" />}>
+            <Button onClick={() => navigate("/dashboard")} variant="gradient" leftIcon={<ArrowLeft className="w-4 h-4" />}>
               {t('backToDashboard')}
             </Button>
           </CardContent>
@@ -192,7 +193,7 @@ function ProjectPage() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate("/dashboard")}
               className="shrink-0 h-8 w-8 p-0"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -331,7 +332,7 @@ function ProjectPage() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => navigate('/dashboard')}
+          onClick={() => navigate("/dashboard")}
           className="flex items-center gap-2"
           leftIcon={<ArrowLeft className="w-4 h-4" />}
         >
