@@ -1,10 +1,11 @@
-
+import { useSocket } from '@/hooks/useSocket'
 
 interface DashboardLayoutProps {
   children: React.ReactNode
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
+  useSocket()
   return (
     <div className="min-h-screen lg:h-screen flex bg-background">
       {/* Main Content */}

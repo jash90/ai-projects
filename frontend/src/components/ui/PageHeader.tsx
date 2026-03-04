@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/Button'
 import { UserMenu } from '@/components/ui/UserMenu'
 import { cn } from '@/lib/utils'
 
+const DEFAULT_USER_MENU_PROPS: PageHeaderProps['userMenuProps'] = {}
+
 interface PageHeaderProps {
   title: string
   subtitle?: string
@@ -33,13 +35,13 @@ export function PageHeader({
   title,
   subtitle,
   showBackButton = false,
-  backTo = '/dashboard',
+  backTo,
   showRefresh = false,
   onRefresh,
   refreshLabel = 'Refresh',
   isRefreshing = false,
   showUserMenu = true,
-  userMenuProps = {},
+  userMenuProps = DEFAULT_USER_MENU_PROPS,
   actions,
   tabs,
   activeTab,
@@ -47,6 +49,8 @@ export function PageHeader({
   className,
   variant = 'default',
 }: PageHeaderProps) {
+  const resolvedBackTo = backTo ?? '/dashboard'
+
   const variantStyles = {
     default: 'bg-card border-b border-border shadow-design-sm',
     gradient: 'bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 border-b border-border',
@@ -61,7 +65,7 @@ export function PageHeader({
           {/* Left side - Title and subtitle */}
           <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
             {showBackButton && (
-              <Link to={backTo}>
+              <Link to={resolvedBackTo}>
                 <Button
                   variant="ghost"
                   size="sm"
