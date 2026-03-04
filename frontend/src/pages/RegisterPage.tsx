@@ -140,7 +140,7 @@ const RegisterPage: React.FC = () => {
         // Sync preferences (theme) from server after registration
         await syncPreferencesFromServer()
         toast.success(t('register.accountCreated'))
-        navigate('/')
+        navigate('/dashboard')
       }
     },
     onError: (error) => {

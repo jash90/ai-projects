@@ -27,6 +27,9 @@ export function MobileNavigation({ onNewProject }: MobileNavigationProps) {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
 
+  // Strip lang prefix for active-state comparisons, e.g. /en/dashboard → /dashboard
+  const currentPath = location.pathname.replace(/^\/[a-z]{2}(\/|$)/, '/');
+
   // Close menu when route changes
   useEffect(() => {
     setIsOpen(false);
@@ -63,25 +66,25 @@ export function MobileNavigation({ onNewProject }: MobileNavigationProps) {
       label: t('navigation.dashboard'),
       href: '/dashboard',
       icon: Home,
-      active: location.pathname === '/dashboard' || location.pathname === '/'
+      active: currentPath === '/dashboard' || currentPath === '/'
     },
     {
       label: t('navigation.projects'),
       href: '/projects',
       icon: FolderOpen,
-      active: location.pathname.startsWith('/projects')
+      active: currentPath.startsWith('/projects')
     },
     {
       label: t('navigation.usage'),
       href: '/usage',
       icon: BarChart3,
-      active: location.pathname === '/usage'
+      active: currentPath === '/usage'
     },
     {
       label: t('navigation.settings'),
       href: '/settings',
       icon: Settings,
-      active: location.pathname === '/settings'
+      active: currentPath === '/settings'
     },
   ];
 
@@ -91,7 +94,7 @@ export function MobileNavigation({ onNewProject }: MobileNavigationProps) {
       label: t('navigation.adminPanel'),
       href: '/admin',
       icon: Shield,
-      active: location.pathname === '/admin'
+      active: currentPath === '/admin'
     });
   }
 

@@ -48,7 +48,7 @@ const LoginPage: React.FC = () => {
         // Sync preferences (theme) from server after login
         await syncPreferencesFromServer()
         toast.success(t('login.welcomeBack'))
-        navigate('/')
+        navigate('/dashboard')
       }
     },
     onError: (error) => {

@@ -1,20 +1,20 @@
 import { lazy, Suspense, useEffect } from 'react'
-import { BrowserRouter as Router, Route, Navigate, useLocation } from 'react-router-dom'
-import { SentryRoutes as Routes } from '@/analytics/sentry'
+import { BrowserRouter as Router, Route, Navigate, useLocation, Routes } from 'react-router-dom'
 import { trackPageView } from '@/analytics/posthog'
 import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/stores/authStore'
 import { useTheme } from '@/stores/uiStore'
-import { useSocket } from '@/hooks/useSocket'
 import { authApi } from '@/lib/api'
 import { setTheme } from '@/lib/utils'
+import { DEFAULT_LANGUAGE, isSupportedLanguage } from '@/lib/languages'
+
 
 // Layout Components
 import AuthLayout from '@/components/layouts/AuthLayout'
 import DashboardLayout from '@/components/layouts/DashboardLayout'
+import LanguageLayout from '@/components/layouts/LanguageLayout'
 
-// Static import for LandingPage (first paint)
-import LandingPage from '@/pages/LandingPage'
+const LandingPage = lazy(() => import('@/pages/LandingPage'))
 
 // Lazy-loaded page components (code splitting)
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
@@ -29,27 +29,37 @@ const AdminPage = lazy(() => import('@/pages/AdminPage'))
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import ErrorBoundary from '@/components/ErrorBoundary'
 
-/** Track SPA page views in PostHog on route changes */
+const SuspenseFallback = (
+  <div className="flex-1 flex items-center justify-center py-20">
+    <LoadingSpinner size="lg" />
+  </div>
+)
+
+/** Redirect from / to the detected language root, e.g. /en/ */
+function RootRedirect() {
+  const rawLang = (localStorage.getItem('i18nextLng') || navigator.language || DEFAULT_LANGUAGE).split('-')[0]
+  const lang = isSupportedLanguage(rawLang) ? rawLang : DEFAULT_LANGUAGE
+  return <Navigate to={`/${lang}/`} replace />
+}
+
+
+/** Track SPA page views in PostHog, stripping the lang prefix. */
 function PostHogPageTracker() {
   const location = useLocation()
   useEffect(() => {
-    trackPageView({ path: location.pathname })
+    const path = location.pathname.replace(/^\/[a-z]{2}(\/|$)/, '/')
+    trackPageView({ path })
   }, [location.pathname])
   return null
 }
 
 function App() {
-  const { isAuthenticated, user, setUser, logout } = useAuth()
+  const { isAuthenticated, setUser, logout } = useAuth()
   const theme = useTheme()
-  useSocket()
 
-  // Initialize theme
-  useEffect(() => {
-    setTheme(theme)
-  }, [theme])
+  // Sync theme to DOM — idempotent, safe to call during render
+  setTheme(theme)
 
-  // Verify authentication in background — trust cached auth for initial render.
-  // If token is invalid, logout() is called and user is redirected.
   useQuery({
     queryKey: ['auth', 'verify'],
     queryFn: async () => {
@@ -78,90 +88,112 @@ function App() {
         <PostHogPageTracker />
         <div className="min-h-screen bg-background text-foreground">
           <Routes>
-            {/* Landing Page - Always accessible (static import, no Suspense needed) */}
-            <Route path="/" element={<LandingPage />} />
+            {/* Root → detect lang → /${lang}/ */}
+            <Route path="/" element={<RootRedirect />} />
 
-            {/* Public Routes */}
-            {!isAuthenticated ? (
-              <>
-                <Route
-                  path="/login"
-                  element={
-                    <AuthLayout>
-                      <Suspense fallback={<div className="flex-1 flex items-center justify-center py-20"><LoadingSpinner size="lg" /></div>}>
-                        <LoginPage />
-                      </Suspense>
-                    </AuthLayout>
-                  }
-                />
-                <Route
-                  path="/register"
-                  element={
-                    <AuthLayout>
-                      <Suspense fallback={<div className="flex-1 flex items-center justify-center py-20"><LoadingSpinner size="lg" /></div>}>
-                        <RegisterPage />
-                      </Suspense>
-                    </AuthLayout>
-                  }
-                />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </>
-            ) : (
-              /* Protected Routes */
-              <>
-                <Route
-                  path="/dashboard"
-                  element={
-                    <DashboardLayout>
-                      <Suspense fallback={<div className="flex-1 flex items-center justify-center py-20"><LoadingSpinner size="lg" /></div>}>
-                        <DashboardPage />
-                      </Suspense>
-                    </DashboardLayout>
-                  }
-                />
-                <Route
-                  path="/projects/:projectId"
-                  element={
-                    <DashboardLayout>
-                      <Suspense fallback={<div className="flex-1 flex items-center justify-center py-20"><LoadingSpinner size="lg" /></div>}>
-                        <ProjectPage />
-                      </Suspense>
-                    </DashboardLayout>
-                  }
-                />
-                <Route
-                  path="/settings"
-                  element={
-                    <DashboardLayout>
-                      <Suspense fallback={<div className="flex-1 flex items-center justify-center py-20"><LoadingSpinner size="lg" /></div>}>
-                        <SettingsPage />
-                      </Suspense>
-                    </DashboardLayout>
-                  }
-                />
-                <Route
-                  path="/usage"
-                  element={
-                    <DashboardLayout>
-                      <Suspense fallback={<div className="flex-1 flex items-center justify-center py-20"><LoadingSpinner size="lg" /></div>}>
-                        <UsagePage />
-                      </Suspense>
-                    </DashboardLayout>
-                  }
-                />
-                <Route
-                  path="/admin"
-                  element={
-                    <DashboardLayout>
-                      <Suspense fallback={<div className="flex-1 flex items-center justify-center py-20"><LoadingSpinner size="lg" /></div>}>
-                        <AdminPage />
-                      </Suspense>
-                    </DashboardLayout>
-                  }
-                />
-                <Route path="*" element={<Navigate to="/dashboard" replace />} />
-              </>
-            )}
+            {/* ────── Lang-prefixed routes: landing page only ────── */}
+            <Route path="/:lang" element={<LanguageLayout />}>
+              <Route index element={<Suspense fallback={SuspenseFallback}><LandingPage /></Suspense>} />
+              <Route path="*" element={<Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />} />
+            </Route>
+
+            {/* ────── Non-lang routes ────── */}
+
+            {/* Auth pages */}
+            <Route
+              path="/login"
+              element={
+                isAuthenticated ? <Navigate to="/dashboard" replace /> : (
+                  <AuthLayout>
+                    <Suspense fallback={SuspenseFallback}>
+                      <LoginPage />
+                    </Suspense>
+                  </AuthLayout>
+                )
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                isAuthenticated ? <Navigate to="/dashboard" replace /> : (
+                  <AuthLayout>
+                    <Suspense fallback={SuspenseFallback}>
+                      <RegisterPage />
+                    </Suspense>
+                  </AuthLayout>
+                )
+              }
+            />
+
+            {/* Dashboard */}
+            <Route
+              path="/dashboard"
+              element={
+                !isAuthenticated ? <Navigate to="/login" replace /> : (
+                  <DashboardLayout>
+                    <Suspense fallback={SuspenseFallback}>
+                      <DashboardPage />
+                    </Suspense>
+                  </DashboardLayout>
+                )
+              }
+            />
+
+            {/* Protected app pages (no lang prefix) */}
+            <Route
+              path="/projects/:projectId"
+              element={
+                !isAuthenticated ? <Navigate to="/login" replace /> : (
+                  <DashboardLayout>
+                    <Suspense fallback={SuspenseFallback}>
+                      <ProjectPage />
+                    </Suspense>
+                  </DashboardLayout>
+                )
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                !isAuthenticated ? <Navigate to="/login" replace /> : (
+                  <DashboardLayout>
+                    <Suspense fallback={SuspenseFallback}>
+                      <SettingsPage />
+                    </Suspense>
+                  </DashboardLayout>
+                )
+              }
+            />
+            <Route
+              path="/usage"
+              element={
+                !isAuthenticated ? <Navigate to="/login" replace /> : (
+                  <DashboardLayout>
+                    <Suspense fallback={SuspenseFallback}>
+                      <UsagePage />
+                    </Suspense>
+                  </DashboardLayout>
+                )
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                !isAuthenticated ? <Navigate to="/login" replace /> : (
+                  <DashboardLayout>
+                    <Suspense fallback={SuspenseFallback}>
+                      <AdminPage />
+                    </Suspense>
+                  </DashboardLayout>
+                )
+              }
+            />
+
+            {/* Catch-all */}
+            <Route
+              path="*"
+              element={<Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />}
+            />
           </Routes>
         </div>
       </Router>
