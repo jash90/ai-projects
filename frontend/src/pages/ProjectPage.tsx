@@ -56,10 +56,10 @@ function ProjectPage() {
 
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null)
   const [selectedFile, setSelectedFile] = useState<FileType | null>(null)
-  const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(isMobile)
+  const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(true)
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState(true)
-  const [agentSectionCollapsed, setAgentSectionCollapsed] = useState(false)
-  const [filesSectionCollapsed, setFilesSectionCollapsed] = useState(false)
+  const [agentSectionCollapsed, setAgentSectionCollapsed] = useState(true)
+  const [filesSectionCollapsed, setFilesSectionCollapsed] = useState(true)
 
   // Mobile-specific states
   const [mobileView, setMobileView] = useState<MobileView>('chat')
@@ -85,9 +85,6 @@ function ProjectPage() {
     if (isMobile) {
       setLeftPanelCollapsed(true)
       setRightPanelCollapsed(true)
-    } else {
-      setLeftPanelCollapsed(false)
-      // Don't force editor open — respect initial state (collapsed)
     }
   }, [isMobile])
 
@@ -95,8 +92,6 @@ function ProjectPage() {
   useEffect(() => {
     if (agentSectionCollapsed && filesSectionCollapsed && !isMobile) {
       setLeftPanelCollapsed(true)
-    } else if (!agentSectionCollapsed || !filesSectionCollapsed) {
-      if (!isMobile) setLeftPanelCollapsed(false)
     }
   }, [agentSectionCollapsed, filesSectionCollapsed, isMobile])
 
