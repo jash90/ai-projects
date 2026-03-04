@@ -1,10 +1,16 @@
-import { useEffect, useCallback, useState } from 'react'
+import { useEffect, useCallback, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { Project, Agent, ChatFileAttachment } from '@/types'
+import type { Project, Agent } from '@/types'
 import { ChatHeader } from './ChatHeader'
-import { ChatMessages } from './ChatMessages'
-import { ChatInput } from './ChatInput'
 import { TokenLimitBanner } from './TokenLimitBanner'
+import { TokenMetaBadge } from './TokenMetaBadge'
+import { conversationMessageToKitMessage } from './adapters'
+import { useFileAttachments } from './useFileAttachments'
+import { MessageList } from '@/components/ui/message-list'
+import { MessageInput } from '@/components/ui/message-input'
+import { PromptSuggestions } from '@/components/ui/prompt-suggestions'
+import { CopyButton } from '@/components/ui/copy-button'
+import type { Message } from '@/components/ui/chat-message'
 import { useConversation, useConversationSending } from '@/stores/conversationStore'
 import { conversationStore } from '@/stores/conversationStore'
 import { useSocket } from '@/hooks/useSocket'
@@ -26,7 +32,6 @@ function Chat({ project, agent, className }: ChatProps) {
     return (
       <div className={cn('flex flex-col h-full bg-background items-center justify-center', className)}>
         <div className="text-center space-y-4">
-          <div className="text-4xl">🤖</div>
           <h3 className="font-semibold text-foreground">{t('selectAgent.title')}</h3>
           <p className="text-muted-foreground text-sm max-w-md">
             {t('selectAgent.description')}
@@ -40,8 +45,32 @@ function Chat({ project, agent, className }: ChatProps) {
   const isSending = useConversationSending(project.id, agent.id)
   const [includeFiles, setIncludeFiles] = useState(true)
   const [streaming, setStreaming] = useState(true)
+  const [inputValue, setInputValue] = useState('')
   const { sendMessage: sendSocketMessage, isConnected: socketConnected } = useSocket(project.id)
   const { canSendMessage, getLimitStatusMessage, refreshUsage, isGlobalLimitExceeded, isMonthlyLimitExceeded } = useTokenLimits()
+  const { files, setFiles, getAttachments, clearFiles, fileError } = useFileAttachments()
+
+  // Convert conversation messages to kit Message[] with stable fallback IDs
+  const kitMessages: Message[] = useMemo(() => {
+    const msgs = conversation?.messages || []
+    return msgs.filter(Boolean).map((msg, idx) => {
+      const fallbackId = `msg-${idx}-${msg.timestamp}`
+      return conversationMessageToKitMessage(msg, fallbackId)
+    })
+  }, [conversation?.messages])
+
+  // Build metadata map
+  const metadataByIndex = useMemo(() => {
+    const msgs = conversation?.messages || []
+    const map = new Map<string, Record<string, any>>()
+    msgs.filter(Boolean).forEach((msg, idx) => {
+      if (msg.role === 'assistant' && msg.metadata && Object.keys(msg.metadata).length > 0) {
+        const id = msg.id || `msg-${idx}-${msg.timestamp}`
+        map.set(id, msg.metadata as Record<string, any>)
+      }
+    })
+    return map
+  }, [conversation?.messages])
 
   // Load conversation history on mount
   useEffect(() => {
@@ -64,8 +93,9 @@ function Chat({ project, agent, className }: ChatProps) {
     }
   }, [project.id, agent.id])
 
-  const handleSendMessage = useCallback(async (content: string, attachments?: ChatFileAttachment[]) => {
-    if ((!content.trim() && (!attachments || attachments.length === 0)) || isSending) return
+  const handleSendMessage = useCallback(async (content: string) => {
+    if (!content.trim() && (!files || files.length === 0)) return
+    if (isSending) return
 
     // Check token limits before sending
     if (!canSendMessage) {
@@ -79,6 +109,8 @@ function Chat({ project, agent, className }: ChatProps) {
       }
       return
     }
+
+    const attachments = getAttachments()
 
     try {
       if (streaming) {
@@ -99,10 +131,8 @@ function Chat({ project, agent, className }: ChatProps) {
         )
       }
 
-      // Refresh usage data after sending message
       refreshUsage()
 
-      // Send via socket for real-time updates (optional)
       if (socketConnected) {
         sendSocketMessage({
           type: 'chat',
@@ -110,23 +140,21 @@ function Chat({ project, agent, className }: ChatProps) {
           projectId: project.id
         })
       }
-    } catch (error) {
-      console.error('Failed to send message:', error)
-
-      // Refresh usage data after error to update token limit banner
+    } catch {
       refreshUsage()
-
-      // Get the formatted error message from the conversation store
       const conversationError = conversationStore.getState().error
-      if (conversationError) {
-        // Show the specific error message (e.g., token limit exceeded)
-        toast.error(conversationError)
-      } else {
-        // Fallback to generic error if no specific error available
-        toast.error(t('errors.sendFailed'))
-      }
+      toast.error(conversationError || t('errors.sendFailed'))
     }
-  }, [project.id, agent.id, includeFiles, streaming, isSending, socketConnected, sendSocketMessage, canSendMessage, getLimitStatusMessage, refreshUsage, isGlobalLimitExceeded, isMonthlyLimitExceeded])
+  }, [project.id, agent.id, includeFiles, streaming, isSending, socketConnected, sendSocketMessage, canSendMessage, getLimitStatusMessage, refreshUsage, isGlobalLimitExceeded, isMonthlyLimitExceeded, files, getAttachments, t])
+
+  const handleFormSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault()
+    if (inputValue.trim() || (files && files.length > 0)) {
+      handleSendMessage(inputValue.trim())
+      setInputValue('')
+      clearFiles()
+    }
+  }, [inputValue, files, handleSendMessage, clearFiles])
 
   const handleClearConversation = useCallback(async () => {
     if (confirm(t('clearConfirm'))) {
@@ -137,6 +165,8 @@ function Chat({ project, agent, className }: ChatProps) {
       }
     }
   }, [project.id, agent.id, t])
+
+  const hasMessages = kitMessages.length > 0
 
   return (
     <div className={cn('flex flex-col h-full bg-background', className)}>
@@ -150,25 +180,63 @@ function Chat({ project, agent, className }: ChatProps) {
         onToggleStreaming={setStreaming}
         onClearConversation={handleClearConversation}
       />
-      
-      <ChatMessages
-        messages={(conversation?.messages || []).filter(Boolean)}
-        agent={agent}
-        isLoading={isSending}
-        className="flex-1"
-      />
-      
+
+      {/* Messages Area */}
+      <div className="flex-1 overflow-y-auto p-4">
+        {!hasMessages && !isSending ? (
+          <div className="flex flex-col items-center justify-center h-full text-center p-8">
+            <PromptSuggestions
+              label={t('emptyState.title')}
+              append={({ content }) => handleSendMessage(content)}
+              suggestions={[
+                t('emptyState.suggestion1', { defaultValue: "What can you help me with?" }),
+                t('emptyState.suggestion2', { defaultValue: "Summarize this project" }),
+                t('emptyState.suggestion3', { defaultValue: "Help me write code" }),
+              ]}
+            />
+          </div>
+        ) : (
+          <MessageList
+            messages={kitMessages}
+            showTimeStamps={true}
+            isTyping={isSending}
+            messageOptions={(message) => ({
+              animation: "fade" as const,
+              actions: message.role === 'assistant' ? (
+                <div className="flex items-center gap-1">
+                  <CopyButton content={message.content} copyMessage="Message copied" />
+                  <TokenMetaBadge metadata={metadataByIndex.get(message.id) || undefined} />
+                </div>
+              ) : undefined,
+            })}
+          />
+        )}
+      </div>
+
       <TokenLimitBanner className="mx-4 mb-2" />
-      
-      <ChatInput
-        onSendMessage={handleSendMessage}
-        disabled={isSending || !canSendMessage}
-        placeholder={
-          !canSendMessage
-            ? (getLimitStatusMessage() || t('errors.tokenLimitExceeded'))
-            : t('placeholder', { agentName: agent.name })
-        }
-      />
+
+      {fileError && (
+        <div className="mx-4 mb-2 text-sm text-destructive">{fileError}</div>
+      )}
+
+      <div className="p-4 pt-0">
+        <form onSubmit={handleFormSubmit}>
+          <MessageInput
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            isGenerating={isSending}
+            allowAttachments={true}
+            files={files}
+            setFiles={setFiles}
+            disabled={!canSendMessage}
+            placeholder={
+              !canSendMessage
+                ? (getLimitStatusMessage() || t('errors.tokenLimitExceeded'))
+                : t('placeholder', { agentName: agent.name })
+            }
+          />
+        </form>
+      </div>
     </div>
   )
 }
