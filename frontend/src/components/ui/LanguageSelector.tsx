@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Globe, Check, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { events } from '@/analytics/posthog'
@@ -34,13 +35,22 @@ interface LanguageSelectorProps {
 
 export function LanguageSelector({ variant = 'grid', className }: LanguageSelectorProps) {
   const { i18n } = useTranslation()
+  const navigate = useNavigate()
+  const location = useLocation()
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const currentLanguage = LANGUAGES.find(lang => lang.code === i18n.language) || LANGUAGES[1]
 
   const handleLanguageChange = (code: string) => {
-    i18n.changeLanguage(code)
+    const pathWithoutLang = location.pathname.replace(/^\/[a-z]{2}(\/|$)/, '/')
+    if (pathWithoutLang !== location.pathname) {
+      // On lang-prefixed pages (/en/...) → navigate to new lang equivalent
+      navigate(`/${code}${pathWithoutLang}`)
+    } else {
+      // On non-lang pages (/login, /settings, …) → just change i18n in place
+      i18n.changeLanguage(code)
+    }
     try { events.languageChanged(code) } catch {}
     setIsOpen(false)
   }

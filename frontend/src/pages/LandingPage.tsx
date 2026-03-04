@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { 
   ArrowRight, 
   Bot, 
@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils';
 export default function LandingPage() {
   const { t } = useTranslation('landing');
   const navigate = useNavigate();
+  const { lang } = useParams<{ lang?: string }>();
   const { isAuthenticated } = useAuth();
   const { canInstall, install, isInstalled } = usePWAFeatures();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -41,7 +42,7 @@ export default function LandingPage() {
       setIsScrolled(window.scrollY > 50);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -164,7 +165,7 @@ export default function LandingPage() {
         <div className="container-mobile">
           <div className="flex items-center justify-between py-4">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2">
+            <Link to={`/${lang}`} className="flex items-center gap-2">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <Bot className="w-5 h-5 text-primary-foreground" />
               </div>
@@ -307,8 +308,8 @@ export default function LandingPage() {
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-8 border-t border-border">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center">
+              {stats.map((stat) => (
+                <div key={stat.label} className="text-center">
                   <div className="text-2xl md:text-3xl font-bold text-foreground mb-1">
                     {stat.value}
                   </div>
@@ -335,8 +336,8 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div key={index} className="card-mobile group hover:shadow-lg transition-all duration-200">
+            {features.map((feature) => (
+              <div key={feature.title} className="card-mobile group hover:shadow-lg transition-all duration-200">
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 bg-primary/10 rounded-lg w-fit group-hover:bg-primary/20 transition-colors">
                     <feature.icon className="w-6 h-6 text-primary" />
@@ -367,8 +368,8 @@ export default function LandingPage() {
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              {techStack.map((tech, index) => (
-                <div key={index} className="text-center p-4 bg-card rounded-lg border border-border hover:border-primary/20 transition-colors">
+              {techStack.map((tech) => (
+                <div key={tech.name} className="text-center p-4 bg-card rounded-lg border border-border hover:border-primary/20 transition-colors">
                   <div className="text-sm font-medium text-foreground mb-1">
                     {tech.name}
                   </div>
@@ -395,11 +396,11 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="card-mobile">
+            {testimonials.map((testimonial) => (
+              <div key={testimonial.name} className="card-mobile">
                 <div className="flex items-center gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star key={star} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
                 <p className="text-foreground mb-6 leading-relaxed">
@@ -472,12 +473,12 @@ export default function LandingPage() {
                 {t('footer.tagline')}
               </p>
               <div className="flex items-center gap-4">
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                <span className="text-muted-foreground">
                   <Github className="w-5 h-5" />
-                </a>
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                </span>
+                <span className="text-muted-foreground">
                   <Twitter className="w-5 h-5" />
-                </a>
+                </span>
               </div>
             </div>
 
@@ -486,8 +487,8 @@ export default function LandingPage() {
               <h3 className="font-semibold text-foreground mb-4">{t('footer.product.title')}</h3>
               <ul className="space-y-2">
                 <li><a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.product.features')}</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.product.api')}</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.product.documentation')}</a></li>
+                <li><span className="text-muted-foreground">{t('footer.product.api')}</span></li>
+                <li><span className="text-muted-foreground">{t('footer.product.documentation')}</span></li>
               </ul>
             </div>
 
@@ -495,10 +496,10 @@ export default function LandingPage() {
             <div>
               <h3 className="font-semibold text-foreground mb-4">{t('footer.company.title')}</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.company.about')}</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.company.blog')}</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.company.careers')}</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.company.contact')}</a></li>
+                <li><span className="text-muted-foreground">{t('footer.company.about')}</span></li>
+                <li><span className="text-muted-foreground">{t('footer.company.blog')}</span></li>
+                <li><span className="text-muted-foreground">{t('footer.company.careers')}</span></li>
+                <li><span className="text-muted-foreground">{t('footer.company.contact')}</span></li>
               </ul>
             </div>
 
@@ -506,10 +507,10 @@ export default function LandingPage() {
             <div>
               <h3 className="font-semibold text-foreground mb-4">{t('footer.support.title')}</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.support.helpCenter')}</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.support.community')}</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.support.status')}</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">{t('footer.support.privacy')}</a></li>
+                <li><span className="text-muted-foreground">{t('footer.support.helpCenter')}</span></li>
+                <li><span className="text-muted-foreground">{t('footer.support.community')}</span></li>
+                <li><span className="text-muted-foreground">{t('footer.support.status')}</span></li>
+                <li><span className="text-muted-foreground">{t('footer.support.privacy')}</span></li>
               </ul>
             </div>
           </div>

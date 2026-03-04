@@ -14,12 +14,13 @@ i18nInstance
     supportedLngs: ['pl', 'en', 'de', 'fr', 'es', 'it', 'pt', 'nl', 'sv', 'cs', 'ro', 'hu', 'uk', 'da', 'fi', 'no', 'sk', 'bg', 'hr', 'el'],
     defaultNS: 'common',
     fallbackNS: 'common',
-    ns: ['common', 'auth', 'dashboard', 'chat', 'files', 'agents', 'admin', 'settings', 'errors', 'project', 'landing'],
+    ns: ['common'],
     backend: {
       loadPath: '/locales/{{lng}}/{{ns}}.json',
     },
     detection: {
-      order: ['localStorage', 'navigator'],
+      order: ['path', 'localStorage', 'navigator'],
+      lookupFromPathIndex: 0,
       caches: ['localStorage'],
     },
     interpolation: {
