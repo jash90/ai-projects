@@ -20,10 +20,6 @@
     "subtitle": "Upravljajte svojim projektima i surađujte s AI agentima",
     "welcome": "Dobrodošli natrag, {{username}}"
   },
-  "quickTip": {
-    "content": "Dodajte datoteke u svoj projekt kako biste agentima AI-a pružili kontekst za bolju pomoć.",
-    "title": "Brzi savjet"
-  },
   "recentProjects": {
     "empty": {
       "description": "Kreirajte svoj prvi projekt kako biste započeli suradnju s AI-om",

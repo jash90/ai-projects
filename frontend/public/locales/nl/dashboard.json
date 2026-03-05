@@ -20,10 +20,6 @@
     "subtitle": "Beheer je projecten en werk samen met AI-agenten",
     "welcome": "Welkom terug, {{username}}"
   },
-  "quickTip": {
-    "content": "Voeg bestanden toe aan je project om AI-agenten context te geven voor betere ondersteuning.",
-    "title": "Snelle Tip"
-  },
   "recentProjects": {
     "empty": {
       "description": "Maak je eerste project aan om te beginnen met AI-samenwerking",

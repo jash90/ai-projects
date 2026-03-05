@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { MarkdownEditor, ExportDialog } from '@/components/markdown'
 import { FileTypeService } from '@/services/fileTypeService'
+import { useConfirm } from '@/components/ui/ConfirmDialog'
 import { cn, debounce, getFileExtension } from '@/lib/utils'
 
 interface FileEditorProps {
@@ -23,6 +24,7 @@ declare global {
 
 export function FileEditor({ file, className }: FileEditorProps) {
   const { t } = useTranslation('files')
+  const confirm = useConfirm()
   const {
     updateFileContent,
     saveFileContent,
@@ -35,13 +37,15 @@ export function FileEditor({ file, className }: FileEditorProps) {
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
   const [lastSavedContent, setLastSavedContent] = useState('')
+  const [editorContent, setEditorContent] = useState('')
   const [showExportDialog, setShowExportDialog] = useState(false)
-  
+
   const editorRef = useRef<any>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const isMountedRef = useRef<boolean>(true)
   const checkIntervalRef = useRef<NodeJS.Timeout | null>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const lastSavedContentRef = useRef('')
 
   // Track mounted state
   useEffect(() => {
@@ -227,11 +231,14 @@ export function FileEditor({ file, className }: FileEditorProps) {
       editor.onDidChangeModelContent(() => {
         const content = editor.getValue()
         updateFileContent(file.id, content)
-        setHasUnsavedChanges(content !== lastSavedContent)
+        setEditorContent(content)
+        setHasUnsavedChanges(content !== lastSavedContentRef.current)
       })
 
       editorRef.current = editor
       setLastSavedContent(file.content)
+      setEditorContent(file.content)
+      lastSavedContentRef.current = file.content
     }
   }, [isMonacoLoading, file, updateFileContent])
 
@@ -245,6 +252,8 @@ export function FileEditor({ file, className }: FileEditorProps) {
       )
       editor.setModel(model)
       setLastSavedContent(file.content)
+      setEditorContent(file.content)
+      lastSavedContentRef.current = file.content
       setHasUnsavedChanges(false)
     }
   }, [file, currentFile])
@@ -262,17 +271,17 @@ export function FileEditor({ file, className }: FileEditorProps) {
   // Auto-save with debouncing
   const debouncedSave = useCallback(
     debounce(async (fileId: string) => {
-      if (hasUnsavedChanges) {
-        try {
-          await saveFileContent(fileId)
-          setLastSavedContent(currentFile?.content || '')
-          setHasUnsavedChanges(false)
-        } catch (error) {
-          console.error('Auto-save failed:', error)
-        }
+      try {
+        await saveFileContent(fileId)
+        const saved = editorRef.current?.getValue() ?? ''
+        setLastSavedContent(saved)
+        lastSavedContentRef.current = saved
+        setHasUnsavedChanges(false)
+      } catch (error) {
+        console.error('Auto-save failed:', error)
       }
     }, 2000),
-    [hasUnsavedChanges, saveFileContent, currentFile]
+    [saveFileContent]
   )
 
   useEffect(() => {
@@ -283,22 +292,31 @@ export function FileEditor({ file, className }: FileEditorProps) {
 
   const handleSave = async () => {
     if (!file) return
-    
+
     try {
       await saveFileContent(file.id)
-      setLastSavedContent(currentFile?.content || '')
+      const savedContent = editorRef.current?.getValue() ?? ''
+      setLastSavedContent(savedContent)
+      lastSavedContentRef.current = savedContent
       setHasUnsavedChanges(false)
     } catch (error) {
       // Error is handled by the store
     }
   }
 
-  const handleRevert = () => {
+  const handleRevert = async () => {
     if (!file || !editorRef.current) return
 
-    if (confirm(t('editor.revertConfirm'))) {
+    const confirmed = await confirm({
+      title: t('editor.revertTitle', 'Revert changes'),
+      description: t('editor.revertConfirm'),
+      confirmLabel: t('editor.revertButton', 'Revert'),
+      variant: 'danger',
+    })
+    if (confirmed) {
       editorRef.current.setValue(lastSavedContent)
       updateFileContent(file.id, lastSavedContent)
+      setEditorContent(lastSavedContent)
       setHasUnsavedChanges(false)
     }
   }
@@ -419,8 +437,8 @@ export function FileEditor({ file, className }: FileEditorProps) {
         {/* File Info */}
         <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
           <span>{t('editor.type', { type: file.type })}</span>
-          <span>{t('editor.lines', { count: file.content.split('\n').length })}</span>
-          <span>{t('editor.characters', { count: file.content.length })}</span>
+          <span>{t('editor.lines', { count: (editorContent || file.content).split('\n').length })}</span>
+          <span>{t('editor.characters', { count: (editorContent || file.content).length })}</span>
           {hasUnsavedChanges && (
             <span className="text-orange-600">• {t('editor.unsavedChangesText')}</span>
           )}

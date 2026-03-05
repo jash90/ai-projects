@@ -9,8 +9,8 @@
       "title": "Ulkoasu"
     },
     "language": {
-      "title": "Kieli",
-      "description": "Valitse haluamasi kieli"
+      "description": "Valitse haluamasi kieli",
+      "title": "Kieli"
     },
     "notifications": {
       "description": "Valitse, mitä ilmoituksia haluat vastaanottaa",

@@ -55,8 +55,6 @@
     },
     "subtitle": "Allt du behöver för att bygga med AI. Enkelt att börja, tillräckligt kraftfullt för team.",
     "techStack": {
-      "subtitle": "Produktionsklar stack med TypeScript, React 18, Node.js, PostgreSQL och AI-integration",
-      "title": "Byggd med Moderna Tekniker",
       "categories": {
         "ai": "AI",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobil",
         "realtime": "Realtid"
-      }
+      },
+      "subtitle": "Produktionsklar stack med TypeScript, React 18, Node.js, PostgreSQL och AI-integration",
+      "title": "Byggd med Moderna Tekniker"
     },
     "title": "Allt Du Behöver"
   },
@@ -81,7 +81,6 @@
       "api": "API",
       "documentation": "Dokumentation",
       "features": "Funktioner",
-      "pricing": "Prissättning",
       "title": "Produkt"
     },
     "support": {
@@ -107,56 +106,8 @@
     "features": "Funktioner",
     "getStarted": "Kom igång",
     "installApp": "Installera App",
-    "pricing": "Priser",
     "signIn": "Logga In",
     "testimonials": "Referenser"
-  },
-  "pricing": {
-    "contactUs": "kontakta oss",
-    "perMonth": "per månad",
-    "plans": {
-      "enterprise": {
-        "cta": "Kontakta Försäljning",
-        "features": [
-          "Allt i Pro",
-          "Adminpanel & teamroller",
-          "Anpassade användningsgränser",
-          "Aktivitetsrevisionsloggar",
-          "SSO-integration",
-          "Dedikerad support"
-        ],
-        "name": "Företag",
-        "price": "Anpassad"
-      },
-      "pro": {
-        "cta": "Börja Pro Test",
-        "features": [
-          "Obegränsade projekt",
-          "GPT-4 & Claude",
-          "Team-samarbete",
-          "Obegränsade filer",
-          "Användningsanalys",
-          "Prioriterad support"
-        ],
-        "name": "Professionell",
-        "popular": "Mest Populär",
-        "price": "$29"
-      },
-      "starter": {
-        "cta": "Kom igång Gratis",
-        "features": [
-          "5 projekt",
-          "GPT-4 åtkomst",
-          "Mobilapp",
-          "Arbeta offline",
-          "Community-support"
-        ],
-        "name": "Start",
-        "price": "$0"
-      }
-    },
-    "subtitle": "Börja gratis, uppgradera när du behöver mer. Inga överraskningar, avbryt när som helst.",
-    "title": "Enkel, Transparent Prissättning"
   },
   "stats": {
     "activeDevelopers": "Skapade Projekt",

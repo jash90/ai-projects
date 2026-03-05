@@ -2,7 +2,7 @@
   "watch": ["src"],
   "ext": "ts,json",
   "ignore": ["src/**/*.test.ts", "dist/**/*", "node_modules/**/*"],
-  "exec": "pnpm exec tsx src/index.ts",
+  "exec": "pnpm exec ts-node --transpile-only -r tsconfig-paths/register src/main.ts",
   "env": {
     "NODE_ENV": "development"
   }

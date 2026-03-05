@@ -122,13 +122,8 @@
   },
   "picker": {
     "empty": {
-      "hint": "Încercați un termen de căutare diferit",
       "title": "Niciun agent găsit"
     },
-    "searchAdmin": "Căutați agenți după nume, descriere sau model...",
-    "searchUser": "Căutați agenți după nume sau descriere...",
-    "select": "Selectați Agent",
-    "selected": "Selectat",
     "title": "Selectați Agentul AI"
   },
   "providers": {

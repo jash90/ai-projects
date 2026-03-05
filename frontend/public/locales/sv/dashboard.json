@@ -20,10 +20,6 @@
     "subtitle": "Hantera dina projekt och samarbeta med AI-agenter",
     "welcome": "Välkommen tillbaka, {{username}}"
   },
-  "quickTip": {
-    "content": "Lägg till filer i ditt projekt för att ge AI-agenter kontext för bättre hjälp.",
-    "title": "Snabbtips"
-  },
   "recentProjects": {
     "empty": {
       "description": "Skapa ditt första projekt för att komma igång med AI-samarbete",

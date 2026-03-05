@@ -122,13 +122,8 @@
   },
   "picker": {
     "empty": {
-      "hint": "Försök med en annan sökterm",
       "title": "Inga agenter hittades"
     },
-    "searchAdmin": "Sök agenter efter namn, beskrivning eller modell...",
-    "searchUser": "Sök agenter efter namn eller beskrivning...",
-    "select": "Välj Agent",
-    "selected": "Vald",
     "title": "Välj AI-agent"
   },
   "providers": {

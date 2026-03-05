@@ -55,8 +55,6 @@
     },
     "subtitle": "Alles, was Sie brauchen, um mit KI zu bauen. Einfach zu starten, leistungsstark genug für Teams.",
     "techStack": {
-      "subtitle": "Produktionsbereiter Stack mit TypeScript, React 18, Node.js, PostgreSQL und KI-Integration",
-      "title": "Mit modernen Technologien gebaut",
       "categories": {
         "ai": "KI",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobil",
         "realtime": "Echtzeit"
-      }
+      },
+      "subtitle": "Produktionsbereiter Stack mit TypeScript, React 18, Node.js, PostgreSQL und KI-Integration",
+      "title": "Mit modernen Technologien gebaut"
     },
     "title": "Alles, was Sie brauchen"
   },
@@ -81,7 +81,6 @@
       "api": "API",
       "documentation": "Dokumentation",
       "features": "Funktionen",
-      "pricing": "Preise",
       "title": "Produkt"
     },
     "support": {
@@ -107,56 +106,8 @@
     "features": "Funktionen",
     "getStarted": "Loslegen",
     "installApp": "App installieren",
-    "pricing": "Preise",
     "signIn": "Anmelden",
     "testimonials": "Referenzen"
-  },
-  "pricing": {
-    "contactUs": "kontaktieren Sie uns",
-    "perMonth": "pro Monat",
-    "plans": {
-      "enterprise": {
-        "cta": "Vertrieb kontaktieren",
-        "features": [
-          "Alles in Pro",
-          "Admin-Panel & Teamrollen",
-          "Benutzerdefinierte Nutzungslimits",
-          "Aktivitätsprüfprotokolle",
-          "SSO-Integration",
-          "Dedizierter Support"
-        ],
-        "name": "Unternehmen",
-        "price": "Benutzerdefiniert"
-      },
-      "pro": {
-        "cta": "Pro-Testversion starten",
-        "features": [
-          "Unbegrenzte Projekte",
-          "GPT-4 & Claude",
-          "Teamzusammenarbeit",
-          "Unbegrenzte Dateien",
-          "Nutzungsanalysen",
-          "Prioritätsupport"
-        ],
-        "name": "Professionell",
-        "popular": "Am Beliebtesten",
-        "price": "$29"
-      },
-      "starter": {
-        "cta": "Kostenlos starten",
-        "features": [
-          "5 Projekte",
-          "Zugang zu GPT-4",
-          "Mobile App",
-          "Offline arbeiten",
-          "Community-Support"
-        ],
-        "name": "Starter",
-        "price": "$0"
-      }
-    },
-    "subtitle": "Kostenlos starten, upgraden, wenn Sie mehr benötigen. Keine Überraschungen, jederzeit kündigen.",
-    "title": "Einfache, transparente Preisgestaltung"
   },
   "stats": {
     "activeDevelopers": "Erstellte Projekte",

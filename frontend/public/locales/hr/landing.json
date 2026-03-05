@@ -55,8 +55,6 @@
     },
     "subtitle": "Sve što ti treba za izgradnju s AI. Jednostavno za početak, dovoljno moćno za timove.",
     "techStack": {
-      "subtitle": "Stack spreman za proizvodnju s TypeScript, React 18, Node.js, PostgreSQL i AI integracijom",
-      "title": "Izgrađeno s Modernim Tehnologijama",
       "categories": {
         "ai": "AI",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobilno",
         "realtime": "U Stvarnom Vremenu"
-      }
+      },
+      "subtitle": "Stack spreman za proizvodnju s TypeScript, React 18, Node.js, PostgreSQL i AI integracijom",
+      "title": "Izgrađeno s Modernim Tehnologijama"
     },
     "title": "Sve što ti Treba"
   },
@@ -81,7 +81,6 @@
       "api": "API",
       "documentation": "Dokumentacija",
       "features": "Značajke",
-      "pricing": "Cijene",
       "title": "Proizvod"
     },
     "support": {
@@ -107,56 +106,8 @@
     "features": "Značajke",
     "getStarted": "Započnite",
     "installApp": "Instalirajte aplikaciju",
-    "pricing": "Cijene",
     "signIn": "Prijavite se",
     "testimonials": "Svjedočanstva"
-  },
-  "pricing": {
-    "contactUs": "kontaktirajte nas",
-    "perMonth": "mjesečno",
-    "plans": {
-      "enterprise": {
-        "cta": "Kontaktirajte prodaju",
-        "features": [
-          "Sve u Pro",
-          "Administratorska ploča i uloge tima",
-          "Prilagođena ograničenja korištenja",
-          "Revizijski dnevnici aktivnosti",
-          "SSO integracija",
-          "Posvećena podrška"
-        ],
-        "name": "Poduzeće",
-        "price": "Prilagođeno"
-      },
-      "pro": {
-        "cta": "Započnite Pro probu",
-        "features": [
-          "Neograničeni projekti",
-          "GPT-4 & Claude",
-          "Suradnja tima",
-          "Neograničene datoteke",
-          "Analitika korištenja",
-          "Prioritetna podrška"
-        ],
-        "name": "Profesionalno",
-        "popular": "Najpopularnije",
-        "price": "$29"
-      },
-      "starter": {
-        "cta": "Započnite besplatno",
-        "features": [
-          "5 projekata",
-          "Pristup GPT-4",
-          "Mobilna aplikacija",
-          "Rad offline",
-          "Podrška zajednice"
-        ],
-        "name": "Početnik",
-        "price": "$0"
-      }
-    },
-    "subtitle": "Započni besplatno, nadogradi kada ti zatreba više. Bez iznenađenja, otkaži u bilo kojem trenutku.",
-    "title": "Jednostavna, Transparentna Cijena"
   },
   "stats": {
     "activeDevelopers": "Kreirani Projekti",

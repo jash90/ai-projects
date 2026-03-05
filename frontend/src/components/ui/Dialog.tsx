@@ -40,10 +40,12 @@ const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), textarea:not([disab
 const Dialog = ({ open, onClose, children, className, size = 'default' }: DialogProps) => {
   const dialogRef = useRef<HTMLDivElement>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
+  const onCloseRef = useRef(onClose)
+  onCloseRef.current = onClose
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') {
-      onClose()
+      onCloseRef.current()
       return
     }
 
@@ -67,7 +69,7 @@ const Dialog = ({ open, onClose, children, className, size = 'default' }: Dialog
         }
       }
     }
-  }, [onClose])
+  }, [])
 
   useEffect(() => {
     if (open) {

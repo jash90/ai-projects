@@ -122,13 +122,8 @@
   },
   "picker": {
     "empty": {
-      "hint": "Prøv et andet søgeord",
       "title": "Ingen agenter fundet"
     },
-    "searchAdmin": "Søg agenter efter navn, beskrivelse eller model...",
-    "searchUser": "Søg agenter efter navn eller beskrivelse...",
-    "select": "Vælg agent",
-    "selected": "Valgt",
     "title": "Vælg AI-agent"
   },
   "providers": {

@@ -55,8 +55,6 @@
     },
     "subtitle": "Minden, amire szükséged van az AI-val való építéshez. Egyszerű a kezdés, elég erős a csapatok számára.",
     "techStack": {
-      "subtitle": "Termelésre kész stack TypeScript, React 18, Node.js, PostgreSQL és AI integrációval",
-      "title": "Modern Technológiákkal Készült",
       "categories": {
         "ai": "AI",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobil",
         "realtime": "Valós idő"
-      }
+      },
+      "subtitle": "Termelésre kész stack TypeScript, React 18, Node.js, PostgreSQL és AI integrációval",
+      "title": "Modern Technológiákkal Készült"
     },
     "title": "Minden, Amire Szükséged Van"
   },
@@ -81,7 +81,6 @@
       "api": "API",
       "documentation": "Dokumentáció",
       "features": "Funkciók",
-      "pricing": "Árazás",
       "title": "Termék"
     },
     "support": {
@@ -107,56 +106,8 @@
     "features": "Funkciók",
     "getStarted": "Kezdj el",
     "installApp": "Alkalmazás telepítése",
-    "pricing": "Árazás",
     "signIn": "Bejelentkezés",
     "testimonials": "Vélemények"
-  },
-  "pricing": {
-    "contactUs": "lépj velünk kapcsolatba",
-    "perMonth": "havonta",
-    "plans": {
-      "enterprise": {
-        "cta": "Kapcsolatfelvétel az értékesítéssel",
-        "features": [
-          "Minden a Pro-ban",
-          "Adminisztrátori panel és csapat szerepek",
-          "Egyedi használati korlátok",
-          "Tevékenységi audit naplók",
-          "SSO integráció",
-          "Dedikált támogatás"
-        ],
-        "name": "Vállalati",
-        "price": "Egyedi"
-      },
-      "pro": {
-        "cta": "Pro próbaverzió indítása",
-        "features": [
-          "Korlátlan projektek",
-          "GPT-4 és Claude",
-          "Csapat együttműködés",
-          "Korlátlan fájlok",
-          "Használati elemzések",
-          "Prioritásos támogatás"
-        ],
-        "name": "Professzionális",
-        "popular": "Legnépszerűbb",
-        "price": "$29"
-      },
-      "starter": {
-        "cta": "Kezdj el ingyen",
-        "features": [
-          "5 projekt",
-          "GPT-4 hozzáférés",
-          "Mobil alkalmazás",
-          "Dolgozz offline",
-          "Közösségi támogatás"
-        ],
-        "name": "Kezdő",
-        "price": "$0"
-      }
-    },
-    "subtitle": "Kezdj ingyen, frissíts, amikor többre van szükséged. Nincs meglepetés, bármikor lemondhatod.",
-    "title": "Egyszerű, Átlátható Árazás"
   },
   "stats": {
     "activeDevelopers": "Létrehozott Projektek",

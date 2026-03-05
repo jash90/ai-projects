@@ -20,10 +20,6 @@
     "subtitle": "Verwalten Sie Ihre Projekte und arbeiten Sie mit KI-Agenten zusammen",
     "welcome": "Willkommen zurück, {{username}}"
   },
-  "quickTip": {
-    "content": "Fügen Sie Dateien zu Ihrem Projekt hinzu, um den KI-Agenten Kontext für bessere Unterstützung zu geben.",
-    "title": "Schnell-Tipp"
-  },
   "recentProjects": {
     "empty": {
       "description": "Erstellen Sie Ihr erstes Projekt, um mit der KI-Zusammenarbeit zu beginnen",

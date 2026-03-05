@@ -122,13 +122,8 @@
   },
   "picker": {
     "empty": {
-      "hint": "Tente um termo de busca diferente",
       "title": "Nenhum agente encontrado"
     },
-    "searchAdmin": "Pesquisar agentes por nome, descrição ou modelo...",
-    "searchUser": "Pesquisar agentes por nome ou descrição...",
-    "select": "Selecionar Agente",
-    "selected": "Selecionado",
     "title": "Selecionar Agente de IA"
   },
   "providers": {

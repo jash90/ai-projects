@@ -55,8 +55,6 @@
     },
     "subtitle": "Kaikki, mitä tarvitset rakentaaksesi AI:n kanssa. Helppo aloittaa, tarpeeksi tehokas tiimeille.",
     "techStack": {
-      "subtitle": "Tuotantovalmiit teknologiat, kuten TypeScript, React 18, Node.js, PostgreSQL ja tekoälyintegraatio",
-      "title": "Rakennettu moderneilla teknologioilla",
       "categories": {
         "ai": "AI",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobiili",
         "realtime": "Reaaliaikainen"
-      }
+      },
+      "subtitle": "Tuotantovalmiit teknologiat, kuten TypeScript, React 18, Node.js, PostgreSQL ja tekoälyintegraatio",
+      "title": "Rakennettu moderneilla teknologioilla"
     },
     "title": "Kaikki, mitä tarvitset"
   },
@@ -81,7 +81,6 @@
       "api": "API",
       "documentation": "Dokumentaatio",
       "features": "Ominaisuudet",
-      "pricing": "Hinnoittelu",
       "title": "Tuote"
     },
     "support": {
@@ -107,56 +106,8 @@
     "features": "Ominaisuudet",
     "getStarted": "Aloita",
     "installApp": "Asenna sovellus",
-    "pricing": "Hinnoittelu",
     "signIn": "Kirjaudu sisään",
     "testimonials": "Arvostelut"
-  },
-  "pricing": {
-    "contactUs": "ota meihin yhteyttä",
-    "perMonth": "kuukaudessa",
-    "plans": {
-      "enterprise": {
-        "cta": "Ota yhteyttä myyntiin",
-        "features": [
-          "Kaikki Pro:ssa",
-          "Ylläpitäjän paneeli & tirolot",
-          "Mukautetut käyttörajoitukset",
-          "Toimintalokit",
-          "SSO-integraatio",
-          "Omistettu tuki"
-        ],
-        "name": "Yritys",
-        "price": "Mukautettu"
-      },
-      "pro": {
-        "cta": "Aloita Pro-kokeilu",
-        "features": [
-          "Rajoittamattomat projektit",
-          "GPT-4 & Claude",
-          "Tiimiyhteistyö",
-          "Rajoittamattomat tiedostot",
-          "Käytön analytiikka",
-          "Priorisoitu tuki"
-        ],
-        "name": "Ammattimainen",
-        "popular": "Suosituin",
-        "price": "$29"
-      },
-      "starter": {
-        "cta": "Aloita ilmaiseksi",
-        "features": [
-          "5 projektia",
-          "GPT-4 pääsy",
-          "Mobiilisovellus",
-          "Työskentele offline-tilassa",
-          "Yhteisön tuki"
-        ],
-        "name": "Aloittelija",
-        "price": "$0"
-      }
-    },
-    "subtitle": "Aloita ilmaiseksi, päivitä kun tarvitset enemmän. Ei yllätyksiä, voit peruuttaa milloin tahansa.",
-    "title": "Yksinkertainen, läpinäkyvä hinnoittelu"
   },
   "stats": {
     "activeDevelopers": "Luodut projektit",

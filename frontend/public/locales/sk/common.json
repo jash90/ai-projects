@@ -34,6 +34,12 @@
     "tryAgain": "Skúsiť znova",
     "tryDifferentSearch": "Skúste iný vyhľadávací termín"
   },
+  "consent": {
+    "accept": "__MISSING__",
+    "decline": "__MISSING__",
+    "message": "__MISSING__",
+    "title": "__MISSING__"
+  },
   "files": "súbory",
   "messages": "správy",
   "navigation": {

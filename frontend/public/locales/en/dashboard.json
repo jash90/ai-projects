@@ -20,10 +20,6 @@
     "subtitle": "Manage your projects and collaborate with AI agents",
     "welcome": "Welcome back, {{username}}"
   },
-  "quickTip": {
-    "content": "Add files to your project to give AI agents context for better assistance.",
-    "title": "Quick Tip"
-  },
   "recentProjects": {
     "empty": {
       "description": "Create your first project to get started with AI collaboration",

@@ -20,10 +20,6 @@
     "subtitle": "Gestionează-ți proiectele și colaborează cu agenți AI",
     "welcome": "Bine ai revenit, {{username}}"
   },
-  "quickTip": {
-    "content": "Adaugă fișiere la proiectul tău pentru a oferi agenților AI context pentru o asistență mai bună.",
-    "title": "Sfat Rapid"
-  },
   "recentProjects": {
     "empty": {
       "description": "Creează-ți primul proiect pentru a începe colaborarea cu AI",

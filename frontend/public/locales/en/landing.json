@@ -81,7 +81,6 @@
       "api": "API",
       "documentation": "Documentation",
       "features": "Features",
-      "pricing": "Pricing",
       "title": "Product"
     },
     "support": {
@@ -107,56 +106,8 @@
     "features": "Features",
     "getStarted": "Get Started",
     "installApp": "Install App",
-    "pricing": "Pricing",
     "signIn": "Sign In",
     "testimonials": "Testimonials"
-  },
-  "pricing": {
-    "contactUs": "contact us",
-    "perMonth": "per month",
-    "plans": {
-      "enterprise": {
-        "cta": "Contact Sales",
-        "features": [
-          "Everything in Pro",
-          "Admin panel & team roles",
-          "Custom usage limits",
-          "Activity audit logs",
-          "SSO integration",
-          "Dedicated support"
-        ],
-        "name": "Enterprise",
-        "price": "Custom"
-      },
-      "pro": {
-        "cta": "Start Pro Trial",
-        "features": [
-          "Unlimited projects",
-          "GPT-4 & Claude",
-          "Team collaboration",
-          "Unlimited files",
-          "Usage analytics",
-          "Priority support"
-        ],
-        "name": "Professional",
-        "popular": "Most Popular",
-        "price": "$29"
-      },
-      "starter": {
-        "cta": "Get Started Free",
-        "features": [
-          "5 projects",
-          "GPT-4 access",
-          "Mobile app",
-          "Work offline",
-          "Community support"
-        ],
-        "name": "Starter",
-        "price": "$0"
-      }
-    },
-    "subtitle": "Start free, upgrade when you need more. No surprises, cancel anytime.",
-    "title": "Simple, Transparent Pricing"
   },
   "stats": {
     "activeDevelopers": "Projects Created",

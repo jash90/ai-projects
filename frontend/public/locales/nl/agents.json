@@ -122,13 +122,8 @@
   },
   "picker": {
     "empty": {
-      "hint": "Probeer een andere zoekterm",
       "title": "Geen agenten gevonden"
     },
-    "searchAdmin": "Zoek agenten op naam, beschrijving of model...",
-    "searchUser": "Zoek agenten op naam of beschrijving...",
-    "select": "Selecteer agent",
-    "selected": "Geselecteerd",
     "title": "Selecteer AI-agent"
   },
   "providers": {

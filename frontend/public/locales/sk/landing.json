@@ -55,8 +55,6 @@
     },
     "subtitle": "Všetko, čo potrebujete na stavbu s AI. Jednoduché na začiatok, dostatočne silné pre tímy.",
     "techStack": {
-      "subtitle": "Stack pripravený na produkciu s TypeScript, React 18, Node.js, PostgreSQL a integráciou AI",
-      "title": "Vytvorené s modernými technológiami",
       "categories": {
         "ai": "AI",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobilné",
         "realtime": "V reálnom čase"
-      }
+      },
+      "subtitle": "Stack pripravený na produkciu s TypeScript, React 18, Node.js, PostgreSQL a integráciou AI",
+      "title": "Vytvorené s modernými technológiami"
     },
     "title": "Všetko, čo potrebujete"
   },
@@ -81,7 +81,6 @@
       "api": "API",
       "documentation": "Dokumentácia",
       "features": "Funkcie",
-      "pricing": "Cenník",
       "title": "Produkt"
     },
     "support": {
@@ -107,56 +106,8 @@
     "features": "Funkcie",
     "getStarted": "Začať",
     "installApp": "Nainštalovať aplikáciu",
-    "pricing": "Ceny",
     "signIn": "Prihlásiť sa",
     "testimonials": "Referencie"
-  },
-  "pricing": {
-    "contactUs": "kontaktujte nás",
-    "perMonth": "mesačne",
-    "plans": {
-      "enterprise": {
-        "cta": "Kontaktovať predaj",
-        "features": [
-          "Všetko v Pro",
-          "Admin panel a tímové úlohy",
-          "Vlastné limity používania",
-          "Auditné záznamy aktivít",
-          "Integrácia SSO",
-          "Zasvätená podpora"
-        ],
-        "name": "Podnik",
-        "price": "Na mieru"
-      },
-      "pro": {
-        "cta": "Začať Pro skúšku",
-        "features": [
-          "Neobmedzené projekty",
-          "GPT-4 a Claude",
-          "Tímová spolupráca",
-          "Neobmedzené súbory",
-          "Analytika používania",
-          "Prioritná podpora"
-        ],
-        "name": "Profesionálny",
-        "popular": "Najobľúbenejšie",
-        "price": "$29"
-      },
-      "starter": {
-        "cta": "Začať zadarmo",
-        "features": [
-          "5 projektov",
-          "Prístup k GPT-4",
-          "Mobilná aplikácia",
-          "Pracujte offline",
-          "Podpora komunity"
-        ],
-        "name": "Začiatočník",
-        "price": "$0"
-      }
-    },
-    "subtitle": "Začnite zadarmo, upgradujte, keď potrebujete viac. Žiadne prekvapenia, zrušte kedykoľvek.",
-    "title": "Jednoduché, transparentné ceny"
   },
   "stats": {
     "activeDevelopers": "Vytvorené projekty",

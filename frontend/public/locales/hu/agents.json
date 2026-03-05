@@ -122,13 +122,8 @@
   },
   "picker": {
     "empty": {
-      "hint": "Próbálj meg egy másik keresési kifejezést",
       "title": "Nincs található ügynök"
     },
-    "searchAdmin": "Ügynökök keresése név, leírás vagy modell alapján...",
-    "searchUser": "Ügynökök keresése név vagy leírás alapján...",
-    "select": "Ügynök kiválasztása",
-    "selected": "Kiválasztva",
     "title": "AI Ügynök kiválasztása"
   },
   "providers": {

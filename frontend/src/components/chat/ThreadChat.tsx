@@ -16,6 +16,7 @@ import { MessageIcon } from '@/components/icons'
 import { threadStore, useActiveThread, useThreadMessages, useThreadSending, useMessagesLoading } from '@/stores/threadStore'
 import { useTokenLimits } from '@/hooks/useTokenLimits'
 import { cn } from '@/lib/utils'
+import { useConfirm } from '@/components/ui/ConfirmDialog'
 import toast from 'react-hot-toast'
 
 interface ThreadChatProps {
@@ -25,6 +26,7 @@ interface ThreadChatProps {
 }
 
 export function ThreadChat({ project, agent, className }: ThreadChatProps) {
+  const confirm = useConfirm()
   const [includeFiles, setIncludeFiles] = useState(true)
   const [streaming, setStreaming] = useState(true)
   const [showThreadList, setShowThreadList] = useState(false)
@@ -148,14 +150,20 @@ export function ThreadChat({ project, agent, className }: ThreadChatProps) {
   const handleClearConversation = useCallback(async () => {
     if (!activeThread) return
 
-    if (confirm('Are you sure you want to delete this conversation? This action cannot be undone.')) {
+    const confirmed = await confirm({
+      title: 'Delete conversation',
+      description: 'Are you sure you want to delete this conversation? This action cannot be undone.',
+      confirmLabel: 'Delete',
+      variant: 'danger',
+    })
+    if (confirmed) {
       try {
         await threadStore.getState().deleteThread(activeThread.id, project.id)
       } catch {
         toast.error('Failed to delete conversation')
       }
     }
-  }, [activeThread, project.id])
+  }, [activeThread, project.id, confirm])
 
   // Return early if no agent selected
   if (!agent) {

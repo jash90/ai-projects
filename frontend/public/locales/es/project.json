@@ -3,8 +3,6 @@
   "dashboard": "Tablero",
   "desktop": {
     "actions": {
-      "enterFullscreen": "Entrar en Pantalla Completa",
-      "exitFullscreen": "Salir de Pantalla Completa",
       "hideEditor": "Ocultar Editor",
       "hideSidebar": "Ocultar Barra Lateral",
       "showEditor": "Mostrar Editor",
@@ -20,23 +18,6 @@
   },
   "loading": "Cargando proyecto...",
   "mobile": {
-    "actions": {
-      "install": "Instalar",
-      "installApp": "Instalar Aplicación",
-      "share": "Compartir"
-    },
-    "menu": {
-      "currentSelection": "Selección Actual",
-      "filesAvailableOffline_one": "Archivos disponibles sin conexión",
-      "filesAvailableOffline_other": "Archivos disponibles sin conexión",
-      "filesPendingUpload_one": "Archivo pendiente de carga",
-      "filesPendingUpload_other": "Archivos pendientes de carga",
-      "noAgentSelected": "Ningún agente seleccionado",
-      "noFileSelected": "Ningún archivo seleccionado",
-      "offlineMode": "Modo Sin Conexión",
-      "online": "En Línea",
-      "status": "Estado"
-    },
     "views": {
       "agents": "Agentes",
       "chat": "Chat",

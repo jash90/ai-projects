@@ -28,12 +28,19 @@ export interface ModelSyncResult {
   error?: string;
 }
 
+interface ProviderCache {
+  models: AIModel[];
+  timestamp: number;
+}
+
+const ONE_HOUR_MS = 60 * 60 * 1000;
+
 class ModelService {
   private openai: OpenAI | null = null;
   private anthropic: Anthropic | null = null;
   private openrouter: OpenAI | null = null;
-  private openrouterModelsCache: { models: AIModel[]; timestamp: number } | null = null;
-  private readonly CACHE_DURATION = 3600000; // 1 hour in milliseconds
+  private providerCache: Map<string, ProviderCache> = new Map();
+  private readonly CACHE_DURATION = ONE_HOUR_MS;
 
   constructor() {
     if (config.ai.openai_api_key) {
@@ -56,177 +63,147 @@ class ModelService {
     }
   }
 
-  /**
-   * Get custom OpenAI models list
-   */
-  async fetchOpenAIModels(): Promise<AIModel[]> {
-    logger.info('Loading custom OpenAI models...');
-    
-    const now = new Date().toISOString();
-    const customModels = [
-      {
-        id: 'gpt-5',
-        name: 'GPT-5',
-        description: 'OpenAI GPT-5 model',
-        max_tokens: 4096,
-        context_window: 128000,
-        cost_per_1k_input_tokens: 10.00,
-        cost_per_1k_output_tokens: 30.00,
-        supports_vision: true,
-        supports_function_calling: true
-      },
-      {
-        id: 'gpt-5-high',
-        name: 'GPT-5 High',
-        description: 'OpenAI GPT-5 High performance model',
-        max_tokens: 4096,
-        context_window: 200000,
-        cost_per_1k_input_tokens: 15.00,
-        cost_per_1k_output_tokens: 45.00,
-        supports_vision: true,
-        supports_function_calling: true
-      },
-      {
-        id: 'gpt-4o',
-        name: 'GPT-4o',
-        description: 'OpenAI GPT-4o model',
-        max_tokens: 4096,
-        context_window: 128000,
-        cost_per_1k_input_tokens: 5.00,
-        cost_per_1k_output_tokens: 15.00,
-        supports_vision: true,
-        supports_function_calling: true
-      },
-      {
-        id: 'o3',
-        name: 'O3',
-        description: 'OpenAI O3 model',
-        max_tokens: 4096,
-        context_window: 200000,
-        cost_per_1k_input_tokens: 20.00,
-        cost_per_1k_output_tokens: 60.00,
-        supports_vision: true,
-        supports_function_calling: true
-      },
-      {
-        id: 'o1',
-        name: 'O1',
-        description: 'OpenAI O1 model',
-        max_tokens: 4096,
-        context_window: 128000,
-        cost_per_1k_input_tokens: 15.00,
-        cost_per_1k_output_tokens: 60.00,
-        supports_vision: false,
-        supports_function_calling: true
-      },
-      {
-        id: 'o4-mini',
-        name: 'O4 Mini',
-        description: 'OpenAI O4 Mini model',
-        max_tokens: 4096,
-        context_window: 128000,
-        cost_per_1k_input_tokens: 0.15,
-        cost_per_1k_output_tokens: 0.60,
-        supports_vision: false,
-        supports_function_calling: true
-      }
-    ];
+  private getCachedModels(provider: string): AIModel[] | null {
+    const cached = this.providerCache.get(provider);
+    if (!cached) return null;
 
-    const models: AIModel[] = customModels.map(model => ({
-      id: model.id,
-      name: model.name,
-      provider: 'openai',
-      description: model.description,
-      max_tokens: model.max_tokens,
-      context_window: model.context_window,
-      cost_per_1k_input_tokens: model.cost_per_1k_input_tokens,
-      cost_per_1k_output_tokens: model.cost_per_1k_output_tokens,
-      supports_vision: model.supports_vision,
-      supports_function_calling: model.supports_function_calling,
-      created_at: now,
-      updated_at: now
-    }));
+    const age = Date.now() - cached.timestamp;
+    if (age >= this.CACHE_DURATION) return null;
 
-    logger.info(`Loaded ${models.length} custom OpenAI models`);
-    return models;
+    logger.info(`Using cached ${provider} models (age: ${Math.round(age / 3600000)}h)`);
+    return cached.models;
+  }
+
+  private setCachedModels(provider: string, models: AIModel[]): void {
+    this.providerCache.set(provider, { models, timestamp: Date.now() });
   }
 
   /**
-   * Fetch available models from Anthropic (static list since they don't have a models API)
+   * Fetch models from OpenAI API
+   */
+  async fetchOpenAIModels(): Promise<AIModel[]> {
+    const cached = this.getCachedModels('openai');
+    if (cached) return cached;
+
+    if (!this.openai) {
+      throw new Error('OpenAI API key not configured');
+    }
+
+    try {
+      logger.info('Fetching OpenAI models from API...');
+
+      const abortController = new AbortController();
+      const timeoutId = setTimeout(() => abortController.abort(), 15000);
+
+      try {
+        const response = await fetch('https://api.openai.com/v1/models', {
+          headers: {
+            'Authorization': `Bearer ${config.ai.openai_api_key}`,
+          },
+          signal: abortController.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`OpenAI API returned ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json() as { data: Array<{ id: string; owned_by?: string }> };
+        const now = new Date().toISOString();
+
+        const models: AIModel[] = data.data
+          .filter(m => this.isOpenAIChatModel(m.id))
+          .map(m => ({
+            id: m.id,
+            name: this.formatModelName(m.id),
+            provider: 'openai' as const,
+            description: `OpenAI ${this.formatModelName(m.id)} model`,
+            max_tokens: this.getOpenAIMaxTokens(m.id),
+            supports_vision: this.supportsVision(m.id),
+            supports_function_calling: this.supportsFunctionCalling(m.id),
+            cost_per_1k_input_tokens: this.getOpenAIInputCost(m.id),
+            cost_per_1k_output_tokens: this.getOpenAIOutputCost(m.id),
+            context_window: this.getOpenAIContextWindow(m.id),
+            created_at: now,
+            updated_at: now,
+          }));
+
+        logger.info(`Fetched ${models.length} chat models from OpenAI API (filtered from ${data.data.length} total)`);
+        this.setCachedModels('openai', models);
+        return models;
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : 'Unknown error';
+      logger.warn(`Failed to fetch OpenAI models from API: ${msg}, using fallback`);
+      return this.getDefaultOpenAIModels();
+    }
+  }
+
+  /**
+   * Fetch models from Anthropic API
    */
   async fetchAnthropicModels(): Promise<AIModel[]> {
+    const cached = this.getCachedModels('anthropic');
+    if (cached) return cached;
+
     if (!this.anthropic) {
       throw new Error('Anthropic API key not configured');
     }
 
     try {
-      logger.info('Loading Anthropic models...');
-      const now = new Date().toISOString();
+      logger.info('Fetching Anthropic models from API...');
 
-      // Custom Anthropic models list (as requested by user)
-      const anthropicModels = [
-        {
-          id: 'claude-opus-4-1-20250805',
-          name: 'Claude Opus 4.1 (August 2025)',
-          max_tokens: 8192,
-          context_window: 200000,
-          input_cost: 20.00,
-          output_cost: 80.00,
-          supports_vision: true,
-          supports_function_calling: true
-        },
-        {
-          id: 'claude-opus-4-20250514',
-          name: 'Claude Opus 4 (May 2025)',
-          max_tokens: 8192,
-          context_window: 200000,
-          input_cost: 18.00,
-          output_cost: 75.00,
-          supports_vision: true,
-          supports_function_calling: true
-        },
-        {
-          id: 'claude-sonnet-4-20250514',
-          name: 'Claude Sonnet 4 (May 2025)',
-          max_tokens: 8192,
-          context_window: 200000,
-          input_cost: 8.00,
-          output_cost: 25.00,
-          supports_vision: true,
-          supports_function_calling: true
-        },
-        {
-          id: 'claude-3-7-sonnet-latest',
-          name: 'Claude 3.7 Sonnet (Latest)',
-          max_tokens: 8192,
-          context_window: 200000,
-          input_cost: 5.00,
-          output_cost: 20.00,
-          supports_vision: true,
-          supports_function_calling: true
+      const abortController = new AbortController();
+      const timeoutId = setTimeout(() => abortController.abort(), 15000);
+
+      try {
+        const response = await fetch('https://api.anthropic.com/v1/models', {
+          headers: {
+            'anthropic-version': '2023-06-01',
+            'x-api-key': config.ai.anthropic_api_key!,
+          },
+          signal: abortController.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Anthropic API returned ${response.status}: ${response.statusText}`);
         }
-      ];
 
-      const models: AIModel[] = anthropicModels.map(model => ({
-        id: model.id,
-        name: model.name,
-        provider: 'anthropic' as const,
-        description: `Anthropic ${model.name} model`,
-        max_tokens: model.max_tokens,
-        supports_vision: model.supports_vision,
-        supports_function_calling: model.supports_function_calling,
-        cost_per_1k_input_tokens: model.input_cost,
-        cost_per_1k_output_tokens: model.output_cost,
-        context_window: model.context_window,
-        created_at: now,
-        updated_at: now
-      }));
+        const data = await response.json() as {
+          data: Array<{
+            id: string;
+            display_name?: string;
+            type: string;
+          }>;
+        };
+        const now = new Date().toISOString();
 
-      logger.info(`Loaded ${models.length} Anthropic models`);
-      return models;
+        const models: AIModel[] = data.data.map(m => ({
+          id: m.id,
+          name: m.display_name || m.id,
+          provider: 'anthropic' as const,
+          description: `Anthropic ${m.display_name || m.id} model`,
+          max_tokens: this.getAnthropicMaxTokens(m.id),
+          supports_vision: this.anthropicSupportsVision(m.id),
+          supports_function_calling: true,
+          cost_per_1k_input_tokens: this.getAnthropicInputCost(m.id),
+          cost_per_1k_output_tokens: this.getAnthropicOutputCost(m.id),
+          context_window: this.getAnthropicContextWindow(m.id),
+          created_at: now,
+          updated_at: now,
+        }));
+
+        logger.info(`Fetched ${models.length} models from Anthropic API`);
+        this.setCachedModels('anthropic', models);
+        return models;
+      } finally {
+        clearTimeout(timeoutId);
+      }
     } catch (error) {
-      logger.error('Failed to load Anthropic models', { error: error instanceof Error ? error.message : 'Unknown error' });
-      throw error;
+      const msg = error instanceof Error ? error.message : 'Unknown error';
+      logger.warn(`Failed to fetch Anthropic models from API: ${msg}, using fallback`);
+      return this.getDefaultAnthropicModels();
     }
   }
 
@@ -234,23 +211,16 @@ class ModelService {
    * Fetch available models from OpenRouter API dynamically
    */
   async fetchOpenRouterModels(): Promise<AIModel[]> {
+    const cached = this.getCachedModels('openrouter');
+    if (cached) return cached;
+
     if (!this.openrouter) {
       throw new Error('OpenRouter API key not configured');
-    }
-
-    // Check cache first
-    if (this.openrouterModelsCache) {
-      const cacheAge = Date.now() - this.openrouterModelsCache.timestamp;
-      if (cacheAge < this.CACHE_DURATION) {
-        logger.info(`Using cached OpenRouter models (age: ${Math.round(cacheAge / 60000)}min)`);
-        return this.openrouterModelsCache.models;
-      }
     }
 
     try {
       logger.info('Fetching OpenRouter models from API...');
 
-      // Define the API response interface
       interface OpenRouterModelsResponse {
         data: Array<{
           id: string;
@@ -271,9 +241,8 @@ class ModelService {
         }>;
       }
 
-      // Fetch models from OpenRouter API with timeout
       const abortController = new AbortController();
-      const timeoutId = setTimeout(() => abortController.abort(), 10000); // 10 second timeout
+      const timeoutId = setTimeout(() => abortController.abort(), 10000);
 
       try {
         const response = await fetch('https://openrouter.ai/api/v1/models', {
@@ -292,7 +261,6 @@ class ModelService {
         const data = await response.json() as OpenRouterModelsResponse;
         const now = new Date().toISOString();
 
-        // Transform API response to our AIModel format
         const models: AIModel[] = data.data.map((model: any) => ({
           id: model.id,
           name: model.name || model.id,
@@ -309,12 +277,7 @@ class ModelService {
           updated_at: now
         }));
 
-        // Cache the results
-        this.openrouterModelsCache = {
-          models,
-          timestamp: Date.now()
-        };
-
+        this.setCachedModels('openrouter', models);
         logger.info(`Loaded ${models.length} OpenRouter models from API`);
         return models;
 
@@ -328,443 +291,84 @@ class ModelService {
 
       logger.warn('Using fallback OpenRouter models list - API may be unavailable', {
         reason: isTimeout ? 'Request timeout (10s)' : errorMessage,
-        fallbackModelCount: 43, // Number of models in fallback list
-        suggestion: 'Check OpenRouter API status or network connectivity'
       });
 
-      // Fallback to curated list of popular models
       return this.getDefaultOpenRouterModels();
     }
   }
 
   /**
-   * Get default fallback OpenRouter models
+   * Fallback OpenAI models when API is unavailable
+   */
+  private getDefaultOpenAIModels(): AIModel[] {
+    const now = new Date().toISOString();
+    const fallback = [
+      { id: 'gpt-4o', name: 'GPT-4o', max_tokens: 16384, context_window: 128000, input: 2.50, output: 10.00, vision: true, functions: true },
+      { id: 'gpt-4o-mini', name: 'GPT-4o Mini', max_tokens: 16384, context_window: 128000, input: 0.15, output: 0.60, vision: true, functions: true },
+      { id: 'gpt-4-turbo', name: 'GPT-4 Turbo', max_tokens: 4096, context_window: 128000, input: 10.00, output: 30.00, vision: true, functions: true },
+      { id: 'o3', name: 'O3', max_tokens: 100000, context_window: 200000, input: 10.00, output: 40.00, vision: true, functions: true },
+      { id: 'o3-mini', name: 'O3 Mini', max_tokens: 100000, context_window: 200000, input: 1.10, output: 4.40, vision: true, functions: true },
+      { id: 'o1', name: 'O1', max_tokens: 100000, context_window: 200000, input: 15.00, output: 60.00, vision: true, functions: true },
+      { id: 'gpt-4.1', name: 'GPT-4.1', max_tokens: 32768, context_window: 1047576, input: 2.00, output: 8.00, vision: true, functions: true },
+      { id: 'gpt-4.1-mini', name: 'GPT-4.1 Mini', max_tokens: 32768, context_window: 1047576, input: 0.40, output: 1.60, vision: true, functions: true },
+      { id: 'gpt-4.1-nano', name: 'GPT-4.1 Nano', max_tokens: 32768, context_window: 1047576, input: 0.10, output: 0.40, vision: true, functions: true },
+    ];
+    return fallback.map(m => ({
+      id: m.id, name: m.name, provider: 'openai' as const,
+      description: `OpenAI ${m.name} model`,
+      max_tokens: m.max_tokens, context_window: m.context_window,
+      cost_per_1k_input_tokens: m.input, cost_per_1k_output_tokens: m.output,
+      supports_vision: m.vision, supports_function_calling: m.functions,
+      created_at: now, updated_at: now,
+    }));
+  }
+
+  /**
+   * Fallback Anthropic models when API is unavailable
+   */
+  private getDefaultAnthropicModels(): AIModel[] {
+    const now = new Date().toISOString();
+    const fallback = [
+      { id: 'claude-opus-4-20250514', name: 'Claude Opus 4', max_tokens: 32000, context_window: 200000, input: 15.00, output: 75.00, vision: true },
+      { id: 'claude-sonnet-4-20250514', name: 'Claude Sonnet 4', max_tokens: 16000, context_window: 200000, input: 3.00, output: 15.00, vision: true },
+      { id: 'claude-haiku-4-5-20251001', name: 'Claude Haiku 4.5', max_tokens: 8192, context_window: 200000, input: 0.80, output: 4.00, vision: true },
+      { id: 'claude-sonnet-4-5-20250514', name: 'Claude Sonnet 4.5', max_tokens: 16000, context_window: 200000, input: 3.00, output: 15.00, vision: true },
+    ];
+    return fallback.map(m => ({
+      id: m.id, name: m.name, provider: 'anthropic' as const,
+      description: `Anthropic ${m.name} model`,
+      max_tokens: m.max_tokens, context_window: m.context_window,
+      cost_per_1k_input_tokens: m.input, cost_per_1k_output_tokens: m.output,
+      supports_vision: m.vision, supports_function_calling: true,
+      created_at: now, updated_at: now,
+    }));
+  }
+
+  /**
+   * Fallback OpenRouter models when API is unavailable
    */
   private getDefaultOpenRouterModels(): AIModel[] {
     const now = new Date().toISOString();
-
-      // Comprehensive OpenRouter models list
-      const openrouterModels = [
-        // Anthropic Models
-        {
-          id: 'anthropic/claude-3.5-sonnet',
-          name: 'Claude 3.5 Sonnet',
-          max_tokens: 8192,
-          context_window: 200000,
-          input_cost: 3.00,
-          output_cost: 15.00,
-          supports_vision: true,
-          supports_function_calling: true
-        },
-        {
-          id: 'anthropic/claude-3-opus',
-          name: 'Claude 3 Opus',
-          max_tokens: 4096,
-          context_window: 200000,
-          input_cost: 15.00,
-          output_cost: 75.00,
-          supports_vision: true,
-          supports_function_calling: true
-        },
-        {
-          id: 'anthropic/claude-3-sonnet',
-          name: 'Claude 3 Sonnet',
-          max_tokens: 4096,
-          context_window: 200000,
-          input_cost: 3.00,
-          output_cost: 15.00,
-          supports_vision: true,
-          supports_function_calling: true
-        },
-        {
-          id: 'anthropic/claude-3-haiku',
-          name: 'Claude 3 Haiku',
-          max_tokens: 4096,
-          context_window: 200000,
-          input_cost: 0.25,
-          output_cost: 1.25,
-          supports_vision: true,
-          supports_function_calling: true
-        },
-        // OpenAI Models
-        {
-          id: 'openai/gpt-4o',
-          name: 'GPT-4o',
-          max_tokens: 4096,
-          context_window: 128000,
-          input_cost: 5.00,
-          output_cost: 15.00,
-          supports_vision: true,
-          supports_function_calling: true
-        },
-        {
-          id: 'openai/gpt-4o-mini',
-          name: 'GPT-4o Mini',
-          max_tokens: 16384,
-          context_window: 128000,
-          input_cost: 0.15,
-          output_cost: 0.60,
-          supports_vision: true,
-          supports_function_calling: true
-        },
-        {
-          id: 'openai/gpt-4-turbo',
-          name: 'GPT-4 Turbo',
-          max_tokens: 4096,
-          context_window: 128000,
-          input_cost: 10.00,
-          output_cost: 30.00,
-          supports_vision: true,
-          supports_function_calling: true
-        },
-        {
-          id: 'openai/gpt-4',
-          name: 'GPT-4',
-          max_tokens: 8192,
-          context_window: 8192,
-          input_cost: 30.00,
-          output_cost: 60.00,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        {
-          id: 'openai/gpt-3.5-turbo',
-          name: 'GPT-3.5 Turbo',
-          max_tokens: 4096,
-          context_window: 16385,
-          input_cost: 0.50,
-          output_cost: 1.50,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        {
-          id: 'openai/o1-preview',
-          name: 'O1 Preview',
-          max_tokens: 32768,
-          context_window: 128000,
-          input_cost: 15.00,
-          output_cost: 60.00,
-          supports_vision: false,
-          supports_function_calling: false
-        },
-        {
-          id: 'openai/o1-mini',
-          name: 'O1 Mini',
-          max_tokens: 65536,
-          context_window: 128000,
-          input_cost: 3.00,
-          output_cost: 12.00,
-          supports_vision: false,
-          supports_function_calling: false
-        },
-        // Google Models
-        {
-          id: 'google/gemini-pro-1.5',
-          name: 'Gemini Pro 1.5',
-          max_tokens: 8192,
-          context_window: 8192,
-          input_cost: 3.50,
-          output_cost: 10.50,
-          supports_vision: true,
-          supports_function_calling: true
-        },
-        {
-          id: 'google/gemini-flash-1.5',
-          name: 'Gemini Flash 1.5',
-          max_tokens: 8192,
-          context_window: 8192,
-          input_cost: 0.35,
-          output_cost: 1.05,
-          supports_vision: true,
-          supports_function_calling: true
-        },
-        {
-          id: 'google/gemini-2.0-flash-exp',
-          name: 'Gemini 2.0 Flash (Experimental)',
-          max_tokens: 8192,
-          context_window: 8192,
-          input_cost: 0.00,
-          output_cost: 0.00,
-          supports_vision: true,
-          supports_function_calling: true
-        },
-        // Meta Llama Models
-        {
-          id: 'meta-llama/llama-3.1-405b-instruct',
-          name: 'Llama 3.1 405B Instruct',
-          max_tokens: 4096,
-          context_window: 128000,
-          input_cost: 2.70,
-          output_cost: 2.70,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        {
-          id: 'meta-llama/llama-3.1-70b-instruct',
-          name: 'Llama 3.1 70B Instruct',
-          max_tokens: 4096,
-          context_window: 128000,
-          input_cost: 0.88,
-          output_cost: 0.88,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        {
-          id: 'meta-llama/llama-3.1-8b-instruct',
-          name: 'Llama 3.1 8B Instruct',
-          max_tokens: 4096,
-          context_window: 128000,
-          input_cost: 0.10,
-          output_cost: 0.10,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        {
-          id: 'meta-llama/llama-3.2-90b-vision-instruct',
-          name: 'Llama 3.2 90B Vision Instruct',
-          max_tokens: 4096,
-          context_window: 128000,
-          input_cost: 0.90,
-          output_cost: 0.90,
-          supports_vision: true,
-          supports_function_calling: true
-        },
-        {
-          id: 'meta-llama/llama-3.2-11b-vision-instruct',
-          name: 'Llama 3.2 11B Vision Instruct',
-          max_tokens: 4096,
-          context_window: 128000,
-          input_cost: 0.18,
-          output_cost: 0.18,
-          supports_vision: true,
-          supports_function_calling: true
-        },
-        {
-          id: 'meta-llama/llama-3.2-3b-instruct',
-          name: 'Llama 3.2 3B Instruct',
-          max_tokens: 4096,
-          context_window: 128000,
-          input_cost: 0.06,
-          output_cost: 0.06,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        {
-          id: 'meta-llama/llama-3.2-1b-instruct',
-          name: 'Llama 3.2 1B Instruct',
-          max_tokens: 4096,
-          context_window: 128000,
-          input_cost: 0.04,
-          output_cost: 0.04,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        // Mistral Models
-        {
-          id: 'mistralai/mistral-large',
-          name: 'Mistral Large',
-          max_tokens: 4096,
-          context_window: 128000,
-          input_cost: 3.00,
-          output_cost: 9.00,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        {
-          id: 'mistralai/mistral-medium',
-          name: 'Mistral Medium',
-          max_tokens: 4096,
-          context_window: 32768,
-          input_cost: 2.70,
-          output_cost: 8.10,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        {
-          id: 'mistralai/mistral-small',
-          name: 'Mistral Small',
-          max_tokens: 4096,
-          context_window: 32768,
-          input_cost: 1.00,
-          output_cost: 3.00,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        {
-          id: 'mistralai/mixtral-8x7b-instruct',
-          name: 'Mixtral 8x7B Instruct',
-          max_tokens: 4096,
-          context_window: 32768,
-          input_cost: 0.24,
-          output_cost: 0.24,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        {
-          id: 'mistralai/mixtral-8x22b-instruct',
-          name: 'Mixtral 8x22B Instruct',
-          max_tokens: 4096,
-          context_window: 65536,
-          input_cost: 0.65,
-          output_cost: 0.65,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        {
-          id: 'mistralai/codestral-latest',
-          name: 'Codestral (Latest)',
-          max_tokens: 4096,
-          context_window: 32768,
-          input_cost: 1.00,
-          output_cost: 3.00,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        // Perplexity Models
-        {
-          id: 'perplexity/llama-3.1-sonar-large-128k-online',
-          name: 'Llama 3.1 Sonar Large (Online)',
-          max_tokens: 4096,
-          context_window: 128000,
-          input_cost: 1.00,
-          output_cost: 1.00,
-          supports_vision: false,
-          supports_function_calling: false
-        },
-        {
-          id: 'perplexity/llama-3.1-sonar-small-128k-online',
-          name: 'Llama 3.1 Sonar Small (Online)',
-          max_tokens: 4096,
-          context_window: 128000,
-          input_cost: 0.20,
-          output_cost: 0.20,
-          supports_vision: false,
-          supports_function_calling: false
-        },
-        {
-          id: 'perplexity/llama-3.1-sonar-large-128k-chat',
-          name: 'Llama 3.1 Sonar Large (Chat)',
-          max_tokens: 4096,
-          context_window: 128000,
-          input_cost: 1.00,
-          output_cost: 1.00,
-          supports_vision: false,
-          supports_function_calling: false
-        },
-        {
-          id: 'perplexity/llama-3.1-sonar-small-128k-chat',
-          name: 'Llama 3.1 Sonar Small (Chat)',
-          max_tokens: 4096,
-          context_window: 128000,
-          input_cost: 0.20,
-          output_cost: 0.20,
-          supports_vision: false,
-          supports_function_calling: false
-        },
-        // Cohere Models
-        {
-          id: 'cohere/command-r-plus',
-          name: 'Command R+',
-          max_tokens: 4096,
-          context_window: 128000,
-          input_cost: 3.00,
-          output_cost: 15.00,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        {
-          id: 'cohere/command-r',
-          name: 'Command R',
-          max_tokens: 4096,
-          context_window: 128000,
-          input_cost: 0.50,
-          output_cost: 1.50,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        // DeepSeek Models
-        {
-          id: 'deepseek/deepseek-chat',
-          name: 'DeepSeek Chat',
-          max_tokens: 4096,
-          context_window: 64000,
-          input_cost: 0.14,
-          output_cost: 0.28,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        {
-          id: 'deepseek/deepseek-coder',
-          name: 'DeepSeek Coder',
-          max_tokens: 4096,
-          context_window: 64000,
-          input_cost: 0.14,
-          output_cost: 0.28,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        // Qwen Models
-        {
-          id: 'qwen/qwen-2-72b-instruct',
-          name: 'Qwen 2 72B Instruct',
-          max_tokens: 4096,
-          context_window: 32768,
-          input_cost: 0.90,
-          output_cost: 0.90,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        {
-          id: 'qwen/qwen-2-vl-72b-instruct',
-          name: 'Qwen 2 VL 72B Instruct',
-          max_tokens: 4096,
-          context_window: 32768,
-          input_cost: 0.90,
-          output_cost: 0.90,
-          supports_vision: true,
-          supports_function_calling: true
-        },
-        // Nvidia Models
-        {
-          id: 'nvidia/nemotron-4-340b-instruct',
-          name: 'Nemotron 4 340B Instruct',
-          max_tokens: 4096,
-          context_window: 4096,
-          input_cost: 4.20,
-          output_cost: 4.20,
-          supports_vision: false,
-          supports_function_calling: true
-        },
-        // X.AI Models
-        {
-          id: 'x-ai/grok-beta',
-          name: 'Grok Beta',
-          max_tokens: 4096,
-          context_window: 131072,
-          input_cost: 5.00,
-          output_cost: 15.00,
-          supports_vision: false,
-          supports_function_calling: true
-        }
-      ];
-
-      const models: AIModel[] = openrouterModels.map(model => ({
-        id: model.id,
-        name: model.name,
-        provider: 'openrouter' as const,
-        description: `OpenRouter ${model.name} model`,
-        max_tokens: model.max_tokens,
-        supports_vision: model.supports_vision,
-        supports_function_calling: model.supports_function_calling,
-        cost_per_1k_input_tokens: model.input_cost,
-        cost_per_1k_output_tokens: model.output_cost,
-        context_window: model.context_window,
-        created_at: now,
-        updated_at: now
-      }));
-
-      logger.info(`Using ${models.length} default OpenRouter models`);
-      return models;
+    const fallback = [
+      { id: 'anthropic/claude-3.5-sonnet', name: 'Claude 3.5 Sonnet', max_tokens: 8192, context_window: 200000, input: 3.00, output: 15.00, vision: true, functions: true },
+      { id: 'anthropic/claude-3-opus', name: 'Claude 3 Opus', max_tokens: 4096, context_window: 200000, input: 15.00, output: 75.00, vision: true, functions: true },
+      { id: 'openai/gpt-4o', name: 'GPT-4o', max_tokens: 4096, context_window: 128000, input: 5.00, output: 15.00, vision: true, functions: true },
+      { id: 'openai/gpt-4o-mini', name: 'GPT-4o Mini', max_tokens: 16384, context_window: 128000, input: 0.15, output: 0.60, vision: true, functions: true },
+      { id: 'google/gemini-pro-1.5', name: 'Gemini Pro 1.5', max_tokens: 8192, context_window: 8192, input: 3.50, output: 10.50, vision: true, functions: true },
+      { id: 'google/gemini-flash-1.5', name: 'Gemini Flash 1.5', max_tokens: 8192, context_window: 8192, input: 0.35, output: 1.05, vision: true, functions: true },
+      { id: 'meta-llama/llama-3.1-405b-instruct', name: 'Llama 3.1 405B Instruct', max_tokens: 4096, context_window: 128000, input: 2.70, output: 2.70, vision: false, functions: true },
+      { id: 'meta-llama/llama-3.1-70b-instruct', name: 'Llama 3.1 70B Instruct', max_tokens: 4096, context_window: 128000, input: 0.88, output: 0.88, vision: false, functions: true },
+      { id: 'mistralai/mistral-large', name: 'Mistral Large', max_tokens: 4096, context_window: 128000, input: 3.00, output: 9.00, vision: false, functions: true },
+      { id: 'deepseek/deepseek-chat', name: 'DeepSeek Chat', max_tokens: 4096, context_window: 64000, input: 0.14, output: 0.28, vision: false, functions: true },
+    ];
+    return fallback.map(m => ({
+      id: m.id, name: m.name, provider: 'openrouter' as const,
+      description: `OpenRouter ${m.name} model`,
+      max_tokens: m.max_tokens, context_window: m.context_window,
+      cost_per_1k_input_tokens: m.input, cost_per_1k_output_tokens: m.output,
+      supports_vision: m.vision, supports_function_calling: m.functions,
+      created_at: now, updated_at: now,
+    }));
   }
 
   /**
@@ -812,8 +416,6 @@ class ModelService {
     // Sync OpenRouter models
     if (this.openrouter) {
       try {
-        // Clear cache to force fresh fetch on manual sync
-        this.clearOpenRouterCache();
         const models = await this.fetchOpenRouterModels();
         const result = await this.syncModelsToDatabase('openrouter', models);
         results.push(result);
@@ -838,16 +440,13 @@ class ModelService {
   private async syncModelsToDatabase(provider: 'openai' | 'anthropic' | 'openrouter', models: AIModel[]): Promise<ModelSyncResult> {
     try {
       logger.info(`Syncing ${models.length} ${provider} models to database...`);
-      
-      // Bulk upsert models
+
       const { added, updated } = await AIModelModel.bulkUpsert(models);
-      
-      // Deactivate models that are no longer available
       const activeModelIds = models.map(m => m.id);
       const removed = await AIModelModel.deactivateModels(provider, activeModelIds);
-      
+
       logger.info(`Model sync completed for ${provider}: ${added} added, ${updated} updated, ${removed} removed`);
-      
+
       return {
         provider,
         models_added: added,
@@ -856,10 +455,10 @@ class ModelService {
         success: true
       };
     } catch (error) {
-      logger.error(`Failed to sync ${provider} models to database`, { 
-        error: error instanceof Error ? error.message : 'Unknown error' 
+      logger.error(`Failed to sync ${provider} models to database`, {
+        error: error instanceof Error ? error.message : 'Unknown error'
       });
-      
+
       return {
         provider,
         models_added: 0,
@@ -871,146 +470,178 @@ class ModelService {
     }
   }
 
-  /**
-   * Check if OpenAI model is a chat completion model
-   */
+  // --- OpenAI model metadata helpers ---
+
   private isOpenAIChatModel(modelId: string): boolean {
-    const chatModels = [
-      'gpt-4', 'gpt-4-0314', 'gpt-4-0613', 'gpt-4-32k', 'gpt-4-32k-0314', 'gpt-4-32k-0613',
-      'gpt-4-1106-preview', 'gpt-4-0125-preview', 'gpt-4-turbo-preview', 'gpt-4-turbo',
-      'gpt-4-turbo-2024-04-09', 'gpt-4o', 'gpt-4o-2024-05-13', 'gpt-4o-2024-08-06',
-      'gpt-4o-mini', 'gpt-4o-mini-2024-07-18',
-      'gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-3.5-turbo-0613', 'gpt-3.5-turbo-1106',
-      'gpt-3.5-turbo-0125', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo-16k-0613'
+    const prefixes = [
+      'gpt-4', 'gpt-3.5-turbo', 'o1', 'o3', 'o4',
+      'chatgpt-4o', 'gpt-4.1', 'gpt-4.5',
     ];
-    
-    return chatModels.some(model => modelId.startsWith(model));
+    return prefixes.some(p => modelId.startsWith(p));
   }
 
-  /**
-   * Get max tokens for OpenAI model
-   */
   private getOpenAIMaxTokens(modelId: string): number {
+    if (modelId.startsWith('o1') || modelId.startsWith('o3') || modelId.startsWith('o4')) return 100000;
+    if (modelId.includes('gpt-4.1') || modelId.includes('gpt-4.5')) return 32768;
     if (modelId.includes('gpt-4o')) return 16384;
     if (modelId.includes('gpt-4-turbo')) return 4096;
     if (modelId.includes('gpt-4-32k')) return 32768;
     if (modelId.includes('gpt-4')) return 8192;
     if (modelId.includes('gpt-3.5-turbo-16k')) return 16384;
     if (modelId.includes('gpt-3.5-turbo')) return 4096;
-    return 4096; // default
+    return 4096;
   }
 
-  /**
-   * Get context window size for OpenAI model
-   */
   private getOpenAIContextWindow(modelId: string): number {
+    if (modelId.includes('gpt-4.1') || modelId.includes('gpt-4.5')) return 1047576;
+    if (modelId.startsWith('o1') || modelId.startsWith('o3') || modelId.startsWith('o4')) return 200000;
     if (modelId.includes('gpt-4o')) return 128000;
     if (modelId.includes('gpt-4-turbo')) return 128000;
     if (modelId.includes('gpt-4-32k')) return 32768;
-    if (modelId.includes('gpt-4-1106-preview')) return 128000;
     if (modelId.includes('gpt-4')) return 8192;
     if (modelId.includes('gpt-3.5-turbo-16k')) return 16384;
-    if (modelId.includes('gpt-3.5-turbo')) return 4096;
-    return 4096; // default
+    if (modelId.includes('gpt-3.5-turbo')) return 16385;
+    return 4096;
   }
 
-  /**
-   * Check if model supports vision
-   */
   private supportsVision(modelId: string): boolean {
-    const visionModels = ['gpt-4-vision-preview', 'gpt-4-turbo', 'gpt-4o'];
-    return visionModels.some(model => modelId.includes(model));
+    if (modelId.includes('gpt-4o')) return true;
+    if (modelId.includes('gpt-4-turbo')) return true;
+    if (modelId.includes('gpt-4.1')) return true;
+    if (modelId.includes('gpt-4.5')) return true;
+    if (modelId.startsWith('o1') || modelId.startsWith('o3') || modelId.startsWith('o4')) return true;
+    return false;
   }
 
-  /**
-   * Check if model supports function calling
-   */
   private supportsFunctionCalling(modelId: string): boolean {
-    const functionModels = [
-      'gpt-4', 'gpt-4-0613', 'gpt-4-32k-0613', 'gpt-4-1106-preview', 'gpt-4-turbo',
-      'gpt-4o', 'gpt-3.5-turbo', 'gpt-3.5-turbo-0613', 'gpt-3.5-turbo-1106'
-    ];
-    return functionModels.some(model => modelId.includes(model));
+    // Most modern OpenAI chat models support function calling
+    if (modelId.includes('gpt-4') || modelId.includes('gpt-3.5-turbo')) return true;
+    if (modelId.startsWith('o1') || modelId.startsWith('o3') || modelId.startsWith('o4')) return true;
+    return false;
   }
 
-  /**
-   * Get input cost per 1K tokens for OpenAI model
-   */
   private getOpenAIInputCost(modelId: string): number {
+    if (modelId.includes('gpt-4.1-nano')) return 0.10;
+    if (modelId.includes('gpt-4.1-mini')) return 0.40;
+    if (modelId.includes('gpt-4.1')) return 2.00;
+    if (modelId.includes('gpt-4.5')) return 75.00;
     if (modelId.includes('gpt-4o-mini')) return 0.15;
-    if (modelId.includes('gpt-4o')) return 5.00;
+    if (modelId.includes('gpt-4o')) return 2.50;
     if (modelId.includes('gpt-4-turbo')) return 10.00;
     if (modelId.includes('gpt-4-32k')) return 60.00;
     if (modelId.includes('gpt-4')) return 30.00;
     if (modelId.includes('gpt-3.5-turbo')) return 0.50;
-    return 0.50; // default
+    if (modelId === 'o3') return 10.00;
+    if (modelId.startsWith('o3-mini')) return 1.10;
+    if (modelId === 'o1') return 15.00;
+    if (modelId.startsWith('o1-mini')) return 3.00;
+    if (modelId.startsWith('o4-mini')) return 1.10;
+    return 1.00;
   }
 
-  /**
-   * Get output cost per 1K tokens for OpenAI model
-   */
   private getOpenAIOutputCost(modelId: string): number {
+    if (modelId.includes('gpt-4.1-nano')) return 0.40;
+    if (modelId.includes('gpt-4.1-mini')) return 1.60;
+    if (modelId.includes('gpt-4.1')) return 8.00;
+    if (modelId.includes('gpt-4.5')) return 150.00;
     if (modelId.includes('gpt-4o-mini')) return 0.60;
-    if (modelId.includes('gpt-4o')) return 15.00;
+    if (modelId.includes('gpt-4o')) return 10.00;
     if (modelId.includes('gpt-4-turbo')) return 30.00;
     if (modelId.includes('gpt-4-32k')) return 120.00;
     if (modelId.includes('gpt-4')) return 60.00;
     if (modelId.includes('gpt-3.5-turbo')) return 1.50;
-    return 1.50; // default
+    if (modelId === 'o3') return 40.00;
+    if (modelId.startsWith('o3-mini')) return 4.40;
+    if (modelId === 'o1') return 60.00;
+    if (modelId.startsWith('o1-mini')) return 12.00;
+    if (modelId.startsWith('o4-mini')) return 4.40;
+    return 4.00;
   }
 
-  /**
-   * Format model name for display
-   */
   private formatModelName(modelId: string): string {
     const nameMap: Record<string, string> = {
+      'gpt-4.5-preview': 'GPT-4.5 Preview',
+      'gpt-4.1': 'GPT-4.1',
+      'gpt-4.1-mini': 'GPT-4.1 Mini',
+      'gpt-4.1-nano': 'GPT-4.1 Nano',
       'gpt-4o': 'GPT-4o',
       'gpt-4o-mini': 'GPT-4o Mini',
       'gpt-4-turbo': 'GPT-4 Turbo',
       'gpt-4': 'GPT-4',
-      'gpt-3.5-turbo': 'GPT-3.5 Turbo'
+      'gpt-3.5-turbo': 'GPT-3.5 Turbo',
+      'o4-mini': 'O4 Mini',
+      'o3-mini': 'O3 Mini',
+      'o3': 'O3',
+      'o1-mini': 'O1 Mini',
+      'o1': 'O1',
     };
 
     for (const [key, value] of Object.entries(nameMap)) {
-      if (modelId.includes(key)) {
+      if (modelId.startsWith(key)) {
         return value;
       }
     }
 
-    return modelId.toUpperCase();
+    return modelId;
   }
 
-  /**
-   * Get all available models from database
-   */
+  // --- Anthropic model metadata helpers ---
+
+  private getAnthropicMaxTokens(modelId: string): number {
+    if (modelId.includes('opus')) return 32000;
+    if (modelId.includes('sonnet')) return 16000;
+    if (modelId.includes('haiku')) return 8192;
+    return 8192;
+  }
+
+  private getAnthropicContextWindow(modelId: string): number {
+    return 200000;
+  }
+
+  private anthropicSupportsVision(modelId: string): boolean {
+    return true; // All Claude 3+ models support vision
+  }
+
+  private getAnthropicInputCost(modelId: string): number {
+    if (modelId.includes('opus-4')) return 15.00;
+    if (modelId.includes('sonnet-4-5') || modelId.includes('sonnet-4.5')) return 3.00;
+    if (modelId.includes('sonnet-4')) return 3.00;
+    if (modelId.includes('haiku-4')) return 0.80;
+    if (modelId.includes('opus-3')) return 15.00;
+    if (modelId.includes('sonnet-3')) return 3.00;
+    if (modelId.includes('haiku-3')) return 0.25;
+    return 3.00;
+  }
+
+  private getAnthropicOutputCost(modelId: string): number {
+    if (modelId.includes('opus-4')) return 75.00;
+    if (modelId.includes('sonnet-4-5') || modelId.includes('sonnet-4.5')) return 15.00;
+    if (modelId.includes('sonnet-4')) return 15.00;
+    if (modelId.includes('haiku-4')) return 4.00;
+    if (modelId.includes('opus-3')) return 75.00;
+    if (modelId.includes('sonnet-3')) return 15.00;
+    if (modelId.includes('haiku-3')) return 1.25;
+    return 15.00;
+  }
+
+  // --- Public query methods ---
+
   async getAvailableModels(): Promise<AIModel[]> {
     return await AIModelModel.findAll();
   }
 
-  /**
-   * Get models by provider from database
-   */
   async getModelsByProvider(provider: 'openai' | 'anthropic' | 'openrouter'): Promise<AIModel[]> {
     return await AIModelModel.findByProvider(provider);
   }
 
-  /**
-   * Get a specific model by ID from database
-   */
   async getModelById(id: string): Promise<AIModel | null> {
     return await AIModelModel.findById(id);
   }
 
-  /**
-   * Get provider statistics
-   */
   async getProviderStats(): Promise<Record<string, { active: number; total: number }>> {
     return await AIModelModel.getProviderStats();
   }
 
-  /**
-   * Get provider status
-   */
   getProviderStatus(): Record<string, boolean> {
     return {
       openai: !!this.openai,
@@ -1020,26 +651,42 @@ class ModelService {
   }
 
   /**
-   * Clear OpenRouter models cache to force refresh on next fetch
+   * Clear cache for a specific provider or all providers
    */
-  clearOpenRouterCache(): void {
-    this.openrouterModelsCache = null;
-    logger.info('OpenRouter models cache cleared');
+  clearCache(provider?: string): void {
+    if (provider) {
+      this.providerCache.delete(provider);
+      logger.info(`${provider} models cache cleared`);
+    } else {
+      this.providerCache.clear();
+      logger.info('All models cache cleared');
+    }
   }
 
-  /**
-   * Get cache status for OpenRouter models
-   */
-  getOpenRouterCacheStatus(): { cached: boolean; age?: number; count?: number } {
-    if (!this.openrouterModelsCache) {
-      return { cached: false };
+  // Keep backward compat alias
+  clearOpenRouterCache(): void {
+    this.clearCache('openrouter');
+  }
+
+  getCacheStatus(): Record<string, { cached: boolean; age?: number; count?: number }> {
+    const status: Record<string, { cached: boolean; age?: number; count?: number }> = {};
+    for (const provider of ['openai', 'anthropic', 'openrouter']) {
+      const cached = this.providerCache.get(provider);
+      if (!cached) {
+        status[provider] = { cached: false };
+      } else {
+        status[provider] = {
+          cached: true,
+          age: Math.round((Date.now() - cached.timestamp) / 3600000), // hours
+          count: cached.models.length,
+        };
+      }
     }
-    const age = Date.now() - this.openrouterModelsCache.timestamp;
-    return {
-      cached: true,
-      age: Math.round(age / 60000), // age in minutes
-      count: this.openrouterModelsCache.models.length
-    };
+    return status;
+  }
+
+  getOpenRouterCacheStatus(): { cached: boolean; age?: number; count?: number } {
+    return this.getCacheStatus().openrouter;
   }
 
   /**
@@ -1047,15 +694,12 @@ class ModelService {
    */
   async initialize(): Promise<void> {
     try {
-      // Create the models table
       await AIModelModel.createTable();
       logger.info('Model service initialized successfully');
-
-      // Sync models from APIs
       await this.syncAllModels();
     } catch (error) {
-      logger.error('Failed to initialize model service', { 
-        error: error instanceof Error ? error.message : 'Unknown error' 
+      logger.error('Failed to initialize model service', {
+        error: error instanceof Error ? error.message : 'Unknown error'
       });
       throw error;
     }

@@ -122,13 +122,8 @@
   },
   "picker": {
     "empty": {
-      "hint": "Skúste iný vyhľadávací výraz",
       "title": "Žiadni agenti nenájdení"
     },
-    "searchAdmin": "Hľadať agentov podľa mena, popisu alebo modelu...",
-    "searchUser": "Hľadať agentov podľa mena alebo popisu...",
-    "select": "Vybrať agenta",
-    "selected": "Vybrané",
     "title": "Vyberte AI agenta"
   },
   "providers": {

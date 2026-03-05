@@ -3,8 +3,6 @@
   "dashboard": "Dashboard",
   "desktop": {
     "actions": {
-      "enterFullscreen": "Volledig scherm",
-      "exitFullscreen": "Verlaat volledig scherm",
       "hideEditor": "Verberg editor",
       "hideSidebar": "Verberg zijbalk",
       "showEditor": "Toon editor",
@@ -20,23 +18,6 @@
   },
   "loading": "Project laden...",
   "mobile": {
-    "actions": {
-      "install": "Installeren",
-      "installApp": "App installeren",
-      "share": "Delen"
-    },
-    "menu": {
-      "currentSelection": "Huidige selectie",
-      "filesAvailableOffline_one": "Bestand beschikbaar offline",
-      "filesAvailableOffline_other": "Bestanden beschikbaar offline",
-      "filesPendingUpload_one": "Bestand wacht op upload",
-      "filesPendingUpload_other": "Bestanden wachten op upload",
-      "noAgentSelected": "Geen agent geselecteerd",
-      "noFileSelected": "Geen bestand geselecteerd",
-      "offlineMode": "Offline modus",
-      "online": "Online",
-      "status": "Status"
-    },
     "views": {
       "agents": "Agents",
       "chat": "Chat",

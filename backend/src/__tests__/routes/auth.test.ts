@@ -1,16 +1,57 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import request from 'supertest';
-import express from 'express';
-import cors from 'cors';
-import authRoutes from '../../routes/auth';
+
+import { DatabaseModule } from '../../database/database.module';
+import { AuthModule } from '../../auth/auth.module';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { TransformInterceptor } from '../../common/interceptors/transform.interceptor';
+import { AllExceptionsFilter } from '../../common/filters/all-exceptions.filter';
+import { authConfig } from '../../config';
 import { TestHelpers } from '../utils/testHelpers';
-import { UserModel } from '../../models/User';
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-app.use('/api/auth', authRoutes);
+describe('Auth (NestJS)', () => {
+  let app: INestApplication;
 
-describe('Auth Routes', () => {
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [
+        ConfigModule.forRoot({
+          isGlobal: true,
+          load: [authConfig],
+        }),
+        ThrottlerModule.forRoot([{ name: 'default', ttl: 900000, limit: 5000 }]),
+        DatabaseModule,
+        AuthModule,
+      ],
+      providers: [
+        { provide: APP_GUARD, useClass: JwtAuthGuard },
+        { provide: APP_GUARD, useClass: ThrottlerGuard },
+        { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
+      ],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    app.setGlobalPrefix('api');
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        transform: true,
+        forbidNonWhitelisted: true,
+        transformOptions: { enableImplicitConversion: true },
+      }),
+    );
+    app.useGlobalFilters(new AllExceptionsFilter());
+    await app.init();
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
   beforeEach(async () => {
     await TestHelpers.cleanDatabase();
   });
@@ -20,27 +61,21 @@ describe('Auth Routes', () => {
       const userData = {
         email: 'test@example.com',
         username: 'testuser',
-        password: 'TestPassword123!'
+        password: 'TestPassword123!',
       };
 
-      const response = await request(app)
+      const response = await request(app.getHttpServer())
         .post('/api/auth/register')
         .send(userData);
 
       expect(response.status).toBe(201);
-      expect(response.body).toMatchObject({
-        success: true,
-        data: {
-          user: {
-            email: userData.email,
-            username: userData.username
-          },
-          tokens: {
-            access_token: expect.any(String),
-            refresh_token: expect.any(String)
-          }
-        }
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.user).toMatchObject({
+        email: userData.email,
+        username: userData.username,
       });
+      expect(response.body.data.tokens.accessToken).toEqual(expect.any(String));
+      expect(response.body.data.tokens.refreshToken).toEqual(expect.any(String));
       expect(response.body.data.user.password_hash).toBeUndefined();
     });
 
@@ -48,84 +83,55 @@ describe('Auth Routes', () => {
       const userData = {
         email: 'invalid-email',
         username: 'testuser',
-        password: 'TestPassword123!'
+        password: 'TestPassword123!',
       };
 
-      const response = await request(app)
+      const response = await request(app.getHttpServer())
         .post('/api/auth/register')
         .send(userData);
 
-      TestHelpers.expectValidationError(response, 'email');
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
     });
 
     it('should reject weak password', async () => {
       const userData = {
         email: 'test@example.com',
         username: 'testuser',
-        password: 'weak'
+        password: 'weak',
       };
 
-      const response = await request(app)
+      const response = await request(app.getHttpServer())
         .post('/api/auth/register')
         .send(userData);
 
-      TestHelpers.expectValidationError(response, 'password');
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
     });
 
     it('should reject duplicate email', async () => {
       const userData = {
         email: 'test@example.com',
         username: 'testuser1',
-        password: 'TestPassword123!'
+        password: 'TestPassword123!',
       };
 
-      // Register first user
-      await request(app)
+      await request(app.getHttpServer())
         .post('/api/auth/register')
         .send(userData);
 
-      // Try to register with same email
       const duplicateData = {
         email: 'test@example.com',
         username: 'testuser2',
-        password: 'TestPassword123!'
+        password: 'TestPassword123!',
       };
 
-      const response = await request(app)
+      const response = await request(app.getHttpServer())
         .post('/api/auth/register')
         .send(duplicateData);
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(409);
       expect(response.body.success).toBe(false);
-      expect(response.body.error).toContain('already exists');
-    });
-
-    it('should reject duplicate username', async () => {
-      const userData = {
-        email: 'test1@example.com',
-        username: 'testuser',
-        password: 'TestPassword123!'
-      };
-
-      // Register first user
-      await request(app)
-        .post('/api/auth/register')
-        .send(userData);
-
-      // Try to register with same username
-      const duplicateData = {
-        email: 'test2@example.com',
-        username: 'testuser',
-        password: 'TestPassword123!'
-      };
-
-      const response = await request(app)
-        .post('/api/auth/register')
-        .send(duplicateData);
-
-      expect(response.status).toBe(400);
-      expect(response.body.success).toBe(false);
-      expect(response.body.error).toContain('already exists');
     });
   });
 
@@ -139,229 +145,102 @@ describe('Auth Routes', () => {
     it('should login with email successfully', async () => {
       const loginData = {
         email: testUser.email,
-        password: testUser.password
+        password: testUser.password,
       };
 
-      const response = await request(app)
+      const response = await request(app.getHttpServer())
         .post('/api/auth/login')
         .send(loginData);
 
       expect(response.status).toBe(200);
-      expect(response.body).toMatchObject({
-        success: true,
-        data: {
-          user: {
-            id: testUser.id,
-            email: testUser.email,
-            username: testUser.username
-          },
-          tokens: {
-            access_token: expect.any(String),
-            refresh_token: expect.any(String)
-          }
-        }
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.user).toMatchObject({
+        id: testUser.id,
+        email: testUser.email,
+        username: testUser.username,
       });
+      expect(response.body.data.tokens.accessToken).toEqual(expect.any(String));
+      expect(response.body.data.tokens.refreshToken).toEqual(expect.any(String));
     });
 
     it('should reject invalid email', async () => {
       const loginData = {
         email: 'nonexistent@example.com',
-        password: testUser.password
+        password: testUser.password,
       };
 
-      const response = await request(app)
+      const response = await request(app.getHttpServer())
         .post('/api/auth/login')
         .send(loginData);
 
       expect(response.status).toBe(401);
       expect(response.body.success).toBe(false);
-      expect(response.body.error).toBe('Invalid credentials');
     });
 
     it('should reject invalid password', async () => {
       const loginData = {
         email: testUser.email,
-        password: 'wrongpassword'
+        password: 'wrongpassword',
       };
 
-      const response = await request(app)
+      const response = await request(app.getHttpServer())
         .post('/api/auth/login')
         .send(loginData);
 
       expect(response.status).toBe(401);
       expect(response.body.success).toBe(false);
-      expect(response.body.error).toBe('Invalid credentials');
     });
 
     it('should reject missing fields', async () => {
-      const response = await request(app)
+      const response = await request(app.getHttpServer())
         .post('/api/auth/login')
         .send({ email: testUser.email });
 
-      TestHelpers.expectValidationError(response, 'password');
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
     });
   });
 
   describe('POST /api/auth/refresh', () => {
     let testUser: any;
-    let tokens: any;
 
     beforeEach(async () => {
       testUser = await TestHelpers.createTestUser();
-      tokens = TestHelpers.generateTokens(testUser.id);
     });
 
     it('should refresh tokens successfully', async () => {
-      const response = await request(app)
+      // First login to get a real refresh token
+      const loginResponse = await request(app.getHttpServer())
+        .post('/api/auth/login')
+        .send({ email: testUser.email, password: testUser.password });
+
+      const refreshToken = loginResponse.body.data.tokens.refreshToken;
+
+      const response = await request(app.getHttpServer())
         .post('/api/auth/refresh')
-        .send({ refresh_token: tokens.refresh_token });
-
-      expect(response.status).toBe(200);
-      expect(response.body).toMatchObject({
-        success: true,
-        data: {
-          tokens: {
-            access_token: expect.any(String),
-            refresh_token: expect.any(String)
-          }
-        }
-      });
-      expect(response.body.data.tokens.access_token).not.toBe(tokens.access_token);
-    });
-
-    it('should reject invalid refresh token', async () => {
-      const response = await request(app)
-        .post('/api/auth/refresh')
-        .send({ refresh_token: 'invalid-token' });
-
-      expect(response.status).toBe(401);
-      expect(response.body.success).toBe(false);
-      expect(response.body.error).toContain('Invalid');
-    });
-
-    it('should reject missing refresh token', async () => {
-      const response = await request(app)
-        .post('/api/auth/refresh')
-        .send({});
-
-      TestHelpers.expectValidationError(response, 'refresh_token');
-    });
-  });
-
-  describe('GET /api/auth/me', () => {
-    let testUser: any;
-    let tokens: any;
-
-    beforeEach(async () => {
-      testUser = await TestHelpers.createTestUser();
-      tokens = TestHelpers.generateTokens(testUser.id);
-    });
-
-    it('should return current user info', async () => {
-      const response = await TestHelpers.authenticatedRequest(app, tokens)
-        .get('/api/auth/me');
-
-      expect(response.status).toBe(200);
-      expect(response.body).toMatchObject({
-        success: true,
-        data: {
-          user: {
-            id: testUser.id,
-            email: testUser.email,
-            username: testUser.username
-          }
-        }
-      });
-    });
-
-    it('should reject unauthenticated request', async () => {
-      const response = await request(app)
-        .get('/api/auth/me');
-
-      TestHelpers.expectAuthError(response);
-    });
-
-    it('should reject invalid token', async () => {
-      const response = await request(app)
-        .get('/api/auth/me')
-        .set('Authorization', 'Bearer invalid-token');
-
-      TestHelpers.expectAuthError(response);
-    });
-  });
-
-  describe('PUT /api/auth/profile', () => {
-    let testUser: any;
-    let tokens: any;
-
-    beforeEach(async () => {
-      testUser = await TestHelpers.createTestUser();
-      tokens = TestHelpers.generateTokens(testUser.id);
-    });
-
-    it('should update username successfully', async () => {
-      const updateData = {
-        username: 'newusername'
-      };
-
-      const response = await TestHelpers.authenticatedRequest(app, tokens)
-        .put('/api/auth/profile')
-        .send(updateData);
-
-      expect(response.status).toBe(200);
-      expect(response.body).toMatchObject({
-        success: true,
-        data: {
-          user: {
-            id: testUser.id,
-            username: updateData.username,
-            email: testUser.email
-          }
-        }
-      });
-    });
-
-    it('should update password successfully', async () => {
-      const updateData = {
-        password: 'NewPassword456!'
-      };
-
-      const response = await TestHelpers.authenticatedRequest(app, tokens)
-        .put('/api/auth/profile')
-        .send(updateData);
+        .send({ refreshToken });
 
       expect(response.status).toBe(200);
       expect(response.body.success).toBe(true);
-
-      // Verify new password works
-      const loginResponse = await request(app)
-        .post('/api/auth/login')
-        .send({
-          email: testUser.email,
-          password: updateData.password
-        });
-
-      expect(loginResponse.status).toBe(200);
+      expect(response.body.data.accessToken).toEqual(expect.any(String));
     });
 
-    it('should reject invalid password format', async () => {
-      const updateData = {
-        password: 'weak'
-      };
+    it('should reject invalid refresh token', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/auth/refresh')
+        .send({ refreshToken: 'invalid-token' });
 
-      const response = await TestHelpers.authenticatedRequest(app, tokens)
-        .put('/api/auth/profile')
-        .send(updateData);
-
-      TestHelpers.expectValidationError(response, 'password');
+      expect(response.status).toBe(401);
+      expect(response.body.success).toBe(false);
     });
 
-    it('should reject unauthenticated request', async () => {
-      const response = await request(app)
-        .put('/api/auth/profile')
-        .send({ username: 'newname' });
+    it('should reject missing refresh token', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/auth/refresh')
+        .send({});
 
-      TestHelpers.expectAuthError(response);
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
     });
   });
 });

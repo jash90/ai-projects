@@ -34,6 +34,12 @@
     "tryAgain": "Probeer opnieuw",
     "tryDifferentSearch": "Probeer een andere zoekterm"
   },
+  "consent": {
+    "accept": "__MISSING__",
+    "decline": "__MISSING__",
+    "message": "__MISSING__",
+    "title": "__MISSING__"
+  },
   "files": "bestanden",
   "messages": "berichten",
   "navigation": {

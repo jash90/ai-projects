@@ -20,10 +20,6 @@
     "subtitle": "Hallitse projektejasi ja tee yhteistyötä AI-agenttien kanssa",
     "welcome": "Tervetuloa takaisin, {{username}}"
   },
-  "quickTip": {
-    "content": "Lisää tiedostoja projektiisi antaaksesi AI-agenteille kontekstia paremman avun saamiseksi.",
-    "title": "Nopea vinkki"
-  },
   "recentProjects": {
     "empty": {
       "description": "Luo ensimmäinen projektisi aloittaaksesi AI-yhteistyön",
