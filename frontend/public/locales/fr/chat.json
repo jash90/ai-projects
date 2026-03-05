@@ -1,12 +1,11 @@
 {
-  "agentNotFound": {
-    "description": "Veuillez sélectionner un agent pour commencer à discuter",
-    "title": "Agent non trouvé"
-  },
+  "clearButton": "Effacer",
   "clearConfirm": "Êtes-vous sûr de vouloir effacer cette conversation ? Cette action ne peut pas être annulée.",
+  "clearTitle": "Effacer la conversation",
   "emptyState": {
-    "description": "Envoyez un message pour commencer à discuter avec {{agentName}}",
-    "filesHint": "Cet agent peut accéder à vos fichiers de projet pour le contexte",
+    "suggestion1": "__MISSING__",
+    "suggestion2": "__MISSING__",
+    "suggestion3": "__MISSING__",
     "title": "Commencer une conversation"
   },
   "errors": {
@@ -22,32 +21,13 @@
     "connected": "Connecté",
     "disconnected": "Déconnecté",
     "files": "Fichiers",
-    "moreOptions": "Plus d'options",
-    "toggleSidebar": "Basculer la barre latérale"
-  },
-  "input": {
-    "attachFile": "Joindre un fichier",
-    "attachFiles": "Joindre des fichiers (images, PDF)",
-    "characters_one": "{{count}} caractère",
-    "characters_other": "{{count}} caractères",
-    "fileTooLarge": "Fichier trop volumineux : {{name}}. Taille max : {{maxSize}}Mo",
-    "maxFilesError_one": "Maximum {{count}} fichier autorisé",
-    "maxFilesError_other": "Maximum {{count}} fichiers autorisés",
-    "placeholder": "Tapez votre message...",
-    "send": "Envoyer",
-    "sendMessage": "Envoyer le message",
-    "startTyping": "Commencez à taper...",
-    "unsupportedFileType": "Type de fichier non pris en charge : {{type}}. Prise en charge : images, PDF"
+    "moreOptions": "Plus d'options"
   },
   "limits": {
     "global": "Limite globale",
     "monthly": "Limite mensuelle",
     "remaining_one": "{{count}} jeton restant",
     "remaining_other": "{{count}} jetons restants"
-  },
-  "message": {
-    "error": "Erreur",
-    "you": "Vous"
   },
   "placeholder": "Message {{agentName}}...",
   "selectAgent": {
@@ -60,10 +40,11 @@
     "regular": "Régulier",
     "streaming": "Streaming"
   },
-  "thinking": "{{agentName}} réfléchit...",
   "threads": {
+    "deleteButton": "Supprimer",
     "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette conversation ?",
     "deleteConversation": "Supprimer la conversation",
+    "deleteTitle": "Supprimer le fil",
     "messageCount_one": "{{count}} message",
     "messageCount_other": "{{count}} messages",
     "newConversation": "Nouvelle conversation",

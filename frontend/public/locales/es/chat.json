@@ -1,12 +1,11 @@
 {
-  "agentNotFound": {
-    "description": "Por favor, selecciona un agente para comenzar a chatear",
-    "title": "Agente no encontrado"
-  },
+  "clearButton": "Borrar",
   "clearConfirm": "¿Estás seguro de que deseas borrar esta conversación? Esta acción no se puede deshacer.",
+  "clearTitle": "Borrar conversación",
   "emptyState": {
-    "description": "Envía un mensaje para comenzar a chatear con {{agentName}}",
-    "filesHint": "Este agente puede acceder a los archivos de tu proyecto para contexto",
+    "suggestion1": "__MISSING__",
+    "suggestion2": "__MISSING__",
+    "suggestion3": "__MISSING__",
     "title": "Iniciar una conversación"
   },
   "errors": {
@@ -22,32 +21,13 @@
     "connected": "Conectado",
     "disconnected": "Desconectado",
     "files": "Archivos",
-    "moreOptions": "Más opciones",
-    "toggleSidebar": "Alternar barra lateral"
-  },
-  "input": {
-    "attachFile": "Adjuntar archivo",
-    "attachFiles": "Adjuntar archivos (imágenes, PDF)",
-    "characters_one": "input.characters",
-    "characters_other": "input.characters",
-    "fileTooLarge": "Archivo demasiado grande: {{name}}. Tamaño máximo: {{maxSize}}MB",
-    "maxFilesError_one": "input.maxFilesError",
-    "maxFilesError_other": "input.maxFilesError",
-    "placeholder": "Escribe tu mensaje...",
-    "send": "Enviar",
-    "sendMessage": "Enviar mensaje",
-    "startTyping": "Comienza a escribir...",
-    "unsupportedFileType": "Tipo de archivo no soportado: {{type}}. Soportados: imágenes, PDF"
+    "moreOptions": "Más opciones"
   },
   "limits": {
     "global": "Límite Global",
     "monthly": "Límite Mensual",
     "remaining_one": "limits.remaining",
     "remaining_other": "limits.remaining"
-  },
-  "message": {
-    "error": "Error",
-    "you": "Tú"
   },
   "placeholder": "Mensaje {{agentName}}...",
   "selectAgent": {
@@ -60,10 +40,11 @@
     "regular": "Regular",
     "streaming": "Streaming"
   },
-  "thinking": "{{agentName}} está pensando...",
   "threads": {
+    "deleteButton": "Eliminar",
     "deleteConfirm": "¿Estás seguro de que deseas eliminar esta conversación?",
     "deleteConversation": "Eliminar conversación",
+    "deleteTitle": "Eliminar hilo",
     "messageCount_one": "{{count}} mensaje",
     "messageCount_other": "{{count}} mensajes",
     "newConversation": "Nueva conversación",

@@ -1,12 +1,11 @@
 {
-  "agentNotFound": {
-    "description": "Molimo odaberite agenta za početak razgovora",
-    "title": "Agent nije pronađen"
-  },
+  "clearButton": "Očisti",
   "clearConfirm": "Jeste li sigurni da želite očistiti ovaj razgovor? Ova radnja se ne može poništiti.",
+  "clearTitle": "Očisti razgovor",
   "emptyState": {
-    "description": "Pošaljite poruku kako biste započeli razgovor s {{agentName}}",
-    "filesHint": "Ovaj agent može pristupiti vašim projektima za kontekst",
+    "suggestion1": "__MISSING__",
+    "suggestion2": "__MISSING__",
+    "suggestion3": "__MISSING__",
     "title": "Započnite razgovor"
   },
   "errors": {
@@ -22,32 +21,13 @@
     "connected": "Povezano",
     "disconnected": "Prekinuto",
     "files": "Datoteke",
-    "moreOptions": "Više opcija",
-    "toggleSidebar": "Prebaci bočnu traku"
-  },
-  "input": {
-    "attachFile": "Priloži datoteku",
-    "attachFiles": "Priloži datoteke (slike, PDF)",
-    "characters_one": "input.characters",
-    "characters_other": "input.characters",
-    "fileTooLarge": "Datoteka prevelika: {{name}}. Maksimalna veličina: {{maxSize}}MB",
-    "maxFilesError_one": "input.maxFilesError",
-    "maxFilesError_other": "input.maxFilesError",
-    "placeholder": "Upišite svoju poruku...",
-    "send": "Pošalji",
-    "sendMessage": "Pošalji poruku",
-    "startTyping": "Započnite tipkanje...",
-    "unsupportedFileType": "Nepodržani tip datoteke: {{type}}. Podržani: slike, PDF"
+    "moreOptions": "Više opcija"
   },
   "limits": {
     "global": "Globalni limit",
     "monthly": "Mjesečni limit",
     "remaining_one": "limits.remaining",
     "remaining_other": "limits.remaining"
-  },
-  "message": {
-    "error": "Greška",
-    "you": "Vi"
   },
   "placeholder": "Poruka {{agentName}}...",
   "selectAgent": {
@@ -60,10 +40,11 @@
     "regular": "Redovni",
     "streaming": "Strimanje"
   },
-  "thinking": "{{agentName}} razmišlja...",
   "threads": {
+    "deleteButton": "Obriši",
     "deleteConfirm": "Jeste li sigurni da želite izbrisati ovaj razgovor?",
     "deleteConversation": "Izbriši razgovor",
+    "deleteTitle": "Obriši nit",
     "messageCount_one": "{{count}} poruka",
     "messageCount_other": "{{count}} poruke",
     "newConversation": "Novi razgovor",

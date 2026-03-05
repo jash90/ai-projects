@@ -1,12 +1,11 @@
 {
-  "agentNotFound": {
-    "description": "Моля, изберете агент, за да започнете чат",
-    "title": "Агентът не е намерен"
-  },
+  "clearButton": "Изчисти",
   "clearConfirm": "Сигурни ли сте, че искате да изчистите този разговор? Това действие не може да бъде отменено.",
+  "clearTitle": "Изчистване на разговора",
   "emptyState": {
-    "description": "Изпратете съобщение, за да започнете чат с {{agentName}}",
-    "filesHint": "Този агент може да получи достъп до вашите проектни файлове за контекст",
+    "suggestion1": "__MISSING__",
+    "suggestion2": "__MISSING__",
+    "suggestion3": "__MISSING__",
     "title": "Започнете разговор"
   },
   "errors": {
@@ -22,32 +21,13 @@
     "connected": "Свързан",
     "disconnected": "Неподключен",
     "files": "Файлове",
-    "moreOptions": "Повече опции",
-    "toggleSidebar": "Превключи страничната лента"
-  },
-  "input": {
-    "attachFile": "Прикрепи файл",
-    "attachFiles": "Прикрепи файлове (изображения, PDF)",
-    "characters_one": "въведете.символи",
-    "characters_other": "въведете.символи",
-    "fileTooLarge": "Файлът е твърде голям: {{name}}. Максимален размер: {{maxSize}}MB",
-    "maxFilesError_one": "въведете.maxFilesError",
-    "maxFilesError_other": "въведете.maxFilesError",
-    "placeholder": "Напишете съобщението си...",
-    "send": "Изпрати",
-    "sendMessage": "Изпрати съобщение",
-    "startTyping": "Започнете да пишете...",
-    "unsupportedFileType": "Неподдържан тип файл: {{type}}. Поддържани: изображения, PDF"
+    "moreOptions": "Повече опции"
   },
   "limits": {
     "global": "Глобален лимит",
     "monthly": "Месечен лимит",
     "remaining_one": "лимити.оставащ",
     "remaining_other": "лимити.оставащи"
-  },
-  "message": {
-    "error": "Грешка",
-    "you": "Вие"
   },
   "placeholder": "Съобщение до {{agentName}}...",
   "selectAgent": {
@@ -60,10 +40,11 @@
     "regular": "Редовен",
     "streaming": "Стрийминг"
   },
-  "thinking": "{{agentName}} мисли...",
   "threads": {
+    "deleteButton": "Изтрий",
     "deleteConfirm": "Сигурни ли сте, че искате да изтриете този разговор?",
     "deleteConversation": "Изтрий разговор",
+    "deleteTitle": "Изтриване на нишка",
     "messageCount_one": "{{count}} съобщение",
     "messageCount_other": "{{count}} съобщения",
     "newConversation": "Нов разговор",

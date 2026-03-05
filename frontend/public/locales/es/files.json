@@ -30,7 +30,9 @@
     },
     "placeholder": "Comienza a escribir...",
     "revert": "Revertir",
+    "revertButton": "Revertir",
     "revertConfirm": "¿Estás seguro de que deseas revertir todos los cambios no guardados?",
+    "revertTitle": "Revertir cambios",
     "save": "Guardar",
     "saving": "Guardando...",
     "shortcuts": {
@@ -48,7 +50,9 @@
       "open": "Abrir"
     },
     "createTitle": "Crear nuevo archivo",
+    "deleteButton": "Eliminar",
     "deleteConfirm": "¿Estás seguro de que deseas eliminar \"{{name}}\"? Esta acción no se puede deshacer.",
+    "deleteTitle": "Eliminar archivo",
     "dismiss": "Descartar",
     "empty": {
       "description": "Crea tu primer archivo para comenzar",

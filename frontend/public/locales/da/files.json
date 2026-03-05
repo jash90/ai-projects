@@ -30,7 +30,9 @@
     },
     "placeholder": "Begynd at skrive...",
     "revert": "Fortryd",
+    "revertButton": "Gendan",
     "revertConfirm": "Er du sikker på, at du vil fortryde alle ikke-gemte ændringer?",
+    "revertTitle": "Gendan ændringer",
     "save": "Gem",
     "saving": "Gemmer...",
     "shortcuts": {
@@ -48,7 +50,9 @@
       "open": "Åbn"
     },
     "createTitle": "Opret ny fil",
+    "deleteButton": "Slet",
     "deleteConfirm": "Er du sikker på, at du vil slette \"{{name}}\"? Denne handling kan ikke fortrydes.",
+    "deleteTitle": "Slet fil",
     "dismiss": "Afvis",
     "empty": {
       "description": "Opret din første fil for at komme i gang",

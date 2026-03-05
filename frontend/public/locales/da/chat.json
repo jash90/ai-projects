@@ -1,12 +1,11 @@
 {
-  "agentNotFound": {
-    "description": "Vælg venligst en agent for at starte en chat",
-    "title": "Agent ikke fundet"
-  },
+  "clearButton": "Ryd",
   "clearConfirm": "Er du sikker på, at du vil rydde denne samtale? Denne handling kan ikke fortrydes.",
+  "clearTitle": "Ryd samtale",
   "emptyState": {
-    "description": "Send en besked for at begynde at chatte med {{agentName}}",
-    "filesHint": "Denne agent kan få adgang til dine projektfiler for kontekst",
+    "suggestion1": "__MISSING__",
+    "suggestion2": "__MISSING__",
+    "suggestion3": "__MISSING__",
     "title": "Start en samtale"
   },
   "errors": {
@@ -22,32 +21,13 @@
     "connected": "Forbundet",
     "disconnected": "Afbrudt",
     "files": "Filer",
-    "moreOptions": "Flere muligheder",
-    "toggleSidebar": "Skift sidepanel"
-  },
-  "input": {
-    "attachFile": "Vedhæft fil",
-    "attachFiles": "Vedhæft filer (billeder, PDF)",
-    "characters_one": "input.characters",
-    "characters_other": "input.characters",
-    "fileTooLarge": "Fil for stor: {{name}}. Maksimal størrelse: {{maxSize}}MB",
-    "maxFilesError_one": "input.maxFilesError",
-    "maxFilesError_other": "input.maxFilesError",
-    "placeholder": "Skriv din besked...",
-    "send": "Send",
-    "sendMessage": "Send besked",
-    "startTyping": "Begynd at skrive...",
-    "unsupportedFileType": "Ikke-understøttet filtype: {{type}}. Understøttet: billeder, PDF"
+    "moreOptions": "Flere muligheder"
   },
   "limits": {
     "global": "Global grænse",
     "monthly": "Månedlig grænse",
     "remaining_one": "limits.remaining",
     "remaining_other": "limits.remaining"
-  },
-  "message": {
-    "error": "Fejl",
-    "you": "Du"
   },
   "placeholder": "Besked {{agentName}}...",
   "selectAgent": {
@@ -60,10 +40,11 @@
     "regular": "Regelmæssig",
     "streaming": "Streaming"
   },
-  "thinking": "{{agentName}} tænker...",
   "threads": {
+    "deleteButton": "Slet",
     "deleteConfirm": "Er du sikker på, at du vil slette denne samtale?",
     "deleteConversation": "Slet samtale",
+    "deleteTitle": "Slet tråd",
     "messageCount_one": "{{count}} besked",
     "messageCount_other": "{{count}} beskeder",
     "newConversation": "Ny samtale",

@@ -1,12 +1,11 @@
 {
-  "agentNotFound": {
-    "description": "Будь ласка, виберіть агента, щоб почати спілкування",
-    "title": "Агента не знайдено"
-  },
+  "clearButton": "Очистити",
   "clearConfirm": "Ви впевнені, що хочете очистити цю розмову? Цю дію не можна скасувати.",
+  "clearTitle": "Очистити розмову",
   "emptyState": {
-    "description": "Надішліть повідомлення, щоб почати спілкування з {{agentName}}",
-    "filesHint": "Цей агент може отримати доступ до ваших проектних файлів для контексту",
+    "suggestion1": "__MISSING__",
+    "suggestion2": "__MISSING__",
+    "suggestion3": "__MISSING__",
     "title": "Почати розмову"
   },
   "errors": {
@@ -22,32 +21,13 @@
     "connected": "Підключено",
     "disconnected": "Відключено",
     "files": "Файли",
-    "moreOptions": "Більше опцій",
-    "toggleSidebar": "Переключити бокову панель"
-  },
-  "input": {
-    "attachFile": "Прикріпити файл",
-    "attachFiles": "Прикріпити файли (зображення, PDF)",
-    "characters_one": "введено символ",
-    "characters_other": "введено символів",
-    "fileTooLarge": "Файл занадто великий: {{name}}. Максимальний розмір: {{maxSize}}MB",
-    "maxFilesError_one": "перевищено максимальну кількість файлів",
-    "maxFilesError_other": "перевищено максимальну кількість файлів",
-    "placeholder": "Наберіть ваше повідомлення...",
-    "send": "Надіслати",
-    "sendMessage": "Надіслати повідомлення",
-    "startTyping": "Почніть набирати...",
-    "unsupportedFileType": "Непідтримуваний тип файлу: {{type}}. Підтримуються: зображення, PDF"
+    "moreOptions": "Більше опцій"
   },
   "limits": {
     "global": "Глобальний ліміт",
     "monthly": "Місячний ліміт",
     "remaining_one": "залишився ліміт",
     "remaining_other": "залишилося лімітів"
-  },
-  "message": {
-    "error": "Помилка",
-    "you": "Ви"
   },
   "placeholder": "Повідомлення {{agentName}}...",
   "selectAgent": {
@@ -60,10 +40,11 @@
     "regular": "Звичайний",
     "streaming": "Поточний"
   },
-  "thinking": "{{agentName}} думає...",
   "threads": {
+    "deleteButton": "Видалити",
     "deleteConfirm": "Ви впевнені, що хочете видалити цю розмову?",
     "deleteConversation": "Видалити розмову",
+    "deleteTitle": "Видалити гілку",
     "messageCount_one": "{{count}} повідомлення",
     "messageCount_other": "{{count}} повідомлень",
     "newConversation": "Нова розмова",

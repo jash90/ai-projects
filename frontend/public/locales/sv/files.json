@@ -30,7 +30,9 @@
     },
     "placeholder": "Börja skriva...",
     "revert": "Ångra",
+    "revertButton": "Återställ",
     "revertConfirm": "Är du säker på att du vill ångra alla osparade ändringar?",
+    "revertTitle": "Återställ ändringar",
     "save": "Spara",
     "saving": "Sparar...",
     "shortcuts": {
@@ -48,7 +50,9 @@
       "open": "Öppna"
     },
     "createTitle": "Skapa ny fil",
+    "deleteButton": "Radera",
     "deleteConfirm": "Är du säker på att du vill ta bort \"{{name}}\"? Denna åtgärd kan inte ångras.",
+    "deleteTitle": "Radera fil",
     "dismiss": "Avvisa",
     "empty": {
       "description": "Skapa din första fil för att komma igång",

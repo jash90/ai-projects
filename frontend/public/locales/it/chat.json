@@ -1,12 +1,11 @@
 {
-  "agentNotFound": {
-    "description": "Seleziona un agente per iniziare a chattare",
-    "title": "Agente non trovato"
-  },
+  "clearButton": "Cancella",
   "clearConfirm": "Sei sicuro di voler cancellare questa conversazione? Questa azione non può essere annullata.",
+  "clearTitle": "Cancella conversazione",
   "emptyState": {
-    "description": "Invia un messaggio per iniziare a chattare con {{agentName}}",
-    "filesHint": "Questo agente può accedere ai tuoi file di progetto per il contesto",
+    "suggestion1": "__MISSING__",
+    "suggestion2": "__MISSING__",
+    "suggestion3": "__MISSING__",
     "title": "Inizia una conversazione"
   },
   "errors": {
@@ -22,32 +21,13 @@
     "connected": "Connesso",
     "disconnected": "Disconnesso",
     "files": "File",
-    "moreOptions": "Altre opzioni",
-    "toggleSidebar": "Attiva/disattiva barra laterale"
-  },
-  "input": {
-    "attachFile": "Allega file",
-    "attachFiles": "Allega file (immagini, PDF)",
-    "characters_one": "input.characters",
-    "characters_other": "input.characters",
-    "fileTooLarge": "File troppo grande: {{name}}. Dimensione massima: {{maxSize}}MB",
-    "maxFilesError_one": "input.maxFilesError",
-    "maxFilesError_other": "input.maxFilesError",
-    "placeholder": "Scrivi il tuo messaggio...",
-    "send": "Invia",
-    "sendMessage": "Invia messaggio",
-    "startTyping": "Inizia a digitare...",
-    "unsupportedFileType": "Tipo di file non supportato: {{type}}. Supportati: immagini, PDF"
+    "moreOptions": "Altre opzioni"
   },
   "limits": {
     "global": "Limite globale",
     "monthly": "Limite mensile",
     "remaining_one": "limits.remaining",
     "remaining_other": "limits.remaining"
-  },
-  "message": {
-    "error": "Errore",
-    "you": "Tu"
   },
   "placeholder": "Messaggio {{agentName}}...",
   "selectAgent": {
@@ -60,10 +40,11 @@
     "regular": "Regolare",
     "streaming": "Streaming"
   },
-  "thinking": "{{agentName}} sta pensando...",
   "threads": {
+    "deleteButton": "Elimina",
     "deleteConfirm": "Sei sicuro di voler cancellare questa conversazione?",
     "deleteConversation": "Cancella conversazione",
+    "deleteTitle": "Elimina thread",
     "messageCount_one": "{{count}} messaggio",
     "messageCount_other": "{{count}} messaggi",
     "newConversation": "Nuova conversazione",

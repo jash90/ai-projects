@@ -1,12 +1,11 @@
 {
-  "agentNotFound": {
-    "description": "Kérjük, válasszon egy ügynököt a csevegés megkezdéséhez",
-    "title": "Ügynök nem található"
-  },
+  "clearButton": "Törlés",
   "clearConfirm": "Biztos benne, hogy törölni szeretné ezt a beszélgetést? Ez a művelet nem vonható vissza.",
+  "clearTitle": "Beszélgetés törlése",
   "emptyState": {
-    "description": "Küldjön egy üzenetet, hogy elkezdhesse a csevegést {{agentName}}-el",
-    "filesHint": "Ez az ügynök hozzáférhet a projektfájljaihoz a kontextus érdekében",
+    "suggestion1": "__MISSING__",
+    "suggestion2": "__MISSING__",
+    "suggestion3": "__MISSING__",
     "title": "Beszélgetés indítása"
   },
   "errors": {
@@ -22,32 +21,13 @@
     "connected": "Csatlakozva",
     "disconnected": "Kapcsolat megszakítva",
     "files": "Fájlok",
-    "moreOptions": "További lehetőségek",
-    "toggleSidebar": "Oldalsáv váltása"
-  },
-  "input": {
-    "attachFile": "Fájl csatolása",
-    "attachFiles": "Fájlok csatolása (képek, PDF)",
-    "characters_one": "karakter",
-    "characters_other": "karakter",
-    "fileTooLarge": "A fájl túl nagy: {{name}}. Maximális méret: {{maxSize}}MB",
-    "maxFilesError_one": "max fájlok hiba",
-    "maxFilesError_other": "max fájlok hiba",
-    "placeholder": "Írja be az üzenetét...",
-    "send": "Küldés",
-    "sendMessage": "Üzenet küldése",
-    "startTyping": "Kezdje el gépelni...",
-    "unsupportedFileType": "Támogatott fájltípus: {{type}}. Támogatott: képek, PDF"
+    "moreOptions": "További lehetőségek"
   },
   "limits": {
     "global": "Globális limit",
     "monthly": "Havi limit",
     "remaining_one": "maradt limit",
     "remaining_other": "maradt limit"
-  },
-  "message": {
-    "error": "Hiba",
-    "you": "Ön"
   },
   "placeholder": "Üzenet {{agentName}}-nek...",
   "selectAgent": {
@@ -60,10 +40,11 @@
     "regular": "Rendszeres",
     "streaming": "Streaming"
   },
-  "thinking": "{{agentName}} gondolkodik...",
   "threads": {
+    "deleteButton": "Törlés",
     "deleteConfirm": "Biztos benne, hogy törölni szeretné ezt a beszélgetést?",
     "deleteConversation": "Beszélgetés törlése",
+    "deleteTitle": "Szál törlése",
     "messageCount_one": "{{count}} üzenet",
     "messageCount_other": "{{count}} üzenet",
     "newConversation": "Új beszélgetés",

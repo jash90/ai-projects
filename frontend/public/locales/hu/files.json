@@ -30,7 +30,9 @@
     },
     "placeholder": "Kezdj el gépelni...",
     "revert": "Visszavonás",
+    "revertButton": "Visszaállítás",
     "revertConfirm": "Biztos benne, hogy vissza akarja vonni az összes mentetlen változtatást?",
+    "revertTitle": "Változtatások visszaállítása",
     "save": "Mentés",
     "saving": "Mentés...",
     "shortcuts": {
@@ -48,7 +50,9 @@
       "open": "Megnyitás"
     },
     "createTitle": "Új fájl létrehozása",
+    "deleteButton": "Törlés",
     "deleteConfirm": "Biztos benne, hogy törölni akarja a \"{{name}}\" fájlt? Ez a művelet nem vonható vissza.",
+    "deleteTitle": "Fájl törlése",
     "dismiss": "Elvetés",
     "empty": {
       "description": "Hozza létre az első fájlját a kezdéshez",

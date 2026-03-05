@@ -30,7 +30,9 @@
     },
     "placeholder": "Aloita kirjoittaminen...",
     "revert": "Palauta",
+    "revertButton": "Palauta",
     "revertConfirm": "Oletko varma, että haluat palauttaa kaikki tallentamattomat muutokset?",
+    "revertTitle": "Palauta muutokset",
     "save": "Tallenna",
     "saving": "Tallennetaan...",
     "shortcuts": {
@@ -48,7 +50,9 @@
       "open": "Avaa"
     },
     "createTitle": "Luo uusi tiedosto",
+    "deleteButton": "Poista",
     "deleteConfirm": "Oletko varma, että haluat poistaa \"{{name}}\"? Tätä toimintoa ei voi peruuttaa.",
+    "deleteTitle": "Poista tiedosto",
     "dismiss": "Hylkää",
     "empty": {
       "description": "Luo ensimmäinen tiedostosi aloittaaksesi",
