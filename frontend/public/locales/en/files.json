@@ -30,7 +30,9 @@
     },
     "placeholder": "Start typing...",
     "revert": "Revert",
+    "revertButton": "Revert",
     "revertConfirm": "Are you sure you want to revert all unsaved changes?",
+    "revertTitle": "Revert changes",
     "save": "Save",
     "saving": "Saving...",
     "shortcuts": {
@@ -48,7 +50,9 @@
       "open": "Open"
     },
     "createTitle": "Create new file",
+    "deleteButton": "Delete",
     "deleteConfirm": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+    "deleteTitle": "Delete file",
     "dismiss": "Dismiss",
     "empty": {
       "description": "Create your first file to get started",

@@ -30,7 +30,9 @@
     },
     "placeholder": "Commencez à taper...",
     "revert": "Revenir en arrière",
+    "revertButton": "Annuler",
     "revertConfirm": "Êtes-vous sûr de vouloir annuler tous les changements non enregistrés ?",
+    "revertTitle": "Annuler les modifications",
     "save": "Sauvegarder",
     "saving": "Sauvegarde en cours...",
     "shortcuts": {
@@ -48,7 +50,9 @@
       "open": "Ouvrir"
     },
     "createTitle": "Créer un nouveau fichier",
+    "deleteButton": "Supprimer",
     "deleteConfirm": "Êtes-vous sûr de vouloir supprimer \"{{name}}\" ? Cette action ne peut pas être annulée.",
+    "deleteTitle": "Supprimer le fichier",
     "dismiss": "Ignorer",
     "empty": {
       "description": "Créez votre premier fichier pour commencer",

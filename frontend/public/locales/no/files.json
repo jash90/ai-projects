@@ -30,7 +30,9 @@
     },
     "placeholder": "Begynn å skrive...",
     "revert": "Tilbakestill",
+    "revertButton": "Tilbakestill",
     "revertConfirm": "Er du sikker på at du vil tilbakestille alle usparte endringer?",
+    "revertTitle": "Tilbakestill endringer",
     "save": "Lagre",
     "saving": "Lagrer...",
     "shortcuts": {
@@ -48,7 +50,9 @@
       "open": "Åpne"
     },
     "createTitle": "Opprett ny fil",
+    "deleteButton": "Slett",
     "deleteConfirm": "Er du sikker på at du vil slette \"{{name}}\"? Denne handlingen kan ikke angres.",
+    "deleteTitle": "Slett fil",
     "dismiss": "Avvis",
     "empty": {
       "description": "Opprett din første fil for å komme i gang",

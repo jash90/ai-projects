@@ -30,7 +30,9 @@
     },
     "placeholder": "Inizia a digitare...",
     "revert": "Annulla",
+    "revertButton": "Ripristina",
     "revertConfirm": "Sei sicuro di voler annullare tutte le modifiche non salvate?",
+    "revertTitle": "Ripristina modifiche",
     "save": "Salva",
     "saving": "Salvataggio in corso...",
     "shortcuts": {
@@ -48,7 +50,9 @@
       "open": "Apri"
     },
     "createTitle": "Crea nuovo file",
+    "deleteButton": "Elimina",
     "deleteConfirm": "Sei sicuro di voler eliminare \"{{name}}\"? Questa azione non può essere annullata.",
+    "deleteTitle": "Elimina file",
     "dismiss": "Ignora",
     "empty": {
       "description": "Crea il tuo primo file per iniziare",

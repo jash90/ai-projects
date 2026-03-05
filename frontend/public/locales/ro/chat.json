@@ -1,12 +1,11 @@
 {
-  "agentNotFound": {
-    "description": "Vă rugăm să selectați un agent pentru a începe conversația",
-    "title": "Agent necunoscut"
-  },
+  "clearButton": "Șterge",
   "clearConfirm": "Sunteți sigur că doriți să ștergeți această conversație? Această acțiune nu poate fi anulată.",
+  "clearTitle": "Șterge conversația",
   "emptyState": {
-    "description": "Trimiteți un mesaj pentru a începe conversația cu {{agentName}}",
-    "filesHint": "Acest agent poate accesa fișierele proiectului dvs. pentru context",
+    "suggestion1": "__MISSING__",
+    "suggestion2": "__MISSING__",
+    "suggestion3": "__MISSING__",
     "title": "Începeți o conversație"
   },
   "errors": {
@@ -22,32 +21,13 @@
     "connected": "Conectat",
     "disconnected": "Dezconectat",
     "files": "Fișiere",
-    "moreOptions": "Mai multe opțiuni",
-    "toggleSidebar": "Comută bara laterală"
-  },
-  "input": {
-    "attachFile": "Atașați fișier",
-    "attachFiles": "Atașați fișiere (imagini, PDF)",
-    "characters_one": "input.characters",
-    "characters_other": "input.characters",
-    "fileTooLarge": "Fișier prea mare: {{name}}. Dimensiune maximă: {{maxSize}}MB",
-    "maxFilesError_one": "input.maxFilesError",
-    "maxFilesError_other": "input.maxFilesError",
-    "placeholder": "Scrieți mesajul dvs....",
-    "send": "Trimite",
-    "sendMessage": "Trimite mesaj",
-    "startTyping": "Începeți să tastați...",
-    "unsupportedFileType": "Tip de fișier nesuportat: {{type}}. Suportat: imagini, PDF"
+    "moreOptions": "Mai multe opțiuni"
   },
   "limits": {
     "global": "Limită globală",
     "monthly": "Limită lunară",
     "remaining_one": "limits.remaining",
     "remaining_other": "limits.remaining"
-  },
-  "message": {
-    "error": "Eroare",
-    "you": "Tu"
   },
   "placeholder": "Mesaj {{agentName}}...",
   "selectAgent": {
@@ -60,10 +40,11 @@
     "regular": "Regulat",
     "streaming": "Streaming"
   },
-  "thinking": "{{agentName}} se gândește...",
   "threads": {
+    "deleteButton": "Șterge",
     "deleteConfirm": "Sunteți sigur că doriți să ștergeți această conversație?",
     "deleteConversation": "Șterge conversația",
+    "deleteTitle": "Șterge firul",
     "messageCount_one": "{{count}} mesaj",
     "messageCount_other": "{{count}} mesaje",
     "newConversation": "Conversație nouă",

@@ -30,7 +30,9 @@
     },
     "placeholder": "Beginnen Sie zu tippen...",
     "revert": "Zurücksetzen",
+    "revertButton": "Zurücksetzen",
     "revertConfirm": "Sind Sie sicher, dass Sie alle nicht gespeicherten Änderungen zurücksetzen möchten?",
+    "revertTitle": "Änderungen zurücksetzen",
     "save": "Speichern",
     "saving": "Wird gespeichert...",
     "shortcuts": {
@@ -48,7 +50,9 @@
       "open": "Öffnen"
     },
     "createTitle": "Neue Datei erstellen",
+    "deleteButton": "Löschen",
     "deleteConfirm": "Sind Sie sicher, dass Sie \"{{name}}\" löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleteTitle": "Datei löschen",
     "dismiss": "Schließen",
     "empty": {
       "description": "Erstellen Sie Ihre erste Datei, um zu beginnen",

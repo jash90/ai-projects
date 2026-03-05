@@ -1,12 +1,11 @@
 {
-  "agentNotFound": {
-    "description": "Vyberte agenta, abyste mohli začít chatovat",
-    "title": "Agent nenalezen"
-  },
+  "clearButton": "Vymazat",
   "clearConfirm": "Opravdu chcete vymazat tuto konverzaci? Tuto akci nelze vrátit zpět.",
+  "clearTitle": "Vymazat konverzaci",
   "emptyState": {
-    "description": "Odešlete zprávu, abyste začali chatovat s {{agentName}}",
-    "filesHint": "Tento agent může mít přístup k vašim projektovým souborům pro kontext",
+    "suggestion1": "__MISSING__",
+    "suggestion2": "__MISSING__",
+    "suggestion3": "__MISSING__",
     "title": "Začněte konverzaci"
   },
   "errors": {
@@ -22,32 +21,13 @@
     "connected": "Připojeno",
     "disconnected": "Odpojeno",
     "files": "Soubory",
-    "moreOptions": "Další možnosti",
-    "toggleSidebar": "Přepnout boční panel"
-  },
-  "input": {
-    "attachFile": "Připojit soubor",
-    "attachFiles": "Připojit soubory (obrázky, PDF)",
-    "characters_one": "input.characters",
-    "characters_other": "input.characters",
-    "fileTooLarge": "Soubor je příliš velký: {{name}}. Maximální velikost: {{maxSize}}MB",
-    "maxFilesError_one": "input.maxFilesError",
-    "maxFilesError_other": "input.maxFilesError",
-    "placeholder": "Napište svou zprávu...",
-    "send": "Odeslat",
-    "sendMessage": "Odeslat zprávu",
-    "startTyping": "Začněte psát...",
-    "unsupportedFileType": "Nepodporovaný typ souboru: {{type}}. Podporované: obrázky, PDF"
+    "moreOptions": "Další možnosti"
   },
   "limits": {
     "global": "Globální limit",
     "monthly": "Měsíční limit",
     "remaining_one": "limits.remaining",
     "remaining_other": "limits.remaining"
-  },
-  "message": {
-    "error": "Chyba",
-    "you": "Vy"
   },
   "placeholder": "Zpráva {{agentName}}...",
   "selectAgent": {
@@ -60,10 +40,11 @@
     "regular": "Běžné",
     "streaming": "Streamování"
   },
-  "thinking": "{{agentName}} přemýšlí...",
   "threads": {
+    "deleteButton": "Smazat",
     "deleteConfirm": "Opravdu chcete smazat tuto konverzaci?",
     "deleteConversation": "Smazat konverzaci",
+    "deleteTitle": "Smazat vlákno",
     "messageCount_one": "{{count}} zpráva",
     "messageCount_other": "{{count}} zprávy",
     "newConversation": "Nová konverzace",

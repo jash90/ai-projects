@@ -1,12 +1,11 @@
 {
-  "agentNotFound": {
-    "description": "Wybierz agenta, aby rozpocząć czat",
-    "title": "Nie znaleziono agenta"
-  },
+  "clearButton": "Wyczyść",
   "clearConfirm": "Czy na pewno chcesz wyczyścić tę rozmowę? Tej czynności nie można cofnąć.",
+  "clearTitle": "Wyczyść konwersację",
   "emptyState": {
-    "description": "Wyślij wiadomość, aby rozpocząć czat z {{agentName}}",
-    "filesHint": "Ten agent może uzyskać dostęp do plików projektu dla kontekstu",
+    "suggestion1": "__MISSING__",
+    "suggestion2": "__MISSING__",
+    "suggestion3": "__MISSING__",
     "title": "Rozpocznij rozmowę"
   },
   "errors": {
@@ -22,38 +21,13 @@
     "connected": "Połączono",
     "disconnected": "Rozłączono",
     "files": "Pliki",
-    "moreOptions": "Więcej opcji",
-    "toggleSidebar": "Przełącz pasek boczny"
-  },
-  "input": {
-    "attachFile": "Załącz plik",
-    "attachFiles": "Załącz pliki (obrazy, PDF)",
-    "characters_one": "{{count}} znak",
-    "characters_few": "{{count}} znaki",
-    "characters_many": "{{count}} znaków",
-    "characters_other": "{{count}} znaków",
-    "fileTooLarge": "Plik za duży: {{name}}. Maksymalny rozmiar: {{maxSize}}MB",
-    "maxFilesError_one": "Maksymalnie {{count}} plik dozwolony",
-    "maxFilesError_few": "Maksymalnie {{count}} pliki dozwolone",
-    "maxFilesError_many": "Maksymalnie {{count}} plików dozwolonych",
-    "maxFilesError_other": "Maksymalnie {{count}} plików dozwolonych",
-    "placeholder": "Wpisz wiadomość...",
-    "send": "Wyślij",
-    "sendMessage": "Wyślij wiadomość",
-    "startTyping": "Zacznij pisać...",
-    "unsupportedFileType": "Nieobsługiwany typ pliku: {{type}}. Obsługiwane: obrazy, PDF"
+    "moreOptions": "Więcej opcji"
   },
   "limits": {
     "global": "Limit globalny",
     "monthly": "Limit miesięczny",
     "remaining_one": "{{count}} token pozostały",
-    "remaining_few": "{{count}} tokeny pozostałe",
-    "remaining_many": "{{count}} tokenów pozostało",
     "remaining_other": "{{count}} tokenów pozostało"
-  },
-  "message": {
-    "error": "Błąd",
-    "you": "Ty"
   },
   "placeholder": "Wiadomość do {{agentName}}...",
   "selectAgent": {
@@ -66,13 +40,12 @@
     "regular": "Zwykłe",
     "streaming": "Strumieniowanie"
   },
-  "thinking": "{{agentName}} myśli...",
   "threads": {
+    "deleteButton": "Usuń",
     "deleteConfirm": "Czy na pewno chcesz usunąć tę rozmowę?",
     "deleteConversation": "Usuń rozmowę",
+    "deleteTitle": "Usuń wątek",
     "messageCount_one": "{{count}} wiadomość",
-    "messageCount_few": "{{count}} wiadomość",
-    "messageCount_many": "{{count}} wiadomości",
     "messageCount_other": "{{count}} wiadomości",
     "newConversation": "Nowa rozmowa",
     "newThread": "Nowa rozmowa",

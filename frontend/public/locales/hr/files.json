@@ -30,7 +30,9 @@
     },
     "placeholder": "Započnite s tipkanjem...",
     "revert": "Poništi",
+    "revertButton": "Vrati",
     "revertConfirm": "Jeste li sigurni da želite poništiti sve nespremljene promjene?",
+    "revertTitle": "Vrati promjene",
     "save": "Spremi",
     "saving": "Spremanje...",
     "shortcuts": {
@@ -48,7 +50,9 @@
       "open": "Otvori"
     },
     "createTitle": "Stvori novu datoteku",
+    "deleteButton": "Obriši",
     "deleteConfirm": "Jeste li sigurni da želite izbrisati \"{{name}}\"? Ova radnja se ne može poništiti.",
+    "deleteTitle": "Obriši datoteku",
     "dismiss": "Odbaci",
     "empty": {
       "description": "Stvorite svoju prvu datoteku za početak",

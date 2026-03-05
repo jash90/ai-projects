@@ -1,12 +1,11 @@
 {
-  "agentNotFound": {
-    "description": "Vänligen välj en agent för att börja chatta",
-    "title": "Agent hittades inte"
-  },
+  "clearButton": "Rensa",
   "clearConfirm": "Är du säker på att du vill rensa denna konversation? Denna åtgärd kan inte ångras.",
+  "clearTitle": "Rensa konversation",
   "emptyState": {
-    "description": "Skicka ett meddelande för att börja chatta med {{agentName}}",
-    "filesHint": "Denna agent kan få tillgång till dina projektfiler för kontext",
+    "suggestion1": "__MISSING__",
+    "suggestion2": "__MISSING__",
+    "suggestion3": "__MISSING__",
     "title": "Börja en konversation"
   },
   "errors": {
@@ -22,32 +21,13 @@
     "connected": "Ansluten",
     "disconnected": "Frånkopplad",
     "files": "Filer",
-    "moreOptions": "Fler alternativ",
-    "toggleSidebar": "Växla sidopanel"
-  },
-  "input": {
-    "attachFile": "Bifoga fil",
-    "attachFiles": "Bifoga filer (bilder, PDF)",
-    "characters_one": "tecken",
-    "characters_other": "tecken",
-    "fileTooLarge": "Fil för stor: {{name}}. Max storlek: {{maxSize}}MB",
-    "maxFilesError_one": "Max antal filer överskridet",
-    "maxFilesError_other": "Max antal filer överskridet",
-    "placeholder": "Skriv ditt meddelande...",
-    "send": "Skicka",
-    "sendMessage": "Skicka meddelande",
-    "startTyping": "Börja skriva...",
-    "unsupportedFileType": "Ej stödd filtyp: {{type}}. Stödda: bilder, PDF"
+    "moreOptions": "Fler alternativ"
   },
   "limits": {
     "global": "Global gräns",
     "monthly": "Månatlig gräns",
     "remaining_one": "återstående gräns",
     "remaining_other": "återstående gränser"
-  },
-  "message": {
-    "error": "Fel",
-    "you": "Du"
   },
   "placeholder": "Meddelande till {{agentName}}...",
   "selectAgent": {
@@ -60,10 +40,11 @@
     "regular": "Regelbunden",
     "streaming": "Strömmande"
   },
-  "thinking": "{{agentName}} tänker...",
   "threads": {
+    "deleteButton": "Radera",
     "deleteConfirm": "Är du säker på att du vill radera denna konversation?",
     "deleteConversation": "Radera konversation",
+    "deleteTitle": "Radera tråd",
     "messageCount_one": "{{count}} meddelande",
     "messageCount_other": "{{count}} meddelanden",
     "newConversation": "Ny konversation",

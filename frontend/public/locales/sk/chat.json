@@ -1,12 +1,11 @@
 {
-  "agentNotFound": {
-    "description": "Vyberte agenta, aby ste začali chatovať",
-    "title": "Agent nenájdený"
-  },
+  "clearButton": "Vymazať",
   "clearConfirm": "Ste si istý, že chcete vymazať túto konverzáciu? Túto akciu nie je možné zrušiť.",
+  "clearTitle": "Vymazať konverzáciu",
   "emptyState": {
-    "description": "Odošlite správu, aby ste začali chatovať s {{agentName}}",
-    "filesHint": "Tento agent môže mať prístup k vašim projektovým súborom pre kontext",
+    "suggestion1": "__MISSING__",
+    "suggestion2": "__MISSING__",
+    "suggestion3": "__MISSING__",
     "title": "Začnite konverzáciu"
   },
   "errors": {
@@ -22,32 +21,13 @@
     "connected": "Pripojené",
     "disconnected": "Odpojené",
     "files": "Súbory",
-    "moreOptions": "Viac možností",
-    "toggleSidebar": "Prepnúť bočný panel"
-  },
-  "input": {
-    "attachFile": "Pripojiť súbor",
-    "attachFiles": "Pripojiť súbory (obrázky, PDF)",
-    "characters_one": "input.characters",
-    "characters_other": "input.characters",
-    "fileTooLarge": "Súbor je príliš veľký: {{name}}. Maximálna veľkosť: {{maxSize}}MB",
-    "maxFilesError_one": "input.maxFilesError",
-    "maxFilesError_other": "input.maxFilesError",
-    "placeholder": "Napíšte svoju správu...",
-    "send": "Odoslať",
-    "sendMessage": "Odoslať správu",
-    "startTyping": "Začnite písať...",
-    "unsupportedFileType": "Nepodporovaný typ súboru: {{type}}. Podporované: obrázky, PDF"
+    "moreOptions": "Viac možností"
   },
   "limits": {
     "global": "Globálny limit",
     "monthly": "Mesačný limit",
     "remaining_one": "limits.remaining",
     "remaining_other": "limits.remaining"
-  },
-  "message": {
-    "error": "Chyba",
-    "you": "Vy"
   },
   "placeholder": "Správa {{agentName}}...",
   "selectAgent": {
@@ -60,10 +40,11 @@
     "regular": "Pravidelný",
     "streaming": "Streamovanie"
   },
-  "thinking": "{{agentName}} premýšľa...",
   "threads": {
+    "deleteButton": "Zmazať",
     "deleteConfirm": "Ste si istý, že chcete vymazať túto konverzáciu?",
     "deleteConversation": "Vymazať konverzáciu",
+    "deleteTitle": "Zmazať vlákno",
     "messageCount_one": "{{count}} správa",
     "messageCount_other": "{{count}} správy",
     "newConversation": "Nová konverzácia",

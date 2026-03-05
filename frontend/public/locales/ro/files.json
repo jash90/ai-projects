@@ -30,7 +30,9 @@
     },
     "placeholder": "Începe să scrii...",
     "revert": "Revenire",
+    "revertButton": "Revenire",
     "revertConfirm": "Ești sigur că vrei să revii la toate modificările nesalvate?",
+    "revertTitle": "Revenire la modificări",
     "save": "Salvează",
     "saving": "Se salvează...",
     "shortcuts": {
@@ -48,7 +50,9 @@
       "open": "Deschide"
     },
     "createTitle": "Creează fișier nou",
+    "deleteButton": "Șterge",
     "deleteConfirm": "Ești sigur că vrei să ștergi \"{{name}}\"? Această acțiune nu poate fi anulată.",
+    "deleteTitle": "Șterge fișierul",
     "dismiss": "Respinge",
     "empty": {
       "description": "Creează-ți primul fișier pentru a începe",

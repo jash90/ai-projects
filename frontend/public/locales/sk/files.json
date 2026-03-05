@@ -30,7 +30,9 @@
     },
     "placeholder": "Začnite písať...",
     "revert": "Vrátiť",
+    "revertButton": "Vrátiť",
     "revertConfirm": "Ste si istý, že chcete vrátiť všetky neuložené zmeny?",
+    "revertTitle": "Vrátiť zmeny",
     "save": "Uložiť",
     "saving": "Ukladá sa...",
     "shortcuts": {
@@ -48,7 +50,9 @@
       "open": "Otvoriť"
     },
     "createTitle": "Vytvoriť nový súbor",
+    "deleteButton": "Zmazať",
     "deleteConfirm": "Ste si istý, že chcete zmazať \"{{name}}\"? Túto akciu nie je možné zrušiť.",
+    "deleteTitle": "Zmazať súbor",
     "dismiss": "Zavrieť",
     "empty": {
       "description": "Vytvorte svoj prvý súbor, aby ste mohli začať",

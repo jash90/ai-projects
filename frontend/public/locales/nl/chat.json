@@ -1,12 +1,11 @@
 {
-  "agentNotFound": {
-    "description": "Selecteer een agent om te beginnen met chatten",
-    "title": "Agent niet gevonden"
-  },
+  "clearButton": "Wissen",
   "clearConfirm": "Weet je zeker dat je dit gesprek wilt wissen? Deze actie kan niet ongedaan worden gemaakt.",
+  "clearTitle": "Gesprek wissen",
   "emptyState": {
-    "description": "Stuur een bericht om te beginnen met chatten met {{agentName}}",
-    "filesHint": "Deze agent kan toegang krijgen tot je projectbestanden voor context",
+    "suggestion1": "__MISSING__",
+    "suggestion2": "__MISSING__",
+    "suggestion3": "__MISSING__",
     "title": "Begin een gesprek"
   },
   "errors": {
@@ -22,32 +21,13 @@
     "connected": "Verbonden",
     "disconnected": "Verbroken",
     "files": "Bestanden",
-    "moreOptions": "Meer opties",
-    "toggleSidebar": "Zijbalk in- of uitschakelen"
-  },
-  "input": {
-    "attachFile": "Bestand bijvoegen",
-    "attachFiles": "Bestanden bijvoegen (afbeeldingen, PDF)",
-    "characters_one": "input.characters",
-    "characters_other": "input.characters",
-    "fileTooLarge": "Bestand te groot: {{name}}. Max grootte: {{maxSize}}MB",
-    "maxFilesError_one": "input.maxFilesError",
-    "maxFilesError_other": "input.maxFilesError",
-    "placeholder": "Typ je bericht...",
-    "send": "Verzenden",
-    "sendMessage": "Bericht verzenden",
-    "startTyping": "Begin met typen...",
-    "unsupportedFileType": "Niet-ondersteund bestandstype: {{type}}. Ondersteund: afbeeldingen, PDF"
+    "moreOptions": "Meer opties"
   },
   "limits": {
     "global": "Globale limiet",
     "monthly": "Maandelijkse limiet",
     "remaining_one": "limits.remaining",
     "remaining_other": "limits.remaining"
-  },
-  "message": {
-    "error": "Fout",
-    "you": "Jij"
   },
   "placeholder": "Bericht {{agentName}}...",
   "selectAgent": {
@@ -60,10 +40,11 @@
     "regular": "Regulier",
     "streaming": "Streaming"
   },
-  "thinking": "{{agentName}} is aan het denken...",
   "threads": {
+    "deleteButton": "Verwijderen",
     "deleteConfirm": "Weet je zeker dat je dit gesprek wilt verwijderen?",
     "deleteConversation": "Gesprek verwijderen",
+    "deleteTitle": "Thread verwijderen",
     "messageCount_one": "{{count}} bericht",
     "messageCount_other": "{{count}} berichten",
     "newConversation": "Nieuw gesprek",
