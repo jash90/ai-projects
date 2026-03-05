@@ -122,13 +122,8 @@
   },
   "picker": {
     "empty": {
-      "hint": "Kokeile eri hakusanaa",
       "title": "Ei agenteja löytynyt"
     },
-    "searchAdmin": "Hae agenteja nimen, kuvauksen tai mallin mukaan...",
-    "searchUser": "Hae agenteja nimen tai kuvauksen mukaan...",
-    "select": "Valitse agentti",
-    "selected": "Valittu",
     "title": "Valitse AI-agentti"
   },
   "providers": {

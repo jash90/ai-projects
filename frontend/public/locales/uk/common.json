@@ -34,6 +34,12 @@
     "tryAgain": "Спробуйте ще раз",
     "tryDifferentSearch": "Спробуйте інший термін пошуку"
   },
+  "consent": {
+    "accept": "__MISSING__",
+    "decline": "__MISSING__",
+    "message": "__MISSING__",
+    "title": "__MISSING__"
+  },
   "files": "файли",
   "messages": "повідомлення",
   "navigation": {

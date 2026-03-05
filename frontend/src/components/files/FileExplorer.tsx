@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { ScrollArea } from '@/components/ui/ScrollArea'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
+import { useConfirm } from '@/components/ui/ConfirmDialog'
 import { FileDialog } from './FileDialog'
 import { UploadFileDialog } from './UploadFileDialog'
 import { cn, getFileExtension, copyToClipboard } from '@/lib/utils'
@@ -44,6 +45,7 @@ export function FileExplorer({
   className
 }: FileExplorerProps) {
   const { t } = useTranslation('files')
+  const confirm = useConfirm()
   const {
     getProjectFiles,
     fetchProjectFiles,
@@ -179,7 +181,13 @@ export function FileExplorer({
   }
 
   const handleDeleteFile = async (file: FileType) => {
-    if (confirm(t('explorer.deleteConfirm', { name: file.name }))) {
+    const confirmed = await confirm({
+      title: t('explorer.deleteTitle', 'Delete file'),
+      description: t('explorer.deleteConfirm', { name: file.name }),
+      confirmLabel: t('explorer.deleteButton', 'Delete'),
+      variant: 'danger',
+    })
+    if (confirmed) {
       try {
         await deleteFile(file.id)
         setContextMenu(null)

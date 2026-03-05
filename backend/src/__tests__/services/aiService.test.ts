@@ -23,12 +23,12 @@ describe('AIService', () => {
     beforeEach(async () => {
       const { pool } = require('../../database/connection');
       await pool.query(`
-        INSERT INTO ai_models (id, provider, name, context_window, input_cost_per_1m, output_cost_per_1m, is_active)
+        INSERT INTO ai_models (id, provider, name, description, max_tokens, context_window, cost_per_1k_input_tokens, cost_per_1k_output_tokens, is_active)
         VALUES
-          ('gpt-3.5-turbo', 'openai', 'GPT-3.5 Turbo', 4096, 0.5, 1.5, true),
-          ('gpt-4', 'openai', 'GPT-4', 8192, 30.0, 60.0, true),
-          ('claude-3-sonnet', 'anthropic', 'Claude 3 Sonnet', 200000, 3.0, 15.0, true),
-          ('claude-3-haiku', 'anthropic', 'Claude 3 Haiku', 200000, 0.25, 1.25, true)
+          ('gpt-3.5-turbo', 'openai', 'GPT-3.5 Turbo', 'OpenAI GPT-3.5', 4096, 4096, 0.0005, 0.0015, true),
+          ('gpt-4', 'openai', 'GPT-4', 'OpenAI GPT-4', 8192, 8192, 0.03, 0.06, true),
+          ('claude-3-sonnet', 'anthropic', 'Claude 3 Sonnet', 'Anthropic Sonnet', 4096, 200000, 0.003, 0.015, true),
+          ('claude-3-haiku', 'anthropic', 'Claude 3 Haiku', 'Anthropic Haiku', 4096, 200000, 0.00025, 0.00125, true)
         ON CONFLICT (id) DO NOTHING
       `);
     });
@@ -64,12 +64,12 @@ describe('AIService', () => {
     beforeEach(async () => {
       const { pool } = require('../../database/connection');
       await pool.query(`
-        INSERT INTO ai_models (id, provider, name, context_window, input_cost_per_1m, output_cost_per_1m, is_active)
+        INSERT INTO ai_models (id, provider, name, description, max_tokens, context_window, cost_per_1k_input_tokens, cost_per_1k_output_tokens, is_active)
         VALUES
-          ('gpt-3.5-turbo', 'openai', 'GPT-3.5 Turbo', 4096, 0.5, 1.5, true),
-          ('gpt-4', 'openai', 'GPT-4', 8192, 30.0, 60.0, true),
-          ('claude-3-sonnet', 'anthropic', 'Claude 3 Sonnet', 200000, 3.0, 15.0, true),
-          ('claude-3-haiku', 'anthropic', 'Claude 3 Haiku', 200000, 0.25, 1.25, true)
+          ('gpt-3.5-turbo', 'openai', 'GPT-3.5 Turbo', 'OpenAI GPT-3.5', 4096, 4096, 0.0005, 0.0015, true),
+          ('gpt-4', 'openai', 'GPT-4', 'OpenAI GPT-4', 8192, 8192, 0.03, 0.06, true),
+          ('claude-3-sonnet', 'anthropic', 'Claude 3 Sonnet', 'Anthropic Sonnet', 4096, 200000, 0.003, 0.015, true),
+          ('claude-3-haiku', 'anthropic', 'Claude 3 Haiku', 'Anthropic Haiku', 4096, 200000, 0.00025, 0.00125, true)
         ON CONFLICT (id) DO NOTHING
       `);
     });

@@ -16,6 +16,7 @@ import { conversationStore } from '@/stores/conversationStore'
 import { useSocket } from '@/hooks/useSocket'
 import { useTokenLimits } from '@/hooks/useTokenLimits'
 import { cn } from '@/lib/utils'
+import { useConfirm } from '@/components/ui/ConfirmDialog'
 import toast from 'react-hot-toast'
 
 interface ChatProps {
@@ -41,6 +42,7 @@ function Chat({ project, agent, className }: ChatProps) {
     )
   }
 
+  const confirm = useConfirm()
   const conversation = useConversation(project.id, agent.id)
   const isSending = useConversationSending(project.id, agent.id)
   const [includeFiles, setIncludeFiles] = useState(true)
@@ -157,14 +159,20 @@ function Chat({ project, agent, className }: ChatProps) {
   }, [inputValue, files, handleSendMessage, clearFiles])
 
   const handleClearConversation = useCallback(async () => {
-    if (confirm(t('clearConfirm'))) {
+    const confirmed = await confirm({
+      title: t('clearTitle', 'Clear conversation'),
+      description: t('clearConfirm'),
+      confirmLabel: t('clearButton', 'Clear'),
+      variant: 'danger',
+    })
+    if (confirmed) {
       try {
         await conversationStore.getState().clearConversation(project.id, agent.id)
       } catch (error) {
         console.error('Failed to clear conversation:', error)
       }
     }
-  }, [project.id, agent.id, t])
+  }, [project.id, agent.id, t, confirm])
 
   const hasMessages = kitMessages.length > 0
 

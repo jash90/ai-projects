@@ -34,6 +34,12 @@
     "tryAgain": "Încearcă din nou",
     "tryDifferentSearch": "Încearcă un termen de căutare diferit"
   },
+  "consent": {
+    "accept": "__MISSING__",
+    "decline": "__MISSING__",
+    "message": "__MISSING__",
+    "title": "__MISSING__"
+  },
   "files": "fișiere",
   "messages": "mesaje",
   "navigation": {

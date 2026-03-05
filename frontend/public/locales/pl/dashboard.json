@@ -14,17 +14,11 @@
     },
     "title": "Wszystkie projekty",
     "viewAll_one": "wszystkie projekty.zobacz wszystkie",
-    "viewAll_few": "wyświetl wszystkie projekty",
-    "viewAll_many": "wyświetl wszystkie projekty",
     "viewAll_other": "wszystkie projekty.zobacz wszystkie"
   },
   "header": {
     "subtitle": "Zarządzaj swoimi projektami i współpracuj z agentami AI",
     "welcome": "Witaj ponownie, {{username}}"
-  },
-  "quickTip": {
-    "content": "Dodaj pliki do swojego projektu, aby dać agentom AI kontekst dla lepszej pomocy.",
-    "title": "Szybka wskazówka"
   },
   "recentProjects": {
     "empty": {

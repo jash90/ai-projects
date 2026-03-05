@@ -3,8 +3,6 @@
   "dashboard": "Řídicí panel",
   "desktop": {
     "actions": {
-      "enterFullscreen": "Přepnout na celou obrazovku",
-      "exitFullscreen": "Opustit celou obrazovku",
       "hideEditor": "Skrýt editor",
       "hideSidebar": "Skrýt postranní panel",
       "showEditor": "Zobrazit editor",
@@ -20,23 +18,6 @@
   },
   "loading": "Načítání projektu...",
   "mobile": {
-    "actions": {
-      "install": "Nainstalovat",
-      "installApp": "Nainstalovat aplikaci",
-      "share": "Sdílet"
-    },
-    "menu": {
-      "currentSelection": "Aktuální výběr",
-      "filesAvailableOffline_one": "Soubory dostupné offline",
-      "filesAvailableOffline_other": "Soubory dostupné offline",
-      "filesPendingUpload_one": "Soubory čekající na nahrání",
-      "filesPendingUpload_other": "Soubory čekající na nahrání",
-      "noAgentSelected": "Žádný agent není vybrán",
-      "noFileSelected": "Žádný soubor není vybrán",
-      "offlineMode": "Offline režim",
-      "online": "Online",
-      "status": "Stav"
-    },
     "views": {
       "agents": "Agenti",
       "chat": "Chat",

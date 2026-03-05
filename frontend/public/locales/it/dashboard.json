@@ -20,10 +20,6 @@
     "subtitle": "Gestisci i tuoi progetti e collabora con agenti AI",
     "welcome": "Bentornato, {{username}}"
   },
-  "quickTip": {
-    "content": "Aggiungi file al tuo progetto per fornire agli agenti AI contesto per un'assistenza migliore.",
-    "title": "Suggerimento Veloce"
-  },
   "recentProjects": {
     "empty": {
       "description": "Crea il tuo primo progetto per iniziare a collaborare con l'AI",

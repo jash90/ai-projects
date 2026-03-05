@@ -20,10 +20,6 @@
     "subtitle": "Kezeld projektjeidet és működj együtt az AI ügynökökkel",
     "welcome": "Üdv újra, {{username}}"
   },
-  "quickTip": {
-    "content": "Adj fájlokat a projektedhez, hogy az AI ügynököknek kontextust adj a jobb segítségnyújtáshoz.",
-    "title": "Gyors tipp"
-  },
   "recentProjects": {
     "empty": {
       "description": "Hozd létre az első projektedet, hogy elkezdhesd az AI együttműködést",

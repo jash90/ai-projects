@@ -674,14 +674,14 @@ export const adminApi = {
     apiClient.put<ApiResponse>(`/admin/users/${userId}/status`, { is_active: isActive }),
 
   updateUserTokenLimits: (userId: string, limits: Omit<TokenLimitUpdate, 'user_id'>) =>
-    apiClient.put<ApiResponse>(`/admin/users/${userId}/token-limits`, limits),
+    apiClient.put<ApiResponse>(`/admin/users/${userId}/limits`, limits),
 
   // Global token limits
   getGlobalTokenLimits: () =>
     apiClient.get<ApiResponse<{ global_limit: number; monthly_limit: number }>>('/admin/token-limits'),
 
   updateGlobalTokenLimits: (limits: Omit<TokenLimitUpdate, 'user_id'>) =>
-    apiClient.put<ApiResponse>('/admin/token-limits', limits),
+    apiClient.put<ApiResponse>('/admin/limits/global', limits),
 
   // Activity log
   getActivity: (params?: {

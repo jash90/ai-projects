@@ -3,25 +3,25 @@
   "version": "1.0.0",
   "description": "A full-stack of AI Projects with AI agents and project management",
   "main": "index.js",
-  "packageManager": "pnpm@10.17.0",
   "engines": {
-    "node": ">=18.0.0",
-    "pnpm": ">=8.0.0"
+    "node": ">=18.0.0"
   },
   "scripts": {
-    "build": "pnpm exec nx run-many -t build",
-    "dev": "pnpm exec nx run-many -t dev",
-    "lint": "pnpm exec nx run-many -t lint",
-    "type-check": "pnpm exec nx run-many -t type-check",
-    "test": "pnpm exec nx run-many -t test",
-    "clean": "pnpm exec nx run-many -t clean && rm -rf node_modules",
-    "start": "cd backend && pnpm run start",
+    "build": "bun nx run-many -t build",
+    "dev": "bun nx daemon --start && concurrently \"bun dev:api\" \"bun dev:web\"",
+    "dev:api": "portless api.ai-projects bun nx run backend:dev",
+    "dev:web": "portless web.ai-projects bun nx run frontend:dev",
+    "lint": "bun nx run-many -t lint",
+    "type-check": "bun nx run-many -t type-check",
+    "test": "bun nx run-many -t test",
+    "clean": "bun nx run-many -t clean && rm -rf node_modules",
+    "start": "cd backend && bun run start",
     "start:prod": "node backend/start-prod.js",
-    "db:migrate": "cd backend && pnpm run db:migrate",
-    "db:seed": "cd backend && pnpm run db:seed",
+    "db:migrate": "cd backend && bun run db:migrate",
+    "db:seed": "cd backend && bun run db:seed",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
-    "install:all": "pnpm install"
+    "install:all": "bun install"
   },
   "keywords": [
     "ai",
@@ -38,15 +38,16 @@
     "@nx/vite": "^21.4.1",
     "@nx/workspace": "^21.4.1",
     "concurrently": "^8.2.2",
-    "nx": "21.4.1"
+    "nx": "21.4.1",
+    "portless": "^0.5.2"
   },
-  "pnpm": {
-    "ignoredBuiltDependencies": [
-      "esbuild"
-    ],
-    "overrides": {
-      "react": "^18.3.1",
-      "react-dom": "^18.3.1"
-    }
-  }
+  "overrides": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "workspaces": [
+    "backend",
+    "frontend",
+    "shared-types"
+  ]
 }

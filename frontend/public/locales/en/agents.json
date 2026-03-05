@@ -122,13 +122,8 @@
   },
   "picker": {
     "empty": {
-      "hint": "Try a different search term",
       "title": "No agents found"
     },
-    "searchAdmin": "Search agents by name, description, or model...",
-    "searchUser": "Search agents by name or description...",
-    "select": "Select Agent",
-    "selected": "Selected",
     "title": "Select AI Agent"
   },
   "providers": {

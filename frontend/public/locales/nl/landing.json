@@ -55,8 +55,6 @@
     },
     "subtitle": "Alles wat je nodig hebt om met AI te bouwen. Eenvoudig om te beginnen, krachtig genoeg voor teams.",
     "techStack": {
-      "subtitle": "Productieklaar stack met TypeScript, React 18, Node.js, PostgreSQL en AI-integratie",
-      "title": "Gebouwd met Moderne Technologieën",
       "categories": {
         "ai": "AI",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobiel",
         "realtime": "Real-time"
-      }
+      },
+      "subtitle": "Productieklaar stack met TypeScript, React 18, Node.js, PostgreSQL en AI-integratie",
+      "title": "Gebouwd met Moderne Technologieën"
     },
     "title": "Alles Wat Je Nodig Hebt"
   },
@@ -81,7 +81,6 @@
       "api": "API",
       "documentation": "Documentatie",
       "features": "Kenmerken",
-      "pricing": "Prijzen",
       "title": "Product"
     },
     "support": {
@@ -107,56 +106,8 @@
     "features": "Kenmerken",
     "getStarted": "Aan de Slag",
     "installApp": "Installeer App",
-    "pricing": "Prijzen",
     "signIn": "Inloggen",
     "testimonials": "Getuigenissen"
-  },
-  "pricing": {
-    "contactUs": "neem contact met ons op",
-    "perMonth": "per maand",
-    "plans": {
-      "enterprise": {
-        "cta": "Neem Contact Op met Verkoop",
-        "features": [
-          "Alles in Pro",
-          "Beheerderspaneel & teamrollen",
-          "Aangepaste gebruikslimieten",
-          "Activiteit auditlogs",
-          "SSO-integratie",
-          "Toegewijde ondersteuning"
-        ],
-        "name": "Enterprise",
-        "price": "Aangepast"
-      },
-      "pro": {
-        "cta": "Start Pro Proefperiode",
-        "features": [
-          "Onbeperkte projecten",
-          "GPT-4 & Claude",
-          "Team samenwerking",
-          "Onbeperkte bestanden",
-          "Gebruik analytics",
-          "Prioriteit ondersteuning"
-        ],
-        "name": "Professioneel",
-        "popular": "Meest Populair",
-        "price": "$29"
-      },
-      "starter": {
-        "cta": "Begin Gratis",
-        "features": [
-          "5 projecten",
-          "Toegang tot GPT-4",
-          "Mobiele app",
-          "Werk offline",
-          "Gemeenschapssteun"
-        ],
-        "name": "Starter",
-        "price": "$0"
-      }
-    },
-    "subtitle": "Begin gratis, upgrade wanneer je meer nodig hebt. Geen verrassingen, annuleer op elk moment.",
-    "title": "Eenvoudige, Transparante Prijzen"
   },
   "stats": {
     "activeDevelopers": "Gemaakte Projecten",

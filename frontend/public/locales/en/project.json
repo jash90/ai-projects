@@ -3,8 +3,6 @@
   "dashboard": "Dashboard",
   "desktop": {
     "actions": {
-      "enterFullscreen": "Enter Fullscreen",
-      "exitFullscreen": "Exit Fullscreen",
       "hideEditor": "Hide Editor",
       "hideSidebar": "Hide Sidebar",
       "showEditor": "Show Editor",
@@ -20,23 +18,6 @@
   },
   "loading": "Loading project...",
   "mobile": {
-    "actions": {
-      "install": "Install",
-      "installApp": "Install App",
-      "share": "Share"
-    },
-    "menu": {
-      "currentSelection": "Current Selection",
-      "filesAvailableOffline_one": "mobile.menu.filesAvailableOffline",
-      "filesAvailableOffline_other": "mobile.menu.filesAvailableOffline",
-      "filesPendingUpload_one": "mobile.menu.filesPendingUpload",
-      "filesPendingUpload_other": "mobile.menu.filesPendingUpload",
-      "noAgentSelected": "No agent selected",
-      "noFileSelected": "No file selected",
-      "offlineMode": "Offline Mode",
-      "online": "Online",
-      "status": "Status"
-    },
     "views": {
       "agents": "Agents",
       "chat": "Chat",

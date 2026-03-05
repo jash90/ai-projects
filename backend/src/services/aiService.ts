@@ -209,6 +209,17 @@ class AIService {
         addBreadcrumb({ category: 'ai', message: 'AI request started', level: 'info', data: { provider: agent.provider, model: agent.model } });
       } catch {}
 
+      // Validate the model exists and is active
+      const { modelService } = await import('./modelService');
+      const modelRecord = await modelService.getModelById(agent.model);
+      if (!modelRecord) {
+        throw createAIModelUnavailableError(
+          agent.provider,
+          agent.model,
+          'Model not found or no longer available. Please select a different model.'
+        );
+      }
+
       // Check token limits before processing (estimate tokens for the request)
       if (userId) {
         const estimatedTokens = this.estimateTokens(messages, projectFiles, agent.system_prompt);

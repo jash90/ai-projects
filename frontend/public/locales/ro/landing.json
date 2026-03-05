@@ -55,8 +55,6 @@
     },
     "subtitle": "Tot ce ai nevoie pentru a construi cu AI. Simplu de început, suficient de puternic pentru echipe.",
     "techStack": {
-      "subtitle": "Stack pregătit pentru producție cu TypeScript, React 18, Node.js, PostgreSQL și integrare AI",
-      "title": "Construit cu Tehnologii Moderne",
       "categories": {
         "ai": "AI",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobil",
         "realtime": "În Timp Real"
-      }
+      },
+      "subtitle": "Stack pregătit pentru producție cu TypeScript, React 18, Node.js, PostgreSQL și integrare AI",
+      "title": "Construit cu Tehnologii Moderne"
     },
     "title": "Tot Ce Ai Nevoie"
   },
@@ -81,7 +81,6 @@
       "api": "API",
       "documentation": "Documentație",
       "features": "Funcționalități",
-      "pricing": "Prețuri",
       "title": "Produs"
     },
     "support": {
@@ -107,56 +106,8 @@
     "features": "Funcționalități",
     "getStarted": "Începeți",
     "installApp": "Instalați aplicația",
-    "pricing": "Prețuri",
     "signIn": "Conectați-vă",
     "testimonials": "Testimoniale"
-  },
-  "pricing": {
-    "contactUs": "contactați-ne",
-    "perMonth": "pe lună",
-    "plans": {
-      "enterprise": {
-        "cta": "Contactați vânzările",
-        "features": [
-          "Tot ce este în Pro",
-          "Panou de administrare & roluri pentru echipă",
-          "Limite de utilizare personalizate",
-          "Jurnale de audit al activității",
-          "Integrare SSO",
-          "Asistență dedicată"
-        ],
-        "name": "Enterprise",
-        "price": "Personalizat"
-      },
-      "pro": {
-        "cta": "Începeți proba Pro",
-        "features": [
-          "Proiecte nelimitate",
-          "GPT-4 & Claude",
-          "Colaborare în echipă",
-          "Fișiere nelimitate",
-          "Analiza utilizării",
-          "Asistență prioritară"
-        ],
-        "name": "Profesional",
-        "popular": "Cel mai popular",
-        "price": "$29"
-      },
-      "starter": {
-        "cta": "Începeți gratuit",
-        "features": [
-          "5 proiecte",
-          "Acces la GPT-4",
-          "Aplicație mobilă",
-          "Lucrează offline",
-          "Asistență din comunitate"
-        ],
-        "name": "Starter",
-        "price": "$0"
-      }
-    },
-    "subtitle": "Începe gratuit, îmbunătățește când ai nevoie de mai mult. Fără surprize, anulează oricând.",
-    "title": "Prețuri Simple și Transparent"
   },
   "stats": {
     "activeDevelopers": "Proiecte Crează",

@@ -36,6 +36,7 @@ import { Card, CardContent, CardHeader, CardTitle, StatCard } from '@/components
 import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/utils';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { useConfirm } from '@/components/ui/ConfirmDialog';
 import toast from 'react-hot-toast';
 
 export default function AdminPage() {
@@ -1230,6 +1231,7 @@ function AgentsTab({
   onRefresh: () => void;
 }) {
   const queryClient = useQueryClient();
+  const confirm = useConfirm();
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
 
@@ -1283,8 +1285,14 @@ function AgentsTab({
     await updateMutation.mutateAsync({ id: editingAgent.id, data: data as AgentUpdate });
   };
 
-  const handleDeleteAgent = (agent: Agent) => {
-    if (confirm(`Are you sure you want to delete "${agent.name}"? This action cannot be undone.`)) {
+  const handleDeleteAgent = async (agent: Agent) => {
+    const confirmed = await confirm({
+      title: 'Delete agent',
+      description: `Are you sure you want to delete "${agent.name}"? This action cannot be undone.`,
+      confirmLabel: 'Delete',
+      variant: 'danger',
+    });
+    if (confirmed) {
       deleteMutation.mutate(agent.id);
     }
   };

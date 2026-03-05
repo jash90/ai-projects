@@ -34,6 +34,12 @@
     "tryAgain": "Опитайте отново",
     "tryDifferentSearch": "Опитайте с различен термин за търсене"
   },
+  "consent": {
+    "accept": "__MISSING__",
+    "decline": "__MISSING__",
+    "message": "__MISSING__",
+    "title": "__MISSING__"
+  },
   "files": "файлове",
   "messages": "съобщения",
   "navigation": {

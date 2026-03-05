@@ -20,10 +20,6 @@
     "subtitle": "Gérez vos projets et collaborez avec des agents IA",
     "welcome": "Bienvenue de nouveau, {{username}}"
   },
-  "quickTip": {
-    "content": "Ajoutez des fichiers à votre projet pour donner aux agents IA un contexte pour une meilleure assistance.",
-    "title": "Astuce rapide"
-  },
   "recentProjects": {
     "empty": {
       "description": "Créez votre premier projet pour commencer à collaborer avec l'IA",

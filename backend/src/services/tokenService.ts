@@ -38,8 +38,8 @@ const MODEL_PRICING: Record<string, Record<string, { prompt: number; completion:
     'claude-sonnet-4-20250514': { prompt: 0.008, completion: 0.025 },
     'claude-sonnet-4-5-20250514': { prompt: 0.003, completion: 0.015 },
 
-    // Claude 3.7
-    'claude-3-7-sonnet-latest': { prompt: 0.005, completion: 0.020 },
+    // Claude Sonnet 4.5
+    'claude-sonnet-4-5-20250929': { prompt: 0.005, completion: 0.025 },
 
     // Claude 3.5 models
     'claude-3-5-sonnet-20241022': { prompt: 0.003, completion: 0.015 },

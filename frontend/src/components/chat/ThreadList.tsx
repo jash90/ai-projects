@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
 import { Thread } from '../../types'
 import { cn } from '../../lib/utils'
+import { useConfirm } from '@/components/ui/ConfirmDialog'
 import { PlusIcon, TrashIcon } from '@/components/icons'
 import { threadStore, useThreads, useActiveThread, useThreadsLoading } from '../../stores/threadStore'
 
@@ -16,6 +17,7 @@ interface ThreadListProps {
 
 export function ThreadList({ projectId, onThreadSelect, className }: ThreadListProps) {
   const { t } = useTranslation('chat')
+  const confirm = useConfirm()
   const threads = useThreads(projectId)
   const activeThread = useActiveThread(projectId)
   const isLoading = useThreadsLoading(projectId)
@@ -46,7 +48,13 @@ export function ThreadList({ projectId, onThreadSelect, className }: ThreadListP
 
   const handleDeleteThread = async (e: MouseEvent, threadId: string) => {
     e.stopPropagation()
-    if (confirm(t('threads.deleteConfirm'))) {
+    const confirmed = await confirm({
+      title: t('threads.deleteTitle', 'Delete thread'),
+      description: t('threads.deleteConfirm'),
+      confirmLabel: t('threads.deleteButton', 'Delete'),
+      variant: 'danger',
+    })
+    if (confirmed) {
       try {
         await threadStore.getState().deleteThread(threadId, projectId)
       } catch (error) {

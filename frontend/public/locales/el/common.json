@@ -34,6 +34,12 @@
     "tryAgain": "Δοκιμάστε ξανά",
     "tryDifferentSearch": "Δοκιμάστε μια διαφορετική λέξη αναζήτησης"
   },
+  "consent": {
+    "accept": "__MISSING__",
+    "decline": "__MISSING__",
+    "message": "__MISSING__",
+    "title": "__MISSING__"
+  },
   "files": "αρχεία",
   "messages": "μηνύματα",
   "navigation": {

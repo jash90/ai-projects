@@ -34,6 +34,12 @@
     "tryAgain": "Yritä uudelleen",
     "tryDifferentSearch": "Yritä eri hakutermillä"
   },
+  "consent": {
+    "accept": "__MISSING__",
+    "decline": "__MISSING__",
+    "message": "__MISSING__",
+    "title": "__MISSING__"
+  },
   "files": "tiedostot",
   "messages": "viestit",
   "navigation": {

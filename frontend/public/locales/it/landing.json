@@ -55,8 +55,6 @@
     },
     "subtitle": "Tutto ciò di cui hai bisogno per costruire con l'IA. Facile da iniziare, abbastanza potente per i team.",
     "techStack": {
-      "subtitle": "Stack pronto per la produzione con TypeScript, React 18, Node.js, PostgreSQL e integrazione dell'IA",
-      "title": "Costruito con Tecnologie Moderne",
       "categories": {
         "ai": "IA",
         "backend": "Backend",
@@ -64,7 +62,9 @@
         "frontend": "Frontend",
         "mobile": "Mobile",
         "realtime": "In Tempo Reale"
-      }
+      },
+      "subtitle": "Stack pronto per la produzione con TypeScript, React 18, Node.js, PostgreSQL e integrazione dell'IA",
+      "title": "Costruito con Tecnologie Moderne"
     },
     "title": "Tutto Ciò di Cui Hai Bisogno"
   },
@@ -81,7 +81,6 @@
       "api": "API",
       "documentation": "Documentazione",
       "features": "Funzionalità",
-      "pricing": "Prezzi",
       "title": "Prodotto"
     },
     "support": {
@@ -107,56 +106,8 @@
     "features": "Caratteristiche",
     "getStarted": "Inizia",
     "installApp": "Installa l'App",
-    "pricing": "Prezzi",
     "signIn": "Accedi",
     "testimonials": "Testimonianze"
-  },
-  "pricing": {
-    "contactUs": "contattaci",
-    "perMonth": "al mese",
-    "plans": {
-      "enterprise": {
-        "cta": "Contatta le Vendite",
-        "features": [
-          "Tutto in Pro",
-          "Pannello di amministrazione & ruoli del team",
-          "Limiti di utilizzo personalizzati",
-          "Registri di audit delle attività",
-          "Integrazione SSO",
-          "Supporto dedicato"
-        ],
-        "name": "Enterprise",
-        "price": "Personalizzato"
-      },
-      "pro": {
-        "cta": "Inizia la Pro Trial",
-        "features": [
-          "Progetti illimitati",
-          "GPT-4 & Claude",
-          "Collaborazione di team",
-          "File illimitati",
-          "Analisi dell'utilizzo",
-          "Supporto prioritario"
-        ],
-        "name": "Professionale",
-        "popular": "Più Popolare",
-        "price": "$29"
-      },
-      "starter": {
-        "cta": "Inizia Gratis",
-        "features": [
-          "5 progetti",
-          "Accesso a GPT-4",
-          "App mobile",
-          "Lavora offline",
-          "Supporto della comunità"
-        ],
-        "name": "Starter",
-        "price": "$0"
-      }
-    },
-    "subtitle": "Inizia gratuitamente, aggiorna quando hai bisogno di più. Nessuna sorpresa, annulla in qualsiasi momento.",
-    "title": "Prezzi Semplici e Trasparenti"
   },
   "stats": {
     "activeDevelopers": "Progetti Creati",

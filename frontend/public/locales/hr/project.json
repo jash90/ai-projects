@@ -3,8 +3,6 @@
   "dashboard": "Nadzorna ploča",
   "desktop": {
     "actions": {
-      "enterFullscreen": "Uđi u cijeli ekran",
-      "exitFullscreen": "Izađi iz cijelog ekrana",
       "hideEditor": "Sakrij uređivač",
       "hideSidebar": "Sakrij bočnu traku",
       "showEditor": "Prikaži uređivač",
@@ -20,23 +18,6 @@
   },
   "loading": "Učitavanje projekta...",
   "mobile": {
-    "actions": {
-      "install": "Instaliraj",
-      "installApp": "Instaliraj aplikaciju",
-      "share": "Dijeli"
-    },
-    "menu": {
-      "currentSelection": "Trenutni odabir",
-      "filesAvailableOffline_one": "Datoteka dostupna izvan mreže",
-      "filesAvailableOffline_other": "Datoteke dostupne izvan mreže",
-      "filesPendingUpload_one": "Datoteka na čekanju za prijenos",
-      "filesPendingUpload_other": "Datoteke na čekanju za prijenos",
-      "noAgentSelected": "Nema odabranog agenta",
-      "noFileSelected": "Nema odabrane datoteke",
-      "offlineMode": "Offline način",
-      "online": "Online",
-      "status": "Status"
-    },
     "views": {
       "agents": "Agenti",
       "chat": "Razgovor",

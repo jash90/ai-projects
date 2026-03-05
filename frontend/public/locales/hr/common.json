@@ -34,6 +34,12 @@
     "tryAgain": "Pokušajte ponovo",
     "tryDifferentSearch": "Pokušajte s drugim pojmom pretraživanja"
   },
+  "consent": {
+    "accept": "__MISSING__",
+    "decline": "__MISSING__",
+    "message": "__MISSING__",
+    "title": "__MISSING__"
+  },
   "files": "datoteke",
   "messages": "poruke",
   "navigation": {

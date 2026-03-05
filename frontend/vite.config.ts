@@ -38,15 +38,19 @@ export default defineConfig(({ mode }) => ({
     dedupe: ['react', 'react-dom'],
   },
   server: {
-    port: 3000,
-    host: true,
+    port: parseInt(process.env.PORT || '3000', 10),
+    host: process.env.HOST || true,
     proxy: {
       '/api': {
-        target: 'http://localhost:3001',
+        target: process.env.PORTLESS_URL
+          ? 'http://api.ai-projects.localhost:1355'
+          : 'http://localhost:3001',
         changeOrigin: true,
       },
       '/socket.io': {
-        target: 'http://localhost:3001',
+        target: process.env.PORTLESS_URL
+          ? 'http://api.ai-projects.localhost:1355'
+          : 'http://localhost:3001',
         ws: true,
       },
     },

@@ -122,13 +122,8 @@
   },
   "picker": {
     "empty": {
-      "hint": "Pokušajte s drugim pojmom pretraživanja",
       "title": "Nema pronađenih agenata"
     },
-    "searchAdmin": "Pretraži agente po imenu, opisu ili modelu...",
-    "searchUser": "Pretraži agente po imenu ili opisu...",
-    "select": "Odaberite agenta",
-    "selected": "Odabrano",
     "title": "Odaberite AI Agenta"
   },
   "providers": {

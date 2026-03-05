@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import toast from 'react-hot-toast'
 
 export function useExport() {
   const exportToFormat = useCallback(async (
@@ -99,7 +100,7 @@ export function useExport() {
         URL.revokeObjectURL(url)
       } else if (format === 'docx') {
         // Placeholder for DOCX export - requires a more complex backend service
-        alert('DOCX export is not yet implemented. Please try HTML or PDF.')
+        toast.error('DOCX export is not yet implemented. Please try HTML or PDF.')
         console.warn('DOCX export not implemented.')
       }
     } catch (error) {

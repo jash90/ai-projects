@@ -20,10 +20,6 @@
     "subtitle": "Spravujte své projekty a spolupracujte s AI agenty",
     "welcome": "Vítejte zpět, {{username}}"
   },
-  "quickTip": {
-    "content": "Přidejte soubory do svého projektu, abyste poskytli AI agentům kontext pro lepší asistenci.",
-    "title": "Rychlý tip"
-  },
   "recentProjects": {
     "empty": {
       "description": "Vytvořte svůj první projekt, abyste začali se spoluprací s AI",
