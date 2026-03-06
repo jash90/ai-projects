@@ -10,6 +10,17 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 export class ConversationsController {
   constructor(private conversationsService: ConversationsService) {}
 
+  @Get(':projectId/:agentId')
+  @ApiOperation({ summary: 'Get conversation by project and agent' })
+  async getConversation(
+    @Param('projectId', ParseUUIDPipe) projectId: string,
+    @Param('agentId', ParseUUIDPipe) agentId: string,
+    @CurrentUser('id') userId: string,
+  ) {
+    const conversation = await this.conversationsService.findByProjectAndAgent(projectId, agentId, userId);
+    return { conversation: conversation || { project_id: projectId, agent_id: agentId, messages: [] } };
+  }
+
   @Get(':projectId')
   @ApiOperation({ summary: 'Get project conversations' })
   async getProjectConversations(

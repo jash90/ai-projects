@@ -85,19 +85,20 @@ export const conversationStore = create<ConversationState>((set, get) => ({
       }
 
       set(state => {
-        const conversation = state.conversations[key]
-        if (conversation) {
-          return {
-            conversations: {
-              ...state.conversations,
-              [key]: {
-                ...conversation,
-                messages: [...conversation.messages, tempMessage]
-              }
+        const conversation = state.conversations[key] || {
+          project_id: projectId,
+          agent_id: agentId,
+          messages: [],
+        }
+        return {
+          conversations: {
+            ...state.conversations,
+            [key]: {
+              ...conversation,
+              messages: [...conversation.messages, tempMessage]
             }
           }
         }
-        return state
       })
 
       // Send message to backend with files
@@ -219,19 +220,20 @@ export const conversationStore = create<ConversationState>((set, get) => ({
       }
 
       set(state => {
-        const conversation = state.conversations[key]
-        if (conversation) {
-          return {
-            conversations: {
-              ...state.conversations,
-              [key]: {
-                ...conversation,
-                messages: [...conversation.messages, tempMessage]
-              }
+        const conversation = state.conversations[key] || {
+          project_id: projectId,
+          agent_id: agentId,
+          messages: [],
+        }
+        return {
+          conversations: {
+            ...state.conversations,
+            [key]: {
+              ...conversation,
+              messages: [...conversation.messages, tempMessage]
             }
           }
         }
-        return state
       })
 
       // Add temporary AI message for streaming
@@ -244,19 +246,20 @@ export const conversationStore = create<ConversationState>((set, get) => ({
       };
 
       set(state => {
-        const conversation = state.conversations[key]
-        if (conversation) {
-          return {
-            conversations: {
-              ...state.conversations,
-              [key]: {
-                ...conversation,
-                messages: [...conversation.messages, aiTempMessage]
-              }
+        const conversation = state.conversations[key] || {
+          project_id: projectId,
+          agent_id: agentId,
+          messages: [],
+        }
+        return {
+          conversations: {
+            ...state.conversations,
+            [key]: {
+              ...conversation,
+              messages: [...conversation.messages, aiTempMessage]
             }
           }
         }
-        return state
       })
 
       try { events.chatStreamStarted(); } catch {}
@@ -272,22 +275,20 @@ export const conversationStore = create<ConversationState>((set, get) => ({
           // Update streaming message content
           set(state => {
             const conversation = state.conversations[key]
-            if (conversation) {
-              return {
-                conversations: {
-                  ...state.conversations,
-                  [key]: {
-                    ...conversation,
-                    messages: conversation.messages.map(m =>
-                      m.id === aiTempMessage.id
-                        ? { ...m, content: m.content + chunk }
-                        : m
-                    )
-                  }
+            if (!conversation) return state
+            return {
+              conversations: {
+                ...state.conversations,
+                [key]: {
+                  ...conversation,
+                  messages: conversation.messages.map(m =>
+                    m.id === aiTempMessage.id
+                      ? { ...m, content: m.content + chunk }
+                      : m
+                  )
                 }
               }
             }
-            return state
           })
         },
         (response: any) => {
