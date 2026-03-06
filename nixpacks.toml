@@ -1,11 +1,11 @@
 [phases.setup]
-nixPkgs = ["nodejs-18_x", "pnpm"]
+nixPkgs = ["bun"]
 
 [phases.install]
-cmds = ["pnpm install --frozen-lockfile"]
+cmds = ["bun install --frozen-lockfile"]
 
 [phases.build]
-cmds = ["pnpm exec nx run-many -t build"]
+cmds = ["bun run nx run-many -t build"]
 
 [start]
 cmd = "node backend/dist/main.js"

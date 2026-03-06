@@ -8,7 +8,7 @@ on:
 
 env:
   NODE_VERSION: '18'
-  PNPM_VERSION: '8'
+  BUN_VERSION: 'latest'
 
 jobs:
   test:
@@ -43,37 +43,36 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: ${{ env.PNPM_VERSION }}
+          bun-version: ${{ env.BUN_VERSION }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       - name: Lint code
-        run: pnpm lint || echo "Linting skipped - no ESLint config found"
+        run: bun run lint || echo "Linting skipped - no ESLint config found"
         continue-on-error: true
 
       - name: Type check
-        run: pnpm type-check
+        run: bun run type-check
 
       - name: Run database migrations
         working-directory: ./backend
-        run: pnpm db:migrate
+        run: bun run db:migrate
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/claude_projects_test
           NODE_ENV: test
 
       - name: Run backend tests
         working-directory: ./backend
-        run: pnpm test || echo "No backend tests found"
+        run: bun test || echo "No backend tests found"
         continue-on-error: true
         env:
           NODE_ENV: test
@@ -83,11 +82,11 @@ jobs:
 
       - name: Build backend
         working-directory: ./backend
-        run: pnpm build
+        run: bun run build
 
       - name: Build frontend
         working-directory: ./frontend
-        run: pnpm build
+        run: bun run build
         env:
           VITE_API_URL: http://localhost:3001
           VITE_WS_URL: ws://localhost:3001

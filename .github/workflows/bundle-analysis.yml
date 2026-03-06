@@ -5,7 +5,7 @@ on:
     branches: [master, main, develop]
     paths:
       - 'frontend/**'
-      - 'pnpm-lock.yaml'
+      - 'bun.lock'
 
 jobs:
   analyze:
@@ -16,23 +16,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: 8
+          bun-version: latest
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       - name: Build and analyze bundle
         working-directory: ./frontend
-        run: pnpm run build:analyze
+        run: bun run build:analyze
         env:
           VITE_API_URL: http://localhost:3001
           VITE_WS_URL: ws://localhost:3001
