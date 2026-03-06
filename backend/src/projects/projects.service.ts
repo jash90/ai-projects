@@ -7,6 +7,10 @@ export class ProjectsService {
     return ProjectModel.findByUserId(userId, page, limit, search);
   }
 
+  async findRecent(userId: string, limit = 5) {
+    return ProjectModel.getRecentActivity(userId, limit);
+  }
+
   async findById(id: string, userId: string) {
     const project = await ProjectModel.findById(id, userId);
     if (!project) throw new NotFoundException('Project not found');

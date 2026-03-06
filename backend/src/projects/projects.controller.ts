@@ -23,6 +23,16 @@ export class ProjectsController {
     return this.projectsService.findByUserId(userId, page || 1, limit || 10, search);
   }
 
+  @Get('recent')
+  @ApiOperation({ summary: 'Get recent projects' })
+  async findRecent(
+    @CurrentUser('id') userId: string,
+    @Query('limit') limit?: number,
+  ) {
+    const projects = await this.projectsService.findRecent(userId, limit || 5);
+    return { projects };
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get project by ID' })
   async findOne(
