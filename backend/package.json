@@ -2,7 +2,7 @@
   "name": "claude-projects-backend",
   "version": "1.0.0",
   "description": "Backend API for AI Projects",
-  "main": "dist/index.js",
+  "main": "dist/main.js",
   "scripts": {
     "dev": "nodemon",
     "build": "nest build",

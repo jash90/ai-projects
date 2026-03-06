@@ -16,8 +16,9 @@ COPY backend/package.json ./backend/
 COPY frontend/package.json ./frontend/
 COPY shared-types/package.json ./shared-types/
 
-# Install all workspace dependencies
+# Install all workspace dependencies and rebuild native modules
 RUN pnpm install
+RUN pnpm rebuild
 
 # Copy source code for shared-types and backend (skip frontend source)
 COPY shared-types/ ./shared-types/
@@ -41,4 +42,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:3001/api/health || exit 1
 
 # Start the backend
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/main.js"]
