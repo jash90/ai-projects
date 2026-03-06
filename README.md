@@ -98,52 +98,58 @@ See [NX_MIGRATION.md](./NX_MIGRATION.md) for complete migration details and Nx c
 ### Monorepo & Build System
 ```typescript
 Nx 21.4                       // Advanced monorepo build system with smart orchestration
-pnpm 8.15                     // Fast, disk space efficient package manager  
-pnpm Workspaces              // Monorepo workspace management
-TypeScript 5.0               // Strict typing across entire monorepo
+pnpm 8+                       // Fast, disk space efficient package manager
+pnpm Workspaces               // Monorepo workspace management
+TypeScript 5.8                // Strict typing across entire monorepo
 ```
 
 ### Frontend Architecture
 ```typescript
-React 18 + TypeScript          // Component framework with strict typing
-Vite 4.5                      // Lightning-fast build tool and dev server  
-Tailwind CSS 3.3             // Utility-first styling with custom design system
+React 19 + TypeScript          // Component framework with strict typing
+Vite 6.4                      // Lightning-fast build tool and dev server
+Tailwind CSS 3.3              // Utility-first styling with custom design system
 Zustand 4.4                   // Lightweight state management with specialized stores
-TanStack Query 5.8           // Server state management and caching
-Socket.io Client 4.7         // Real-time bidirectional communication
-React Hook Form 7.47 + Zod   // Type-safe form validation
-React Router v6.17           // Modern routing with data loading
-Lucide React 0.288           // Beautiful icon library
-React Dropzone 14.2          // File upload with drag & drop
-React Markdown 9.0           // Markdown rendering with syntax highlighting
-PWA Features                 // Service Worker, Web Share API, offline support
+TanStack Query 5.8            // Server state management and caching
+Socket.io Client 4.7          // Real-time bidirectional communication
+React Hook Form + Zod         // Type-safe form validation
+React Router v6.17            // Modern routing with data loading
+Lucide React                  // Beautiful icon library
+React Dropzone                // File upload with drag & drop
+React Markdown 9.0            // Markdown rendering with syntax highlighting
+i18next 25.7                  // Internationalization (20+ languages)
+Mermaid 11.12                 // Diagram rendering in chat
+KaTeX 0.16                    // Math notation support
+PWA Features                  // Service Worker, Web Share API, offline support
 ```
 
 ### Backend Architecture
 ```typescript
-Node.js 18+ + Express 4.18   // Server runtime and web framework
-TypeScript 5.2               // Static type checking with strict mode
-PostgreSQL 15                // Primary database with JSONB support
-Redis 7                      // Session storage, caching, and rate limiting
-Socket.io 4.7                // WebSocket server with authentication
-Winston 3.11                 // Structured logging with rotation
-JWT 9.0                      // Authentication with refresh tokens
-Multer 1.4.5                 // File upload handling with security
-Joi 17.11                    // Request validation schemas
-Helmet 7.0 + CORS 2.8        // Security middleware
-Bcrypt 2.4                   // Password hashing
-UUID 9.0                     // Unique identifier generation
+NestJS 11.1                   // Modular Node.js framework (migrated from Express)
+TypeScript 5.8                // Static type checking with strict mode
+PostgreSQL 15                 // Primary database with JSONB support
+Redis 7                       // Session storage, caching, and rate limiting
+Socket.io 4.7                 // WebSocket server with authentication
+Winston                       // Structured logging with rotation
+JWT 9.0                       // Authentication with refresh tokens
+Passport.js 0.7               // Auth middleware with strategies
+Multer 1.4.5                  // File upload handling with security
+Class Validator 0.15           // DTO-based request validation
+Helmet 7.0 + CORS             // Security middleware
+Bcrypt 2.4                    // Password hashing
+Puppeteer 24.18               // Headless browser automation
+Sentry + PostHog              // Error tracking and product analytics
 ```
 
 ### AI & ML Integration
 ```typescript
-OpenAI SDK v4.20.1          // GPT models integration with streaming
-Anthropic SDK v0.60.0       // Claude models integration
-Dynamic Model Management     // Auto-sync latest models from providers
-Token Usage Tracking        // Comprehensive cost monitoring
-Context-Aware Processing    // Project files in AI conversations
-Streaming Responses         // Real-time AI response delivery
-Custom Agent Personalities  // Specialized AI agents with unique traits
+OpenAI SDK v4.20              // GPT-4, GPT-4o, O3, O1 models with streaming
+Anthropic SDK v0.60           // Claude 3, Claude 3.5 Sonnet, Claude Opus
+OpenRouter (custom)           // 350+ models from all providers (Meta, Llama, Mistral, etc.)
+Dynamic Model Management      // Auto-sync latest models from providers
+Token Usage Tracking          // Comprehensive cost monitoring per project/agent
+Context-Aware Processing      // Project files in AI conversations
+Streaming Responses           // Real-time AI response delivery
+Custom Agent Personalities    // Specialized AI agents with unique traits
 ```
 
 ### Mobile & PWA Technologies
