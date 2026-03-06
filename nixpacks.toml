@@ -8,7 +8,7 @@ cmds = ["pnpm install --frozen-lockfile"]
 cmds = ["pnpm exec nx run-many -t build"]
 
 [start]
-cmd = "node backend/dist/index.js"
+cmd = "node backend/dist/main.js"
 
 [variables]
 NODE_ENV = "production"
