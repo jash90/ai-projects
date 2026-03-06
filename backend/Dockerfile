@@ -1,24 +1,20 @@
-FROM node:18-alpine
+FROM oven/bun:1-alpine
 
 # Install curl for health checks
 RUN apk add --no-cache curl
 
 WORKDIR /app
 
-# Enable pnpm
-RUN corepack enable pnpm
-
 # Copy workspace configuration
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
+COPY package.json bun.lock* ./
 
 # Copy package.json from each workspace package
 COPY backend/package.json ./backend/
 COPY frontend/package.json ./frontend/
 COPY shared-types/package.json ./shared-types/
 
-# Install all workspace dependencies and rebuild native modules
-RUN pnpm install
-RUN pnpm rebuild
+# Install all workspace dependencies
+RUN bun install
 
 # Copy source code for shared-types and backend (skip frontend source)
 COPY shared-types/ ./shared-types/
@@ -26,10 +22,10 @@ COPY backend/ ./backend/
 
 # Build shared-types first, then backend
 WORKDIR /app/shared-types
-RUN pnpm run build
+RUN bun run build
 
 WORKDIR /app/backend
-RUN pnpm run build
+RUN bun run build
 
 # Create uploads directory
 RUN mkdir -p uploads
@@ -41,5 +37,5 @@ EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:3001/api/health || exit 1
 
-# Start the backend
+# Start the backend (Node for NestJS compatibility)
 CMD ["node", "dist/main.js"]

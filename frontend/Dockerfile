@@ -1,15 +1,12 @@
-FROM node:18-alpine as builder
+FROM oven/bun:1-alpine AS builder
 
 ARG VITE_API_URL
 ARG VITE_WS_URL
 
 WORKDIR /app
 
-# Enable pnpm
-RUN corepack enable pnpm
-
 # Copy workspace configuration
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
+COPY package.json bun.lock* ./
 
 # Copy package.json from each workspace package
 COPY backend/package.json ./backend/
@@ -17,18 +14,18 @@ COPY frontend/package.json ./frontend/
 COPY shared-types/package.json ./shared-types/
 
 # Install all workspace dependencies
-RUN pnpm install
+RUN bun install
 
 # Copy shared-types source and build it
 COPY shared-types/ ./shared-types/
 WORKDIR /app/shared-types
-RUN pnpm run build
+RUN bun run build
 
 # Copy frontend source and build it
 WORKDIR /app
 COPY frontend/ ./frontend/
 WORKDIR /app/frontend
-RUN VITE_API_URL=${VITE_API_URL} VITE_WS_URL=${VITE_WS_URL} pnpm run build
+RUN VITE_API_URL=${VITE_API_URL} VITE_WS_URL=${VITE_WS_URL} bun run build
 
 # Production stage - nginx
 FROM nginx:alpine
