@@ -1,7 +1,7 @@
-FROM oven/bun:1-alpine
+FROM node:20-alpine
 
-# Install curl for health checks
-RUN apk add --no-cache curl
+# Install bun (for package management and running TS scripts) + curl (health checks)
+RUN apk add --no-cache curl && npm install -g bun
 
 WORKDIR /app
 
