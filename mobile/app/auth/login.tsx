@@ -9,8 +9,8 @@ import {
   Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useAuthLogin } from '../../src/api/generated/auth/auth';
-import { saveAuth } from '../../src/lib/auth';
+import { useAuthLogin } from '@/api/generated/auth/auth';
+import { saveAuth } from '@/lib/auth';
 
 export default function LoginScreen() {
   const router = useRouter();

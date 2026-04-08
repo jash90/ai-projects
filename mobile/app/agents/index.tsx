@@ -1,6 +1,6 @@
 import { FlatList, View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useListAgents } from '../../src/api/generated/agents/agents';
+import { useListAgents } from '@/api/generated/agents/agents';
 
 export default function AgentPickerScreen() {
   const router = useRouter();

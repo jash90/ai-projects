@@ -3,8 +3,8 @@ import {
   View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useAuthRegister } from '../../src/api/generated/auth/auth';
-import { saveAuth } from '../../src/lib/auth';
+import { useAuthRegister } from '@/api/generated/auth/auth';
+import { saveAuth } from '@/lib/auth';
 
 export default function RegisterScreen() {
   const router = useRouter();

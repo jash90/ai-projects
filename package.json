@@ -48,7 +48,6 @@
   "workspaces": [
     "backend",
     "frontend",
-    "shared-types",
-    "mobile"
+    "shared-types"
   ]
 }

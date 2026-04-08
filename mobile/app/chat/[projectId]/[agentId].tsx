@@ -4,7 +4,7 @@ import {
   ActivityIndicator, KeyboardAvoidingView, Platform,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { useGetConversation, useChat } from '../../src/api/generated/chat/chat';
+import { useGetConversation, useChat } from '@/api/generated/chat/chat';
 
 interface DisplayMessage {
   id: string;
