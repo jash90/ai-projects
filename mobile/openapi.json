@@ -6,278 +6,674 @@
     "description": "Backend API for AI Projects Platform"
   },
   "servers": [
-    { "url": "http://localhost:3001/api", "description": "Development" }
+    {
+      "url": "http://localhost:3001/api",
+      "description": "Development"
+    }
   ],
-  "security": [{ "bearerAuth": [] }],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
   "components": {
     "securitySchemes": {
-      "bearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" }
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
     },
     "schemas": {
       "User": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "email": { "type": "string", "format": "email" },
-          "username": { "type": "string" },
-          "role": { "type": "string", "enum": ["user", "admin"] },
-          "is_active": { "type": "boolean" },
-          "created_at": { "type": "string", "format": "date-time" },
-          "updated_at": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "username": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "admin"
+            ]
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         },
-        "required": ["id", "email", "username", "role"]
+        "required": [
+          "id",
+          "email",
+          "username",
+          "role"
+        ]
       },
       "AuthResponse": {
         "type": "object",
         "properties": {
-          "user": { "$ref": "#/components/schemas/User" },
-          "access_token": { "type": "string" },
-          "refresh_token": { "type": "string" }
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "access_token": {
+            "type": "string"
+          },
+          "refresh_token": {
+            "type": "string"
+          }
         },
-        "required": ["user", "access_token"]
+        "required": [
+          "user",
+          "access_token"
+        ]
       },
       "RegisterInput": {
         "type": "object",
         "properties": {
-          "email": { "type": "string", "format": "email" },
-          "username": { "type": "string", "minLength": 3, "maxLength": 30 },
-          "password": { "type": "string", "minLength": 6, "maxLength": 128 }
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "username": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 30
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 128
+          }
         },
-        "required": ["email", "username", "password"]
+        "required": [
+          "email",
+          "username",
+          "password"
+        ]
       },
       "LoginInput": {
         "type": "object",
         "properties": {
-          "email": { "type": "string", "format": "email" },
-          "password": { "type": "string" }
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string"
+          }
         },
-        "required": ["email", "password"]
+        "required": [
+          "email",
+          "password"
+        ]
       },
       "RefreshTokenInput": {
         "type": "object",
         "properties": {
-          "refresh_token": { "type": "string" }
+          "refresh_token": {
+            "type": "string"
+          }
         },
-        "required": ["refresh_token"]
+        "required": [
+          "refresh_token"
+        ]
       },
       "Project": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string" },
-          "description": { "type": "string" },
-          "user_id": { "type": "string", "format": "uuid" },
-          "created_at": { "type": "string", "format": "date-time" },
-          "updated_at": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         },
-        "required": ["id", "name", "user_id"]
+        "required": [
+          "id",
+          "name",
+          "user_id"
+        ]
       },
       "CreateProjectInput": {
         "type": "object",
         "properties": {
-          "name": { "type": "string", "minLength": 1, "maxLength": 200 },
-          "description": { "type": "string", "maxLength": 1000 }
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000
+          }
         },
-        "required": ["name"]
+        "required": [
+          "name"
+        ]
       },
       "UpdateProjectInput": {
         "type": "object",
         "properties": {
-          "name": { "type": "string", "minLength": 1, "maxLength": 200 },
-          "description": { "type": "string", "maxLength": 1000 }
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000
+          }
         }
       },
       "Agent": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string" },
-          "description": { "type": "string" },
-          "system_prompt": { "type": "string" },
-          "provider": { "type": "string", "enum": ["openai", "anthropic", "openrouter"] },
-          "model": { "type": "string" },
-          "temperature": { "type": "number" },
-          "max_tokens": { "type": "integer" },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "system_prompt": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string",
+            "enum": [
+              "openai",
+              "anthropic",
+              "openrouter"
+            ]
+          },
+          "model": {
+            "type": "string"
+          },
+          "temperature": {
+            "type": "number"
+          },
+          "max_tokens": {
+            "type": "integer"
+          },
           "files": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "id": { "type": "string" },
-                "name": { "type": "string" },
-                "size": { "type": "number" },
-                "created_at": { "type": "string", "format": "date-time" }
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "size": {
+                  "type": "number"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
               }
             }
           },
-          "created_at": { "type": "string", "format": "date-time" },
-          "updated_at": { "type": "string", "format": "date-time" }
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         },
-        "required": ["id", "name", "system_prompt", "provider", "model", "temperature", "max_tokens"]
+        "required": [
+          "id",
+          "name",
+          "system_prompt",
+          "provider",
+          "model",
+          "temperature",
+          "max_tokens"
+        ]
       },
       "CreateAgentInput": {
         "type": "object",
         "properties": {
-          "name": { "type": "string", "minLength": 1, "maxLength": 100 },
-          "description": { "type": "string", "maxLength": 500 },
-          "system_prompt": { "type": "string", "minLength": 1, "maxLength": 10000 },
-          "provider": { "type": "string", "enum": ["openai", "anthropic", "openrouter"] },
-          "model": { "type": "string", "minLength": 1, "maxLength": 50 },
-          "temperature": { "type": "number", "minimum": 0, "maximum": 2 },
-          "max_tokens": { "type": "integer", "minimum": 1, "maximum": 100000, "default": 2000 }
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "system_prompt": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "provider": {
+            "type": "string",
+            "enum": [
+              "openai",
+              "anthropic",
+              "openrouter"
+            ]
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 2
+          },
+          "max_tokens": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100000,
+            "default": 2000
+          }
         },
-        "required": ["name", "system_prompt", "provider", "model"]
+        "required": [
+          "name",
+          "system_prompt",
+          "provider",
+          "model"
+        ]
       },
       "UpdateAgentInput": {
         "type": "object",
         "properties": {
-          "name": { "type": "string" },
-          "description": { "type": "string" },
-          "system_prompt": { "type": "string" },
-          "provider": { "type": "string", "enum": ["openai", "anthropic", "openrouter"] },
-          "model": { "type": "string" },
-          "temperature": { "type": "number" },
-          "max_tokens": { "type": "integer" }
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "system_prompt": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string",
+            "enum": [
+              "openai",
+              "anthropic",
+              "openrouter"
+            ]
+          },
+          "model": {
+            "type": "string"
+          },
+          "temperature": {
+            "type": "number"
+          },
+          "max_tokens": {
+            "type": "integer"
+          }
         }
       },
       "ConversationMessage": {
         "type": "object",
         "properties": {
-          "role": { "type": "string", "enum": ["user", "assistant"] },
-          "content": { "type": "string" },
-          "timestamp": { "type": "string", "format": "date-time" },
-          "metadata": { "$ref": "#/components/schemas/MessageMetadata" }
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant"
+            ]
+          },
+          "content": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MessageMetadata"
+          }
         },
-        "required": ["role", "content", "timestamp"]
+        "required": [
+          "role",
+          "content",
+          "timestamp"
+        ]
       },
       "MessageMetadata": {
         "type": "object",
         "properties": {
-          "model": { "type": "string" },
-          "tokens": { "type": "integer" },
-          "prompt_tokens": { "type": "integer" },
-          "completion_tokens": { "type": "integer" },
-          "processing_time": { "type": "number" },
-          "estimated_cost": { "type": "number" }
+          "model": {
+            "type": "string"
+          },
+          "tokens": {
+            "type": "integer"
+          },
+          "prompt_tokens": {
+            "type": "integer"
+          },
+          "completion_tokens": {
+            "type": "integer"
+          },
+          "processing_time": {
+            "type": "number"
+          },
+          "estimated_cost": {
+            "type": "number"
+          }
         }
       },
       "Conversation": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
-          "project_id": { "type": "string", "format": "uuid" },
-          "agent_id": { "type": "string", "format": "uuid" },
-          "messages": { "type": "array", "items": { "$ref": "#/components/schemas/ConversationMessage" } },
-          "created_at": { "type": "string", "format": "date-time" },
-          "updated_at": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConversationMessage"
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "Thread": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "project_id": { "type": "string", "format": "uuid" },
-          "title": { "type": "string" },
-          "created_at": { "type": "string", "format": "date-time" },
-          "updated_at": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         },
-        "required": ["id", "project_id"]
+        "required": [
+          "id",
+          "project_id"
+        ]
       },
       "ThreadMessage": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
-          "thread_id": { "type": "string" },
-          "role": { "type": "string", "enum": ["user", "assistant"] },
-          "content": { "type": "string" },
+          "id": {
+            "type": "string"
+          },
+          "thread_id": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant"
+            ]
+          },
+          "content": {
+            "type": "string"
+          },
           "metadata": {},
-          "created_at": { "type": "string", "format": "date-time" }
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         },
-        "required": ["id", "thread_id", "role", "content"]
+        "required": [
+          "id",
+          "thread_id",
+          "role",
+          "content"
+        ]
       },
       "ProjectFile": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name": { "type": "string" },
-          "type": { "type": "string" },
-          "content": { "type": "string" },
-          "project_id": { "type": "string", "format": "uuid" },
-          "created_at": { "type": "string", "format": "date-time" },
-          "updated_at": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         },
-        "required": ["id", "name", "type", "project_id"]
+        "required": [
+          "id",
+          "name",
+          "type",
+          "project_id"
+        ]
       },
       "CreateFileInput": {
         "type": "object",
         "properties": {
-          "name": { "type": "string" },
-          "content": { "type": "string" },
-          "type": { "type": "string" }
+          "name": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
         },
-        "required": ["name", "type"]
+        "required": [
+          "name",
+          "type"
+        ]
       },
       "UpdateFileInput": {
         "type": "object",
         "properties": {
-          "name": { "type": "string" },
-          "content": { "type": "string" },
-          "type": { "type": "string" }
+          "name": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
         }
       },
       "UploadedFile": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
-          "original_name": { "type": "string" },
-          "mimetype": { "type": "string" },
-          "size": { "type": "number" },
-          "project_id": { "type": "string" },
-          "created_at": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string"
+          },
+          "original_name": {
+            "type": "string"
+          },
+          "mimetype": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "AIModel": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
-          "name": { "type": "string" },
-          "provider": { "type": "string" },
-          "description": { "type": "string" },
-          "max_tokens": { "type": "integer" },
-          "context_window": { "type": "integer" },
-          "cost_per_1k_input_tokens": { "type": "number" },
-          "cost_per_1k_output_tokens": { "type": "number" },
-          "supports_vision": { "type": "boolean" },
-          "supports_function_calling": { "type": "boolean" }
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "max_tokens": {
+            "type": "integer"
+          },
+          "context_window": {
+            "type": "integer"
+          },
+          "cost_per_1k_input_tokens": {
+            "type": "number"
+          },
+          "cost_per_1k_output_tokens": {
+            "type": "number"
+          },
+          "supports_vision": {
+            "type": "boolean"
+          },
+          "supports_function_calling": {
+            "type": "boolean"
+          }
         },
-        "required": ["id", "name", "provider"]
+        "required": [
+          "id",
+          "name",
+          "provider"
+        ]
       },
       "ProviderStatus": {
         "type": "object",
         "properties": {
-          "name": { "type": "string" },
-          "configured": { "type": "boolean" },
-          "active_models": { "type": "integer" },
-          "total_models": { "type": "integer" }
+          "name": {
+            "type": "string"
+          },
+          "configured": {
+            "type": "boolean"
+          },
+          "active_models": {
+            "type": "integer"
+          },
+          "total_models": {
+            "type": "integer"
+          }
         }
       },
       "UsageStats": {
         "type": "object",
         "properties": {
-          "total_tokens": { "type": "integer" },
-          "prompt_tokens": { "type": "integer" },
-          "completion_tokens": { "type": "integer" },
-          "estimated_cost": { "type": "number" },
-          "request_count": { "type": "integer" }
+          "total_tokens": {
+            "type": "integer"
+          },
+          "prompt_tokens": {
+            "type": "integer"
+          },
+          "completion_tokens": {
+            "type": "integer"
+          },
+          "estimated_cost": {
+            "type": "number"
+          },
+          "request_count": {
+            "type": "integer"
+          }
         }
       },
       "Error": {
         "type": "object",
         "properties": {
-          "statusCode": { "type": "integer" },
-          "code": { "type": "string" },
-          "message": { "type": "string" },
-          "userMessage": { "type": "string" }
+          "statusCode": {
+            "type": "integer"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "userMessage": {
+            "type": "string"
+          }
         }
       }
     }
@@ -285,38 +681,100 @@
   "paths": {
     "/auth/register": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "security": [],
         "operationId": "authRegister",
-        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/RegisterInput" } } } },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterInput"
+              }
+            }
+          }
+        },
         "responses": {
-          "201": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthResponse" } } } },
-          "409": { "description": "Email already registered" }
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            },
+            "description": "User registered successfully"
+          },
+          "409": {
+            "description": "Email already registered"
+          }
         }
       }
     },
     "/auth/login": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "security": [],
         "operationId": "authLogin",
-        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LoginInput" } } } },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginInput"
+              }
+            }
+          }
+        },
         "responses": {
-          "200": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthResponse" } } } },
-          "401": { "description": "Invalid credentials" }
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            },
+            "description": "Login successful"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          }
         }
       }
     },
     "/auth/logout": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "operationId": "authLogout",
-        "responses": { "200": { "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string" } } } } } } }
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Logged out successfully"
+          }
+        }
       }
     },
     "/auth/verify": {
       "get": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "operationId": "authVerify",
         "responses": {
           "200": {
@@ -324,31 +782,82 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "user": { "$ref": "#/components/schemas/User" }, "valid": { "type": "boolean" } }
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    "valid": {
+                      "type": "boolean"
+                    }
+                  }
                 }
               }
-            }
+            },
+            "description": "Token is valid"
           }
         }
       }
     },
     "/auth/refresh": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "security": [],
         "operationId": "authRefresh",
-        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/RefreshTokenInput" } } } },
-        "responses": { "200": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthResponse" } } } } }
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            },
+            "description": "Token refreshed"
+          }
+        }
       }
     },
     "/projects": {
       "get": {
-        "tags": ["Projects"],
+        "tags": [
+          "Projects"
+        ],
         "operationId": "listProjects",
         "parameters": [
-          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
-          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 10 } },
-          { "name": "search", "in": "query", "schema": { "type": "string" } }
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -357,166 +866,319 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "projects": { "type": "array", "items": { "$ref": "#/components/schemas/Project" } },
-                    "total": { "type": "integer" },
-                    "page": { "type": "integer" },
-                    "totalPages": { "type": "integer" }
+                    "projects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Project"
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "page": {
+                      "type": "integer"
+                    },
+                    "totalPages": {
+                      "type": "integer"
+                    }
                   }
                 }
               }
-            }
+            },
+            "description": "List of projects"
           }
         }
       },
       "post": {
-        "tags": ["Projects"],
+        "tags": [
+          "Projects"
+        ],
         "operationId": "createProject",
-        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateProjectInput" } } } },
-        "responses": { "201": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Project" } } } } }
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProjectInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            },
+            "description": "Project created"
+          }
+        }
       }
     },
     "/projects/recent": {
       "get": {
-        "tags": ["Projects"],
+        "tags": [
+          "Projects"
+        ],
         "operationId": "listRecentProjects",
-        "parameters": [{ "name": "limit", "in": "query", "schema": { "type": "integer", "default": 5 } }],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 5
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
               "application/json": {
-                "schema": { "type": "object", "properties": { "projects": { "type": "array", "items": { "$ref": "#/components/schemas/Project" } } } }
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "projects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Project"
+                      }
+                    }
+                  }
+                }
               }
-            }
+            },
+            "description": "Recent projects"
           }
         }
       }
     },
     "/projects/{id}": {
       "get": {
-        "tags": ["Projects"],
+        "tags": [
+          "Projects"
+        ],
         "operationId": "getProject",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
-        "responses": { "200": { "content": { "application/json": { "schema": { "type": "object", "properties": { "project": { "$ref": "#/components/schemas/Project" } } } } } } }
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "project": {
+                      "$ref": "#/components/schemas/Project"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Project details"
+          }
+        }
       },
       "put": {
-        "tags": ["Projects"],
+        "tags": [
+          "Projects"
+        ],
         "operationId": "updateProject",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
-        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateProjectInput" } } } },
-        "responses": { "200": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Project" } } } } }
-      },
-      "delete": {
-        "tags": ["Projects"],
-        "operationId": "deleteProject",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
-        "responses": { "200": { "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string" } } } } } } }
-      }
-    },
-    "/agents": {
-      "get": {
-        "tags": ["Agents"],
-        "operationId": "listAgents",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": { "type": "object", "properties": { "agents": { "type": "array", "items": { "$ref": "#/components/schemas/Agent" } } } }
-              }
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
             }
           }
-        }
-      },
-      "post": {
-        "tags": ["Agents"],
-        "operationId": "createAgent",
-        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateAgentInput" } } } },
-        "responses": { "201": { "content": { "application/json": { "schema": { "type": "object", "properties": { "agent": { "$ref": "#/components/schemas/Agent" } } } } } } }
-      }
-    },
-    "/agents/{id}": {
-      "get": {
-        "tags": ["Agents"],
-        "operationId": "getAgent",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
-        "responses": { "200": { "content": { "application/json": { "schema": { "type": "object", "properties": { "agent": { "$ref": "#/components/schemas/Agent" } } } } } } }
-      },
-      "put": {
-        "tags": ["Agents"],
-        "operationId": "updateAgent",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
-        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateAgentInput" } } } },
-        "responses": { "200": { "content": { "application/json": { "schema": { "type": "object", "properties": { "agent": { "$ref": "#/components/schemas/Agent" } } } } } } }
-      },
-      "delete": {
-        "tags": ["Agents"],
-        "operationId": "deleteAgent",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
-        "responses": { "200": { "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string" } } } } } } }
-      }
-    },
-    "/conversations/{projectId}/{agentId}": {
-      "get": {
-        "tags": ["Conversations"],
-        "operationId": "getConversation",
-        "parameters": [
-          { "name": "projectId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
-          { "name": "agentId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": { "type": "object", "properties": { "conversation": { "$ref": "#/components/schemas/Conversation" } } }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": ["Conversations"],
-        "operationId": "clearConversation",
-        "parameters": [
-          { "name": "projectId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
-          { "name": "agentId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
-        ],
-        "responses": { "200": { "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string" } } } } } } }
-      }
-    },
-    "/conversations/{projectId}": {
-      "get": {
-        "tags": ["Conversations"],
-        "operationId": "getProjectConversations",
-        "parameters": [{ "name": "projectId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": { "type": "object", "properties": { "conversations": { "type": "array", "items": { "$ref": "#/components/schemas/Conversation" } } } }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/projects/{projectId}/agents/{agentId}/chat": {
-      "post": {
-        "tags": ["Chat"],
-        "operationId": "chat",
-        "parameters": [
-          { "name": "projectId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
-          { "name": "agentId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "message": { "type": "string" },
-                  "includeFiles": { "type": "boolean", "default": true },
-                  "stream": { "type": "boolean", "default": false }
-                },
-                "required": ["message"]
+                "$ref": "#/components/schemas/UpdateProjectInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            },
+            "description": "Project updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Projects"
+        ],
+        "operationId": "deleteProject",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Project deleted"
+          }
+        }
+      }
+    },
+    "/agents": {
+      "get": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "listAgents",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "agents": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Agent"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "List of agents"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "createAgent",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAgentInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "agent": {
+                      "$ref": "#/components/schemas/Agent"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Agent created"
+          }
+        }
+      }
+    },
+    "/agents/{id}": {
+      "get": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "getAgent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "agent": {
+                      "$ref": "#/components/schemas/Agent"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Agent details"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "updateAgent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAgentInput"
               }
             }
           }
@@ -528,16 +1190,255 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": { "type": "boolean" },
+                    "agent": {
+                      "$ref": "#/components/schemas/Agent"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Agent updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Agents"
+        ],
+        "operationId": "deleteAgent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Agent deleted"
+          }
+        }
+      }
+    },
+    "/conversations/{projectId}/{agentId}": {
+      "get": {
+        "tags": [
+          "Conversations"
+        ],
+        "operationId": "getConversation",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "agentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "conversation": {
+                      "$ref": "#/components/schemas/Conversation"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Conversation"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Conversations"
+        ],
+        "operationId": "clearConversation",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "agentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Conversation cleared"
+          }
+        }
+      }
+    },
+    "/conversations/{projectId}": {
+      "get": {
+        "tags": [
+          "Conversations"
+        ],
+        "operationId": "getProjectConversations",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "conversations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Conversation"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Project conversations"
+          }
+        }
+      }
+    },
+    "/projects/{projectId}/agents/{agentId}/chat": {
+      "post": {
+        "tags": [
+          "Chat"
+        ],
+        "operationId": "chat",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "agentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  },
+                  "includeFiles": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "stream": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                },
+                "required": [
+                  "message"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
                     "data": {
                       "type": "object",
                       "properties": {
-                        "conversation": { "$ref": "#/components/schemas/Conversation" },
+                        "conversation": {
+                          "$ref": "#/components/schemas/Conversation"
+                        },
                         "response": {
                           "type": "object",
                           "properties": {
-                            "content": { "type": "string" },
-                            "metadata": { "$ref": "#/components/schemas/MessageMetadata" }
+                            "content": {
+                              "type": "string"
+                            },
+                            "metadata": {
+                              "$ref": "#/components/schemas/MessageMetadata"
+                            }
                           }
                         }
                       }
@@ -545,14 +1446,17 @@
                   }
                 }
               }
-            }
+            },
+            "description": "Chat response"
           }
         }
       }
     },
     "/ai/status": {
       "get": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "operationId": "getAiStatus",
         "security": [],
         "responses": {
@@ -562,93 +1466,179 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "providers": { "type": "object", "additionalProperties": { "type": "boolean" } },
-                    "models": { "type": "object", "additionalProperties": { "type": "array", "items": {} } }
+                    "providers": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "boolean"
+                      }
+                    },
+                    "models": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {}
+                      }
+                    }
                   }
                 }
               }
-            }
+            },
+            "description": "AI service status"
           }
         }
       }
     },
     "/threads/projects/{projectId}": {
       "get": {
-        "tags": ["Threads"],
+        "tags": [
+          "Threads"
+        ],
         "operationId": "listThreads",
-        "parameters": [{ "name": "projectId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
               "application/json": {
-                "schema": { "type": "object", "properties": { "threads": { "type": "array", "items": { "$ref": "#/components/schemas/Thread" } } } }
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "threads": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Thread"
+                      }
+                    }
+                  }
+                }
               }
-            }
+            },
+            "description": "List of threads"
           }
         }
       },
       "post": {
-        "tags": ["Threads"],
+        "tags": [
+          "Threads"
+        ],
         "operationId": "createThread",
-        "parameters": [{ "name": "projectId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
-        "requestBody": { "content": { "application/json": { "schema": { "type": "object", "properties": { "title": { "type": "string" } } } } } },
-        "responses": { "201": { "content": { "application/json": { "schema": { "type": "object", "properties": { "thread": { "$ref": "#/components/schemas/Thread" } } } } } } }
-      }
-    },
-    "/threads/{threadId}": {
-      "get": {
-        "tags": ["Threads"],
-        "operationId": "getThread",
-        "parameters": [{ "name": "threadId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
-        "responses": { "200": { "content": { "application/json": { "schema": { "type": "object", "properties": { "thread": { "$ref": "#/components/schemas/Thread" } } } } } } }
-      },
-      "put": {
-        "tags": ["Threads"],
-        "operationId": "updateThread",
-        "parameters": [{ "name": "threadId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
-        "requestBody": { "content": { "application/json": { "schema": { "type": "object", "properties": { "title": { "type": "string" } }, "required": ["title"] } } } },
-        "responses": { "200": { "content": { "application/json": { "schema": { "type": "object", "properties": { "thread": { "$ref": "#/components/schemas/Thread" } } } } } } }
-      },
-      "delete": {
-        "tags": ["Threads"],
-        "operationId": "deleteThread",
-        "parameters": [{ "name": "threadId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
-        "responses": { "200": { "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string" } } } } } } }
-      }
-    },
-    "/threads/{threadId}/messages": {
-      "get": {
-        "tags": ["Threads"],
-        "operationId": "getThreadMessages",
-        "parameters": [{ "name": "threadId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": { "type": "object", "properties": { "messages": { "type": "array", "items": { "$ref": "#/components/schemas/ThreadMessage" } } } }
-              }
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
             }
           }
-        }
-      }
-    },
-    "/threads/{threadId}/chat": {
-      "post": {
-        "tags": ["Threads"],
-        "operationId": "threadChat",
-        "parameters": [{ "name": "threadId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "message": { "type": "string" },
-                  "agentId": { "type": "string" },
-                  "includeFiles": { "type": "boolean" },
-                  "stream": { "type": "boolean" }
+                  "title": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "thread": {
+                      "$ref": "#/components/schemas/Thread"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Thread created"
+          }
+        }
+      }
+    },
+    "/threads/{threadId}": {
+      "get": {
+        "tags": [
+          "Threads"
+        ],
+        "operationId": "getThread",
+        "parameters": [
+          {
+            "name": "threadId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "thread": {
+                      "$ref": "#/components/schemas/Thread"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Thread details"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Threads"
+        ],
+        "operationId": "updateThread",
+        "parameters": [
+          {
+            "name": "threadId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  }
                 },
-                "required": ["message", "agentId"]
+                "required": [
+                  "title"
+                ]
               }
             }
           }
@@ -660,114 +1650,491 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": { "type": "boolean" },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "message": { "$ref": "#/components/schemas/ThreadMessage" },
-                        "messages": { "type": "array", "items": { "$ref": "#/components/schemas/ThreadMessage" } },
-                        "response": { "type": "object", "properties": { "content": { "type": "string" }, "metadata": {} } }
+                    "thread": {
+                      "$ref": "#/components/schemas/Thread"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Thread updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Threads"
+        ],
+        "operationId": "deleteThread",
+        "parameters": [
+          {
+            "name": "threadId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Thread deleted"
+          }
+        }
+      }
+    },
+    "/threads/{threadId}/messages": {
+      "get": {
+        "tags": [
+          "Threads"
+        ],
+        "operationId": "getThreadMessages",
+        "parameters": [
+          {
+            "name": "threadId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "messages": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ThreadMessage"
                       }
                     }
                   }
                 }
               }
+            },
+            "description": "Thread messages"
+          }
+        }
+      }
+    },
+    "/threads/{threadId}/chat": {
+      "post": {
+        "tags": [
+          "Threads"
+        ],
+        "operationId": "threadChat",
+        "parameters": [
+          {
+            "name": "threadId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
             }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  },
+                  "agentId": {
+                    "type": "string"
+                  },
+                  "includeFiles": {
+                    "type": "boolean"
+                  },
+                  "stream": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "message",
+                  "agentId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "$ref": "#/components/schemas/ThreadMessage"
+                        },
+                        "messages": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/ThreadMessage"
+                          }
+                        },
+                        "response": {
+                          "type": "object",
+                          "properties": {
+                            "content": {
+                              "type": "string"
+                            },
+                            "metadata": {}
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Thread chat response"
           }
         }
       }
     },
     "/projects/{projectId}/files": {
       "get": {
-        "tags": ["Project Files"],
+        "tags": [
+          "Project Files"
+        ],
         "operationId": "listProjectFiles",
-        "parameters": [{ "name": "projectId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
               "application/json": {
-                "schema": { "type": "object", "properties": { "files": { "type": "array", "items": { "$ref": "#/components/schemas/ProjectFile" } }, "count": { "type": "integer" } } }
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "files": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ProjectFile"
+                      }
+                    },
+                    "count": {
+                      "type": "integer"
+                    }
+                  }
+                }
               }
-            }
+            },
+            "description": "Project files"
           }
         }
       },
       "post": {
-        "tags": ["Project Files"],
+        "tags": [
+          "Project Files"
+        ],
         "operationId": "createProjectFile",
-        "parameters": [{ "name": "projectId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
-        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateFileInput" } } } },
-        "responses": { "201": { "content": { "application/json": { "schema": { "type": "object", "properties": { "file": { "$ref": "#/components/schemas/ProjectFile" } } } } } } }
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFileInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "$ref": "#/components/schemas/ProjectFile"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "File created"
+          }
+        }
       }
     },
     "/files/{id}": {
       "get": {
-        "tags": ["Project Files"],
+        "tags": [
+          "Project Files"
+        ],
         "operationId": "getProjectFile",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
-        "responses": { "200": { "content": { "application/json": { "schema": { "type": "object", "properties": { "file": { "$ref": "#/components/schemas/ProjectFile" } } } } } } }
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "$ref": "#/components/schemas/ProjectFile"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "File details"
+          }
+        }
       },
       "put": {
-        "tags": ["Project Files"],
+        "tags": [
+          "Project Files"
+        ],
         "operationId": "updateProjectFile",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
-        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateFileInput" } } } },
-        "responses": { "200": { "content": { "application/json": { "schema": { "type": "object", "properties": { "file": { "$ref": "#/components/schemas/ProjectFile" } } } } } } }
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFileInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "$ref": "#/components/schemas/ProjectFile"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "File updated"
+          }
+        }
       },
       "delete": {
-        "tags": ["Project Files"],
+        "tags": [
+          "Project Files"
+        ],
         "operationId": "deleteProjectFile",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
-        "responses": { "200": { "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string" } } } } } } }
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "File deleted"
+          }
+        }
       }
     },
     "/models": {
       "get": {
-        "tags": ["Models"],
+        "tags": [
+          "Models"
+        ],
         "operationId": "listModels",
         "responses": {
           "200": {
             "content": {
               "application/json": {
-                "schema": { "type": "object", "properties": { "models": { "type": "array", "items": { "$ref": "#/components/schemas/AIModel" } }, "count": { "type": "integer" } } }
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "models": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AIModel"
+                      }
+                    },
+                    "count": {
+                      "type": "integer"
+                    }
+                  }
+                }
               }
-            }
+            },
+            "description": "List of models"
           }
         }
       }
     },
     "/models/providers/status": {
       "get": {
-        "tags": ["Models"],
+        "tags": [
+          "Models"
+        ],
         "operationId": "getProviderStatus",
         "security": [],
         "responses": {
           "200": {
             "content": {
               "application/json": {
-                "schema": { "type": "object", "properties": { "providers": { "type": "array", "items": { "$ref": "#/components/schemas/ProviderStatus" } } } }
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "providers": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ProviderStatus"
+                      }
+                    }
+                  }
+                }
               }
-            }
+            },
+            "description": "Provider status"
           }
         }
       }
     },
     "/usage/current": {
       "get": {
-        "tags": ["Usage"],
+        "tags": [
+          "Usage"
+        ],
         "operationId": "getCurrentUsage",
-        "responses": { "200": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UsageStats" } } } } }
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageStats"
+                }
+              }
+            },
+            "description": "Current usage"
+          }
+        }
       }
     },
     "/usage/summary": {
       "get": {
-        "tags": ["Usage"],
+        "tags": [
+          "Usage"
+        ],
         "operationId": "getUsageSummary",
         "parameters": [
-          { "name": "startDate", "in": "query", "schema": { "type": "string", "format": "date" } },
-          { "name": "endDate", "in": "query", "schema": { "type": "string", "format": "date" } }
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
         ],
-        "responses": { "200": { "content": { "application/json": { "schema": { "type": "object" } } } } }
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Usage summary"
+          }
+        }
       }
     }
   }

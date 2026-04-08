@@ -3,7 +3,7 @@ import {
   View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useRegister } from '../../src/api/hooks';
+import { useAuthRegister } from '../../src/api/generated/auth/auth';
 import { saveAuth } from '../../src/lib/auth';
 
 export default function RegisterScreen() {
@@ -11,7 +11,7 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const register = useRegister();
+  const register = useAuthRegister();
 
   const handleRegister = async () => {
     if (!email || !username || !password) {
@@ -19,11 +19,12 @@ export default function RegisterScreen() {
       return;
     }
     try {
-      const data = await register.mutateAsync({ email, username, password });
-      if (data) {
+      const result = await register.mutateAsync({ data: { email, username, password } });
+      if (result?.data) {
+        const d = result.data;
         await saveAuth(
-          { access_token: data.access_token, refresh_token: data.refresh_token },
-          data.user
+          { access_token: d.access_token, refresh_token: d.refresh_token },
+          d.user
         );
         router.replace('/projects');
       }

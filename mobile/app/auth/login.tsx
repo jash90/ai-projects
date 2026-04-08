@@ -9,14 +9,14 @@ import {
   Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useLogin } from '../../src/api/hooks';
+import { useAuthLogin } from '../../src/api/generated/auth/auth';
 import { saveAuth } from '../../src/lib/auth';
 
 export default function LoginScreen() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const login = useLogin();
+  const login = useAuthLogin();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -24,11 +24,12 @@ export default function LoginScreen() {
       return;
     }
     try {
-      const data = await login.mutateAsync({ email, password });
-      if (data) {
+      const result = await login.mutateAsync({ data: { email, password } });
+      if (result?.data) {
+        const d = result.data;
         await saveAuth(
-          { access_token: data.access_token, refresh_token: data.refresh_token },
-          data.user
+          { access_token: d.access_token, refresh_token: d.refresh_token },
+          d.user
         );
         router.replace('/projects');
       }

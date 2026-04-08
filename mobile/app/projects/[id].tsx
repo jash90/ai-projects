@@ -1,23 +1,23 @@
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useProject, useProjectConversations, useDeleteProject } from '../../src/api/hooks';
+import { useGetProject, useGetProjectConversations, useDeleteProject } from '../../src/api/generated/projects/projects';
 import { Alert } from 'react-native';
 
 export default function ProjectDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const { data: projectData, isLoading } = useProject(id);
-  const { data: convData } = useProjectConversations(id);
+  const { data: projectData, isLoading } = useGetProject(id);
+  const { data: convData } = useGetProjectConversations(id);
   const deleteProject = useDeleteProject();
 
-  const project = projectData?.project;
+  const project = projectData?.data?.project;
 
   const handleDelete = () => {
     Alert.alert('Delete Project', 'Are you sure?', [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Delete', style: 'destructive', onPress: async () => {
-          await deleteProject.mutateAsync(id);
+          await deleteProject.mutateAsync({ id });
           router.back();
         },
       },

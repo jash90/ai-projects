@@ -1,9 +1,9 @@
 import { Redirect } from 'expo-router';
 import { ActivityIndicator, View } from 'react-native';
-import { useVerifyAuth } from '../src/api/hooks';
+import { useAuthVerify } from '../src/api/generated/auth/auth';
 
 export default function HomeScreen() {
-  const { data, isLoading } = useVerifyAuth();
+  const { data, isLoading } = useAuthVerify();
 
   if (isLoading) {
     return (
@@ -13,7 +13,7 @@ export default function HomeScreen() {
     );
   }
 
-  if (data?.valid) {
+  if (data?.data?.valid) {
     return <Redirect href="/projects" />;
   }
 

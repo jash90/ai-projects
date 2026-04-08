@@ -4,8 +4,7 @@ import {
   ActivityIndicator, KeyboardAvoidingView, Platform,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { useConversation, useChat } from '../../src/api/hooks';
-import type { ConversationMessage } from '../../src/api/generated/schema';
+import { useGetConversation, useChat } from '../../src/api/generated/chat/chat';
 
 interface DisplayMessage {
   id: string;
@@ -21,13 +20,13 @@ export default function ChatScreen() {
   const flatListRef = useRef<FlatList>(null);
   const chat = useChat();
 
-  const { data: convData } = useConversation(projectId, agentId);
+  const { data: convData } = useGetConversation(projectId, agentId);
 
   // Initialize from existing conversation
   useEffect(() => {
-    if (convData?.conversation?.messages?.length) {
+    if (convData?.data?.conversation?.messages?.length) {
       setLocalMessages(
-        convData.conversation.messages.map((m: ConversationMessage, i: number) => ({
+        convData.data.conversation.messages.map((m: any, i: number) => ({
           id: `server-${i}`,
           role: m.role,
           content: m.content,
@@ -35,7 +34,7 @@ export default function ChatScreen() {
         }))
       );
     }
-  }, [convData?.conversation?.messages?.length]);
+  }, [convData?.data?.conversation?.messages?.length]);
 
   const handleSend = async () => {
     const message = input.trim();
@@ -51,7 +50,7 @@ export default function ChatScreen() {
     setInput('');
 
     try {
-      const result = await chat.mutateAsync({ projectId, agentId, message });
+      const result = await chat.mutateAsync({ projectId, agentId, data: { message, includeFiles: true, stream: false } });
       if (result?.data?.response) {
         const assistantMsg: DisplayMessage = {
           id: `resp-${Date.now()}`,
