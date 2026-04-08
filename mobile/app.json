@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "AI Projects",
+    "slug": "ai-projects-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "ai-projects",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.aiprojects.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.aiprojects.mobile"
+    },
+    "plugins": ["expo-router", "expo-secure-store"]
+  }
+}
