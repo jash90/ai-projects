@@ -28,6 +28,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  CreateProject201,
   CreateProjectInput,
   DeleteProject200,
   GetProject200,
@@ -35,7 +36,7 @@ import type {
   ListProjectsParams,
   ListRecentProjects200,
   ListRecentProjectsParams,
-  Project,
+  UpdateProject200,
   UpdateProjectInput
 } from '../schemas';
 
@@ -206,7 +207,7 @@ export function useListProjectsSuspense<TData = Awaited<ReturnType<typeof listPr
 
 
 export type createProjectResponse201 = {
-  data: Project
+  data: CreateProject201
   status: 201
 }
 
@@ -597,7 +598,7 @@ export function useGetProjectSuspense<TData = Awaited<ReturnType<typeof getProje
 
 
 export type updateProjectResponse200 = {
-  data: Project
+  data: UpdateProject200
   status: 200
 }
 

@@ -5,10 +5,10 @@
  * Backend API for AI Projects Platform
  * OpenAPI spec version: 2.0.0
  */
+import type { AuthResponseTokens } from './authResponseTokens';
 import type { User } from './user';
 
 export interface AuthResponse {
   user: User;
-  access_token: string;
-  refresh_token?: string;
+  tokens: AuthResponseTokens;
 }

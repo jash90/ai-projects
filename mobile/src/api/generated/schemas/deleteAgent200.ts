@@ -5,7 +5,9 @@
  * Backend API for AI Projects Platform
  * OpenAPI spec version: 2.0.0
  */
+import type { DeleteAgent200Data } from './deleteAgent200Data';
 
 export type DeleteAgent200 = {
-  message?: string;
+  success: boolean;
+  data?: DeleteAgent200Data;
 };

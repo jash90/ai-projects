@@ -5,7 +5,7 @@ import { useListAgents } from '@/api/generated/agents/agents';
 export default function AgentPickerScreen() {
   const router = useRouter();
   const { data, isLoading } = useListAgents();
-  const agents = data?.data?.agents ?? [];
+  const agents = (data as any)?.data?.data?.items ?? [];
 
   // Try to get projectId from params if navigating from project detail
   // expo-router passes search params via useLocalSearchParams

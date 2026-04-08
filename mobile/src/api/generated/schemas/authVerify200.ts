@@ -5,9 +5,9 @@
  * Backend API for AI Projects Platform
  * OpenAPI spec version: 2.0.0
  */
-import type { User } from './user';
+import type { AuthVerify200Data } from './authVerify200Data';
 
 export type AuthVerify200 = {
-  user?: User;
-  valid?: boolean;
+  success: boolean;
+  data?: AuthVerify200Data;
 };

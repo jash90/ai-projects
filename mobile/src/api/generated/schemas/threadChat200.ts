@@ -8,6 +8,6 @@
 import type { ThreadChat200Data } from './threadChat200Data';
 
 export type ThreadChat200 = {
-  success?: boolean;
+  success: boolean;
   data?: ThreadChat200Data;
 };

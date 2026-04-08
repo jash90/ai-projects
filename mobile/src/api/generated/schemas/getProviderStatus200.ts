@@ -5,8 +5,9 @@
  * Backend API for AI Projects Platform
  * OpenAPI spec version: 2.0.0
  */
-import type { ProviderStatus } from './providerStatus';
+import type { GetProviderStatus200Data } from './getProviderStatus200Data';
 
 export type GetProviderStatus200 = {
-  providers?: ProviderStatus[];
+  success: boolean;
+  data?: GetProviderStatus200Data;
 };

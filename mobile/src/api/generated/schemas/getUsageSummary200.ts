@@ -5,5 +5,9 @@
  * Backend API for AI Projects Platform
  * OpenAPI spec version: 2.0.0
  */
+import type { GetUsageSummary200Data } from './getUsageSummary200Data';
 
-export type GetUsageSummary200 = { [key: string]: unknown };
+export type GetUsageSummary200 = {
+  success: boolean;
+  data?: GetUsageSummary200Data;
+};

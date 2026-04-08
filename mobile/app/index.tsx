@@ -13,7 +13,7 @@ export default function HomeScreen() {
     );
   }
 
-  if (data?.data?.valid) {
+  if ((data as any)?.data?.data?.valid) {
     return <Redirect href="/projects" />;
   }
 

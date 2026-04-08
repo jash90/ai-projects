@@ -5,8 +5,9 @@
  * Backend API for AI Projects Platform
  * OpenAPI spec version: 2.0.0
  */
-import type { ThreadMessage } from './threadMessage';
+import type { GetThreadMessages200Data } from './getThreadMessages200Data';
 
 export type GetThreadMessages200 = {
-  messages?: ThreadMessage[];
+  success: boolean;
+  data?: GetThreadMessages200Data;
 };

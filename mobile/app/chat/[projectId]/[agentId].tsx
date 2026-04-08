@@ -22,11 +22,13 @@ export default function ChatScreen() {
 
   const { data: convData } = useGetConversation(projectId, agentId);
 
+  const convResponse = (convData as any)?.data?.data;
+
   // Initialize from existing conversation
   useEffect(() => {
-    if (convData?.data?.conversation?.messages?.length) {
+    if (convResponse?.conversation?.messages?.length) {
       setLocalMessages(
-        convData.data.conversation.messages.map((m: any, i: number) => ({
+        convResponse.conversation.messages.map((m: any, i: number) => ({
           id: `server-${i}`,
           role: m.role,
           content: m.content,
@@ -34,7 +36,7 @@ export default function ChatScreen() {
         }))
       );
     }
-  }, [convData?.data?.conversation?.messages?.length]);
+  }, [convResponse?.conversation?.messages?.length]);
 
   const handleSend = async () => {
     const message = input.trim();
@@ -51,11 +53,12 @@ export default function ChatScreen() {
 
     try {
       const result = await chat.mutateAsync({ projectId, agentId, data: { message, includeFiles: true, stream: false } });
-      if (result?.data?.response) {
+      const chatResponse = (result as any)?.data?.data;
+      if (chatResponse?.response) {
         const assistantMsg: DisplayMessage = {
           id: `resp-${Date.now()}`,
           role: 'assistant',
-          content: result.data.response.content,
+          content: chatResponse.response.content,
           timestamp: new Date().toISOString(),
         };
         setLocalMessages(prev => [...prev, assistantMsg]);

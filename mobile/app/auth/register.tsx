@@ -20,10 +20,10 @@ export default function RegisterScreen() {
     }
     try {
       const result = await register.mutateAsync({ data: { email, username, password } });
-      if (result?.data) {
-        const d = result.data;
+      const d = (result as any)?.data?.data;
+      if (d?.user && d?.tokens) {
         await saveAuth(
-          { access_token: d.access_token, refresh_token: d.refresh_token },
+          { access_token: d.tokens.access_token, refresh_token: d.tokens.refresh_token },
           d.user
         );
         router.replace('/projects');

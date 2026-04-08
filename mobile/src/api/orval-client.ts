@@ -1,78 +1,66 @@
 /**
- * Orval mutator — wraps openapi-fetch client for TanStack Query hook generation.
- * Orval calls customInstance<T>(...) which delegates to apiClient.GET/POST/etc.
+ * Orval mutator — bridges orval's call pattern to openapi-fetch.
+ * Orval generates: customInstance<T>(url, { method, headers, body, signal, ... })
+ * We delegate to the openapi-fetch client which handles path/query params & serialization.
  */
 import { apiClient } from './client';
 import type { paths } from './generated/schema';
 
-type Method = keyof paths[string];
-type Path = keyof paths;
-type Op<P extends Path, M extends Method> = paths[P][M];
+export async function customInstance<T>(
+  url: string,
+  options: RequestInit & {
+    method?: string;
+    body?: string;
+    signal?: AbortSignal;
+    params?: { path?: Record<string, string | number>; query?: Record<string, unknown> };
+  } = {}
+): Promise<T> {
+  const method = (options.method || 'GET').toUpperCase() as 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  const body = options.body ? JSON.parse(options.body as string) : undefined;
+  const signal = options.signal;
+  const pathParams = (options.params?.path || {}) as Record<string, string>;
+  const queryParams = options.params?.query as Record<string, unknown> | undefined;
 
-type RequestOptions = {
-  url: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-  params?: {
-    path?: Record<string, string | number>;
-    query?: Record<string, unknown>;
-  };
-  body?: unknown;
-  signal?: AbortSignal;
-};
-
-// Extract the success response data type
-type SuccessResponse<T> = T extends { 200: { content: { 'application/json': infer D } } }
-  ? D
-  : T extends { 201: { content: { 'application/json': infer D } } }
-  ? D
-  : unknown;
-
-export async function customInstance<T>(request: RequestOptions): Promise<T> {
-  const { url, method, params, body, signal } = request;
-
-  // Map URL pattern (/projects/{id}) + params to openapi-fetch call
-  const pathParams = (params?.path || {}) as Record<string, string>;
-  const queryParams = params?.query as Record<string, unknown> | undefined;
-
-  const fetchParams = {
+  const fetchParams: any = {
     params: {
       path: pathParams,
       ...(queryParams ? { query: queryParams } : {}),
     },
-    body: body as any,
+    body,
     signal,
   };
 
-  // Route to the correct apiClient method
   const path = url as keyof paths;
+  let result: { data: unknown; error: unknown; response: Response };
 
   switch (method) {
-    case 'GET': {
-      const { data, error } = await apiClient.GET(path as any, fetchParams as any);
-      if (error) throw error;
-      return data as T;
-    }
-    case 'POST': {
-      const { data, error } = await apiClient.POST(path as any, fetchParams as any);
-      if (error) throw error;
-      return data as T;
-    }
-    case 'PUT': {
-      const { data, error } = await apiClient.PUT(path as any, fetchParams as any);
-      if (error) throw error;
-      return data as T;
-    }
-    case 'DELETE': {
-      const { data, error } = await apiClient.DELETE(path as any, fetchParams as any);
-      if (error) throw error;
-      return data as T;
-    }
-    case 'PATCH': {
-      const { data, error } = await apiClient.PATCH(path as any, fetchParams as any);
-      if (error) throw error;
-      return data as T;
-    }
+    case 'GET':
+      result = await apiClient.GET(path as any, fetchParams);
+      break;
+    case 'POST':
+      result = await apiClient.POST(path as any, fetchParams);
+      break;
+    case 'PUT':
+      result = await apiClient.PUT(path as any, fetchParams);
+      break;
+    case 'DELETE':
+      result = await apiClient.DELETE(path as any, fetchParams);
+      break;
+    case 'PATCH':
+      result = await apiClient.PATCH(path as any, fetchParams);
+      break;
     default:
       throw new Error(`Unsupported method: ${method}`);
   }
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  // Return in orval's expected shape: { data, status, headers }
+  return {
+    data: result.data,
+    status: result.response.status,
+    headers: result.response.headers,
+  } as T;
 }
