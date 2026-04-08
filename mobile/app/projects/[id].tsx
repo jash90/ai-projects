@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useGetProject, useGetProjectConversations, useDeleteProject } from '../../src/api/generated/projects/projects';
+import { useGetProject, useGetProjectConversations, useDeleteProject } from '@/api/generated/projects/projects';
 import { Alert } from 'react-native';
 
 export default function ProjectDetailScreen() {

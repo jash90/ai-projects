@@ -1,6 +1,6 @@
 import { FlatList, View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, RefreshControl } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useListProjects, useCreateProject } from '../../src/api/generated/projects/projects';
+import { useListProjects, useCreateProject } from '@/api/generated/projects/projects';
 import { useState } from 'react';
 import { TextInput, Alert } from 'react-native';
 

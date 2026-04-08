@@ -1,6 +1,6 @@
 import { Redirect } from 'expo-router';
 import { ActivityIndicator, View } from 'react-native';
-import { useAuthVerify } from '../src/api/generated/auth/auth';
+import { useAuthVerify } from '@/api/generated/auth/auth';
 
 export default function HomeScreen() {
   const { data, isLoading } = useAuthVerify();

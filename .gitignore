@@ -136,3 +136,4 @@ monitoring/prometheus/data/
 # Database backups (store in separate location)
 backups/
 *.sql.gz
+mobile/.expo/
