@@ -12,7 +12,7 @@
       "description": "Descrizione",
       "descriptionPlaceholder": "Descrivi cosa fa questo agente...",
       "maxTokens": "Token Massimi",
-      "maxTokensHint": "Lunghezza massima della risposta",
+      "maxTokensHint": "Lunghezza massima della risposta (fino a {{max}} token, contesto: {{context}})",
       "model": "Modello",
       "modelSelect": "Seleziona modello...",
       "name": "Nome Agente *",

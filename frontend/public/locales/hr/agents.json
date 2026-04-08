@@ -12,7 +12,7 @@
       "description": "Opis",
       "descriptionPlaceholder": "Opišite što ovaj agent radi...",
       "maxTokens": "Maksimalni tokeni",
-      "maxTokensHint": "Maksimalna duljina odgovora",
+      "maxTokensHint": "Maksimalna duljina odgovora (do {{max}} tokena, kontekst: {{context}})",
       "model": "Model",
       "modelSelect": "Odaberite model...",
       "name": "Ime agenta *",

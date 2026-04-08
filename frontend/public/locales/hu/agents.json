@@ -12,7 +12,7 @@
       "description": "Leírás",
       "descriptionPlaceholder": "Írd le, mit csinál ez az ügynök...",
       "maxTokens": "Max Token",
-      "maxTokensHint": "Maximális válasz hossz",
+      "maxTokensHint": "Maximális válasz hossz (legfeljebb {{max}} token, kontextus: {{context}})",
       "model": "Modell",
       "modelSelect": "Modell kiválasztása...",
       "name": "Ügynök neve *",
