@@ -215,7 +215,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
     const firstModel = popularModel || availableModels[0]
 
     // Clamp max_tokens to the new model's output limit if a model is auto-selected
-    const newModelMaxTokens = firstModel?.metadata?.maxOutputTokens || 4096
+    const newModelMaxTokens = firstModel?.metadata?.maxOutputTokens || Math.floor((firstModel?.metadata?.contextWindow || 128000) * 0.4)
     const currentMaxTokens = formData.max_tokens
 
     setFormData(prev => ({
@@ -274,8 +274,9 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
 
   // Get the selected model's metadata for dynamic max_tokens limits
   const selectedModelMetadata = availableModels.find(m => m.id === formData.model)?.metadata
-  const modelMaxOutputTokens = selectedModelMetadata?.maxOutputTokens || 4096
-  const modelContextWindow = selectedModelMetadata?.contextWindow || 4096
+  // Use context window as fallback — models with large context windows always support more output
+  const modelContextWindow = selectedModelMetadata?.contextWindow || 128000
+  const modelMaxOutputTokens = selectedModelMetadata?.maxOutputTokens || Math.floor(modelContextWindow * 0.4)
 
   return (
     <Dialog
@@ -466,7 +467,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
                           value={formData.model}
                           onValueChange={(value) => {
                             const newModel = availableModels.find(m => m.id === value)
-                            const newModelMaxTokens = newModel?.metadata?.maxOutputTokens || 4096
+                            const newModelMaxTokens = newModel?.metadata?.maxOutputTokens || Math.floor((newModel?.metadata?.contextWindow || 128000) * 0.4)
                             setFormData(prev => ({
                               ...prev,
                               model: value,
@@ -532,7 +533,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
                       className="mt-1"
                     />
                     <p className="text-xs text-muted-foreground mt-1">
-                      {t('dialog.fields.maxTokensHint')} (max: {modelMaxOutputTokens.toLocaleString()}, context: {modelContextWindow.toLocaleString()})
+                      {t('dialog.fields.maxTokensHint', { max: modelMaxOutputTokens.toLocaleString(), context: modelContextWindow.toLocaleString() })}
                     </p>
                   </div>
                 </div>
@@ -623,7 +624,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
           onClose={() => setShowModelPicker(false)}
           onSelect={(modelId) => {
             const newModel = availableModels.find(m => m.id === modelId)
-            const newModelMaxTokens = newModel?.metadata?.maxOutputTokens || 4096
+            const newModelMaxTokens = newModel?.metadata?.maxOutputTokens || Math.floor((newModel?.metadata?.contextWindow || 128000) * 0.4)
             setFormData(prev => ({
               ...prev,
               model: modelId,
