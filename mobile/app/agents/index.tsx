@@ -1,11 +1,11 @@
 import { FlatList, View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useAgents } from '../../src/api/hooks';
+import { useListAgents } from '../../src/api/generated/agents/agents';
 
 export default function AgentPickerScreen() {
   const router = useRouter();
-  const { data, isLoading } = useAgents();
-  const agents = data?.agents ?? [];
+  const { data, isLoading } = useListAgents();
+  const agents = data?.data?.agents ?? [];
 
   // Try to get projectId from params if navigating from project detail
   // expo-router passes search params via useLocalSearchParams

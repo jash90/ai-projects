@@ -1,22 +1,22 @@
 import { FlatList, View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, RefreshControl } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useProjects, useCreateProject } from '../../src/api/hooks';
+import { useListProjects, useCreateProject } from '../../src/api/generated/projects/projects';
 import { useState } from 'react';
 import { TextInput, Alert } from 'react-native';
 
 export default function ProjectsScreen() {
   const router = useRouter();
-  const { data, isLoading, refetch } = useProjects({ limit: 50 });
+  const { data, isLoading, refetch } = useListProjects({ query: { params: { query: { limit: 50 } } } });
   const createProject = useCreateProject();
   const [showCreate, setShowCreate] = useState(false);
   const [name, setName] = useState('');
 
-  const projects = data?.projects ?? [];
+  const projects = data?.data?.projects ?? [];
 
   const handleCreate = async () => {
     if (!name.trim()) return;
     try {
-      await createProject.mutateAsync({ name: name.trim() });
+      await createProject.mutateAsync({ data: { name: name.trim() } });
       setName('');
       setShowCreate(false);
       refetch();
