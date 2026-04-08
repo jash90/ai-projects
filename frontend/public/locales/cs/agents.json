@@ -12,7 +12,7 @@
       "description": "Popis",
       "descriptionPlaceholder": "Popište, co tento agent dělá...",
       "maxTokens": "Maximální tokeny",
-      "maxTokensHint": "Maximální délka odpovědi",
+      "maxTokensHint": "Maximální délka odpovědi (až {{max}} tokenů, kontext: {{context}})",
       "model": "Model",
       "modelSelect": "Vybrat model...",
       "name": "Jméno agenta *",

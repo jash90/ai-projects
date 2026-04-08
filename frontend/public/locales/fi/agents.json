@@ -12,7 +12,7 @@
       "description": "Kuvaus",
       "descriptionPlaceholder": "Kuvaile, mitä tämä agentti tekee...",
       "maxTokens": "Maksimi tokenit",
-      "maxTokensHint": "Maksimi vastauspituus",
+      "maxTokensHint": "Maksimi vastauspituus (jopa {{max}} tokenia, konteksti: {{context}})",
       "model": "Malli",
       "modelSelect": "Valitse malli...",
       "name": "Agentin nimi *",

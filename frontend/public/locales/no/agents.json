@@ -12,7 +12,7 @@
       "description": "Beskrivelse",
       "descriptionPlaceholder": "Beskriv hva denne agenten gjør...",
       "maxTokens": "Maks Tokens",
-      "maxTokensHint": "Maksimal lengde på svar",
+      "maxTokensHint": "Maksimal lengde på svar (opptil {{max}} tokens, kontekst: {{context}})",
       "model": "Modell",
       "modelSelect": "Velg modell...",
       "name": "Agentnavn *",

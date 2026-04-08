@@ -12,7 +12,7 @@
       "description": "Περιγραφή",
       "descriptionPlaceholder": "Περιγράψτε τι κάνει αυτός ο πράκτορας...",
       "maxTokens": "Μέγιστοι Tokens",
-      "maxTokensHint": "Μέγιστο μήκος απάντησης",
+      "maxTokensHint": "Μέγιστο μήκος απάντησης (μέχρι {{max}} tokens, πλαίσιο: {{context}})",
       "model": "Μοντέλο",
       "modelSelect": "Επιλέξτε μοντέλο...",
       "name": "Όνομα Πράκτορα *",

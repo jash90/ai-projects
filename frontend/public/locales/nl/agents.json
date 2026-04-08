@@ -12,7 +12,7 @@
       "description": "Beschrijving",
       "descriptionPlaceholder": "Beschrijf wat deze agent doet...",
       "maxTokens": "Max Tokens",
-      "maxTokensHint": "Maximale responslengte",
+      "maxTokensHint": "Maximale responslengte (tot {{max}} tokens, context: {{context}})",
       "model": "Model",
       "modelSelect": "Selecteer model...",
       "name": "Agent Naam *",

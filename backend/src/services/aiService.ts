@@ -126,6 +126,204 @@ class AIService {
     return systemContent;
   }
 
+  // Unified safety margin constant used by both truncation and output allocation.
+  // 7% of context window is sufficient to account for token estimation inaccuracies.
+  private static readonly CONTEXT_SAFETY_MARGIN_RATIO = 0.07;
+
+  // Fraction of context window reserved for output / used as dynamic allowance baseline.
+  private static readonly OUTPUT_RESERVE_RATIO = 0.4;
+
+  /**
+   * Calculate the optimal max_tokens for a completion request based on:
+   * - The model's context window
+   * - The estimated prompt token count (system prompt + messages + project files)
+   * - The agent's configured max_tokens as a baseline preference
+   * - A safety margin to prevent context overflow
+   *
+   * The agent's max_tokens is treated as a minimum baseline, not a hard ceiling.
+   * The system dynamically allocates more output tokens when the context window
+   * has plenty of room, ensuring responses are never cut short artificially.
+   *
+   * Returns the number of tokens available for the model's completion.
+   */
+  private calculateOptimalMaxTokens(
+    contextWindow: number,
+    promptTokenEstimate: number,
+    agentMaxTokens: number,
+    modelMaxOutputTokens: number
+  ): number {
+    const safetyMargin = Math.max(100, Math.floor(contextWindow * AIService.CONTEXT_SAFETY_MARGIN_RATIO));
+    const availableForOutput = Math.max(contextWindow - promptTokenEstimate - safetyMargin, 256);
+
+    // The hard ceiling is the lesser of what the model supports and what fits in context
+    const hardCeiling = Math.min(availableForOutput, modelMaxOutputTokens);
+
+    // The agent's max_tokens is a baseline preference, not a hard cap.
+    // Allow up to OUTPUT_RESERVE_RATIO of context window or 2x the user's setting, whichever is greater.
+    // But never exceed the model's actual output limit or available context.
+    const dynamicAllowance = Math.max(
+      agentMaxTokens * 2,
+      Math.floor(contextWindow * AIService.OUTPUT_RESERVE_RATIO)
+    );
+    const effectiveMax = Math.min(dynamicAllowance, hardCeiling);
+
+    // Ensure we always honor at least the agent's configured minimum
+    const finalMax = Math.max(effectiveMax, Math.min(agentMaxTokens, hardCeiling));
+
+    // Only log when the adjustment is significant (>20% difference) to reduce log noise
+    const safeAgentMax = Math.max(agentMaxTokens, 1); // guard against division by zero
+    const deltaRatio = Math.abs(finalMax - agentMaxTokens) / safeAgentMax;
+    if (deltaRatio > 0.2) {
+      logger.debug('Dynamic max_tokens adjustment', {
+        contextWindow,
+        promptTokenEstimate,
+        safetyMargin,
+        availableForOutput,
+        modelMaxOutputTokens,
+        agentMaxTokens,
+        hardCeiling,
+        dynamicAllowance,
+        effectiveMax: finalMax,
+      });
+    }
+
+    return finalMax;
+  }
+
+  /**
+   * Truncate conversation messages to fit within the model's context window.
+   * Removes oldest messages first in user/assistant pairs to maintain conversation coherence,
+   * always keeping the system prompt and the latest user message.
+   *
+   * @returns The truncated messages array and the estimated prompt token count
+   */
+  private truncateMessagesToFitContext(
+    messages: ConversationMessage[],
+    systemPrompt: string,
+    contextWindow: number,
+    modelMaxOutputTokens: number
+  ): { messages: ConversationMessage[]; promptTokenEstimate: number } {
+    // Estimate tokens for system prompt (already includes project files via buildSystemContent)
+    const fixedTokens = TokenService.estimateTokens(systemPrompt) + 50; // +50 for formatting overhead
+
+    // Reserve tokens for output using the unified safety margin
+    const outputReserve = Math.min(modelMaxOutputTokens, Math.floor(contextWindow * AIService.OUTPUT_RESERVE_RATIO));
+    const safetyMargin = Math.max(100, Math.floor(contextWindow * AIService.CONTEXT_SAFETY_MARGIN_RATIO));
+    const budgetForMessages = contextWindow - fixedTokens - outputReserve - safetyMargin;
+
+    // Edge case: system prompt + project files alone exceed available budget
+    if (budgetForMessages <= 0) {
+      logger.warn('Fixed tokens exceed available context budget, dropping all prior messages', {
+        contextWindow,
+        fixedTokens,
+        outputReserve,
+        safetyMargin,
+        budgetForMessages,
+        messageCount: messages.length,
+      });
+      // Keep only the last message (current user message)
+      const lastMessage = messages[messages.length - 1];
+      const keptMessages = lastMessage ? [lastMessage] : [];
+      const lastMsgTokens = lastMessage ? TokenService.estimateTokens(lastMessage.content) + 4 : 0;
+      return {
+        messages: keptMessages,
+        promptTokenEstimate: fixedTokens + lastMsgTokens,
+      };
+    }
+
+    // Estimate tokens for each message
+    const messageEstimates = messages.map(msg => ({
+      message: msg,
+      tokens: TokenService.estimateTokens(msg.content) + 4, // +4 for role markers
+    }));
+
+    // Calculate total message tokens
+    const totalMessageTokens = messageEstimates.reduce((sum, m) => sum + m.tokens, 0);
+
+    if (totalMessageTokens <= budgetForMessages) {
+      // All messages fit, no truncation needed
+      return {
+        messages,
+        promptTokenEstimate: fixedTokens + totalMessageTokens,
+      };
+    }
+
+    // Need to truncate: remove oldest messages in user/assistant pairs to maintain
+    // conversation coherence. Always keep the last message (current user input).
+    const lastMsg = messageEstimates[messageEstimates.length - 1];
+    let remainingBudget = budgetForMessages - (lastMsg?.tokens || 0);
+    const truncatedMessages: ConversationMessage[] = [];
+
+    // Collect messages from newest to oldest
+    for (let i = messageEstimates.length - 2; i >= 0; i--) {
+      const current = messageEstimates[i];
+      const prev = i > 0 ? messageEstimates[i - 1] : null;
+
+      // Check if this is an assistant message preceded by a user message (a pair)
+      const isAssistant = current.message.role === 'assistant';
+      const isPartOfPair = isAssistant && prev && prev.message.role === 'user';
+
+      if (isPartOfPair) {
+        // Try to add both messages of the pair
+        const pairTokens = current.tokens + prev.tokens;
+        if (remainingBudget >= pairTokens) {
+          remainingBudget -= pairTokens;
+          truncatedMessages.unshift(current.message);
+          truncatedMessages.unshift(prev.message);
+          i--; // Skip the paired user message in next iteration
+        }
+        // If pair doesn't fit, skip both to maintain coherence
+      } else {
+        // Non-paired message (e.g., standalone user message) — add individually
+        if (remainingBudget >= current.tokens) {
+          remainingBudget -= current.tokens;
+          truncatedMessages.unshift(current.message);
+        }
+      }
+    }
+
+    // Always include the last message
+    if (lastMsg) {
+      truncatedMessages.push(lastMsg.message);
+    }
+
+    // Post-process: merge consecutive same-role messages to satisfy API constraints.
+    // Some providers (e.g. Anthropic) require strictly alternating user/assistant roles.
+    const coherentMessages: ConversationMessage[] = [];
+    for (const msg of truncatedMessages) {
+      const lastKept = coherentMessages[coherentMessages.length - 1];
+      if (lastKept && lastKept.role === msg.role) {
+        // Merge into the previous message by appending content
+        lastKept.content += '\n\n' + msg.content;
+      } else {
+        // Shallow-copy to avoid mutating the original message objects
+        coherentMessages.push({ ...msg });
+      }
+    }
+
+    // Drop leading assistant messages — Anthropic requires the first message to be 'user' role.
+    // An orphaned leading assistant response has no preceding user question and is useless context.
+    while (coherentMessages.length > 1 && coherentMessages[0].role === 'assistant') {
+      coherentMessages.shift();
+    }
+
+    const finalTokenEstimate = fixedTokens + (budgetForMessages - remainingBudget);
+
+    logger.warn('Truncated conversation messages to fit context window', {
+      originalCount: messages.length,
+      truncatedCount: coherentMessages.length,
+      removedCount: messages.length - coherentMessages.length,
+      mergedPairs: truncatedMessages.length - coherentMessages.length,
+      contextWindow,
+      estimatedTokens: finalTokenEstimate,
+    });
+
+    return {
+      messages: coherentMessages,
+      promptTokenEstimate: finalTokenEstimate,
+    };
+  }
+
   /**
    * Validate OpenRouter model format (must be provider/model-name)
    */
@@ -220,19 +418,41 @@ class AIService {
         );
       }
 
-      // Check token limits before processing (estimate tokens for the request)
+      // Build system content once — reused for token estimation and passed to providers
+      const systemContent = this.buildSystemContent(agent, projectFiles);
+
+      // Truncate messages to fit within the model's context window
+      const { messages: truncatedMessages, promptTokenEstimate } = this.truncateMessagesToFitContext(
+        messages,
+        systemContent,
+        modelRecord.context_window,
+        modelRecord.max_tokens
+      );
+
+      // Calculate optimal max_tokens based on remaining context window capacity
+      const optimalMaxTokens = this.calculateOptimalMaxTokens(
+        modelRecord.context_window,
+        promptTokenEstimate,
+        agent.max_tokens,
+        modelRecord.max_tokens
+      );
+
+      // Check token limits before processing — use promptTokenEstimate only (output not yet consumed)
       if (userId) {
-        const estimatedTokens = this.estimateTokens(messages, projectFiles, agent.system_prompt);
-        await UserModel.checkTokenLimit(userId, estimatedTokens);
+        await UserModel.checkTokenLimit(userId, promptTokenEstimate);
       }
+
+      // Create an enriched agent with the calculated optimal max_tokens
+      const enrichedAgent = { ...agent, max_tokens: optimalMaxTokens };
+
       if (stream) {
         // Return streaming response
         if (agent.provider === 'openai') {
-          return await this.streamChatWithOpenAI(agent, messages, projectFiles, attachments, userId, projectId, conversationId);
+          return await this.streamChatWithOpenAI(enrichedAgent, truncatedMessages, systemContent, attachments, userId, projectId, conversationId, projectFiles);
         } else if (agent.provider === 'anthropic') {
-          return await this.streamChatWithAnthropic(agent, messages, projectFiles, attachments, userId, projectId, conversationId);
+          return await this.streamChatWithAnthropic(enrichedAgent, truncatedMessages, systemContent, attachments, userId, projectId, conversationId, projectFiles);
         } else if (agent.provider === 'openrouter') {
-          return await this.streamChatWithOpenRouter(agent, messages, projectFiles, attachments, userId, projectId, conversationId);
+          return await this.streamChatWithOpenRouter(enrichedAgent, truncatedMessages, systemContent, attachments, userId, projectId, conversationId, projectFiles);
         } else {
           throw new AppError({
             code: ErrorCode.AI_SERVICE_UNAVAILABLE,
@@ -246,11 +466,11 @@ class AIService {
         let response: ChatResponse;
 
         if (agent.provider === 'openai') {
-          response = await this.chatWithOpenAI(agent, messages, projectFiles, attachments, userId, projectId, conversationId);
+          response = await this.chatWithOpenAI(enrichedAgent, truncatedMessages, systemContent, attachments, userId, projectId, conversationId, projectFiles);
         } else if (agent.provider === 'anthropic') {
-          response = await this.chatWithAnthropic(agent, messages, projectFiles, attachments, userId, projectId, conversationId);
+          response = await this.chatWithAnthropic(enrichedAgent, truncatedMessages, systemContent, attachments, userId, projectId, conversationId, projectFiles);
         } else if (agent.provider === 'openrouter') {
-          response = await this.chatWithOpenRouter(agent, messages, projectFiles, attachments, userId, projectId, conversationId);
+          response = await this.chatWithOpenRouter(enrichedAgent, truncatedMessages, systemContent, attachments, userId, projectId, conversationId, projectFiles);
         } else {
           throw new AppError({
             code: ErrorCode.AI_SERVICE_UNAVAILABLE,
@@ -267,9 +487,11 @@ class AIService {
           provider: agent.provider,
           model: agent.model,
           processing_time: processingTime,
-          input_messages: messages.length,
+          input_messages: truncatedMessages.length,
           output_length: response.content.length,
           tokens: response.metadata.tokens,
+          optimal_max_tokens: optimalMaxTokens,
+          prompt_token_estimate: promptTokenEstimate,
           attachments: attachments?.length || 0
         });
 
@@ -313,17 +535,16 @@ class AIService {
   private async chatWithOpenAI(
     agent: Agent,
     messages: ConversationMessage[],
-    projectFiles?: string[],
+    systemContent: string,
     attachments?: ChatFileAttachment[],
     userId?: string,
     projectId?: string,
-    conversationId?: string
+    conversationId?: string,
+    projectFiles?: string[]
   ): Promise<ChatResponse> {
     if (!this.openai) {
       throw createAIApiKeyInvalidError('openai');
     }
-
-    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to OpenAI format with multimodal support
     const openaiMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
@@ -438,17 +659,16 @@ class AIService {
   private async streamChatWithOpenAI(
     agent: Agent,
     messages: ConversationMessage[],
-    projectFiles?: string[],
+    systemContent: string,
     attachments?: ChatFileAttachment[],
     userId?: string,
     projectId?: string,
-    conversationId?: string
+    conversationId?: string,
+    projectFiles?: string[]
   ): Promise<StreamingChatResponse> {
     if (!this.openai) {
       throw createAIApiKeyInvalidError('openai');
     }
-
-    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to OpenAI format with multimodal support
     const openaiMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
@@ -649,11 +869,12 @@ class AIService {
   private async chatWithAnthropic(
     agent: Agent,
     messages: ConversationMessage[],
-    projectFiles?: string[],
+    systemContent: string,
     attachments?: ChatFileAttachment[],
     userId?: string,
     projectId?: string,
-    conversationId?: string
+    conversationId?: string,
+    projectFiles?: string[]
   ): Promise<ChatResponse> {
     logger.info(`Anthropic client check: ${!!this.anthropic}`);
     logger.info(`Anthropic messages check: ${!!this.anthropic?.messages}`);
@@ -663,8 +884,6 @@ class AIService {
     }
 
     const actualModel = agent.model;
-
-    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to Anthropic format with multimodal support
     const anthropicMessages: Anthropic.Messages.MessageParam[] = messages.slice(0, -1).map(msg => ({
@@ -785,11 +1004,12 @@ class AIService {
   private async streamChatWithAnthropic(
     agent: Agent,
     messages: ConversationMessage[],
-    projectFiles?: string[],
+    systemContent: string,
     attachments?: ChatFileAttachment[],
     userId?: string,
     projectId?: string,
-    conversationId?: string
+    conversationId?: string,
+    projectFiles?: string[]
   ): Promise<StreamingChatResponse> {
     logger.info(`Anthropic client check: ${!!this.anthropic}`);
     logger.info(`Anthropic messages check: ${!!this.anthropic?.messages}`);
@@ -799,8 +1019,6 @@ class AIService {
     }
 
     const actualModel = agent.model;
-
-    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to Anthropic format with multimodal support
     const anthropicMessages: Anthropic.Messages.MessageParam[] = messages.slice(0, -1).map(msg => ({
@@ -996,11 +1214,12 @@ class AIService {
   private async chatWithOpenRouter(
     agent: Agent,
     messages: ConversationMessage[],
-    projectFiles?: string[],
+    systemContent: string,
     attachments?: ChatFileAttachment[],
     userId?: string,
     projectId?: string,
-    conversationId?: string
+    conversationId?: string,
+    projectFiles?: string[]
   ): Promise<ChatResponse> {
     if (!this.openrouter) {
       throw createAIApiKeyInvalidError('openrouter');
@@ -1008,8 +1227,6 @@ class AIService {
 
     // Validate model format
     this.validateOpenRouterModel(agent.model);
-
-    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to OpenAI format (OpenRouter is OpenAI-compatible)
     const openrouterMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
@@ -1130,11 +1347,12 @@ class AIService {
   private async streamChatWithOpenRouter(
     agent: Agent,
     messages: ConversationMessage[],
-    projectFiles?: string[],
+    systemContent: string,
     attachments?: ChatFileAttachment[],
     userId?: string,
     projectId?: string,
-    conversationId?: string
+    conversationId?: string,
+    projectFiles?: string[]
   ): Promise<StreamingChatResponse> {
     if (!this.openrouter) {
       throw createAIApiKeyInvalidError('openrouter');
@@ -1142,8 +1360,6 @@ class AIService {
 
     // Validate model format
     this.validateOpenRouterModel(agent.model);
-
-    const systemContent = this.buildSystemContent(agent, projectFiles);
 
     // Convert messages to OpenAI format (OpenRouter is OpenAI-compatible)
     const openrouterMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
@@ -1372,23 +1588,6 @@ class AIService {
     const { modelService } = await import('./modelService');
     const modelData = await modelService.getModelById(model);
     return modelData?.provider === provider && !!modelData;
-  }
-
-  /**
-   * Estimate tokens for a chat request using improved algorithm
-   * Uses TokenService.estimateRequestTokens for accurate estimation
-   */
-  private estimateTokens(
-    messages: ConversationMessage[],
-    projectFiles?: string[],
-    systemPrompt?: string
-  ): number {
-    const estimation = TokenService.estimateRequestTokens(
-      messages.map(m => ({ content: m.content, role: m.role })),
-      projectFiles,
-      systemPrompt
-    );
-    return estimation.total;
   }
 
   // Get provider status

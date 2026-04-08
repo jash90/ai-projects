@@ -38,10 +38,10 @@ export class CreateAgentDto {
   @Max(2)
   temperature?: number;
 
-  @ApiProperty({ required: false, minimum: 1, maximum: 8000, default: 2000 })
+  @ApiProperty({ required: false, minimum: 1, maximum: 100000, default: 2000 })
   @IsInt()
   @IsOptional()
   @Min(1)
-  @Max(8000)
+  @Max(100000)
   max_tokens?: number;
 }

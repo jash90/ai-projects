@@ -12,7 +12,7 @@
       "description": "Descriere",
       "descriptionPlaceholder": "Descrie ce face acest agent...",
       "maxTokens": "Maxim Tokeni",
-      "maxTokensHint": "Lungimea maximă a răspunsului",
+      "maxTokensHint": "Lungimea maximă a răspunsului (până la {{max}} tokens, context: {{context}})",
       "model": "Model",
       "modelSelect": "Selectează model...",
       "name": "Numele Agentului *",
