@@ -137,6 +137,12 @@ class AIService {
    * The system dynamically allocates more output tokens when the context window
    * has plenty of room, ensuring responses are never cut short artificially.
    *
+   * Note on safety margins: `truncateMessagesToFitContext` already reserves 5%
+   * of the context window (plus 40% for output). This method applies an additional
+   * 5% safety margin on top, resulting in a total of ~10% safety buffer. This
+   * double margin accounts for estimation inaccuracies in both the message
+   * truncation phase and the final output allocation phase.
+   *
    * Returns the number of tokens available for the model's completion.
    */
   private calculateOptimalMaxTokens(
@@ -243,20 +249,22 @@ class AIService {
       };
     }
 
-    // Need to truncate: keep the latest messages that fit within budget
-    // Always keep the last message (the current user message)
+    // Need to truncate: keep the most recent messages that fit within budget.
+    // Strategy: iterate from newest to oldest, collecting messages that fit.
+    // We skip any single message that exceeds the remaining budget (instead of
+    // breaking) so that smaller older messages can still be included.
+    // Always keep the last message (the current user message).
     const lastMsg = messageEstimates[messageEstimates.length - 1];
     let remainingBudget = budgetForMessages - (lastMsg?.tokens || 0);
     const truncatedMessages: ConversationMessage[] = [];
 
-    // Add messages from newest to oldest until budget is exhausted
+    // Collect messages from newest to oldest, skipping any that don't fit
     for (let i = messageEstimates.length - 2; i >= 0; i--) {
       if (remainingBudget >= messageEstimates[i].tokens) {
         remainingBudget -= messageEstimates[i].tokens;
         truncatedMessages.unshift(messageEstimates[i].message);
-      } else {
-        break;
       }
+      // Do NOT break: continue checking older (potentially smaller) messages
     }
 
     // Always include the last message
@@ -264,7 +272,9 @@ class AIService {
       truncatedMessages.push(lastMsg.message);
     }
 
-    const finalTokenEstimate = fixedTokens + (budgetForMessages - remainingBudget) + (lastMsg?.tokens || 0);
+    // The used budget = budgetForMessages - remainingBudget already includes lastMsg.tokens
+    // (it was subtracted from remainingBudget at line 249), so no need to add it again.
+    const finalTokenEstimate = fixedTokens + (budgetForMessages - remainingBudget);
 
     logger.warn('Truncated conversation messages to fit context window', {
       originalCount: messages.length,
