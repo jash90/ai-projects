@@ -182,7 +182,7 @@ export function AgentDialog({ open, onClose, onSubmit, title, agent }: AgentDial
             metadata: {
               provider: category,
               contextWindow: model.context_window,
-              maxOutputTokens: (model as any).max_tokens,
+              maxOutputTokens: model.max_tokens,
               cost: costTier
             }
           })
