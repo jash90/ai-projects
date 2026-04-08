@@ -5,11 +5,9 @@
  * Backend API for AI Projects Platform
  * OpenAPI spec version: 2.0.0
  */
-import type { Project } from './project';
+import type { ListProjects200Data } from './listProjects200Data';
 
 export type ListProjects200 = {
-  projects?: Project[];
-  total?: number;
-  page?: number;
-  totalPages?: number;
+  success: boolean;
+  data?: ListProjects200Data;
 };

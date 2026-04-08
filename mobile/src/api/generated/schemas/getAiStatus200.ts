@@ -5,10 +5,9 @@
  * Backend API for AI Projects Platform
  * OpenAPI spec version: 2.0.0
  */
-import type { GetAiStatus200Models } from './getAiStatus200Models';
-import type { GetAiStatus200Providers } from './getAiStatus200Providers';
+import type { GetAiStatus200Data } from './getAiStatus200Data';
 
 export type GetAiStatus200 = {
-  providers?: GetAiStatus200Providers;
-  models?: GetAiStatus200Models;
+  success: boolean;
+  data?: GetAiStatus200Data;
 };

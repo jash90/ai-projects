@@ -10,7 +10,9 @@ export default function ProjectDetailScreen() {
   const { data: convData } = useGetProjectConversations(id);
   const deleteProject = useDeleteProject();
 
-  const project = projectData?.data?.project;
+  const project = (projectData as any)?.data?.data;
+  const conversations = (convData as any)?.data?.data?.conversations;
+  const convCount = convData?.conversations?.length ?? 0;
 
   const handleDelete = () => {
     Alert.alert('Delete Project', 'Are you sure?', [
@@ -33,8 +35,8 @@ export default function ProjectDetailScreen() {
       {project.description ? <Text style={styles.desc}>{project.description}</Text> : null}
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Conversations ({convData?.conversations?.length ?? 0})</Text>
-        {(convData?.conversations ?? []).map((conv: any) => (
+        <Text style={styles.sectionTitle}>Conversations {conversations ? `(${conversations.length})` : ''}</Text>
+        {(conversations ?? []).map((conv: any) => (
           <TouchableOpacity key={conv.id} style={styles.convCard}
             onPress={() => router.push(`/chat/${id}/${conv.agent_id}`)}>
             <Text style={styles.convAgent}>Agent: {conv.agent_id}</Text>

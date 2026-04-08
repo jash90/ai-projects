@@ -5,7 +5,9 @@
  * Backend API for AI Projects Platform
  * OpenAPI spec version: 2.0.0
  */
+import type { ClearConversation200Data } from './clearConversation200Data';
 
 export type ClearConversation200 = {
-  message?: string;
+  success: boolean;
+  data?: ClearConversation200Data;
 };

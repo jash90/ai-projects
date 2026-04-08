@@ -5,7 +5,9 @@
  * Backend API for AI Projects Platform
  * OpenAPI spec version: 2.0.0
  */
+import type { DeleteProjectFile200Data } from './deleteProjectFile200Data';
 
 export type DeleteProjectFile200 = {
-  message?: string;
+  success: boolean;
+  data?: DeleteProjectFile200Data;
 };

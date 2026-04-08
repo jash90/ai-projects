@@ -11,7 +11,7 @@ export default function ProjectsScreen() {
   const [showCreate, setShowCreate] = useState(false);
   const [name, setName] = useState('');
 
-  const projects = data?.data?.projects ?? [];
+  const projects = (data as any)?.data?.data?.items ?? [];
 
   const handleCreate = async () => {
     if (!name.trim()) return;

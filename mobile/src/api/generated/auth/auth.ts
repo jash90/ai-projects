@@ -28,8 +28,10 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  AuthLogin200,
   AuthLogout200,
-  AuthResponse,
+  AuthRefresh200,
+  AuthRegister201,
   AuthVerify200,
   LoginInput,
   RefreshTokenInput,
@@ -42,7 +44,7 @@ import { customInstance } from '../../orval-client';
 
 
 export type authRegisterResponse201 = {
-  data: AuthResponse
+  data: AuthRegister201
   status: 201
 }
 
@@ -125,7 +127,7 @@ const {mutation: mutationOptions} = options ?
       return useMutation(getAuthRegisterMutationOptions(options), queryClient);
     }
     export type authLoginResponse200 = {
-  data: AuthResponse
+  data: AuthLogin200
   status: 200
 }
 
@@ -437,7 +439,7 @@ export function useAuthVerifySuspense<TData = Awaited<ReturnType<typeof authVeri
 
 
 export type authRefreshResponse200 = {
-  data: AuthResponse
+  data: AuthRefresh200
   status: 200
 }
 

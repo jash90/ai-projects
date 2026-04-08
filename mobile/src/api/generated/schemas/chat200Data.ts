@@ -5,10 +5,9 @@
  * Backend API for AI Projects Platform
  * OpenAPI spec version: 2.0.0
  */
-import type { Chat200DataResponse } from './chat200DataResponse';
-import type { Conversation } from './conversation';
+import type { Chat200DataData } from './chat200DataData';
 
 export type Chat200Data = {
-  conversation?: Conversation;
-  response?: Chat200DataResponse;
+  success?: boolean;
+  data?: Chat200DataData;
 };

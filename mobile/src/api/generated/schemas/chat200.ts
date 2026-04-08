@@ -8,6 +8,6 @@
 import type { Chat200Data } from './chat200Data';
 
 export type Chat200 = {
-  success?: boolean;
+  success: boolean;
   data?: Chat200Data;
 };

@@ -408,8 +408,10 @@ export interface components {
         };
         AuthResponse: {
             user: components["schemas"]["User"];
-            access_token: string;
-            refresh_token?: string;
+            tokens: {
+                access_token: string;
+                refresh_token?: string;
+            };
         };
         RegisterInput: {
             /** Format: email */
@@ -623,12 +625,16 @@ export interface operations {
             };
         };
         responses: {
+            /** @description User registered successfully */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AuthResponse"];
+                    "application/json": {
+                        success: boolean;
+                        data?: components["schemas"]["AuthResponse"];
+                    };
                 };
             };
             /** @description Email already registered */
@@ -653,12 +659,16 @@ export interface operations {
             };
         };
         responses: {
+            /** @description Login successful */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AuthResponse"];
+                    "application/json": {
+                        success: boolean;
+                        data?: components["schemas"]["AuthResponse"];
+                    };
                 };
             };
             /** @description Invalid credentials */
@@ -679,13 +689,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Logged out successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        message?: string;
+                        success: boolean;
+                        data?: {
+                            message?: string;
+                        };
                     };
                 };
             };
@@ -700,14 +714,18 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Token is valid */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        user?: components["schemas"]["User"];
-                        valid?: boolean;
+                        success: boolean;
+                        data?: {
+                            user?: components["schemas"]["User"];
+                            valid?: boolean;
+                        };
                     };
                 };
             };
@@ -726,12 +744,16 @@ export interface operations {
             };
         };
         responses: {
+            /** @description Token refreshed */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AuthResponse"];
+                    "application/json": {
+                        success: boolean;
+                        data?: components["schemas"]["AuthResponse"];
+                    };
                 };
             };
         };
@@ -749,16 +771,20 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description List of projects */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        projects?: components["schemas"]["Project"][];
-                        total?: number;
-                        page?: number;
-                        totalPages?: number;
+                        success: boolean;
+                        data?: {
+                            projects?: components["schemas"]["Project"][];
+                            total?: number;
+                            page?: number;
+                            totalPages?: number;
+                        };
                     };
                 };
             };
@@ -777,12 +803,16 @@ export interface operations {
             };
         };
         responses: {
+            /** @description Project created */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Project"];
+                    "application/json": {
+                        success: boolean;
+                        data?: components["schemas"]["Project"];
+                    };
                 };
             };
         };
@@ -798,13 +828,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Recent projects */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        projects?: components["schemas"]["Project"][];
+                        success: boolean;
+                        data?: {
+                            projects?: components["schemas"]["Project"][];
+                        };
                     };
                 };
             };
@@ -821,13 +855,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Project details */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        project?: components["schemas"]["Project"];
+                        success: boolean;
+                        data?: {
+                            project?: components["schemas"]["Project"];
+                        };
                     };
                 };
             };
@@ -848,12 +886,16 @@ export interface operations {
             };
         };
         responses: {
+            /** @description Project updated */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Project"];
+                    "application/json": {
+                        success: boolean;
+                        data?: components["schemas"]["Project"];
+                    };
                 };
             };
         };
@@ -869,13 +911,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Project deleted */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        message?: string;
+                        success: boolean;
+                        data?: {
+                            message?: string;
+                        };
                     };
                 };
             };
@@ -890,13 +936,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description List of agents */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        agents?: components["schemas"]["Agent"][];
+                        success: boolean;
+                        data?: {
+                            agents?: components["schemas"]["Agent"][];
+                        };
                     };
                 };
             };
@@ -915,13 +965,17 @@ export interface operations {
             };
         };
         responses: {
+            /** @description Agent created */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        agent?: components["schemas"]["Agent"];
+                        success: boolean;
+                        data?: {
+                            agent?: components["schemas"]["Agent"];
+                        };
                     };
                 };
             };
@@ -938,13 +992,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Agent details */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        agent?: components["schemas"]["Agent"];
+                        success: boolean;
+                        data?: {
+                            agent?: components["schemas"]["Agent"];
+                        };
                     };
                 };
             };
@@ -965,13 +1023,17 @@ export interface operations {
             };
         };
         responses: {
+            /** @description Agent updated */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        agent?: components["schemas"]["Agent"];
+                        success: boolean;
+                        data?: {
+                            agent?: components["schemas"]["Agent"];
+                        };
                     };
                 };
             };
@@ -988,13 +1050,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Agent deleted */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        message?: string;
+                        success: boolean;
+                        data?: {
+                            message?: string;
+                        };
                     };
                 };
             };
@@ -1012,13 +1078,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Conversation */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        conversation?: components["schemas"]["Conversation"];
+                        success: boolean;
+                        data?: {
+                            conversation?: components["schemas"]["Conversation"];
+                        };
                     };
                 };
             };
@@ -1036,13 +1106,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Conversation cleared */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        message?: string;
+                        success: boolean;
+                        data?: {
+                            message?: string;
+                        };
                     };
                 };
             };
@@ -1059,13 +1133,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Project conversations */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        conversations?: components["schemas"]["Conversation"][];
+                        success: boolean;
+                        data?: {
+                            conversations?: components["schemas"]["Conversation"][];
+                        };
                     };
                 };
             };
@@ -1093,18 +1171,22 @@ export interface operations {
             };
         };
         responses: {
+            /** @description Chat response */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        success?: boolean;
+                        success: boolean;
                         data?: {
-                            conversation?: components["schemas"]["Conversation"];
-                            response?: {
-                                content?: string;
-                                metadata?: components["schemas"]["MessageMetadata"];
+                            success?: boolean;
+                            data?: {
+                                conversation?: components["schemas"]["Conversation"];
+                                response?: {
+                                    content?: string;
+                                    metadata?: components["schemas"]["MessageMetadata"];
+                                };
                             };
                         };
                     };
@@ -1121,17 +1203,21 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description AI service status */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        providers?: {
-                            [key: string]: boolean;
-                        };
-                        models?: {
-                            [key: string]: unknown[];
+                        success: boolean;
+                        data?: {
+                            providers?: {
+                                [key: string]: boolean;
+                            };
+                            models?: {
+                                [key: string]: unknown[];
+                            };
                         };
                     };
                 };
@@ -1149,13 +1235,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description List of threads */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        threads?: components["schemas"]["Thread"][];
+                        success: boolean;
+                        data?: {
+                            threads?: components["schemas"]["Thread"][];
+                        };
                     };
                 };
             };
@@ -1178,13 +1268,17 @@ export interface operations {
             };
         };
         responses: {
+            /** @description Thread created */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        thread?: components["schemas"]["Thread"];
+                        success: boolean;
+                        data?: {
+                            thread?: components["schemas"]["Thread"];
+                        };
                     };
                 };
             };
@@ -1201,13 +1295,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Thread details */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        thread?: components["schemas"]["Thread"];
+                        success: boolean;
+                        data?: {
+                            thread?: components["schemas"]["Thread"];
+                        };
                     };
                 };
             };
@@ -1230,13 +1328,17 @@ export interface operations {
             };
         };
         responses: {
+            /** @description Thread updated */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        thread?: components["schemas"]["Thread"];
+                        success: boolean;
+                        data?: {
+                            thread?: components["schemas"]["Thread"];
+                        };
                     };
                 };
             };
@@ -1253,13 +1355,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Thread deleted */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        message?: string;
+                        success: boolean;
+                        data?: {
+                            message?: string;
+                        };
                     };
                 };
             };
@@ -1276,13 +1382,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Thread messages */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        messages?: components["schemas"]["ThreadMessage"][];
+                        success: boolean;
+                        data?: {
+                            messages?: components["schemas"]["ThreadMessage"][];
+                        };
                     };
                 };
             };
@@ -1308,19 +1418,23 @@ export interface operations {
             };
         };
         responses: {
+            /** @description Thread chat response */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        success?: boolean;
+                        success: boolean;
                         data?: {
-                            message?: components["schemas"]["ThreadMessage"];
-                            messages?: components["schemas"]["ThreadMessage"][];
-                            response?: {
-                                content?: string;
-                                metadata?: unknown;
+                            success?: boolean;
+                            data?: {
+                                message?: components["schemas"]["ThreadMessage"];
+                                messages?: components["schemas"]["ThreadMessage"][];
+                                response?: {
+                                    content?: string;
+                                    metadata?: unknown;
+                                };
                             };
                         };
                     };
@@ -1339,14 +1453,18 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Project files */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        files?: components["schemas"]["ProjectFile"][];
-                        count?: number;
+                        success: boolean;
+                        data?: {
+                            files?: components["schemas"]["ProjectFile"][];
+                            count?: number;
+                        };
                     };
                 };
             };
@@ -1367,13 +1485,17 @@ export interface operations {
             };
         };
         responses: {
+            /** @description File created */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        file?: components["schemas"]["ProjectFile"];
+                        success: boolean;
+                        data?: {
+                            file?: components["schemas"]["ProjectFile"];
+                        };
                     };
                 };
             };
@@ -1390,13 +1512,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description File details */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        file?: components["schemas"]["ProjectFile"];
+                        success: boolean;
+                        data?: {
+                            file?: components["schemas"]["ProjectFile"];
+                        };
                     };
                 };
             };
@@ -1417,13 +1543,17 @@ export interface operations {
             };
         };
         responses: {
+            /** @description File updated */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        file?: components["schemas"]["ProjectFile"];
+                        success: boolean;
+                        data?: {
+                            file?: components["schemas"]["ProjectFile"];
+                        };
                     };
                 };
             };
@@ -1440,13 +1570,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description File deleted */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        message?: string;
+                        success: boolean;
+                        data?: {
+                            message?: string;
+                        };
                     };
                 };
             };
@@ -1461,14 +1595,18 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description List of models */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        models?: components["schemas"]["AIModel"][];
-                        count?: number;
+                        success: boolean;
+                        data?: {
+                            models?: components["schemas"]["AIModel"][];
+                            count?: number;
+                        };
                     };
                 };
             };
@@ -1483,13 +1621,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Provider status */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        providers?: components["schemas"]["ProviderStatus"][];
+                        success: boolean;
+                        data?: {
+                            providers?: components["schemas"]["ProviderStatus"][];
+                        };
                     };
                 };
             };
@@ -1504,12 +1646,16 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Current usage */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["UsageStats"];
+                    "application/json": {
+                        success: boolean;
+                        data?: components["schemas"]["UsageStats"];
+                    };
                 };
             };
         };
@@ -1526,12 +1672,16 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Usage summary */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": {
+                        success: boolean;
+                        data?: Record<string, never>;
+                    };
                 };
             };
         };

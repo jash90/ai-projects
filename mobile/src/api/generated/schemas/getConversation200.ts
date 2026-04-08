@@ -5,8 +5,9 @@
  * Backend API for AI Projects Platform
  * OpenAPI spec version: 2.0.0
  */
-import type { Conversation } from './conversation';
+import type { GetConversation200Data } from './getConversation200Data';
 
 export type GetConversation200 = {
-  conversation?: Conversation;
+  success: boolean;
+  data?: GetConversation200Data;
 };

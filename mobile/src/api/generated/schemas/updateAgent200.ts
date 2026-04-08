@@ -5,8 +5,9 @@
  * Backend API for AI Projects Platform
  * OpenAPI spec version: 2.0.0
  */
-import type { Agent } from './agent';
+import type { UpdateAgent200Data } from './updateAgent200Data';
 
 export type UpdateAgent200 = {
-  agent?: Agent;
+  success: boolean;
+  data?: UpdateAgent200Data;
 };

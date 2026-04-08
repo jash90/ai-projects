@@ -5,8 +5,9 @@
  * Backend API for AI Projects Platform
  * OpenAPI spec version: 2.0.0
  */
-import type { ProjectFile } from './projectFile';
+import type { CreateProjectFile201Data } from './createProjectFile201Data';
 
 export type CreateProjectFile201 = {
-  file?: ProjectFile;
+  success: boolean;
+  data?: CreateProjectFile201Data;
 };

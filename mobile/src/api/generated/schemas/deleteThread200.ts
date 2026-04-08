@@ -5,7 +5,9 @@
  * Backend API for AI Projects Platform
  * OpenAPI spec version: 2.0.0
  */
+import type { DeleteThread200Data } from './deleteThread200Data';
 
 export type DeleteThread200 = {
-  message?: string;
+  success: boolean;
+  data?: DeleteThread200Data;
 };

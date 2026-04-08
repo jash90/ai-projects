@@ -24,9 +24,9 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  GetCurrentUsage200,
   GetUsageSummary200,
-  GetUsageSummaryParams,
-  UsageStats
+  GetUsageSummaryParams
 } from '../schemas';
 
 import { customInstance } from '../../orval-client';
@@ -35,7 +35,7 @@ import { customInstance } from '../../orval-client';
 
 
 export type getCurrentUsageResponse200 = {
-  data: UsageStats
+  data: GetCurrentUsage200
   status: 200
 }
 

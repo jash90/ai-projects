@@ -1,12 +1,6 @@
 import { useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
-  Alert,
+  View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuthLogin } from '@/api/generated/auth/auth';
@@ -25,13 +19,16 @@ export default function LoginScreen() {
     }
     try {
       const result = await login.mutateAsync({ data: { email, password } });
-      if (result?.data) {
-        const d = result.data;
+      // result = { data: { success, data: { user, tokens } }, status, headers }
+      const d = (result as any)?.data?.data;
+      if (d?.user && d?.tokens) {
         await saveAuth(
-          { access_token: d.access_token, refresh_token: d.refresh_token },
+          { access_token: d.tokens.access_token, refresh_token: d.tokens.refresh_token },
           d.user
         );
         router.replace('/projects');
+      } else {
+        Alert.alert('Login Failed', 'Unexpected response format');
       }
     } catch (err: any) {
       Alert.alert('Login Failed', err?.message || 'Invalid credentials');

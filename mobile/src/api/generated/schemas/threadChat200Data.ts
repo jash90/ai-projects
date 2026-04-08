@@ -5,11 +5,9 @@
  * Backend API for AI Projects Platform
  * OpenAPI spec version: 2.0.0
  */
-import type { ThreadChat200DataResponse } from './threadChat200DataResponse';
-import type { ThreadMessage } from './threadMessage';
+import type { ThreadChat200DataData } from './threadChat200DataData';
 
 export type ThreadChat200Data = {
-  message?: ThreadMessage;
-  messages?: ThreadMessage[];
-  response?: ThreadChat200DataResponse;
+  success?: boolean;
+  data?: ThreadChat200DataData;
 };

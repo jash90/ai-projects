@@ -5,8 +5,9 @@
  * Backend API for AI Projects Platform
  * OpenAPI spec version: 2.0.0
  */
-import type { Thread } from './thread';
+import type { ListThreads200Data } from './listThreads200Data';
 
 export type ListThreads200 = {
-  threads?: Thread[];
+  success: boolean;
+  data?: ListThreads200Data;
 };
