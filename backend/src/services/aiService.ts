@@ -156,29 +156,25 @@ class AIService {
     // When there's plenty of context room, allow up to 4x the user's setting
     // so that detailed responses are never cut short.
     // But never exceed the model's actual output limit or available context.
-    const dynamicAllowance = Math.min(
+    // dynamicAllowance is always >= agentMaxTokens (it's agentMaxTokens * 4),
+    // so no need for Math.max between the two.
+    const effectiveMax = Math.min(
       agentMaxTokens * 4,
       hardCeiling
     );
 
-    // Use the larger of the agent's preference or the dynamic allowance,
-    // but never exceed the hard ceiling
-    const effectiveMax = Math.min(
-      Math.max(agentMaxTokens, dynamicAllowance),
-      hardCeiling
-    );
-
-    logger.info('Calculated optimal max_tokens', {
-      contextWindow,
-      promptTokenEstimate,
-      safetyMargin,
-      availableForOutput,
-      modelMaxOutputTokens,
-      agentMaxTokens,
-      hardCeiling,
-      dynamicAllowance,
-      effectiveMax,
-    });
+    if (effectiveMax !== agentMaxTokens) {
+      logger.debug('Dynamic max_tokens adjustment', {
+        contextWindow,
+        promptTokenEstimate,
+        safetyMargin,
+        availableForOutput,
+        modelMaxOutputTokens,
+        agentMaxTokens,
+        hardCeiling,
+        effectiveMax,
+      });
+    }
 
     return effectiveMax;
   }
@@ -209,6 +205,26 @@ class AIService {
     const outputReserve = Math.min(modelMaxOutputTokens, contextWindow * 0.4); // reserve up to 40% for output
     const safetyMargin = Math.max(100, Math.floor(contextWindow * 0.05));
     const budgetForMessages = contextWindow - fixedTokens - outputReserve - safetyMargin;
+
+    // Edge case: system prompt + project files alone exceed 55% of context window
+    if (budgetForMessages <= 0) {
+      logger.warn('Fixed tokens exceed available context budget, dropping all prior messages', {
+        contextWindow,
+        fixedTokens,
+        outputReserve,
+        safetyMargin,
+        budgetForMessages,
+        messageCount: messages.length,
+      });
+      // Keep only the last message (current user message)
+      const lastMessage = messages[messages.length - 1];
+      const keptMessages = lastMessage ? [lastMessage] : [];
+      const lastMsgTokens = lastMessage ? TokenService.estimateTokens(lastMessage.content) + 4 : 0;
+      return {
+        messages: keptMessages,
+        promptTokenEstimate: fixedTokens + lastMsgTokens,
+      };
+    }
 
     // Estimate tokens for each message
     const messageEstimates = messages.map(msg => ({
