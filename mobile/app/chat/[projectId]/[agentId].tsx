@@ -134,25 +134,25 @@ export default function ChatScreen() {
     const message = input.trim();
     if ((!message && attachedFiles.length === 0) || chat.isPending) return;
 
-    const fileNames = attachedFiles.map(f => f.name).join(', ');
-    const displayContent = message + (fileNames ? `\n📎 ${fileNames}` : '');
+    const filesToSend = [...attachedFiles];
 
     const userMsg: DisplayMessage = {
       id: `local-${Date.now()}`,
       role: 'user',
-      content: displayContent,
+      content: message || 'Sent a file',
       timestamp: new Date().toISOString(),
-      files: attachedFiles.length > 0 ? [...attachedFiles] : undefined,
+      files: filesToSend.length > 0 ? filesToSend : undefined,
     };
     setLocalMessages(prev => [...prev, userMsg]);
     setInput('');
     setAttachedFiles([]);
 
     try {
+      const apiMessage = message || `Shared ${filesToSend.length} file${filesToSend.length > 1 ? 's' : ''}: ${filesToSend.map(f => f.name).join(', ')}`;
       const result = await chat.mutateAsync({
         projectId,
         agentId,
-        data: { message: message || `Attached files: ${fileNames}`, includeFiles: true, stream: false },
+        data: { message: apiMessage, includeFiles: true, stream: false },
       });
       const chatResponse = (result as any)?.data?.data;
       if (chatResponse?.response) {
@@ -179,26 +179,32 @@ export default function ChatScreen() {
     const isUser = item.role === 'user';
     return (
       <View style={[styles.msgBubble, isUser ? styles.userBubble : styles.aiBubble]}>
-        {/* Show attached file chips */}
+        {/* Show attached files */}
         {item.files && item.files.length > 0 && (
-          <ScrollView horizontal style={styles.fileChips} showsHorizontalScrollIndicator={false}>
+          <View style={styles.filesContainer}>
             {item.files.map((f, i) => (
-              <View key={i} style={[styles.fileChip, isUser && styles.fileChipUser]}>
-                <Text style={[styles.fileChipText, isUser && styles.fileChipTextUser]} numberOfLines={1}>
-                  📎 {f.name}
-                </Text>
-                {f.size ? <Text style={[styles.fileChipSize, isUser && styles.fileChipTextUser]}>
-                  {formatFileSize(f.size)}
-                </Text> : null}
+              <View key={i} style={styles.fileAttachment}>
+                {f.type?.startsWith('image/') ? (
+                  <Image source={{ uri: f.uri }} style={styles.fileImage} />
+                ) : (
+                  <View style={styles.fileDocIcon}>
+                    <Text style={styles.fileDocIconText}>📄</Text>
+                    <Text style={styles.fileDocExt}>{f.name.split('.').pop()?.toUpperCase() || 'FILE'}</Text>
+                  </View>
+                )}
+                <Text style={[styles.fileInfo, isUser && styles.fileInfoUser]} numberOfLines={1}>{f.name}</Text>
+                {f.size ? <Text style={[styles.fileSize, isUser && styles.fileInfoUser]}>{formatFileSize(f.size)}</Text> : null}
               </View>
             ))}
-          </ScrollView>
+          </View>
         )}
-        {isUser ? (
-          <Text style={styles.userText}>{item.content}</Text>
-        ) : (
-          <Markdown style={markdownStyles}>{item.content}</Markdown>
-        )}
+        {item.content ? (
+          isUser ? (
+            <Text style={styles.userText}>{item.content}</Text>
+          ) : (
+            <Markdown style={markdownStyles}>{item.content}</Markdown>
+          )
+        ) : null}
       </View>
     );
   };
@@ -286,12 +292,15 @@ const styles = StyleSheet.create({
   userBubble: { backgroundColor: '#007AFF', alignSelf: 'flex-end' },
   aiBubble: { backgroundColor: '#f5f5f5', alignSelf: 'flex-start' },
   userText: { color: '#fff', fontSize: 15, lineHeight: 20 },
-  fileChips: { flexDirection: 'row', marginBottom: 6 },
-  fileChip: { backgroundColor: '#e0e0e0', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 4, marginRight: 4, maxWidth: 150 },
-  fileChipUser: { backgroundColor: 'rgba(255,255,255,0.25)' },
-  fileChipText: { fontSize: 11, color: '#333' },
-  fileChipTextUser: { color: '#fff' },
-  fileChipSize: { fontSize: 9, color: '#888' },
+  filesContainer: { marginBottom: 8 },
+  fileAttachment: { marginBottom: 6 },
+  fileImage: { width: '100%', height: 180, borderRadius: 8, resizeMode: 'cover' },
+  fileDocIcon: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 8 },
+  fileDocIconText: { fontSize: 20, marginRight: 8 },
+  fileDocExt: { fontSize: 12, fontWeight: '700', color: '#fff' },
+  fileInfo: { fontSize: 11, color: '#666', marginTop: 2 },
+  fileInfoUser: { color: 'rgba(255,255,255,0.8)' },
+  fileSize: { fontSize: 10, color: '#999' },
   loadingRow: { flexDirection: 'row', alignItems: 'center', paddingLeft: 20, paddingVertical: 6 },
   loadingText: { color: '#999', fontSize: 13, marginLeft: 8 },
 
