@@ -22,6 +22,8 @@
       "expo-secure-store",
       "expo-asset",
       "expo-font",
+      "expo-document-picker",
+      "expo-image-picker",
       "./plugins/withFmtFix"
     ]
   }
