@@ -47,7 +47,7 @@ export default function ProjectDetailScreen() {
       </View>
 
       <View style={styles.actions}>
-        <TouchableOpacity style={styles.chatBtn} onPress={() => router.push(`/chat?projectId=${id}`)}>
+        <TouchableOpacity style={styles.chatBtn} onPress={() => router.push(`/agents?projectId=${id}`)}>
           <Text style={styles.chatBtnText}>💬 Start Chat</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.deleteBtn} onPress={handleDelete}>
