@@ -137,3 +137,6 @@ monitoring/prometheus/data/
 backups/
 *.sql.gz
 mobile/.expo/
+
+# Personal agent config (not committed)
+AGENTS.local.md
