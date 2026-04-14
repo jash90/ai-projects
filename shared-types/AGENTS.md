@@ -1,9 +1,9 @@
-# AGENTS.md — Shared Types Rules
-<!-- Scope: shared-types/ package. Source: CLAUDE.md architecture section. -->
+# AGENTS.md — Shared Types
+<!-- Scope: shared-types/ package. Source: .claude/rules/architecture.md -->
 
 ## Purpose
 
-This package contains TypeScript type definitions shared between backend, frontend, and mobile packages. It is a workspace dependency consumed by all other packages.
+Pure TypeScript type definitions shared between backend, frontend, and mobile packages.
 
 ## Conventions
 

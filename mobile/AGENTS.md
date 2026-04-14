@@ -1,9 +1,9 @@
-# AGENTS.md — Mobile App Rules
-<!-- Scope: mobile/ package. Source: CLAUDE.md, git history (recent mobile commits). -->
+# AGENTS.md — Mobile
+<!-- Scope: mobile/ package. Source: .claude/rules/architecture.md, git history -->
 
 ## Architecture
 
-Expo/React Native mobile app consuming the same backend API as the frontend.
+Expo / React Native app consuming the same backend API as the frontend.
 
 - Uses Expo Router for navigation.
 - API client generated via Orval from `mobile/openapi.json`.
@@ -16,6 +16,12 @@ Expo/React Native mobile app consuming the same backend API as the frontend.
 - Place shared utilities in `mobile/src/lib/`.
 - Expo config plugins go in `mobile/plugins/`.
 - Always test on both iOS and Android before considering a mobile change complete.
+
+## Workspace Boundaries
+
+- This is an independent pnpm workspace package.
+- Never import directly from `backend/` or `frontend/`.
+- Shared types must come from `shared-types/` — never duplicate types locally.
 
 ## Known Issues
 
