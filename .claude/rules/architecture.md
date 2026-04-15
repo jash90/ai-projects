@@ -7,10 +7,10 @@ alwaysApply: true
 
 ## Workspace Boundaries
 
-- `backend/`, `frontend/`, `mobile/`, `shared-types/` are independent pnpm workspace packages.
+- `backend/`, `frontend/`, `shared-types/` are bun workspace packages. `mobile/` is standalone (Expo, not in workspace).
 - Never import directly between `backend/` and `frontend/`. Shared types go through `shared-types/`.
 - Never duplicate a type that already exists in `shared-types/` — always import from there.
-- `shared-types/` must contain only pure type definitions — no runtime code, no side effects, no imports from other packages.
+- `shared-types/` may export **pure type definitions** and **pure constant values** (no side effects, no runtime logic, no imports from other packages).
 
 ## Two File Systems
 

@@ -16,7 +16,7 @@ globs: ["backend/**/*"]
 
 Never use `tsx` (esbuild-based) to run NestJS. It does NOT support `emitDecoratorMetadata` — DI fails silently.
 
-- Always use `ts-node --transpile-only`.
+- Always use `ts-node --transpile-only` (or `bun` for non-NestJS scripts).
 - Always add `import 'reflect-metadata'` at the top of entry files.
 - Check `backend/nodemon.json` `exec` field when debugging startup issues.
 
@@ -51,5 +51,5 @@ Socket.io with room-based project collaboration. Always scope events to project 
 
 `users`, `projects`, `agents`, `conversations` (JSONB messages), `files`, `project_files`, `token_usage`.
 
-- Always use migrations (`pnpm db:migrate`), never modify schema manually.
+- Always use migrations (`bun run db:migrate`), never modify schema manually.
 - Always validate input at the API boundary before database operations.

@@ -12,3 +12,4 @@ alwaysApply: true
 - Prefer editing existing files over creating new ones.
 - Never create documentation files (*.md) unless explicitly requested.
 - Never save working files, text files, or tests to the repository root — use appropriate subdirectories.
+- **Package manager**: Always use `bun`. Never use `pnpm`, `npm`, or `yarn` in commands or scripts.

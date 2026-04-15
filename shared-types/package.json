@@ -9,6 +9,12 @@
       "require": "./dist/constants.js",
       "import": "./dist/constants.js",
       "default": "./dist/constants.js"
+    },
+    "./constants": {
+      "types": "./dist/constants.d.ts",
+      "require": "./dist/constants.js",
+      "import": "./dist/constants.js",
+      "default": "./dist/constants.js"
     }
   },
   "scripts": {
