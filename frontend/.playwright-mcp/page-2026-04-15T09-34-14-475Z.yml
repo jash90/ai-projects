@@ -1,0 +1,89 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e4]:
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - img [ref=e16]
+          - heading "Projekty AI" [level=1] [ref=e18]
+          - paragraph [ref=e19]: Twoje inteligentne miejsce pracy do współpracy w rozwoju AI
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - img [ref=e23]
+            - generic [ref=e26]:
+              - heading "Wielu agentów AI" [level=3] [ref=e27]
+              - paragraph [ref=e28]: Specjalizowane agenty z unikalnymi możliwościami
+          - generic [ref=e29]:
+            - img [ref=e31]
+            - generic [ref=e33]:
+              - heading "Zarządzanie projektami" [level=3] [ref=e34]
+              - paragraph [ref=e35]: Organizuj pliki i kontekst dla każdego projektu
+          - generic [ref=e36]:
+            - img [ref=e38]
+            - generic [ref=e40]:
+              - heading "Czat w czasie rzeczywistym" [level=3] [ref=e41]
+              - paragraph [ref=e42]: Bezproblemowa współpraca z asystentami AI
+        - generic [ref=e44]:
+          - generic [ref=e45]:
+            - generic [ref=e46]: 10K+
+            - generic [ref=e47]: Utworzone projekty
+          - generic [ref=e48]:
+            - generic [ref=e49]: 50+
+            - generic [ref=e50]: Modele AI
+          - generic [ref=e51]:
+            - generic [ref=e52]: 99.9%
+            - generic [ref=e53]: Czas działania
+      - generic [ref=e55]:
+        - button "🇵🇱 Polski" [ref=e58] [cursor=pointer]:
+          - img [ref=e59]
+          - generic [ref=e62]: 🇵🇱
+          - generic [ref=e63]: Polski
+          - img [ref=e64]
+        - generic [ref=e67]:
+          - generic [ref=e68]:
+            - heading "Witaj ponownie" [level=1] [ref=e69]
+            - paragraph [ref=e70]: Zaloguj się, aby kontynuować
+          - generic [ref=e71]:
+            - generic [ref=e72]:
+              - text: Email
+              - generic [ref=e73]:
+                - img [ref=e75]
+                - textbox "Email" [ref=e78]:
+                  - /placeholder: Wprowadź swój email
+            - generic [ref=e79]:
+              - generic [ref=e80]:
+                - generic [ref=e81]: Hasło
+                - link "Zapomniałeś hasła?" [ref=e82] [cursor=pointer]:
+                  - /url: /forgot-password
+              - generic [ref=e83]:
+                - img [ref=e85]
+                - textbox "Hasło" [ref=e88]:
+                  - /placeholder: Wprowadź hasło
+                - button [ref=e89] [cursor=pointer]:
+                  - img [ref=e90]
+            - button "Zaloguj się" [ref=e93] [cursor=pointer]:
+              - text: Zaloguj się
+              - img [ref=e95]
+          - generic [ref=e97]:
+            - generic [ref=e98]: Nie masz konta?
+            - link "Zarejestruj się" [ref=e99] [cursor=pointer]:
+              - /url: /register
+        - paragraph [ref=e101]:
+          - text: Kontynuując, zgadzasz się na nasze
+          - link "Warunki korzystania z usługi" [ref=e102] [cursor=pointer]:
+            - /url: "#"
+          - text: i
+          - link "Polityka prywatności" [ref=e103] [cursor=pointer]:
+            - /url: "#"
+    - dialog "__MISSING__" [ref=e104]:
+      - generic [ref=e105]:
+        - paragraph [ref=e106]: __MISSING__
+        - generic [ref=e107]:
+          - button "__MISSING__" [ref=e108] [cursor=pointer]
+          - button "__MISSING__" [ref=e109] [cursor=pointer]
+  - generic [ref=e110]:
+    - generic [ref=e111]:
+      - generic [ref=e112]: Install AI Projects
+      - generic [ref=e113]: Add to your home screen for quick access
+    - generic [ref=e114]:
+      - button "Install" [ref=e115] [cursor=pointer]
+      - button "✕" [ref=e116] [cursor=pointer]
