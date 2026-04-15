@@ -1,33 +1,33 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter as Router, Route, Navigate, useLocation, Routes } from 'react-router-dom'
-import { trackPageView } from '@/analytics/posthog'
+import { trackPageView } from '@/shared/analytics/posthog'
 import { useQuery } from '@tanstack/react-query'
-import { useAuth } from '@/stores/authStore'
-import { useTheme } from '@/stores/uiStore'
-import { authApi } from '@/lib/api'
-import { setTheme } from '@/lib/utils'
-import { DEFAULT_LANGUAGE, isSupportedLanguage } from '@/lib/languages'
+import { useAuth } from '@/features/auth/store'
+import { useTheme } from '@/shared/stores/uiStore'
+import { authApi } from '@/features/auth/api'
+import { setTheme } from '@/shared/lib/utils'
+import { DEFAULT_LANGUAGE, isSupportedLanguage } from '@/shared/lib/languages'
 
 
 // Layout Components
-import AuthLayout from '@/components/layouts/AuthLayout'
-import DashboardLayout from '@/components/layouts/DashboardLayout'
-import LanguageLayout from '@/components/layouts/LanguageLayout'
+import AuthLayout from '@/shared/components/layouts/AuthLayout'
+import DashboardLayout from '@/shared/components/layouts/DashboardLayout'
+import LanguageLayout from '@/shared/components/layouts/LanguageLayout'
 
-const LandingPage = lazy(() => import('@/pages/LandingPage'))
+const LandingPage = lazy(() => import('@/features/landing/pages/LandingPage'))
 
 // Lazy-loaded page components (code splitting)
-const LoginPage = lazy(() => import('@/pages/LoginPage'))
-const RegisterPage = lazy(() => import('@/pages/RegisterPage'))
-const DashboardPage = lazy(() => import('@/pages/DashboardPage'))
-const ProjectPage = lazy(() => import('@/pages/ProjectPage'))
-const SettingsPage = lazy(() => import('@/pages/SettingsPage'))
-const UsagePage = lazy(() => import('@/pages/UsagePage').then(m => ({ default: m.UsagePage })))
-const AdminPage = lazy(() => import('@/pages/AdminPage'))
+const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
+const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'))
+const DashboardPage = lazy(() => import('@/features/projects/pages/DashboardPage'))
+const ProjectPage = lazy(() => import('@/features/projects/pages/ProjectPage'))
+const SettingsPage = lazy(() => import('@/features/settings/pages/SettingsPage'))
+const UsagePage = lazy(() => import('@/features/usage/pages/UsagePage').then(m => ({ default: m.UsagePage })))
+const AdminPage = lazy(() => import('@/features/admin/pages/AdminPage'))
 
 // UI Components
-import LoadingSpinner from '@/components/ui/LoadingSpinner'
-import ErrorBoundary from '@/components/ErrorBoundary'
+import LoadingSpinner from '@/shared/components/ui/LoadingSpinner'
+import ErrorBoundary from '@/shared/components/ErrorBoundary'
 
 const SuspenseFallback = (
   <div className="flex-1 flex items-center justify-center py-20">

@@ -5,23 +5,23 @@ import { I18nextProvider } from 'react-i18next'
 import { HelmetProvider } from 'react-helmet-async'
 import { Toaster } from 'react-hot-toast'
 import App from './App.tsx'
-import { ConfirmDialogProvider } from '@/components/ui/ConfirmDialog'
-import { isAnalyticsAllowed } from '@/utils/consent'
-import { initWebVitals } from '@/utils/webVitals'
+import { ConfirmDialogProvider } from '@/shared/components/ui/ConfirmDialog'
+import { isAnalyticsAllowed } from '@/shared/utils/consent'
+import { initWebVitals } from '@/shared/utils/webVitals'
 import './index.css'
 
 // Initialize i18n
-import i18n from './lib/i18n'
+import i18n from '@/shared/lib/i18n'
 
 // Initialize PWA — deferred to avoid blocking first paint
 if (typeof requestIdleCallback === 'function') {
-  requestIdleCallback(() => import('./utils/pwa'))
+  requestIdleCallback(() => import('@/shared/utils/pwa'))
 } else {
-  setTimeout(() => import('./utils/pwa'), 0)
+  setTimeout(() => import('@/shared/utils/pwa'), 0)
 }
 
 // Lazy-load CookieConsent — consent banner can appear after first paint
-const CookieConsent = lazy(() => import('@/components/CookieConsent'))
+const CookieConsent = lazy(() => import('@/shared/components/CookieConsent'))
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,7 +39,7 @@ const queryClient = new QueryClient({
 // Defer analytics initialization to after first paint
 function initAnalytics() {
   // Sentry — deferred init (Sentry.init() has non-trivial setup cost)
-  import('@/analytics/sentry').then(({ initializeSentry, captureException }) => {
+  import('@/shared/analytics/sentry').then(({ initializeSentry, captureException }) => {
     initializeSentry()
     window.addEventListener('error', (event) => {
       captureException(event.error ?? event.message, {
@@ -60,7 +60,7 @@ function initAnalytics() {
   const posthogKey = import.meta.env.VITE_POSTHOG_KEY
   if (posthogKey && import.meta.env.VITE_POSTHOG_ENABLED !== 'false') {
     const hasAnalyticsConsent = isAnalyticsAllowed()
-    import('@/analytics/posthog').then(({ initPostHog }) => {
+    import('@/shared/analytics/posthog').then(({ initPostHog }) => {
       initPostHog(posthogKey, {
         api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com',
         opt_out_capturing_by_default: !hasAnalyticsConsent,
