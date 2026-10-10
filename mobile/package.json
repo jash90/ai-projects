@@ -9,7 +9,7 @@
     "web": "expo start --web",
     "lint": "eslint .",
     "generate:api": "node_modules/.bin/orval && node_modules/.bin/openapi-typescript openapi.json -o src/api/generated/schema.d.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "node node_modules/@typescript/native/bin/tsc --noEmit"
   },
   "dependencies": {
     "@babel/runtime": "^7.29.2",
@@ -36,10 +36,11 @@
   "devDependencies": {
     "@babel/core": "^7.25.0",
     "@types/react": "~18.3.0",
+    "@typescript/native": "npm:typescript@~7.0.2",
     "babel-plugin-module-resolver": "^5.0.3",
     "openapi-fetch": "^0.13.0",
     "openapi-typescript": "^7.6.0",
     "orval": "^8.6.2",
-    "typescript": "^5.5.0"
+    "typescript": "npm:@typescript/typescript6@^6.0.2"
   }
 }
