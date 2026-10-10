@@ -18,14 +18,14 @@
     }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "node node_modules/@typescript/native/bin/tsc",
     "clean": "rm -rf dist"
   },
   "files": [
     "dist"
   ],
   "devDependencies": {
-    "@typescript/native": "npm:typescript@^7.0.2",
+    "@typescript/native": "npm:typescript@~7.0.2",
     "typescript": "npm:@typescript/typescript6@^6.0.2"
   }
 }
